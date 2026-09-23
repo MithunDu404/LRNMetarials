@@ -59,13 +59,13 @@ That's the architecture half. The rest of the guide covers the three other thing
 
 ## 2. From one server to a scalable architecture
 
-![Architecture evolution](figures/system_design/01_architecture_evolution.png)
+![Architecture evolution](../figures/system_design/01_architecture_evolution.png)
 
 *Each step removes the bottleneck the previous step created. This is the spine of almost every system-design interview answer.*
 
 ### 2.1 What actually happens when a user opens your app
 
-![Request flow](figures/system_design/02_request_flow.png)
+![Request flow](../figures/system_design/02_request_flow.png)
 
 *DNS turns a name into an IP (and caches it for the record's TTL). The client opens a TCP connection, does a TLS handshake, and sends an HTTP request. Browsers usually get HTML, mobile apps usually get JSON.*
 
@@ -108,7 +108,7 @@ Tables with rows and columns, queried with SQL: **PostgreSQL, MySQL, Oracle, SQL
 | **Graph** | Neo4j, Neptune | relationships as first-class data (recommendations, social graphs, fraud rings) |
 | **Key-value** | Redis, Memcached | caching, sessions, counters, rate limits (RAM-speed) |
 
-![SQL vs document](figures/system_design/03_sql_vs_document.png)
+![SQL vs document](../figures/system_design/03_sql_vs_document.png)
 
 *The same data in two shapes. The document version reads in one operation. The relational version avoids duplicating product data and can answer questions the document model can't ("which customers bought this product?") without scanning everything.*
 
@@ -161,7 +161,7 @@ Tables with rows and columns, queried with SQL: **PostgreSQL, MySQL, Oracle, SQL
 | 6 | **Geographic** | closest region | global services (usually DNS or anycast level) |
 | 7 | **Consistent hashing** | position on a hash ring | caches and sharded stores (§4.3) |
 
-![Load balancer simulation](figures/system_design/05_load_balancer_sim.png)
+![Load balancer simulation](../figures/system_design/05_load_balancer_sim.png)
 
 *A real queueing simulation: 80,000 requests, heavy-tailed sizes, ~85% utilization, four servers where one is half as fast. **Random** and **round robin** keep sending it a quarter of the traffic, its queue grows without bound, and p99 explodes into the thousands of seconds. **Power of two choices**, **least connections** and **weighted least connections** stay around 12–18 s at p99. Medians barely differ, which is why you must watch the tail.*
 
@@ -173,7 +173,7 @@ Tables with rows and columns, queried with SQL: **PostgreSQL, MySQL, Oracle, SQL
 
 ### 4.3 Consistent hashing: the one that needs a picture
 
-![Consistent hashing](figures/system_design/06_consistent_hashing.png)
+![Consistent hashing](../figures/system_design/06_consistent_hashing.png)
 
 *Left: servers and keys are hashed onto a ring; a key belongs to the next server clockwise. Right: measured on 10,000 keys. With `hash(key) % N`, adding one server to a pool of 10 moves **~91%** of keys, which means a cache stampede onto your database. With consistent hashing it's **~9%**, matching the ideal 1/(N+1).*
 
@@ -185,7 +185,7 @@ Tables with rows and columns, queried with SQL: **PostgreSQL, MySQL, Oracle, SQL
 
 A **SPOF** is any component whose failure takes the whole system down: one database behind many app servers, one load balancer, one region, one DNS provider.
 
-![Availability math](figures/system_design/04_availability_math.png)
+![Availability math](../figures/system_design/04_availability_math.png)
 
 *Left: with redundancy, the system fails only if **all** copies fail: 99% each → 99.99% with two (if failures are independent, which shared power, shared network or a bad deploy can break). Right: components in series **multiply**. Five hops at 99.9%–99.99% give ~99.64%, about 31 hours of downtime a year.*
 
@@ -216,7 +216,7 @@ An **API is a contract**: which requests are allowed, and what responses look li
 | Versioning | URL or header | evolve the schema, deprecate fields | proto field numbers |
 | Best for | public APIs, CRUD | complex UIs with nested data | internal microservices |
 
-![REST vs GraphQL round trips](figures/system_design/07_rest_vs_graphql_roundtrips.png)
+![REST vs GraphQL round trips](../figures/system_design/07_rest_vs_graphql_roundtrips.png)
 
 *A profile page needing user + posts + followers: three sequential REST round trips at 120 ms each, versus one GraphQL request. (REST can also parallelize those calls or offer a composite endpoint; GraphQL's real win is that the client chooses the fields.)*
 
@@ -271,7 +271,7 @@ network       IP  ·  link  ·  physical
 
 ### 7.3 WebSockets: when polling isn't good enough
 
-![Polling vs WebSocket](figures/system_design/08_polling_vs_websocket.png)
+![Polling vs WebSocket](../figures/system_design/08_polling_vs_websocket.png)
 
 *Simulated chat with 40 messages an hour. Polling every 5 s means an average 2.5 s delay and ~94% empty responses. A WebSocket does one handshake, then the server **pushes** the moment a message exists.*
 
@@ -292,7 +292,7 @@ network       IP  ·  link  ·  physical
 
 ### 7.5 TCP vs UDP
 
-![TCP vs UDP](figures/system_design/09_tcp_vs_udp.png)
+![TCP vs UDP](../figures/system_design/09_tcp_vs_udp.png)
 
 | | TCP | UDP |
 |---|---|---|
@@ -311,7 +311,7 @@ network       IP  ·  link  ·  physical
 
 **Why caches work:** traffic is **skewed**. A few items are requested constantly.
 
-![Caching](figures/system_design/10_caching.png)
+![Caching](../figures/system_design/10_caching.png)
 
 *Left: LRU simulation over 150,000 requests. With realistic skew, a cache holding **1% of items** serves 40–70% of requests. Right: what a hit ratio is worth: with a 50 ms database query, going from 0% to 80% hits takes average latency from 51 ms to ~11 ms.*
 
@@ -348,7 +348,7 @@ network       IP  ·  link  ·  physical
 
 ## 9. CDNs and the speed of light
 
-![CDN latency](figures/system_design/11_cdn_latency.png)
+![CDN latency](../figures/system_design/11_cdn_latency.png)
 
 *Computed from geography: light in fibre travels ~200,000 km/s, and real routes are ~1.5× the straight-line distance. From a Virginia origin, six round trips cost ~1.4 s for a user in Sydney. From a nearby edge cache, it's ~15 ms. **No amount of server optimization fixes distance.***
 
@@ -380,7 +380,7 @@ network       IP  ·  link  ·  physical
 | **Session** | server stores session, client holds a cookie | easy revocation; needs shared session storage (Redis) |
 | **JWT bearer** | signed claims, verified locally | no lookup per request; harder to revoke |
 
-![Session vs JWT](figures/system_design/12_session_vs_jwt.png)
+![Session vs JWT](../figures/system_design/12_session_vs_jwt.png)
 
 > **JWT truths people miss:**
 > - A JWT is **signed, not encrypted**. Anyone can read the payload (run the demo in §14). Never put secrets in it.
@@ -390,7 +390,7 @@ network       IP  ·  link  ·  physical
 
 ### OAuth 2 + OpenID Connect
 
-![OAuth and OIDC flow](figures/system_design/13_oauth_oidc_flow.png)
+![OAuth and OIDC flow](../figures/system_design/13_oauth_oidc_flow.png)
 
 *The authorization-code flow. Your app never sees the password. The **access token** says what the app may do (authorization); the **ID token** (a JWT, from OIDC) says who the user is (authentication). **PKCE** — the `code_challenge`/`code_verifier` pair — stops an intercepted code from being redeemed by an attacker, and is now recommended for all clients.*
 
@@ -406,7 +406,7 @@ You authenticate once with the identity provider, which creates a **global sessi
 
 ## 11. Authorization (what may you do?)
 
-![Authorization models](figures/system_design/14_authorization_models.png)
+![Authorization models](../figures/system_design/14_authorization_models.png)
 
 | Model | Rule | Strength | Weakness |
 |---|---|---|---|
@@ -422,7 +422,7 @@ Real systems **combine** them: RBAC for coarse roles, ABAC conditions for contex
 
 ### 1. Rate limiting
 
-![Rate limit windows](figures/system_design/15_rate_limit_windows.png)
+![Rate limit windows](../figures/system_design/15_rate_limit_windows.png)
 
 *Limit: 100 requests/minute. An attacker bursting around a **fixed window** boundary gets 200 through in 10 seconds. A **sliding window** (or **token bucket**, see the Atlassian note) enforces the real rate.*
 
@@ -430,7 +430,7 @@ Apply per **endpoint**, per **user/API key**, per **IP**, and a **global** limit
 
 ### 2. CORS — with a correction
 
-![Web attacks](figures/system_design/16_web_attacks_csrf_xss_cors.png)
+![Web attacks](../figures/system_design/16_web_attacks_csrf_xss_cors.png)
 
 **CORS is a browser mechanism that *relaxes* the same-origin policy.** It controls whether JavaScript on another origin may **read** your responses.
 
@@ -501,7 +501,7 @@ Everything in §12 above still applies — the 2025 revision reorganized categor
 
 ## 14. Code: four demos you can run (tested)
 
-Full file: [`code/system_design_demos.py`](code/system_design_demos.py). **Actual output:**
+Full file: [`code/system_design_demos.py`](../code/system_design_demos.py). **Actual output:**
 
 ```
 [injection] unsafe query: SELECT name FROM users WHERE name = 'admin' --' AND password = 'anything'

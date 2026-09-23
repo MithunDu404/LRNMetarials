@@ -90,13 +90,13 @@ Most DeepSeek tricks are engineering around the model. **MLA changes the transfo
 
 Generation is **autoregressive**: produce "blue", append it, run the model again to get the next token.
 
-![KV cache idea](figures/deepseek_mla/01_kv_cache_idea.png)
+![KV cache idea](../figures/deepseek_mla/01_kv_cache_idea.png)
 
 *When "blue" is appended, the old rows of Q, K, V don't change, because each row depends only on its own token (thanks to the causal mask). The top-left block of the pattern is unchanged, the upper-right is masked, so **only the bottom row** is new. That row needs **one** new query plus **all** keys and values. So keys and values get cached. Queries don't.*
 
 ### 4.2 How much it saves (measured)
 
-![KV cache speed](figures/deepseek_mla/02_kv_cache_speed.png)
+![KV cache speed](../figures/deepseek_mla/02_kv_cache_speed.png)
 
 *Left: a real NumPy decoding loop. Generating 800 tokens is 115× faster with a KV cache, and the gap keeps growing. Right: without the cache, step t redoes a t×t pattern. With it, step t computes one row of t numbers.*
 
@@ -116,7 +116,7 @@ For DeepSeek-R1's shape with standard MHA: $2 \times 61 \times 128 \times 128 \t
 
 ## 5. Earlier fixes: share keys and values between heads
 
-![Attention variants](figures/deepseek_mla/04_attention_variants.png)
+![Attention variants](../figures/deepseek_mla/04_attention_variants.png)
 
 *Green boxes are what has to be cached for every past token. MHA caches K and V per head. MQA caches one shared K, V. GQA caches one per group. MLA caches one small latent that every head decodes differently.*
 
@@ -135,7 +135,7 @@ For DeepSeek-R1's shape with standard MHA: $2 \times 61 \times 128 \times 128 \t
 
 MQA and GQA **hand-design** the sharing. DeepSeek asked a different question: *what if the model **learns** a compressed representation that all heads can decode from?* That's a **latent space**, the same idea behind autoencoders, and behind LoRA's low-rank matrices.
 
-![Low-rank intuition](figures/deepseek_mla/05_low_rank_intuition.png)
+![Low-rank intuition](../figures/deepseek_mla/05_low_rank_intuition.png)
 
 *A simulation: 32 heads × 64 dimensions = 2,048 key numbers per token, but generated from shared structure. The singular values (left) drop off a cliff after 48 components. Keeping a 48-number latent (right) reconstructs all 2,048 key numbers with small error, using 43× less memory. MLA doesn't compress after the fact like this. It **trains** the model to use a small latent from the start, so the model learns to make it work.*
 
@@ -155,7 +155,7 @@ $$\underbrace{c = W_{DKV}\,x}_{\text{shared down-projection (cached)}} \qquad k^
 
 Decompressing K and V for every cached token at every step sounds like it would undo the savings. The video describes a linear-algebra trick: since the up-projections are fixed after training, **absorb** them.
 
-![Absorbing weights and the RoPE problem](figures/deepseek_mla/07_absorb_and_rope.png)
+![Absorbing weights and the RoPE problem](../figures/deepseek_mla/07_absorb_and_rope.png)
 
 - **Keys:** $q \cdot (W_{UK} c) = (W_{UK}^\top q) \cdot c$. Move $W_{UK}^\top$ into the query side and dot directly with the cached latent.
 - **Values:** $\sum_j A_{ij}\,W_{UV} c_j = W_{UV}\big(\sum_j A_{ij} c_j\big)$. Average the latents first, then apply $W_{UV}$ once.
@@ -177,7 +177,7 @@ Modern LLMs encode position with **RoPE** (rotary position embedding), which *ro
 
 ### 6.5 The result: cache size no longer depends on the number of heads
 
-![Cache sizes](figures/deepseek_mla/03_cache_sizes.png)
+![Cache sizes](../figures/deepseek_mla/03_cache_sizes.png)
 
 *Left: per-token cache for DeepSeek-R1's shape. MHA 4.0 MB → GQA 500 KB → MLA 70 KB (**57× smaller than MHA**). Only MQA is smaller, and it costs quality. Right: a single 128K-token conversation needs ~510 GB with MHA (more than six 80 GB GPUs) but only ~9 GB with MLA.*
 
@@ -193,7 +193,7 @@ And quality: in the DeepSeek-V2 paper's ablations, MLA models **scored better th
 
 ## 7. Real-world impact: why cache size = money
 
-![Users per server](figures/deepseek_mla/06_users_per_server.png)
+![Users per server](../figures/deepseek_mla/06_users_per_server.png)
 
 *Rough capacity estimate for one 8×H200 server (1,128 GB of GPU memory) with ~700 GB used by R1's weights. With MHA only ~3 users with 32K contexts fit at once. With MLA, ~190 fit. MQA fits more still, but loses quality. (Real servers also need room for activations and other overhead, so actual numbers are lower. The **ratio** is what counts.)*
 
@@ -341,7 +341,7 @@ MHA: 400 GB ÷ (4 MB × 32,000 = 128 GB) ≈ **3**. MLA: 400 GB ÷ (70 KB × 32,
 
 ## 10. Code: MLA in NumPy (tested)
 
-Full file: [`code/mla_numpy.py`](code/mla_numpy.py). The core of the generation loop:
+Full file: [`code/mla_numpy.py`](../code/mla_numpy.py). The core of the generation loop:
 
 ```python
 latent_cache = []

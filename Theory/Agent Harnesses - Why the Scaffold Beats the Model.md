@@ -82,7 +82,7 @@ The field has pushed models up the **intelligence axis** (lower perplexity) but 
 
 The speaker's earlier experiment: adding examples **in context** stops helping after about **40–50 examples**. Beyond that, the only options are heavier training steps: low-rank LoRA → high-rank LoRA → full fine-tuning.
 
-![Adaptation ladder](figures/agent_harness/06_adaptation_ladder.png)
+![Adaptation ladder](../figures/agent_harness/06_adaptation_ladder.png)
 
 *A conceptual map, not measurements. Cheap, shallow adaptation (in-context examples) saturates quickly. Deep adaptation (fine-tuning) is slow and expensive. Harness mechanisms (memory, skills, tools, a REPL, prompt optimization) fill the middle: the agent adapts **procedurally**, without gradient updates.*
 
@@ -90,7 +90,7 @@ The speaker's earlier experiment: adding examples **in context** stops helping a
 
 **ARC-AGI** (by **François Chollet**, run by the ARC Prize Foundation, whose president is Greg Kamradt, the "Greg" in the transcript) measures **fluid intelligence**: how fast a system adapts to **new** puzzles, not memorized knowledge. ARC-AGI-3 uses interactive game-like environments, each designed to test different skills.
 
-![ARC-AGI reported numbers](figures/agent_harness/05_arc_agi_reported.png)
+![ARC-AGI reported numbers](../figures/agent_harness/05_arc_agi_reported.png)
 
 *Numbers as reported in the talk: Claude Opus evaluated directly scored about 30% on the private holdout, and ~95.5% inside the Prime Agent harness. NVIDIA's system (transcribed as "AVO") was said to reach 100%.*
 
@@ -98,7 +98,7 @@ The speaker's earlier experiment: adding examples **in context** stops helping a
 
 **Building intuition without trusting any single number:**
 
-![Same weights different harness](figures/agent_harness/04_same_weights_different_harness.png)
+![Same weights different harness](../figures/agent_harness/04_same_weights_different_harness.png)
 
 *A **toy simulation** with assumed error rates, not a benchmark. The "model" never changes: it makes the same small slips. Answering in one shot collapses on multi-step problems. Writing steps out (chain of thought) helps. Handing arithmetic to a tool helps more. Adding a verifier that catches most wrong answers and retries keeps accuracy near 97% even at 20 steps. **The harness decides how the model's errors compound.***
 
@@ -122,7 +122,7 @@ It ran about 8 ideas on 8×H100 nodes at once. Paper quality went from poor (Mar
 
 ## 3. A five-minute history of harnesses
 
-![Harness timeline](figures/agent_harness/02_harness_timeline.png)
+![Harness timeline](../figures/agent_harness/02_harness_timeline.png)
 
 | Step | Idea | What it added | Category |
 |---|---|---|---|
@@ -151,17 +151,17 @@ Everything since has been **added around this same loop**.
 
 ## 4. Anatomy of a static harness ("harness v1")
 
-![Harness anatomy](figures/agent_harness/01_harness_anatomy.png)
+![Harness anatomy](../figures/agent_harness/01_harness_anatomy.png)
 
 **Agent spec:** system prompt · **limits** (max turns, max tool calls: never unbounded) · tool list · skills list · sub-agent list.
 
-![Harness v1 loop](figures/agent_harness/03_harness_v1_loop.png)
+![Harness v1 loop](../figures/agent_harness/03_harness_v1_loop.png)
 
 *Triggered by a user (e.g. a Slack message) or a **cron** schedule (wake up hourly and decide what to do). Each iteration: session management → **context compilation** (assemble everything relevant into the prompt) → LLM call → action → run tool → append the result → repeat until done or a limit is hit.*
 
 ### Code: a minimal harness (tested)
 
-Full file: [`code/minimal_harness.py`](code/minimal_harness.py). The "LLM" is a scripted stand-in so it runs offline. Replace `fake_llm` with a real API call.
+Full file: [`code/minimal_harness.py`](../code/minimal_harness.py). The "LLM" is a scripted stand-in so it runs offline. Replace `fake_llm` with a real API call.
 
 ```python
 def run(self, task):
@@ -194,7 +194,7 @@ The parent delegated reading a large, noisy file to a **sub-agent**. The sub-age
 
 ## 5. Harness v2: harnesses that learn
 
-![Learned harness](figures/agent_harness/09_learned_harness.png)
+![Learned harness](../figures/agent_harness/09_learned_harness.png)
 
 ### 5.1 DSPy and GEPA: learn the prompt
 
@@ -240,7 +240,7 @@ An LLM is a **sequential processor with fixed weights over a visible context win
 
 ### 6.3 The cache-hierarchy mental model
 
-![Memory hierarchy](figures/agent_harness/07_memory_hierarchy.png)
+![Memory hierarchy](../figures/agent_harness/07_memory_hierarchy.png)
 
 | Layer | Holds | Update mechanism | Trade-off |
 |---|---|---|---|
@@ -251,7 +251,7 @@ An LLM is a **sequential processor with fixed weights over a visible context win
 
 **The general rule:** every layer needs a way to **write** new state and a way to **prune** old state.
 
-![Context pressure](figures/agent_harness/08_context_pressure.png)
+![Context pressure](../figures/agent_harness/08_context_pressure.png)
 
 *A toy simulation of a long-horizon agent. Appending every tool output overflows a 200K window in under 50 steps. **Compaction** gives a saw-tooth pattern that survives. **Sub-agents** that read bulky outputs and return summaries keep growth slow and steady. This is the L1 vs L2 idea in numbers.*
 
@@ -364,7 +364,7 @@ Assistants such as OpenClaw and Hermes Agent send almost every query to cloud mo
 
 ### 7.2 Five primitives, and the cloud as optimizer
 
-![Open Jarvis](figures/agent_harness/10_open_jarvis.png)
+![Open Jarvis](../figures/agent_harness/10_open_jarvis.png)
 
 1. **User interfaces**
 2. **Agentic logic**
@@ -391,7 +391,7 @@ Assistants such as OpenClaw and Hermes Agent send almost every query to cloud mo
 
 ## 8. Talk 3: QM, YC's open-source agent harness
 
-![QM evolution and architecture](figures/agent_harness/11_qm_evolution_architecture.png)
+![QM evolution and architecture](../figures/agent_harness/11_qm_evolution_architecture.png)
 
 ### 8.1 How they got there
 

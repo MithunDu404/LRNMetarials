@@ -59,7 +59,7 @@ Most of the real engineering pain in this guide traces back to that second row.
 
 ## 2. Law 1: design around resources, not actions
 
-![Resources vs actions](figures/api_design/01_resources_vs_actions.png)
+![Resources vs actions](../figures/api_design/01_resources_vs_actions.png)
 
 *Left: action names put the verb in the URL, so every new operation means a new URL. Right: a few resource URLs combined with the standard HTTP methods cover the same operations with a predictable grid.*
 
@@ -124,7 +124,7 @@ Current resource: `{"name": "Ann", "email": "a@x.com", "phone": "123"}`
 
 The dangerous case: the **server processed** the request, but the **response was lost** (timeout, dropped connection, mobile network). The client can't tell whether the request went through, so it **retries**.
 
-![Idempotency and retries](figures/api_design/02_idempotency_retries.png)
+![Idempotency and retries](../figures/api_design/02_idempotency_retries.png)
 
 *Simulated 10,000 payments per point. If just 5% of responses are lost and clients retry, ~5% of payments get **charged twice**. With an **Idempotency-Key**, the server recognizes the retry and returns the stored result: zero duplicates.*
 
@@ -139,7 +139,7 @@ The dangerous case: the **server processed** the request, but the **response was
 
 ## 5. Law 4: make status codes useful
 
-![Status code decision tree](figures/api_design/03_status_code_tree.png)
+![Status code decision tree](../figures/api_design/03_status_code_tree.png)
 
 *First decide **whose fault** it is. 2xx = it worked. 4xx = the client must change something (retrying the same request won't help, except 429). 5xx = a server problem (retrying later may help).*
 
@@ -157,7 +157,7 @@ The dangerous case: the **server processed** the request, but the **response was
 
 Client libraries, API gateways and service meshes decide **whether to retry** based on the status code. Send `200` with an error body and none of that works. Send `500` for validation errors and clients will pointlessly hammer you with retries.
 
-![Retry storms and backoff](figures/api_design/04_retry_backoff.png)
+![Retry storms and backoff](../figures/api_design/04_retry_backoff.png)
 
 *5,000 clients hitting a 10-second outage (simulation, log scale). Fixed 1-second retries hammer the service with ~5,000 req/s the whole time. Exponential backoff without jitter sends **synchronized waves** (at 1, 3, 7 and 15 s), and the wave at 15 s hits the just-recovered service. **Backoff with random jitter** spreads retries into a smooth, decaying curve. That's why APIs return `429`/`503` with a `Retry-After` header, and why AWS recommends full jitter.*
 
@@ -165,7 +165,7 @@ Client libraries, API gateways and service meshes decide **whether to retry** ba
 
 ## 6. Law 5: keep errors consistent
 
-![Error anatomy](figures/api_design/05_error_anatomy.png)
+![Error anatomy](../figures/api_design/05_error_anatomy.png)
 
 *There's a standard for this: **RFC 9457 "Problem Details for HTTP APIs"** (`application/problem+json`). You don't have to use it exactly, but **one** structure across the whole API is essential.*
 
@@ -185,7 +185,7 @@ A good error gives:
 
 ## 7. Law 6: don't put everything into the URL path
 
-![URL anatomy](figures/api_design/06_url_anatomy.png)
+![URL anatomy](../figures/api_design/06_url_anatomy.png)
 
 | Responsibility | Where it goes |
 |---|---|
@@ -203,7 +203,7 @@ A good error gives:
 
 ### 7.1 Pagination deserves its own warning
 
-![Offset vs cursor pagination](figures/api_design/08_pagination_offset_vs_cursor.png)
+![Offset vs cursor pagination](../figures/api_design/08_pagination_offset_vs_cursor.png)
 
 *Measured on SQLite with 1M rows. `OFFSET 990000` makes the database walk past 990,000 rows (10 ms here, far worse on big tables with joins). A cursor (`WHERE id > last_seen`) uses the index and stays flat. Offset pages also **skip or duplicate items** when rows are inserted while the user is paging.*
 
@@ -218,7 +218,7 @@ A good error gives:
 
 ## 8. Law 7: treat API changes carefully
 
-![Versioning](figures/api_design/07_versioning.png)
+![Versioning](../figures/api_design/07_versioning.png)
 
 *Left: a well-run migration. Release v2, keep v1 running, mark v1 deprecated (the standard `Deprecation` and `Sunset` headers), **measure** who still calls v1, remind them, and only then remove it. Right: which changes break clients.*
 
@@ -313,7 +313,7 @@ The **same laws apply to all of them**: consistency, clear errors, safe retries,
 
 ## 12. Code: an API that follows all 8 laws (standard library only, tested)
 
-Full file: [`code/rest_api_server.py`](code/rest_api_server.py). Run `python code/rest_api_server.py`: it starts the server, runs a test client against it, and exits.
+Full file: [`code/rest_api_server.py`](../code/rest_api_server.py). Run `python code/rest_api_server.py`: it starts the server, runs a test client against it, and exits.
 
 The idempotent create, the most important engineering pattern here:
 

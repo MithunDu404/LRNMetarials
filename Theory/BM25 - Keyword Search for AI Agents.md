@@ -52,7 +52,7 @@ One term you'll see throughout: **agentic search** just means "search that happe
 
 ## 2. What is agentic search?
 
-![Agentic search loop](figures/bm25/01_agentic_search_loop.png)
+![Agentic search loop](../figures/bm25/01_agentic_search_loop.png)
 
 *Search is no longer "a human types two words and scans 10 blue links". A model runs a loop, and search is one tool inside it.*
 
@@ -90,19 +90,19 @@ It rests on three ideas.
 
 ### 3.1 Idea 1: rare words are strong evidence (IDF)
 
-![IDF curve](figures/bm25/03_idf.png)
+![IDF curve](../figures/bm25/03_idf.png)
 
 *In a 100,000-document corpus, a product code found in only 2 docs weighs 10.6. "the", found in almost every doc, weighs ~0. Matching a rare word tells you much more.*
 
 ### 3.2 Idea 2: repetition helps, but saturates (k1)
 
-![TF saturation](figures/bm25/02_tf_saturation.png)
+![TF saturation](../figures/bm25/02_tf_saturation.png)
 
 *The first mention of a word matters most. By the 20th mention there's almost no extra credit. The contribution can never exceed $k_1 + 1$. This stops keyword-stuffed spam pages from winning, which was a real problem for early search engines.*
 
 ### 3.3 Idea 3: long documents shouldn't win just by being long (b)
 
-![Length normalization](figures/bm25/04_length_normalization.png)
+![Length normalization](../figures/bm25/04_length_normalization.png)
 
 *A 50-page document mentions everything a few times by chance. With $b = 0.75$ (the Lucene/Elasticsearch default), 3 mentions in a document 6× longer than average count for a lot less. With $b = 0$ length is ignored. Anserini/Pyserini, which IR researchers use, default to $b = 0.4$.*
 
@@ -119,7 +119,7 @@ Lowering $b$ cut the length penalty on the long document by about half. That mat
 
 ### 3.5 Why it's fast: the inverted index
 
-![Inverted index](figures/bm25/05_inverted_index.png)
+![Inverted index](../figures/bm25/05_inverted_index.png)
 
 *"Score every document" is only the naive picture. Real engines keep, for every word, a list of the documents containing it (a **posting list**). A query only reads the lists for its own words. Algorithms such as **WAND**, **Block-Max WAND** and **MaxScore** also skip documents that can't reach the top-k. Forty years of IR engineering sped up top-k retrieval without changing the formula.*
 
@@ -140,7 +140,7 @@ Lowering $b$ cut the length penalty on the long document by about half. That mat
 
 **Key idea:** a scoring function is only as good as the queries you give it. BM25 is limited mainly by **vocabulary mismatch** (the query says "timeout", the document says "times out"). A knowledgeable agent that **reformulates** can fix that itself.
 
-![Agentic reformulation simulation](figures/bm25/07_agentic_reformulation.png)
+![Agentic reformulation simulation](../figures/bm25/07_agentic_reformulation.png)
 
 *A simulation on a synthetic corpus with real BM25 scoring. The agent knows several clue words about the answer. Early vague queries (one clue plus generic words) rarely surface the evidence. When it reformulates with **two** specific clues, success jumps. With tuned parameters the agent finds the evidence in 98% of questions after 5 queries. The retrieval engine didn't change: **the querier got smarter.***
 
@@ -162,7 +162,7 @@ Lowering $b$ cut the length penalty on the long document by about half. That mat
 
 ### 5.2 The floppy-disk argument
 
-![Context budget vs corpus sizes](figures/bm25/08_context_budget.png)
+![Context budget vs corpus sizes](../figures/bm25/08_context_budget.png)
 
 *A 1.44 MB floppy disk holds roughly 350K tokens of text (at ~4 characters per token). That's about where Bergum estimates quality starts to degrade in current long-context models. Even a small benchmark corpus is ~1,000× bigger, and the web is ~100 million times bigger. **Even a perfect AGI has to decide what goes on the floppy disk.** That decision is retrieval.*
 
@@ -183,7 +183,7 @@ The original BrowseComp-Plus paper's BM25 baseline did badly against embedding m
 >
 > The headline for you: *"we tried BM25 and it was bad"* is very often a statement about two numbers someone never tuned. BrowseComp-Plus itself was accepted to **ACL 2026**.
 
-![Parameter grid](figures/bm25/06_parameter_grid.png)
+![Parameter grid](../figures/bm25/06_parameter_grid.png)
 
 *Same corpus, same queries, only `k1` and `b` changed (synthetic corpus where the evidence is buried in long pages and short distractor pages repeat single clue words). Recall@10 ranges from **24% to 98%**. The common defaults (k1 = 1.2, b = 0.75) score 58%. A result labelled just "BM25" in a paper tells you little until you know these settings.*
 
@@ -230,7 +230,7 @@ $$\text{RRF}(d) = \sum_{\text{rankers}} \frac{1}{k + \text{rank}(d)}, \quad k = 
 
 This comes from Jimmy Lin's group (University of Waterloo), *"Scaling Direct Corpus Interaction via Dynamic Workspace Expansion"*.
 
-![Workspace as filesystem](figures/bm25/09_workspace_filesystem.png)
+![Workspace as filesystem](../figures/bm25/09_workspace_filesystem.png)
 
 *Retrieval narrows billions of documents to a handful, which are written into a sandbox **filesystem**. The agent first sees cheap titles and snippets, then uses `rg`, `sed` and `cat` to read exactly the lines it needs, and runs new searches that add to the workspace.*
 
@@ -283,7 +283,7 @@ Hornet is building a BM25-first retrieval engine for agents. In the talk, Bergum
 
 ## 11. Code: BM25 from scratch plus hybrid fusion (tested)
 
-Full file: [`code/bm25_search.py`](code/bm25_search.py). The core scoring:
+Full file: [`code/bm25_search.py`](../code/bm25_search.py). The core scoring:
 
 ```python
 def search(self, query, k=3):

@@ -65,7 +65,7 @@ Every API call is independent. The model has **no idea** you talked yesterday, o
 
 The harness keeps a list of messages. Each turn it appends your message and the reply, then **sends the whole list again**.
 
-![Stateless LLM history cost](figures/agent_memory/01_stateless_history_cost.png)
+![Stateless LLM history cost](../figures/agent_memory/01_stateless_history_cost.png)
 
 *Left: tokens sent per turn grow steadily, because the entire history is resent. Right: the total tokens you pay for grow roughly **quadratically** over a long chat. Recalling a few hundred tokens of relevant memories instead keeps growth linear. (Prompt caching reduces the price of resent tokens but doesn't remove the growth or the context limit.)*
 
@@ -76,7 +76,7 @@ The harness keeps a list of messages. Each turn it appends your message and the 
 
 ### 2.3 Long-term memory: a separate service
 
-![Short-term vs long-term memory](figures/agent_memory/02_short_vs_long_term.png)
+![Short-term vs long-term memory](../figures/agent_memory/02_short_vs_long_term.png)
 
 *Conversation B on Friday can't see what you said on Monday. A long-term memory service stores the durable facts **outside** any session and recalls them when they're relevant. Because it's keyed to the **user**, several different agents can share it.*
 
@@ -88,7 +88,7 @@ The harness keeps a list of messages. Each turn it appends your message and the 
 
 ### 2.4 The four kinds of agent memory
 
-![Memory taxonomy](figures/agent_memory/08_memory_taxonomy.png)
+![Memory taxonomy](../figures/agent_memory/08_memory_taxonomy.png)
 
 | Type | Human analogy | Agent example | Where it lives |
 |---|---|---|---|
@@ -103,7 +103,7 @@ Mem0 focuses on **semantic** memory, with an optional **procedural** mode.
 
 ## 3. Mem0's storage: three stores
 
-![Mem0's three stores](figures/agent_memory/03_three_stores.png)
+![Mem0's three stores](../figures/agent_memory/03_three_stores.png)
 
 ### 3.1 Main memory store (vector DB)
 
@@ -134,7 +134,7 @@ Named entities (people, places, products) are extracted from each memory. Each e
 
 ## 4. Ingestion: how memories are created
 
-![Ingestion pipeline](figures/agent_memory/04_ingestion_pipeline.png)
+![Ingestion pipeline](../figures/agent_memory/04_ingestion_pipeline.png)
 
 Ingestion runs **after every agent turn**. There are three modes:
 
@@ -214,7 +214,7 @@ Two triggers use the **same** pipeline:
 
 ### 5.2 The pipeline
 
-![Retrieval pipeline](figures/agent_memory/05_retrieval_pipeline.png)
+![Retrieval pipeline](../figures/agent_memory/05_retrieval_pipeline.png)
 
 1. **Embed the query** with the **same** embedding model used for storage. Vectors from different models aren't comparable.
 2. **Vector search for a candidate pool** of `max(4 × top_k, 60)`. With top_k = 10 that's 60 candidates. Reranking works better with more candidates, **but it can only reorder this pool**.
@@ -226,13 +226,13 @@ Two triggers use the **same** pipeline:
 
 ### 5.3 Why the entity boost rewards specificity
 
-![Entity specificity](figures/agent_memory/07_entity_specificity.png)
+![Entity specificity](../figures/agent_memory/07_entity_specificity.png)
 
 *If "Paris" links to 1,000 memories, matching it tells you almost nothing. If it links to 2, those 2 are very likely what the user means. This is the same idea as **IDF** in BM25: rare signals are informative. (The curve is the shape used in our mini implementation. Mem0's exact formula may differ.)*
 
 ### 5.4 A worked example (computed)
 
-![Scoring worked example](figures/agent_memory/06_scoring_worked_example.png)
+![Scoring worked example](../figures/agent_memory/06_scoring_worked_example.png)
 
 *Real output of `code/agent_memory_mini.py` for **"Where should I eat in Paris?"**. The two Paris memories win on keyword match plus the entity boost. But look at the bottom row: **"user prefers vegan restaurants" scores 0**, even though it's clearly relevant to *where to eat*.*
 
@@ -273,7 +273,7 @@ That failure is the most useful lesson in the example:
 
 ## 8. Code: a mini Mem0 you can run (tested)
 
-Full file: [`code/agent_memory_mini.py`](code/agent_memory_mini.py). The retrieval core:
+Full file: [`code/agent_memory_mini.py`](../code/agent_memory_mini.py). The retrieval core:
 
 ```python
 def search(self, query, top_k=3, threshold=0.0):

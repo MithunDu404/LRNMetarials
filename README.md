@@ -16,29 +16,29 @@ Thirteen notes taken from YouTube talks, rewritten as self-contained study guide
 
 | Guide | What you'll get out of it |
 |---|---|
-| [**Backpropagation from scratch**](Backpropagation%20-%20How%20Neural%20Networks%20Learn.md) | Derivatives → gradients → the chain rule → the backward pass, with a worked computational graph and a 60-line autograd engine you can run. Why one gradient costs ~3 forward passes no matter how many parameters you have. |
-| [**Predictive coding: how the brain may learn instead**](Predictive%20Coding%20-%20How%20the%20Brain%20May%20Learn%20Instead.md) | Predictive coding as an energy-based model: local Hebbian rules, relaxation, clamping. The sequel to the backprop guide. |
-| [**Attention in transformers**](Attention%20in%20Transformers%20-%20Queries%20Keys%20and%20Values.md) | Q/K/V built up from "what am I looking for?", attention patterns computed by a real head, why √d_k matters, masking, multi-head, and the quadratic cost of long context. |
-| [**How DeepSeek rewrote the transformer (MLA)**](Multi-head%20Latent%20Attention%20-%20Shrinking%20the%20KV%20Cache.md) | The KV cache, why generation is memory-bound, and how MLA cuts the cache 57× by caching a learned latent instead of keys and values. Includes the RoPE catch the video skips. |
-| [**DeepSeek-V4.1-Flash: pushing KV cache compression**](DeepSeek%20V4.1%20Flash%20-%20Extreme%20KV%20Cache%20Compression.md) | The sequel to the MLA note, worked through from the technical report. Half the model skips reading the prompt; only 4 of 38 layers keep a cache; short-term memory is deleted and recomputed because that's cheaper than fetching it. |
+| [**Backpropagation from scratch**](Theory/Backpropagation%20-%20How%20Neural%20Networks%20Learn.md) | Derivatives → gradients → the chain rule → the backward pass, with a worked computational graph and a 60-line autograd engine you can run. Why one gradient costs ~3 forward passes no matter how many parameters you have. |
+| [**Predictive coding: how the brain may learn instead**](Theory/Predictive%20Coding%20-%20How%20the%20Brain%20May%20Learn%20Instead.md) | Predictive coding as an energy-based model: local Hebbian rules, relaxation, clamping. The sequel to the backprop guide. |
+| [**Attention in transformers**](Theory/Attention%20in%20Transformers%20-%20Queries%20Keys%20and%20Values.md) | Q/K/V built up from "what am I looking for?", attention patterns computed by a real head, why √d_k matters, masking, multi-head, and the quadratic cost of long context. |
+| [**How DeepSeek rewrote the transformer (MLA)**](Theory/Multi-head%20Latent%20Attention%20-%20Shrinking%20the%20KV%20Cache.md) | The KV cache, why generation is memory-bound, and how MLA cuts the cache 57× by caching a learned latent instead of keys and values. Includes the RoPE catch the video skips. |
+| [**DeepSeek-V4.1-Flash: pushing KV cache compression**](Theory/DeepSeek%20V4.1%20Flash%20-%20Extreme%20KV%20Cache%20Compression.md) | The sequel to the MLA note, worked through from the technical report. Half the model skips reading the prompt; only 4 of 38 layers keep a cache; short-term memory is deleted and recomputed because that's cheaper than fetching it. |
 
 ### AI engineering
 
 | Guide | What you'll get out of it |
 |---|---|
-| [**Why the harness matters more than the model**](Agent%20Harnesses%20-%20Why%20the%20Scaffold%20Beats%20the%20Model.md) | Everything between the model and the world: context compilation, tools, memory hierarchy (L1/L2/L3), sub-agents, and harnesses that learn. With a working minimal harness. |
-| [**Graph engineering for agents**](Graph%20Engineering%20-%20Agent%20Workflows%20as%20DAGs.md) | Jobs, arrows, state; cutting fake arrows for parallelism; the split→work→check→merge diamond; stop rules and human gates. With a real parallel graph runner. |
-| [**Agent memory (Mem0 architecture)**](Agent%20Memory%20-%20Long-Term%20Memory%20with%20Mem0.md) | Why LLMs are stateless, what long-term memory actually stores, and a hybrid retrieval pipeline (vector + BM25 + entity boost) you can run and inspect. |
-| [**BM25 for agentic search**](BM25%20-%20Keyword%20Search%20for%20AI%20Agents.md) | The BM25 formula explained piece by piece, why a smarter querier revives an old algorithm, and how parameter choices swing recall from 24% to 98%. |
+| [**Why the harness matters more than the model**](Theory/Agent%20Harnesses%20-%20Why%20the%20Scaffold%20Beats%20the%20Model.md) | Everything between the model and the world: context compilation, tools, memory hierarchy (L1/L2/L3), sub-agents, and harnesses that learn. With a working minimal harness. |
+| [**Graph engineering for agents**](Theory/Graph%20Engineering%20-%20Agent%20Workflows%20as%20DAGs.md) | Jobs, arrows, state; cutting fake arrows for parallelism; the split→work→check→merge diamond; stop rules and human gates. With a real parallel graph runner. |
+| [**Agent memory (Mem0 architecture)**](Theory/Agent%20Memory%20-%20Long-Term%20Memory%20with%20Mem0.md) | Why LLMs are stateless, what long-term memory actually stores, and a hybrid retrieval pipeline (vector + BM25 + entity boost) you can run and inspect. |
+| [**BM25 for agentic search**](Theory/BM25%20-%20Keyword%20Search%20for%20AI%20Agents.md) | The BM25 formula explained piece by piece, why a smarter querier revives an old algorithm, and how parameter choices swing recall from 24% to 98%. |
 
 ### Backend and systems
 
 | Guide | What you'll get out of it |
 |---|---|
-| [**System design explained**](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) | One server → load balancers → replicas → cache → CDN, plus APIs, protocols, auth and security. 16 figures, including a load-balancer queueing simulation and consistent hashing measured. |
-| [**8 API laws**](REST%20API%20Design%20-%20The%208%20Laws.md) | Resources vs actions, method semantics, status codes, one error shape, pagination, versioning. Includes a working API in pure Python that follows all eight. |
-| [**1 million requests per second**](Scaling%20to%201%20Million%20Requests%20per%20Second.md) | The four walls: bandwidth, CPU per request, concurrency and memory. Why a query rewrite beat every hardware upgrade. |
-| [**8 years of platform engineering (Atlassian)**](Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md) | Async provisioning, control plane vs data plane, immutable infrastructure, centralizing auth/rate limits at the edge — and why maintenance is the hard part. |
+| [**System design explained**](Theory/System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) | One server → load balancers → replicas → cache → CDN, plus APIs, protocols, auth and security. 16 figures, including a load-balancer queueing simulation and consistent hashing measured. |
+| [**8 API laws**](Theory/REST%20API%20Design%20-%20The%208%20Laws.md) | Resources vs actions, method semantics, status codes, one error shape, pagination, versioning. Includes a working API in pure Python that follows all eight. |
+| [**1 million requests per second**](Theory/Scaling%20to%201%20Million%20Requests%20per%20Second.md) | The four walls: bandwidth, CPU per request, concurrency and memory. Why a query rewrite beat every hardware upgrade. |
+| [**8 years of platform engineering (Atlassian)**](Theory/Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md) | Async provisioning, control plane vs data plane, immutable infrastructure, centralizing auth/rate limits at the edge — and why maintenance is the hard part. |
 
 ---
 
@@ -48,7 +48,7 @@ The AI guides age fastest. These are the substantive updates, each written up in
 
 | Guide | What moved | Where |
 |---|---|---|
-| **DeepSeek MLA** | Biggest change of the set. DeepSeek-V3.2 (2025) added *sparse* attention on top of MLA; **DeepSeek-V4 (April 2026) replaced MLA altogether** with a compressed + sparse hybrid, and V4.1-Flash added a third compression dimension. MLA lives on in Kimi K2 and GLM-5.x | §7.5, and [its own guide](DeepSeek%20V4.1%20Flash%20-%20Extreme%20KV%20Cache%20Compression.md) |
+| **DeepSeek MLA** | Biggest change of the set. DeepSeek-V3.2 (2025) added *sparse* attention on top of MLA; **DeepSeek-V4 (April 2026) replaced MLA altogether** with a compressed + sparse hybrid, and V4.1-Flash added a third compression dimension. MLA lives on in Kimi K2 and GLM-5.x | §7.5, and [its own guide](Theory/DeepSeek%20V4.1%20Flash%20-%20Extreme%20KV%20Cache%20Compression.md) |
 | **Why the harness matters** | Nearly everything the talk claimed is now published and checkable: Prime Agent open-sourced with a paper, OpenJarvis shipped from Stanford, and the ARC Prize leaderboard now reports **the same model under two harnesses** — a gap of up to 80 points | §6.6.1, §7 |
 | **BM25** | The talk's thesis was tested properly and held: tuned BM25 + a strong model reached **83.1%** on BrowseComp-Plus, beating dense-retriever agents. Includes the tuned parameter values | §5.3 |
 | **Attention** | FlashAttention-4 (2026); the learned-sparse-attention family that made 1M-token context affordable; current GQA/MLA adoption | §9 |
@@ -80,7 +80,7 @@ The AI guides age fastest. These are the substantive updates, each written up in
 Every guide is named after **what it teaches**, not after the video it came from. The video title is always in the guide's `Source:` line, and the untouched original note is in `_originals/` under the video's own name.
 
 ```
-*.md                     the thirteen study guides
+Theory/*.md              the thirteen study guides
 figures/<topic>/         PNGs + the make_figs.py script that generates them
 figures/_style.py        shared plotting style and drawing helpers
 code/                    runnable examples referenced by the guides

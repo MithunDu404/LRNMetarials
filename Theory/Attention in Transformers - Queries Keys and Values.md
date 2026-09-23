@@ -62,7 +62,7 @@ If you remember only one sentence from this guide: *attention is how words in a 
 
 ### 2.1 Same word, different meaning
 
-![Context changes meaning](figures/attention/01_context_changes_meaning.png)
+![Context changes meaning](../figures/attention/01_context_changes_meaning.png)
 
 *Left: the embedding table gives "mole" **one** vector, whatever the sentence. Attention computes a context-dependent $\Delta E$ that pushes it toward the right sense. Right: "tower" picks up meaning step by step. "Eiffel" pulls it toward Paris and steel, and "miniature" pulls it away from "large".*
 
@@ -88,7 +88,7 @@ Feed in a mystery novel that ends with *"Therefore the murderer was ___"*. The n
 
 Running example: **"a fluffy blue creature roamed the verdant forest"**. For intuition, pretend this head has one job: *adjectives update their nouns*. (Real heads learn whatever reduces the loss, and are usually much harder to interpret.)
 
-![Q K V pipeline](figures/attention/02_qkv_pipeline.png)
+![Q K V pipeline](../figures/attention/02_qkv_pipeline.png)
 
 *Every token goes through the same pipeline at the same time. The only learned parts are the matrices. The dot products, softmax and weighted sum are fixed arithmetic.*
 
@@ -108,7 +108,7 @@ $$\vec k_j = W_K \, \vec E_j$$
 
 ### 3.3 Match every query with every key → the attention pattern
 
-![Attention pattern computed step by step](figures/attention/03_attention_pattern.png)
+![Attention pattern computed step by step](../figures/attention/03_attention_pattern.png)
 
 *A real computation with a tiny hand-built head. ① Raw scores $q_i \cdot k_j / \sqrt{d_k}$ can be any number. ② The causal mask sets future positions to −∞. ③ A row-wise softmax turns each row into weights that sum to 1. The orange boxes show "creature" putting 62% of its attention on "blue" and 13% on "fluffy", and "forest" putting 52% on "verdant". The head found the adjective-noun pairs.*
 
@@ -134,7 +134,7 @@ $$\boxed{\text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{
 
 The original notes just said "for numerical stability". Here's what that actually means:
 
-![Why divide by sqrt d_k](figures/attention/04_why_sqrt_dk.png)
+![Why divide by sqrt d_k](../figures/attention/04_why_sqrt_dk.png)
 
 *Left: dot products of random vectors have a spread that grows like $\sqrt{d_k}$ (measured). Right: without scaling, larger $d_k$ makes softmax almost **one-hot** (entropy near 0): one token gets ~100% of the weight. A saturated softmax has near-zero gradients, so the head **stops learning**. Dividing by $\sqrt{d_k}$ keeps the spread at ~1 for any dimension.*
 
@@ -144,7 +144,7 @@ The original notes just said "for numerical stability". Here's what that actuall
 
 **How it works:** set future scores to **−∞ before softmax**. Since $e^{-\infty} = 0$, they get exactly zero weight **and** the row still sums to 1.
 
-![Masking trick](figures/attention/05_masking_trick.png)
+![Masking trick](../figures/attention/05_masking_trick.png)
 
 *Zeroing entries after softmax leaves rows that no longer sum to 1 (0.35 here). Setting −∞ before softmax fixes that automatically.*
 
@@ -188,7 +188,7 @@ A naive $W_V$ would map 12,288 → 12,288 dimensions, which is **151 million** n
 
 The combined map is still embedding-to-embedding, but it has **rank ≤ 128**. This is a *low-rank factorization*: the same idea as **LoRA**, the most popular way to fine-tune LLMs cheaply.
 
-![GPT-3 parameter breakdown](figures/attention/07_gpt3_param_breakdown.png)
+![GPT-3 parameter breakdown](../figures/attention/07_gpt3_param_breakdown.png)
 
 *The exact counts. Four 128 × 12,288 matrices = 6.29 M per head. × 96 heads = 604 M per block. × 96 layers = **58.0 B** for attention, about a third of GPT-3's 175 B. The MLP blocks hold about two thirds.*
 
@@ -208,7 +208,7 @@ One head learns one kind of relationship. Language has many:
 
 So each block runs **many heads in parallel** (96 in GPT-3). Each has its own $W_Q, W_K, W_V$, and their $\Delta E$s are added together.
 
-![Multi-head patterns](figures/attention/08_multihead_patterns.png)
+![Multi-head patterns](../figures/attention/08_multihead_patterns.png)
 
 *Four head types that interpretability research has really found in trained models (the patterns here are illustrative). **Previous-token heads** look one step back. **Attention sinks** park unused attention on the first token. **Induction heads** find the previous occurrence of the current token and look at what came next, which is a key mechanism behind in-context learning and copying. **Local heads** focus on nearby words.*
 
@@ -218,7 +218,7 @@ So each block runs **many heads in parallel** (96 in GPT-3). Each has its own $W
 
 ## 6. Self-attention vs cross-attention
 
-![Self vs cross attention](figures/attention/11_self_vs_cross.png)
+![Self vs cross attention](../figures/attention/11_self_vs_cross.png)
 
 | | Self-attention | Cross-attention |
 |---|---|---|
@@ -231,7 +231,7 @@ So each block runs **many heads in parallel** (96 in GPT-3). Each has its own $W
 
 ## 7. Attention inside the full transformer
 
-![Transformer block and residual stream](figures/attention/09_transformer_block.png)
+![Transformer block and residual stream](../figures/attention/09_transformer_block.png)
 
 *The **residual stream** is a running vector for each token. Each layer **reads** from it and **adds** to it. Attention moves information **between** tokens ("talking"). The MLP processes each token **on its own** ("thinking"), and research suggests it stores much of the model's factual knowledge. GPT-3 repeats this 96 times.*
 
@@ -241,7 +241,7 @@ Deeper layers build more abstract features: grammar → meaning → sentiment, t
 
 ## 8. Why attention won: parallelism
 
-![RNN vs attention](figures/attention/10_rnn_vs_attention.png)
+![RNN vs attention](../figures/attention/10_rnn_vs_attention.png)
 
 | | RNN / LSTM (pre-2017) | Transformer attention |
 |---|---|---|
@@ -258,7 +258,7 @@ The deep learning lesson of the last decade is that **scale wins**. An architect
 
 The attention pattern has **n × n** entries. Double the context and you quadruple that part of the work.
 
-![Quadratic cost of attention](figures/attention/06_quadratic_cost.png)
+![Quadratic cost of attention](../figures/attention/06_quadratic_cost.png)
 
 *Left: storing every attention matrix of a GPT-3-sized model in fp16. At 2K tokens that's already ~77 GB, and at 1M tokens it's tens of millions of GB. **FlashAttention** never stores the full matrix, which makes memory linear. Right: the share of per-token compute spent on the n×n part grows from ~1% at 2K context to most of the compute at 1M (rough estimate).*
 
@@ -310,7 +310,7 @@ The attention pattern has **n × n** entries. Double the context and you quadrup
 
 ## 12. Code: multi-head causal self-attention in NumPy (tested)
 
-Saved as [`code/attention_numpy.py`](code/attention_numpy.py).
+Saved as [`code/attention_numpy.py`](../code/attention_numpy.py).
 
 ```python
 import numpy as np

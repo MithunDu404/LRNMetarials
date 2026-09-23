@@ -53,7 +53,7 @@ The single most important finding, and the one that transfers to your job: **the
 9. **Node.js couldn't reach 1M req/s with a 30 KB payload; C++ (Drogon + RapidJSON) did**, using ~70% of CPU instead of 100%. Managed runtimes lose when the work is genuinely CPU-bound.
 10. **Real companies don't do this on one box.** 100 ordinary servers doing 10K req/s each is cheaper, faster for users, and survives failure. The single-machine stunt is how you learn where the walls are.
 
-![The journey](figures/million_rps/01_journey.png)
+![The journey](../figures/million_rps/01_journey.png)
 
 *Every milestone from the video, on a log scale. Note the two big jumps come from **changing the payload** and **changing the data store**, not from buying a bigger machine.*
 
@@ -68,7 +68,7 @@ The single most important finding, and the one that transfers to your job: **the
 | Micro-optimization is premature | 1 µs of extra CPU per request = **one whole core** |
 | Costs are a rounding error | A wrong instance choice is $20,000/month |
 
-![Rare events](figures/million_rps/10_rare_events.png)
+![Rare events](../figures/million_rps/10_rare_events.png)
 
 *Computed. At 1M req/s, a one-in-a-million event occurs **86,400 times a day**. That's why the final result (2 billion requests, **40** timeouts) is genuinely excellent: a 0.000002% failure rate.*
 
@@ -78,7 +78,7 @@ The single most important finding, and the one that transfers to your job: **the
 
 ## 3. Law 1 — the bandwidth wall
 
-![The bandwidth wall](figures/million_rps/02_bandwidth_wall.png)
+![The bandwidth wall](../figures/million_rps/02_bandwidth_wall.png)
 
 *Pure arithmetic: `requests/s × payload = bits/s`. The dotted red lines mark the payloads used in the video.*
 
@@ -98,13 +98,13 @@ The single most important finding, and the one that transfers to your job: **the
 
 ## 4. Law 2 — CPU time per request
 
-![CPU budget](figures/million_rps/04_cpu_budget.png)
+![CPU budget](../figures/million_rps/04_cpu_budget.png)
 
 *Computed: `cores × 1 second ÷ requests per second`. On 128 cores at 1M req/s you get **128 µs of CPU per request** — and building 30 KB of JSON can consume most of that.*
 
 ### 4.1 One thread = one core
 
-![Threads and cores](figures/million_rps/05_threads_and_cores.png)
+![Threads and cores](../figures/million_rps/05_threads_and_cores.png)
 
 $$\text{Core utilization} = \frac{\text{total time} - \text{idle time}}{\text{total time}} \times 100$$
 
@@ -136,7 +136,7 @@ On 192 cores with a 30 KB payload, **Node couldn't reach 1M req/s** even at full
 
 ## 5. Law 3 — concurrency (Little's Law)
 
-![Little's Law](figures/million_rps/03_littles_law.png)
+![Little's Law](../figures/million_rps/03_littles_law.png)
 
 $$\text{concurrency} = \text{throughput} \times \text{latency}$$
 
@@ -175,7 +175,7 @@ At 1M req/s with 5 ms latency you need **5,000 requests in flight**. If latency 
 
 ### 6.2 The algorithmic lesson, measured
 
-![Query complexity measured](figures/million_rps/06_query_complexity_measured.png)
+![Query complexity measured](../figures/million_rps/06_query_complexity_measured.png)
 
 *Measured on SQLite with the same three implementations the video used on Postgres.*
 
@@ -191,7 +191,7 @@ That's a **54,000× difference** from a query rewrite, on identical hardware. In
 
 ### 6.3 RAM instead of disk
 
-![Storage and buffering](figures/million_rps/07_storage_and_buffering.png)
+![Storage and buffering](../figures/million_rps/07_storage_and_buffering.png)
 
 *Left: RAM is ~1,000× lower latency than an SSD. Right: the pattern that actually wins — **write to memory now, batch to disk later**.*
 
@@ -203,7 +203,7 @@ The `code-fast` route writes to a Redis **queue**, and a separate `sync` worker 
 
 ### 6.4 Memory is a bucket you must keep draining
 
-![RAM burn-down](figures/million_rps/09_ram_burndown.png)
+![RAM burn-down](../figures/million_rps/09_ram_burndown.png)
 
 *Computed. At 1M writes/s of ~1.7 KB records (the video's 100 GB / 60M rows), **384 GB of RAM fills in about 4 minutes**. Sustained in-memory writes are only viable with continuous flushing and eviction.*
 
@@ -211,7 +211,7 @@ The `code-fast` route writes to a Redis **queue**, and a separate `sync` worker 
 
 Sequential IDs need a **shared counter** — a serialization point every writer must touch, plus an extra "is this ID used?" write. Random **UUIDv4** (122 random bits) removes both.
 
-![Birthday paradox](figures/million_rps/08_uuid_birthday.png)
+![Birthday paradox](../figures/million_rps/08_uuid_birthday.png)
 
 $$P(\text{collision}) \approx 1 - e^{-n^2 / 2N}, \qquad N = 2^{122}$$
 
@@ -239,7 +239,7 @@ $$P(\text{collision}) \approx 1 - e^{-n^2 / 2N}, \qquad N = 2^{122}$$
 
 **The conclusion the video draws:** past a certain volume, running your own servers beats per-request pricing — and **optimizing the code beats buying capacity**. The v1 → v3 query rewrite saved more than any instance upgrade.
 
-![One box vs distributed](figures/million_rps/11_one_box_vs_distributed.png)
+![One box vs distributed](../figures/million_rps/11_one_box_vs_distributed.png)
 
 *Why nobody actually does this on one machine: geography (a user 15,000 km away pays 200 ms no matter how fast your server is), failure domains, and elasticity. 100 ordinary servers at 10K req/s each cost less and serve everyone better.*
 
@@ -262,7 +262,7 @@ $$P(\text{collision}) \approx 1 - e^{-n^2 / 2N}, \qquad N = 2^{122}$$
 
 ## 9. Code: the arithmetic, runnable (tested)
 
-Full file: [`code/million_rps_math.py`](code/million_rps_math.py). **Actual output (abridged):**
+Full file: [`code/million_rps_math.py`](../code/million_rps_math.py). **Actual output (abridged):**
 
 ```
 1. BANDWIDTH

@@ -60,7 +60,7 @@ Plus two supporting pieces: **Engram**, 196 billion parameters of pure factual l
 9. **SWA Bounded Replay:** stop persisting short-window state to SSD; on a miss, replay just the last **128 tokens** instead of the exact 5,120 (L × win). Persistent cache drops to ~**1/8** of V4-Flash.
 10. Result: **890 bytes/token** of global cache, decode FLOPs nearly **flat from 4K to 1M context**, and agent-benchmark scores that match or beat Claude Opus-5 and GPT-5.6 Sol — with an honest, explicitly-stated gap remaining on the hardest science tasks.
 
-![Global KV cache across DeepSeek generations](figures/deepseek_v41/01_kv_cache_generations.png)
+![Global KV cache across DeepSeek generations](../figures/deepseek_v41/01_kv_cache_generations.png)
 
 *Seven years of the same obsession. V1 used ordinary multi-head attention and needed ~390 KB of cache per token. V2/V3 introduced MLA. V4-Flash added sequence-dimension compression and FP8. V4.1-Flash adds the layer dimension and FP4. The paper's stated 437× is end-to-end from V1.*
 
@@ -79,7 +79,7 @@ Both matter, but the paper's opening argument is that **agents shifted the balan
 
 ### 2.2 Where the notes physically live
 
-![The memory hierarchy](figures/deepseek_v41/02_memory_hierarchy.png)
+![The memory hierarchy](../figures/deepseek_v41/02_memory_hierarchy.png)
 
 *The global KV cache **must** stay in HBM, because it is read in full for every generated token. Anything that doesn't fit spills to host DRAM or SSD, and then the GPU spends its time waiting on a bus instead of computing. This is the entire motivation for the paper.*
 
@@ -99,7 +99,7 @@ The paper is precise about which cache goes where, and the distinction matters f
 
 This is the most transferable idea in the paper, and it's stated explicitly in §2.3. There are exactly three independent ways to make a KV cache smaller, and they **multiply**.
 
-![The three dimensions](figures/deepseek_v41/12_three_dimensions.png)
+![The three dimensions](../figures/deepseek_v41/12_three_dimensions.png)
 
 | Dimension | The question | Prior art | V4.1's move |
 |---|---|---|---|
@@ -117,7 +117,7 @@ The paper's claim to novelty is not any single one of these. It's that **no prio
 
 ### 4.1 The idea
 
-![Causal Encoder-Decoder flow](figures/deepseek_v41/13_ced_flow.png)
+![Causal Encoder-Decoder flow](../figures/deepseek_v41/13_ced_flow.png)
 
 A standard transformer is a uniform stack: all 40 layers read the prompt, all 40 build their own KV cache, all 40 participate in writing the answer. CED breaks that symmetry.
 
@@ -148,7 +148,7 @@ The analogy that actually holds: junior analysts read ten thousand pages and pro
 
 ### 4.3 What it costs and saves
 
-![Prefill cost with and without the split](figures/deepseek_v41/07_prefill_split.png)
+![Prefill cost with and without the split](../figures/deepseek_v41/07_prefill_split.png)
 
 *Computed from the published architecture. The decoder still has to build its sliding-window state, which naively means running it over the last `win × L/2` = 2,560 tokens. Bounded replay (§7) cuts that to the last 128, so decoder prefill work becomes a constant. Complexity drops from O(Ln) to O(Ln/2 + win·L/2) ≈ **O(Ln/2)** — almost exactly half.*
 
@@ -162,7 +162,7 @@ In an ordinary transformer every layer computes and stores its own KV cache. Dif
 
 Each CSA2 layer is **statically assigned** one of three modes — decided once at design time, not chosen at runtime:
 
-![The three CSA2 modes](figures/deepseek_v41/04_csa2_modes.png)
+![The three CSA2 modes](../figures/deepseek_v41/04_csa2_modes.png)
 
 | Mode | Main KV | Indexer K | Top-K indices | Intuition |
 |---|---|---|---|---|
@@ -176,7 +176,7 @@ In all three modes, every layer still computes its **own query** and its **own s
 
 ### 5.2 The actual assignment, rebuilt from the paper
 
-![The full 40-layer map](figures/deepseek_v41/03_layer_map.png)
+![The full 40-layer map](../figures/deepseek_v41/03_layer_map.png)
 
 *Rebuilt directly from the configuration in §4.2.1 of the paper. Encoder: 2 SWA-only layers, then 18 CSA2 layers (compression rate 2) in three groups of six, each `[Full, Reuse×5]`. Decoder: 20 CSA2 layers (rate 1) in five groups of four — the first `[Full, Reuse×3]`, the rest `[Reindex, Reuse×3]`.*
 
@@ -193,7 +193,7 @@ The consequence, which `code/deepseek_v41_kv.py` prints:
 
 **Four layers.** That is the whole global memory of a model with a million-token context.
 
-![What the layer dimension buys](figures/deepseek_v41/05_layer_dimension.png)
+![What the layer dimension buys](../figures/deepseek_v41/05_layer_dimension.png)
 
 *Left: main-KV entries stored per token, counting the encoder's 2× sequence compression. Cross-layer reuse alone is an 11.6× reduction. Right: what that means for one conversation — and why 890 bytes/token is the difference between a 1M-token context costing 0.9 GB and costing 10 GB.*
 
@@ -208,7 +208,7 @@ The fix exploits a simple observation: in the decoder, a shallow layer's judgeme
 3. Every later **Reindex** layer scores *only* those 16,384 positions and picks its own top-512 from them.
 4. **Reuse** layers score nothing at all.
 
-![Indexing cost with and without the hierarchy](figures/deepseek_v41/06_hierarchical_indexer.png)
+![Indexing cost with and without the hierarchy](../figures/deepseek_v41/06_hierarchical_indexer.png)
 
 *Computed from the published configuration. For a fixed pool size, the deeper indexers' cost becomes **constant in context length**. Note the residual term the video omits entirely: the first Full-mode layer still scans the whole range, which is precisely why decode cost is nearly — but not exactly — flat.*
 
@@ -245,7 +245,7 @@ The paper's diagnosis is sharper than "it's big": **the access pattern doesn't m
 
 Exact reconstruction is expensive because sliding-window dependencies **compound across layers**: layer 2's window depends on layer 1's, and so on, so rebuilding L layers exactly needs `L × win` = **5,120 tokens** replayed. Bounded replay instead replays only the most recent **`win` = 128 tokens** and truncates the window to the replay segment. For a replay starting at position *s*, a query at position *i* attends to keys in `[max(s, i − win + 1), i]`.
 
-![The replay trade-off](figures/deepseek_v41/08_swa_bounded_replay.png)
+![The replay trade-off](../figures/deepseek_v41/08_swa_bounded_replay.png)
 
 *Left, computed: 40× less recomputation, at the price of a state that is **not** mathematically identical to a full forward pass. Right: an explicitly-labelled toy model of why it's still worth it — moving bytes across a motherboard costs more than re-deriving them on a GPU.*
 
@@ -312,7 +312,7 @@ And the claim the video leads with, which the paper backs in Figure 2: **extendi
 
 ### 9.2 Benchmarks
 
-![Benchmark comparison](figures/deepseek_v41/09_benchmarks.png)
+![Benchmark comparison](../figures/deepseek_v41/09_benchmarks.png)
 
 *Plotted from Table 3 of the technical report. All at Max reasoning effort.*
 
@@ -341,7 +341,7 @@ The paper states this gap plainly rather than burying it: *"a gap with giant mod
 
 ### 9.3 Buying accuracy with tokens
 
-![Reasoning effort](figures/deepseek_v41/11_reasoning_effort.png)
+![Reasoning effort](../figures/deepseek_v41/11_reasoning_effort.png)
 
 The model exposes a **reasoning-effort** dial from 25 to 100 (the public API maps low/high/max to 50/75/100). Turning it from 25 to 100 buys roughly +9 points averaged over eight reasoning benchmarks, at about **2.5× the output tokens** — and the paper notes the gains are front-loaded, with effort 60–80 capturing most of the benefit. The final step to 100 lengthens agent trajectories by 1.6–1.8× for marginal gain.
 
@@ -373,7 +373,7 @@ The three-dimensions framework and the storage-vs-compute inversion aren't AI-sp
 
 Table 4 of the paper is a gift to anyone who read the [harness note](Agent%20Harnesses%20-%20Why%20the%20Scaffold%20Beats%20the%20Model.md): the same checkpoint, same decoding config, same tasks, run under **eight different agent scaffolds**, changing only the system prompt, tool schema and turn-taking logic.
 
-![Same model across eight harnesses](figures/deepseek_v41/10_agent_scaffolds.png)
+![Same model across eight harnesses](../figures/deepseek_v41/10_agent_scaffolds.png)
 
 *An **8.7-point** spread on DeepSWE v1.1 and **6.5 points** on Terminal-Bench, from the harness alone. The paper frames this as evidence of *robustness* — the model doesn't collapse outside its native scaffold, which it credits to training on diverse tool schemas and interaction formats.*
 
@@ -420,7 +420,7 @@ Two more points of emphasis rather than error:
 
 ## 13. Code: the arithmetic, runnable
 
-Full file: [`code/deepseek_v41_kv.py`](code/deepseek_v41_kv.py). Standard library only. It rebuilds the layer map from the published config and derives every budget from it.
+Full file: [`code/deepseek_v41_kv.py`](../code/deepseek_v41_kv.py). Standard library only. It rebuilds the layer map from the published config and derives every budget from it.
 
 ```python
 def layer_map():

@@ -76,7 +76,7 @@ The architectures changed a lot. The training principle didn't.
 
 ## 3. The problem: curve fitting
 
-![Curve fitting before and after gradient descent](figures/backprop/01_curve_fitting.png)
+![Curve fitting before and after gradient descent](../figures/backprop/01_curve_fitting.png)
 
 *Left: random coefficients give a bad curve. The orange lines are the gaps between the data and the curve, and the loss is the sum of their squares. Right: after gradient descent the loss dropped from 2.6 to 0.03. (Outside the data, at x > 0.7, the curve does whatever it likes. That's a preview of **overfitting**.)*
 
@@ -117,7 +117,7 @@ Picture a machine with **six knobs** and a display showing the loss.
 
 Freeze five knobs and leave only $k_1$ free. Now the loss is an ordinary curve $L(k_1)$. The catch is that **you can't see the whole curve**. You can only evaluate it at the point you're currently at. What you'd really like to know is: *is it going up or down right here?*
 
-![A derivative as the limit of secant slopes](figures/backprop/02_derivative_secant.png)
+![A derivative as the limit of secant slopes](../figures/backprop/02_derivative_secant.png)
 
 *Nudge the knob by $\Delta x$ and measure how much the loss changes, $\Delta y$. The ratio $\Delta y/\Delta x$ is the slope of a **secant** line (dashed). As $\Delta x$ shrinks (2.0 → 1.0 → 0.3), the secant slope (−0.60 → −1.20 → −1.62) approaches the slope of the **tangent** line (−1.80). That limit is the derivative.*
 
@@ -143,7 +143,7 @@ The derivative is itself a *function*: every point has its own steepness. (It do
 
 $\eta$ (eta, a Greek letter used the way you'd use a variable name) is the **learning rate**. It's the single most important setting in all of deep learning.
 
-![Effect of the learning rate](figures/backprop/03_gd_learning_rates.png)
+![Effect of the learning rate](../figures/backprop/03_gd_learning_rates.png)
 
 *The same algorithm with four settings. **Too small:** safe but painfully slow. **Good:** fast. **Too large:** every step overshoots the bottom by more than the last, and training **diverges** (in real life the loss becomes `NaN`). **Bumpy loss:** gradient descent only sees the local slope, so it settles into the nearest valley, which might not be the deepest one.*
 
@@ -159,7 +159,7 @@ $$\nabla L = \left(\frac{\partial L}{\partial k_0}, \frac{\partial L}{\partial k
 
 **The key fact:** the gradient points in the direction of **steepest ascent**. So $-\nabla L$ is steepest descent.
 
-![Loss surface with gradient field and descent path](figures/backprop/04_gradient_2d.png)
+![Loss surface with gradient field and descent path](../figures/backprop/04_gradient_2d.png)
 
 *Left: a real loss surface for fitting a line (knobs: offset and slope), seen from above like a contour map. The white arrows show $-\nabla L$ at many points, and they all point downhill, perpendicular to the contour lines. The red path is gradient descent. Right: the same steps drawn as lines. The loss drops from 40.8 to 0.20 in 40 steps.*
 
@@ -198,7 +198,7 @@ And rules for combining them:
 
 Feed $x$ into machine $j$, then feed its output into machine $f$. How does a nudge to $x$ affect the final output?
 
-![Chain rule with real numbers](figures/backprop/05_chain_rule.png)
+![Chain rule with real numbers](../figures/backprop/05_chain_rule.png)
 
 *Nudge $x$ by a tiny $\delta$. Machine 1 scales the nudge by its local slope ($j'(1.5) = 3$). That scaled nudge is the input to machine 2, which scales it again by **its** local slope evaluated at **its** input ($\cos 2.25 = -0.628$). Total effect: $3 \times (-0.628) = -1.8845$. The numerical check gives the same value.*
 
@@ -220,7 +220,7 @@ Break the loss calculation into atomic steps and draw them as a graph: each node
 
 Going **backward**, each node receives $\partial L/\partial(\text{its output})$ from the right and must pass $\partial L/\partial(\text{each input})$ to the left. It only needs its own inputs and that one incoming number. **Everything is local.**
 
-![Local gradient rules: add, multiply, branch](figures/backprop/06_node_rules.png)
+![Local gradient rules: add, multiply, branch](../figures/backprop/06_node_rules.png)
 
 | Node | Forward | Backward rule | Intuition |
 |---|---|---|---|
@@ -234,7 +234,7 @@ Rules for `x²`, `exp`, `tanh` and the others follow the same way from the table
 
 One data point $(x=2, y=3)$, a line $\hat y = k_0 + k_1 x$ with $k_0=1$ and $k_1=0.5$, and loss $L = (y-\hat y)^2$.
 
-![Worked computational graph with forward values and gradients](figures/backprop/07_worked_graph.png)
+![Worked computational graph with forward values and gradients](../figures/backprop/07_worked_graph.png)
 
 **Forward (blue):** $k_1 x = 1$, $\;\hat y = 2$, $\;y-\hat y = 1$, $\;L = 1$.
 
@@ -262,7 +262,7 @@ $$\text{forward (compute } L\text{)} \;\rightarrow\; \text{backward (compute } \
 
 Once the knobs move, the old gradients are **stale**, because they described a place you've left. So you recompute everything every step.
 
-![Training progress of the polynomial fit](figures/backprop/08_training_progress.png)
+![Training progress of the polynomial fit](../figures/backprop/08_training_progress.png)
 
 *The real run of the polynomial fit from §3. Left: the curve after 0, 30, 300, 3,000 and 40,000 steps. Right: the loss on log-log axes. Most of the improvement happens early. Near the bottom the valley is almost flat, the gradients are tiny, and progress crawls. That's why real training uses smarter optimizers such as momentum and Adam.*
 
@@ -278,7 +278,7 @@ $$\mathbf{z} = W\mathbf{h}_{\text{prev}} + \mathbf{b}, \qquad \mathbf{h} = \sigm
 
 which is multiplications and additions (matrix $W$), followed by a nonlinearity $\sigma$ (tanh, ReLU...).
 
-![A small neural network trained by backprop](figures/backprop/09_mlp_fit.png)
+![A small neural network trained by backprop](../figures/backprop/09_mlp_fit.png)
 
 *A network with two hidden layers of 32 units (1,121 parameters), trained with the exact backward pass described above, fitting a wiggly function. The polynomial couldn't do this. The network can, because stacked nonlinear layers can approximate essentially any function (the **universal approximation theorem**).*
 
@@ -304,7 +304,7 @@ Notice the backward pass reuses $W$ **and** the stored forward values $\mathbf{h
 
 Here's the naive alternative: to get $\partial L/\partial k_i$, nudge **each knob separately** and re-run the model. This is called **finite differences**. With $N$ parameters that's $N+1$ forward passes **per gradient**.
 
-![Cost of finite differences vs backprop](figures/backprop/10_cost_backprop_vs_finite_diff.png)
+![Cost of finite differences vs backprop](../figures/backprop/10_cost_backprop_vs_finite_diff.png)
 
 *Left: measured on real (tiny) networks. With 18,000 parameters, backprop is already about 6,500× faster, and the gap grows linearly. Right: the same comparison for real models. For GPT-2 (1.5 B parameters), finite differences would need 1.5 billion forward passes for **one** training step. Backprop needs the equivalent of about 3, whatever the model size.*
 
@@ -337,7 +337,7 @@ The backward pass needs the forward values ($\mathbf{h}$, $\mathbf{z}$) of **eve
 
 The chain rule **multiplies** local slopes. Multiply 20 numbers that are each ≤ 0.25 (the sigmoid's maximum slope) and the result is essentially zero.
 
-![Vanishing gradients by activation function](figures/backprop/11_vanishing_gradients.png)
+![Vanishing gradients by activation function](../figures/backprop/11_vanishing_gradients.png)
 
 *A real 20-layer network. With sigmoid, the gradient reaching layer 1 is about **10¹³× smaller** than at the top, so the early layers basically never learn. That's why deep networks were considered untrainable before about 2010. ReLU with proper initialization keeps the gradient size roughly constant.*
 
@@ -374,7 +374,7 @@ That `.zero_()` exists because of the **branch rule**: gradients *add up*, so if
 
 If you implement a custom operation, compare backprop against finite differences on a tiny example:
 
-![Gradient check](figures/backprop/12_gradient_check.png)
+![Gradient check](../figures/backprop/12_gradient_check.png)
 
 *Backprop gradients vs finite-difference gradients for all 26 parameters of a small network. They agree to about 1 part in a billion. A relative error above ~10⁻⁴ usually means a bug.*
 
@@ -419,7 +419,7 @@ So: if you learn this chapter properly, none of it expires.
 
 ## 12. Code: build your own autograd engine (60 lines, tested)
 
-Saved as [`code/backprop_micrograd.py`](code/backprop_micrograd.py). It's in the spirit of Andrej Karpathy's *micrograd*. Every rule from §6.2 is marked in the code.
+Saved as [`code/backprop_micrograd.py`](../code/backprop_micrograd.py). It's in the spirit of Andrej Karpathy's *micrograd*. Every rule from §6.2 is marked in the code.
 
 ```python
 import math, random

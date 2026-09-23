@@ -52,7 +52,7 @@ One piece of vocabulary before you start: an **energy** here is not physics ener
 
 ## 2. The core problem: credit assignment
 
-![Credit assignment](figures/predictive_coding/01_credit_assignment.png)
+![Credit assignment](../figures/predictive_coding/01_credit_assignment.png)
 
 Any system with adjustable parameters faces the same question: **given an error at the output, which of the millions of weights should change, and by how much?**
 
@@ -72,7 +72,7 @@ This works very well, so it's natural to ask whether the brain does the same thi
 
 ## 3. Why backpropagation doesn't fit the brain
 
-![Backprop vs predictive coding timeline](figures/predictive_coding/02_backprop_vs_pc_timeline.png)
+![Backprop vs predictive coding timeline](../figures/predictive_coding/02_backprop_vs_pc_timeline.png)
 
 ### 3.1 Discontinuous processing (the top panel above)
 
@@ -114,7 +114,7 @@ The brain does have global signals (theta and gamma rhythms, dopamine, attention
 
 ### 4.2 The hierarchy
 
-![Predictive coding hierarchy](figures/predictive_coding/03_pc_hierarchy.png)
+![Predictive coding hierarchy](../figures/predictive_coding/03_pc_hierarchy.png)
 
 - The **bottom layer** is sensory input (pixels) and is *clamped* to the world.
 - **Higher layers** hold more abstract causes. An abstraction is useful exactly *because* it predicts the layer below well.
@@ -136,7 +136,7 @@ Give every configuration of the network (all activities and weights) a single nu
 
 ### 5.2 The mechanical analogy: springs and posts
 
-![Springs and posts](figures/predictive_coding/04_springs_and_posts.png)
+![Springs and posts](../figures/predictive_coding/04_springs_and_posts.png)
 
 | Physical part | Meaning in the network |
 |---|---|
@@ -174,7 +174,7 @@ Two notational conventions that trip people up, and neither is deep:
 
 ## 6. Deriving the activity update rule
 
-![Energy landscape](figures/predictive_coding/05_energy_landscape.png)
+![Energy landscape](../figures/predictive_coding/05_energy_landscape.png)
 
 *The figure above is the real energy of the tiny network from §6.3, with one hidden activity $x$ and one weight $v$ both free. Each colored ball follows only the local rules derived below and rolls into a valley. Different starting points can reach different minima; energy landscapes don't have to be simple bowls.*
 
@@ -243,7 +243,7 @@ input   x0 = 2      (clamped, "the world")
 
 ### 6.4 Watching it happen in a bigger network
 
-![Relaxation dynamics](figures/predictive_coding/06_relaxation_dynamics.png)
+![Relaxation dynamics](../figures/predictive_coding/06_relaxation_dynamics.png)
 
 This is a real 49 → 12 → 3 network (details in §9). With the input and label clamped:
 
@@ -260,7 +260,7 @@ The subtraction $x_i - \mu_i$ can't happen "in the math". Some **physical cell**
 - **Representational neurons** $x$: their activity is the belief, and it's sent down as a prediction.
 - **Error neurons** $\varepsilon$: they compare the actual activity with the prediction. The model is named "predictive coding" because part of the neural code represents errors.
 
-![Error neuron circuit](figures/predictive_coding/07_error_neuron_circuit.png)
+![Error neuron circuit](../figures/predictive_coding/07_error_neuron_circuit.png)
 
 **Reading the wiring straight off the equations:**
 
@@ -306,7 +306,7 @@ $$\Delta(W - B) = -\lambda\,(W - B)$$
 - With **no weight decay** ($\lambda = 0$), the mismatch $W - B$ **never changes**. Both matrices grow in the same direction, so the *angle* between them shrinks, but the difference stays exactly the same.
 - With **weight decay** ($\lambda > 0$), the mismatch **decays exponentially to zero**. This is the Kolen–Pollack mechanism (1994).
 
-![Weight transport](figures/predictive_coding/09_weight_transport.png)
+![Weight transport](../figures/predictive_coding/09_weight_transport.png)
 
 The simulation confirms both cases exactly. **Red:** the angle drops (86° → 17°) but $\lVert W-B\rVert$ stays flat at 7.16. **Green:** with a little decay, the mismatch goes to 0.02 and the angle to 0.2°. In both cases the network still reaches 100% accuracy, because **approximate alignment is enough**. That matches research on feedback alignment (Lillicrap et al., 2016).
 
@@ -316,7 +316,7 @@ The simulation confirms both cases exactly. **Red:** the angle drops (86° → 1
 
 ## 9. Putting it all together: clamping and relaxation
 
-![Clamping modes](figures/predictive_coding/10_clamping_modes.png)
+![Clamping modes](../figures/predictive_coding/10_clamping_modes.png)
 
 **Why clamp anything?** If everything is free, the trivial answer is "all activities and weights equal 0", which gives $E = 0$ and no computation. Clamping forces the network to find a **non-trivial compromise**.
 
@@ -341,7 +341,7 @@ repeat T steps:                                   # relaxation
 
 ### 9.1 A real experiment
 
-![Training results](figures/predictive_coding/08_training_results.png)
+![Training results](../figures/predictive_coding/08_training_results.png)
 
 A linear PC network (49 pixels → 12 hidden → 3 labels) was trained **one example at a time with only the local rules above**, on noisy 7×7 images of a ring, a cross and a plus.
 
@@ -354,7 +354,7 @@ A linear PC network (49 pixels → 12 hidden → 3 labels) was trained **one exa
 
 ## 10. Minimal code you can run
 
-This is a complete predictive coding network in about 30 lines of NumPy. The full script that made every figure in this guide is [`figures/predictive_coding/make_figs.py`](figures/predictive_coding/make_figs.py) (run it with `python figures/predictive_coding/make_figs.py figures/predictive_coding`).
+This is a complete predictive coding network in about 30 lines of NumPy. The full script that made every figure in this guide is [`figures/predictive_coding/make_figs.py`](../figures/predictive_coding/make_figs.py) (run it with `python figures/predictive_coding/make_figs.py figures/predictive_coding`).
 
 ```python
 import numpy as np

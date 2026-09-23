@@ -55,7 +55,7 @@ The guide is really about the three parts of that vending machine, and each has 
 
 ## 2. The interview process (and what it was testing)
 
-![Interview loop](figures/platform_engineering/01_interview_loop.png)
+![Interview loop](../figures/platform_engineering/01_interview_loop.png)
 
 | Stage | What happened | Skill really tested |
 |---|---|---|
@@ -98,13 +98,13 @@ The abstraction is the point: a developer asks for *"a SQL-compatible database"*
 
 ### 3.2 The async architecture
 
-![OSB async architecture](figures/platform_engineering/02_osb_async_architecture.png)
+![OSB async architecture](../figures/platform_engineering/02_osb_async_architecture.png)
 
 *The API never does slow work itself. It records the job, drops a message on **SQS**, and returns **202 Accepted** at once. A **worker** does the slow provisioning (DNS records, CloudFront distributions, AWS API calls) and writes the result to **DynamoDB**. The client **polls** until the state is `succeeded` or `failed`.*
 
 ### 3.3 Why async matters (simulated)
 
-![Sync vs async](figures/platform_engineering/03_sync_vs_async.png)
+![Sync vs async](../figures/platform_engineering/03_sync_vs_async.png)
 
 *Simulation: 60 provisioning jobs of about 20 s each, 12 workers. In a synchronous design the HTTP call stays open until the work finishes, and **60%** of calls would exceed a typical 30 s client or load-balancer timeout. The client then retries, which adds even more load. In the async design every HTTP call returns in milliseconds, and the work finishes just as fast.*
 
@@ -123,7 +123,7 @@ The abstraction is the point: a developer asks for *"a SQL-compatible database"*
 
 ### 4.2 Control plane vs data plane
 
-![Control plane Sovereign](figures/platform_engineering/04_control_plane_sovereign.png)
+![Control plane Sovereign](../figures/platform_engineering/04_control_plane_sovereign.png)
 
 | | Control plane | Data plane |
 |---|---|---|
@@ -150,7 +150,7 @@ The abstraction is the point: a developer asks for *"a SQL-compatible database"*
 
 ## 5. Project 3: provisioning the proxy fleet (infrastructure as code)
 
-![Provisioning pipeline](figures/platform_engineering/05_provisioning_pipeline.png)
+![Provisioning pipeline](../figures/platform_engineering/05_provisioning_pipeline.png)
 
 | Tool | Role | Alternatives |
 |---|---|---|
@@ -187,13 +187,13 @@ So much of the team's effort went into **templating + validation**: developers s
 
 ### 7.2 "Valid but traffic-destroying" configs: limit the blast radius
 
-![Canary config rollout](figures/platform_engineering/08_config_canary_rollout.png)
+![Canary config rollout](../figures/platform_engineering/08_config_canary_rollout.png)
 
 *Simulation. A config passes schema validation but fails 35% of requests. Pushed to all proxies at once, it's a global outage. Rolled out in stages (1% → 5% → 25% → 100%) with automatic health checks and rollback, the problem is caught on the 1% canary and peak impact is ~0.5%. This is how large platforms ship config: Google SRE practices, AWS's staged deployments, and Cloudflare's gradual rollouts after its 2019 WAF-regex outage.*
 
 ### 7.3 One proxy layer, many concerns
 
-![Edge with centralized concerns](figures/platform_engineering/06_edge_centralized_concerns.png)
+![Edge with centralized concerns](../figures/platform_engineering/06_edge_centralized_concerns.png)
 
 | Concern | Implementation |
 |---|---|
@@ -207,13 +207,13 @@ Sidecars are separate processes on the same host that Envoy calls locally (Envoy
 
 ### 7.4 The rate limiter, simulated
 
-![Token bucket](figures/platform_engineering/07_token_bucket.png)
+![Token bucket](../figures/platform_engineering/07_token_bucket.png)
 
 *The token-bucket algorithm used by most rate limiters (including Envoy's local rate limit). Tokens refill at 5/s up to a burst of 10. Each request spends one. Short bursts are absorbed, and sustained floods get `429 Too Many Requests`, protecting every backend behind the proxy.*
 
 ### 7.5 Why centralize? The economics
 
-![Centralization economics](figures/platform_engineering/09_centralization_economics.png)
+![Centralization economics](../figures/platform_engineering/09_centralization_economics.png)
 
 *An illustrative model with **assumed** costs. If every service team builds and maintains five concerns itself, cost grows with the number of services. A platform team building them once has a fixed cost plus small onboarding, and wins after about 10 services. The bigger win is **consistency**: security becomes the default, not whatever each team remembered.*
 
@@ -295,7 +295,7 @@ A useful frame for mentoring is the **zone of proximal development**: give help 
 
 ## 11. Code: three platform patterns (tested)
 
-Full file: [`code/platform_patterns.py`](code/platform_patterns.py). Excerpt, validating rendered proxy config:
+Full file: [`code/platform_patterns.py`](../code/platform_patterns.py). Excerpt, validating rendered proxy config:
 
 ```python
 def render_route(context):

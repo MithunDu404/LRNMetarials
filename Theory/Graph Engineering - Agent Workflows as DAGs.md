@@ -75,7 +75,7 @@ Engineers have been running work as **dependency graphs** for decades:
 
 ## 3. Lesson 1: jobs, arrows, state
 
-![Vocabulary](figures/graph_engineering/01_vocabulary.png)
+![Vocabulary](../figures/graph_engineering/01_vocabulary.png)
 
 | Word | Definition | Test |
 |---|---|---|
@@ -91,7 +91,7 @@ Engineers have been running work as **dependency graphs** for decades:
 
 Find every hidden **"and then"** in your system and ask: *does the next job actually need the previous job's result?*
 
-![Fake arrows Gantt](figures/graph_engineering/02_fake_arrows_gantt.png)
+![Fake arrows Gantt](../figures/graph_engineering/02_fake_arrows_gantt.png)
 
 *The same six jobs scheduled two ways (computed from the dependencies). As a straight line: **18 min**. After removing fake arrows ("check calendar" never needed the summary, and "look up CRM record" never needed the draft), independent jobs overlap: **13 min**. Only the real chain summarize → draft → personalize → send sets the finish time.*
 
@@ -101,7 +101,7 @@ Find every hidden **"and then"** in your system and ask: *does the next job actu
 
 ## 4. Lesson 2: the diamond
 
-![The diamond pattern](figures/graph_engineering/03_diamond.png)
+![The diamond pattern](../figures/graph_engineering/03_diamond.png)
 
 **Four moves: split, work, check, merge.** Narrow at the top (one plan), wide in the middle (parallel lanes), narrow at the bottom (one checked answer).
 
@@ -125,13 +125,13 @@ Anthropic's engineering post *"How we built our multi-agent research system"* (J
 
 ### 4.2 The price of the diamond
 
-![Token cost](figures/graph_engineering/09_token_cost.png)
+![Token cost](../figures/graph_engineering/09_token_cost.png)
 
 *Anthropic's numbers: agents use ~4× the tokens of a chat, and multi-agent systems ~15×. The diamond buys speed and breadth **with money**. It pays off for high-value, parallelizable tasks, not for "rename this variable".*
 
 ### 4.3 Parallelism has limits (Amdahl's law)
 
-![Parallel latency Monte Carlo](figures/graph_engineering/04_parallel_latency.png)
+![Parallel latency Monte Carlo](../figures/graph_engineering/04_parallel_latency.png)
 
 *Monte-Carlo simulation (20,000 runs). Left: running lanes in sequence grows linearly. In parallel, total time ≈ lead + **the slowest** lane + check + merge. Right: 10 lanes give only ~3.7× speed-up, not 10×. The fixed lead/check/merge time and the long tail of slow lanes cap the gain. This is **Amdahl's law**, the same limit that applies to CPUs and distributed systems.*
 
@@ -141,7 +141,7 @@ Anthropic's engineering post *"How we built our multi-agent research system"* (J
 
 **The research:** Huang et al. (Google DeepMind, ICLR 2024), *"Large Language Models Cannot Self-Correct Reasoning Yet"*. When models were asked to review and fix their own answers **with no external feedback**, accuracy didn't improve, and it often **got worse**, because they changed correct answers into wrong ones.
 
-![Checker toy model](figures/graph_engineering/05_checker_toy_model.png)
+![Checker toy model](../figures/graph_engineering/05_checker_toy_model.png)
 
 *A toy model to build intuition (the catch rates are illustrative assumptions, not measurements). A 20-claim report where each claim is wrong 15% of the time is almost never fully correct. A checker that shares the writer's blind spots barely helps. An independent skeptic helps, and a skeptic with **external evidence** (search results, running the code, checking sources) helps most.*
 
@@ -160,7 +160,7 @@ Anthropic's engineering post *"How we built our multi-agent research system"* (J
 
 A **loop** repeats until something stops it. Forget the stop condition and it keeps calling the model and spending money, often getting slightly **worse** each round.
 
-![Stop rules](figures/graph_engineering/06_stop_rules.png)
+![Stop rules](../figures/graph_engineering/06_stop_rules.png)
 
 *A toy model of an "improve the answer" loop. Quality climbs quickly, then flattens. Cost rises in a straight line forever. Each stop rule cuts the bill at a different point: the **cap** stops early and safely, the **bar** stops when the answer is good enough, the **budget** stops at a spending limit. With no rule, the bill keeps growing overnight while quality stays flat.*
 
@@ -180,7 +180,7 @@ A **loop** repeats until something stops it. Forget the stop condition and it ke
 
 A deliberate pause: **pause → review → resume** (approve, or send it back with a note like "too aggressive, soften it").
 
-![Human gate placement](figures/graph_engineering/07_human_gate.png)
+![Human gate placement](../figures/graph_engineering/07_human_gate.png)
 
 *Gate only the steps you can't undo. Reversible steps (research, drafting, editing) run at full speed. The gate goes right before "send 500 emails".*
 
@@ -203,7 +203,7 @@ A deliberate pause: **pause → review → resume** (approve, or send it back wi
 
 ## 7. Three complete builds
 
-![Three builds](figures/graph_engineering/08_three_builds.png)
+![Three builds](../figures/graph_engineering/08_three_builds.png)
 
 ### 7.1 Deep research desk
 
@@ -284,7 +284,7 @@ What does *not* change either way: the stop rules (§5), the human gates (§6), 
 
 ## 10. Code: a tiny graph runner (tested)
 
-Full file: [`code/graph_runner.py`](code/graph_runner.py). It runs jobs as soon as their arrows are satisfied, shares a `state` dict, uses an independent skeptic loop with **cap + bar**, stops everything with a **budget**, and pauses at a **human gate**.
+Full file: [`code/graph_runner.py`](../code/graph_runner.py). It runs jobs as soon as their arrows are satisfied, shares a `state` dict, uses an independent skeptic loop with **cap + bar**, stops everything with a **budget**, and pauses at a **human gate**.
 
 ```python
 async def run(self, state, parallel=True):
