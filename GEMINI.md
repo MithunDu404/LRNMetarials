@@ -23,6 +23,7 @@ When the user asks to **be quizzed, tested, or examined** on a topic or file (e.
 - Apply the **quiz** skill (`.agent/skills/quiz/SKILL.md`).
 - **Continuous by default:** Never stop at 5 questions or set an arbitrary limit. Keep generating questions one at a time indefinitely until the user explicitly says to stop.
 - Deliver questions **one at a time** using the interactive `ask_question` tool.
+- **Answer Shuffling:** The correct answer must **NEVER default to Option 1**. Randomly distribute the correct answer across slots (Option 1, 2, 3, etc.), with "I don't know" always at the very bottom.
 - Provide instant feedback (✓/✗/I don't know), correct answer, and diagnostic explanations.
 - Never dump multiple questions in static chat text.
 

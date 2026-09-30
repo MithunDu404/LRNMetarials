@@ -122,7 +122,7 @@
 
 **Direct Solution & Prescribed Format:**
 
-| Stage / Particulars | Detailed Components (Imaginary Items) | Inner Amount ($₹$) | Outer Amount ($₹$) |
+| Stage / Particulars | Detailed Components (Imaginary Items) | Inner Amount (₹) | Outer Amount (₹) |
 |:---|:---|---:|---:|
 | **Stage 1: Raw Materials Consumed** | Opening Stock of Raw Materials | $50,000$ | |
 | | *Add:* Purchase of Raw Materials | $1,20,000$ | |
@@ -369,7 +369,7 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **2. Tabular Calculation of Present Values:**
 
-| Year ($t$) | PV Factor ($11\%$) | Equipment A Cash Inflow ($₹$) | Equipment A PV ($₹$) | Equipment B Cash Inflow ($₹$) | Equipment B PV ($₹$) |
+| Year ($t$) | PV Factor ($11\%$) | Equipment A Cash Inflow (₹) | Equipment A PV (₹) | Equipment B Cash Inflow (₹) | Equipment B PV (₹) |
 |:---:|:---:|---:|---:|---:|---:|
 | 1 | $0.9009$ | $20,000$ | $18,018.02$ | $14,000$ | $12,612.61$ |
 | 2 | $0.8116$ | $18,000$ | $14,609.20$ | $18,000$ | $14,609.20$ |
@@ -378,11 +378,11 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 | 5 | $0.5935$ | $23,000$ | $13,649.38$ | $11,000$ | $6,527.96$ |
 | **Gross PV of Inflows** | | | $\mathbf{78,831.09}$ | | $\mathbf{51,087.58}$ |
 | *Less:* Initial Outlay ($I_0$) | | | $(75,000.00)$ | | $(50,000.00)$ |
-| **NET PRESENT VALUE (NPV)** | | | $\mathbf{+₹3,831.09}$ | | $\mathbf{+₹1,087.58}$ |
+| **NET PRESENT VALUE (NPV)** | | | **+ \text{Rs. } 3,831.09** | | **+ \text{Rs. } 1,087.58** |
 
 **3. Managerial Comment on Acceptability:**
-- **Independent Project Criteria:** Both Equipment A ($\text{NPV} = +₹3,831.09 > 0$) and Equipment B ($\text{NPV} = +₹1,087.58 > 0$) generate returns exceeding the $11\%$ required cost of capital. Both are financially acceptable on an individual basis.
-- **Mutually Exclusive Selection:** If the firm can install only one machine, **Equipment A is recommended** because it yields a significantly higher Net Present Value ($\mathbf{₹3,831.09 > ₹1,087.58}$), creating more absolute wealth for shareholders.
+- **Independent Project Criteria:** Both Equipment A ($\text{NPV} = + \text{Rs. } 3,831.09 > 0$) and Equipment B ($\text{NPV} = + \text{Rs. } 1,087.58 > 0$) generate returns exceeding the $11\%$ required cost of capital. Both are financially acceptable on an individual basis.
+- **Mutually Exclusive Selection:** If the firm can install only one machine, **Equipment A is recommended** because it yields a significantly higher Net Present Value (**₹3,831.09 > ₹1,087.58**), creating more absolute wealth for shareholders.
 
 ---
 
@@ -506,7 +506,7 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 2. **Computational Table:**
 
-| Particulars | Inner Amount ($₹$) | Outer Amount ($₹$) |
+| Particulars | Inner Amount (₹) | Outer Amount (₹) |
 |:---|---:|---:|
 | Opening Stock of Raw Materials | $1,25,000$ | |
 | *Add:* Purchase of Raw Materials | $1,70,000$ | |
@@ -514,12 +514,12 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 | *Subtotal* | $2,95,500$ | |
 | *Less:* Raw Materials returned to suppliers | $(32,000)$ | |
 | *Less:* Closing Stock of Raw Materials | $(10,800)$ | |
-| **RAW MATERIAL CONSUMED** | | $\mathbf{₹2,52,700}$ |
+| **RAW MATERIAL CONSUMED** | | **₹2,52,700** |
 
 3. **Explicit List of Excluded Items (Belonging to Later Stages):**
-   - *Direct Charges / Prime Cost:* Productive Wages ($₹10,000$), Direct Chargeable Expenses ($₹2,800$).
-   - *Factory Overheads:* Repairs to Plant ($₹9,600$), Workshop Rent ($₹42,500$), Non-productive Wages ($₹22,000$), Fuel/Gas/Water ($₹21,000$), Depreciation on Machinery ($₹41,400$).
-   - *Administrative Overheads:* Office Expenses ($₹41,500$), Office Salaries ($₹45,000$).
+   - *Direct Charges / Prime Cost:* Productive Wages (₹10,000), Direct Chargeable Expenses (₹2,800).
+   - *Factory Overheads:* Repairs to Plant (₹9,600), Workshop Rent (₹42,500), Non-productive Wages (₹22,000), Fuel/Gas/Water (₹21,000), Depreciation on Machinery (₹41,400).
+   - *Administrative Overheads:* Office Expenses (₹41,500), Office Salaries (₹45,000).
 
 ---
 
@@ -677,7 +677,7 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **Direct Solution:**
 
-| Item | Classification & Rationale | Amount ($₹$) |
+| Item | Classification & Rationale | Amount (₹) |
 |:---|:---|---:|
 | Clerk's Salary | Office administrative staff salary | $1,80,000$ |
 | Postage | Administrative communication expense | $5,000$ |
@@ -687,15 +687,15 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 | Audit Fees | Statutory compliance and auditing | $1,60,000$ |
 | Office Rent | Facility charge for executive office | $1,50,000$ |
 | Depreciation of Photo Copier | Office appliance wear-and-tear | $50,000$ |
-| Electricity (50% for Office) | Total $₹1,00,000 - 50\%$ Factory ($₹50,000$) | $50,000$ |
+| Electricity (50% for Office) | Total ₹1,00,000 $-$ 50% Factory (₹50,000) | $50,000$ |
 | Telephone Charges | Administrative telecommunication | $70,000$ |
-| **TOTAL ADMINISTRATIVE OVERHEADS** | | $\mathbf{₹10,45,000}$ |
+| **TOTAL ADMINISTRATIVE OVERHEADS** | | **₹10,45,000** |
 
 *Excluded Items & Respective Stages:*
-- *Prime Cost:* Direct Materials ($₹10,00,000$), Direct Wages ($₹8,00,000$), Direct Expenses ($₹2,00,000$).
-- *Factory Overheads:* Indirect Wages ($₹50,000$), Factory Electricity ($₹50,000$).
-- *Selling & Distribution Overheads:* Packing Charges ($₹50,000$), Advertisements ($₹1,00,000$).
-- *Revenue:* Sales ($₹90,00,000$).
+- *Prime Cost:* Direct Materials (₹10,00,000), Direct Wages (₹8,00,000), Direct Expenses (₹2,00,000).
+- *Factory Overheads:* Indirect Wages (₹50,000), Factory Electricity (₹50,000).
+- *Selling & Distribution Overheads:* Packing Charges (₹50,000), Advertisements (₹1,00,000).
+- *Revenue:* Sales (₹90,00,000).
 
 ---
 
@@ -797,7 +797,7 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **Direct Solution:**
 
-| Year ($t$) | Discount Factor ($10\%$) | Machine A EAT ($₹$) | Machine A PV ($₹$) | Machine B EAT ($₹$) | Machine B PV ($₹$) |
+| Year ($t$) | Discount Factor ($10\%$) | Machine A EAT (₹) | Machine A PV (₹) | Machine B EAT (₹) | Machine B PV (₹) |
 |:---:|:---:|---:|---:|---:|---:|
 | 1 | $0.9091$ | $24,000$ | $21,818.18$ | $8,000$ | $7,272.73$ |
 | 2 | $0.8264$ | $32,000$ | $26,446.28$ | $24,000$ | $19,834.71$ |
@@ -806,10 +806,10 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 | 5 | $0.6209$ | $16,000$ | $9,934.74$ | $32,000$ | $19,869.48$ |
 | **Gross PV of Inflows** | | | $\mathbf{1,04,644.12}$ | | $\mathbf{1,03,803.64}$ |
 | *Less:* Initial Outlay | | | $(80,000.00)$ | | $(80,000.00)$ |
-| **NET PRESENT VALUE (NPV)** | | | $\mathbf{+₹24,644.12}$ | | $\mathbf{+₹23,803.64}$ |
+| **NET PRESENT VALUE (NPV)** | | | **+ \text{Rs. } 24,644.12** | | **+ \text{Rs. } 23,803.64** |
 
 **Decision Recommendation:**  
-Both machines have substantial positive NPVs ($> 0$). Under mutually exclusive choice, **Machine A is selected** because its NPV ($₹24,644.12$) exceeds Machine B ($₹23,803.64$).
+Both machines have substantial positive NPVs ($> 0$). Under mutually exclusive choice, **Machine A is selected** because its NPV (₹24,644.12) exceeds Machine B (₹23,803.64).
 
 ---
 
@@ -860,7 +860,7 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
      $$\frac{dY}{dT} = -\frac{b}{1 - b}$$
    - Comparing magnitudes:
      $$\left|\frac{-b}{1 - b}\right| = \frac{1}{1 - b} - 1 < \frac{1}{1 - b}$$
-   - A $₹100\text{ crore}$ tax hike contracts national income by less than a $₹100\text{ crore}$ spending cut would.
+   - A ₹100 crore tax hike contracts national income by less than a ₹100 crore spending cut would.
 
 ---
 
@@ -916,21 +916,21 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 
 2. **Part B: Numerical Calculation of Works Overheads Only [6M]:**
 
-| Item | Classification & Rationale | Amount ($₹$) |
+| Item | Classification & Rationale | Amount (₹) |
 |:---|:---|---:|
 | Indirect Materials | Factory consumable materials | $60,000$ |
 | Indirect Wages | Factory maintenance / helper wages | $1,00,000$ |
 | Rent: Factory | Workshop rental | $75,000$ |
-| Lighting (50% for Factory) | $50\% \text{ of } ₹88,000$ | $44,000$ |
+| Lighting (50% for Factory) | 50% of ₹88,000 | $44,000$ |
 | Power | Motive power for plant machinery | $60,000$ |
 | Depreciation of Plant | Machine capital wear-and-tear | $1,15,500$ |
 | Salary of Works Manager | Factory production head salary | $95,000$ |
 | Lubricant | Factory machine consumable | $10,000$ |
 | Factory Guards Salary | Factory physical security | $30,000$ |
 | Insurance of Plant | Production asset risk coverage | $25,000$ |
-| **TOTAL WORKS OVERHEADS** | | $\mathbf{₹6,14,500}$ |
+| **TOTAL WORKS OVERHEADS** | | **₹6,14,500** |
 
-*Exclusions:* Direct Materials ($₹10\text{L}$), Direct Wages ($₹2\text{L}$) [Prime Cost]; Advertisement ($₹50\text{k}$) [Selling OH]; Rent Office ($₹1.15\text{L}$), Salary Admin Staff ($₹80\text{k}$), Office Lighting ($₹44\text{k}$) [Admin OH].
+*Exclusions:* Direct Materials (₹10 L), Direct Wages (₹2 L) [Prime Cost]; Advertisement (₹50 k) [Selling OH]; Rent Office (₹1.15 L), Salary Admin Staff (₹80 k), Office Lighting (₹44 k) [Admin OH].
 
 ---
 
@@ -1066,7 +1066,7 @@ Henri Fayol pioneered modern administrative management by conceptualizing manage
 > *Explain how fractional reserve banking creates money supply in an economy. [3]*
 
 **Direct Solution:**
-Under fractional-reserve banking, commercial banks are mandated by the central bank to hold only a fraction of public deposits in reserve ($\text{CRR}$). When a customer deposits $₹10,000$ and $\text{CRR} = 10\%$, the bank reserves $₹1,000$ and lends out $₹9,000$. The borrower spends this loan, which is redeposited into the banking system, allowing another bank to lend $90\%$ of that deposit ($₹8,100$). Through this successive lending multiplier ($m = \frac{1}{\text{CRR}} = 10$), an initial cash deposit of $₹10,000$ creates up to $₹1,00,000$ of total money supply in the economy.
+Under fractional-reserve banking, commercial banks are mandated by the central bank to hold only a fraction of public deposits in reserve ($\text{CRR}$). When a customer deposits ₹10,000 and $\text{CRR} = 10\%$, the bank reserves ₹1,000 and lends out ₹9,000. The borrower spends this loan, which is redeposited into the banking system, allowing another bank to lend $90\%$ of that deposit (₹8,100). Through this successive lending multiplier ($m = \frac{1}{\text{CRR}} = 10$), an initial cash deposit of ₹10,000 creates up to ₹1,00,000 of total money supply in the economy.
 
 ---
 
@@ -1135,7 +1135,7 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 1. **(a) Traceability Classification [2M]:** Direct costs (traceable to cost unit) vs. Indirect costs (shared overheads).
 2. **(b) Tabular Calculation of Selling & Distribution Overheads [8M]:**
 
-| Item | Classification & Rationale | Amount ($₹$) |
+| Item | Classification & Rationale | Amount (₹) |
 |:---|:---|---:|
 | Advertisement | Brand promotion and marketing | $1,80,000$ |
 | Salesmen's Salaries & Commissions | Field salesforce remuneration | $1,00,000$ |
@@ -1143,9 +1143,9 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 | Carriage Outwards | Freight paid on customer deliveries | $67,000$ |
 | Showroom Rent | Retail showroom premises rent | $70,000$ |
 | Showroom Lighting | Retail showroom illumination | $58,000$ |
-| **TOTAL SELLING & DISTRIBUTION OVERHEADS** | | $\mathbf{₹5,31,000}$ |
+| **TOTAL SELLING & DISTRIBUTION OVERHEADS** | | **₹5,31,000** |
 
-*Exclusions:* Power & Fuel ($₹10\text{k}$), Stores Manager Salary ($₹80\text{k}$) [Factory OH]; Meeting Expenses ($₹54\text{k}$), Office Rent ($₹95\text{k}$) [Admin OH]; Debtors ($₹1.34\text{L}$), Creditors ($₹32\text{k}$) [Balance Sheet]; Sales ($₹5.32\text{L}$) [Revenue].
+*Exclusions:* Power & Fuel (₹10 k), Stores Manager Salary (₹80 k) [Factory OH]; Meeting Expenses (₹54 k), Office Rent (₹95 k) [Admin OH]; Debtors (₹1.34 L), Creditors (₹32 k) [Balance Sheet]; Sales (₹5.32 L) [Revenue].
 
 ---
 
@@ -1189,8 +1189,8 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > | Oranges | ₹12 | 150 kg | ₹8 |
 
 **Direct Solution:**
-- **Nominal GDP 2023:** $(20 \times 100) + (12 \times 150) = 2,000 + 1,800 = \mathbf{₹3,800}$.
-- **Real GDP 2023 (at 2020 Base Prices):** $(5 \times 100) + (8 \times 150) = 500 + 1,200 = \mathbf{₹1,700}$.
+- **Nominal GDP 2023:** $(20 \times 100) + (12 \times 150) = 2,000 + 1,800 = \mathbf{\text{Rs. } 3,800}$.
+- **Real GDP 2023 (at 2020 Base Prices):** $(5 \times 100) + (8 \times 150) = 500 + 1,200 = \mathbf{\text{Rs. } 1,700}$.
 - **GDP Deflator:**
   $$\text{GDP Deflator} = \frac{\text{Nominal GDP}}{\text{Real GDP}} \times 100 = \frac{3,800}{1,700} \times 100 = \mathbf{223.53\%}$$
 
@@ -1217,13 +1217,13 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 
 **Direct Solution:**
 1. **Gross Domestic Product at Market Price ($\text{GDP}_{\text{MP}}$):**
-   $$\text{GDP}_{\text{MP}} = C + I + G + (X - M) = 300 + 80 + 200 + (250 - 550) = 580 - 300 = \mathbf{₹280}$$
+   $$\text{GDP}_{\text{MP}} = C + I + G + (X - M) = 300 + 80 + 200 + (250 - 550) = 580 - 300 = \mathbf{\text{Rs. } 280}$$
 2. **Net Factor Income from Abroad (NFIA):**
-   $$\text{NFIA} = \text{Income from abroad} (500) - \text{Payments to abroad} (100) = \mathbf{+₹400}$$
+   $$\text{NFIA} = \text{Income from abroad} (500) - \text{Payments to abroad} (100) = \mathbf{+ \text{Rs. } 400}$$
 3. **Gross National Product at Market Price ($\text{GNP}_{\text{MP}}$):**
-   $$\text{GNP}_{\text{MP}} = \text{GDP}_{\text{MP}} + \text{NFIA} = 280 + 400 = \mathbf{₹680}$$
+   $$\text{GNP}_{\text{MP}} = \text{GDP}_{\text{MP}} + \text{NFIA} = 280 + 400 = \mathbf{\text{Rs. } 680}$$
 4. **Gross National Product at Factor Cost ($\text{GNP}_{\text{FC}}$):**
-   $$\text{GNP}_{\text{FC}} = \text{GNP}_{\text{MP}} - \text{Net Indirect Taxes} = 680 - 100 = \mathbf{₹580}$$
+   $$\text{GNP}_{\text{FC}} = \text{GNP}_{\text{MP}} - \text{Net Indirect Taxes} = 680 - 100 = \mathbf{\text{Rs. } 580}$$
 
 ---
 
@@ -1303,7 +1303,7 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 
 **Direct Solution:**
 
-| Year ($t$) | PV Factor ($10\%$) | Project A Inflow ($₹$) | Project A PV ($₹$) | Project B Inflow ($₹$) | Project B PV ($₹$) |
+| Year ($t$) | PV Factor ($10\%$) | Project A Inflow (₹) | Project A PV (₹) | Project B Inflow (₹) | Project B PV (₹) |
 |:---:|:---:|---:|---:|---:|---:|
 | 1 | $0.909$ | $50,000$ | $45,450$ | $35,000$ | $31,815$ |
 | 2 | $0.826$ | $56,000$ | $46,256$ | $66,000$ | $54,516$ |
@@ -1312,10 +1312,10 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 | 5 | $0.621$ | $\text{Nil}$ | $0$ | $23,000$ | $14,283$ |
 | **Gross PV of Inflows** | | | $\mathbf{1,86,693}$ | | $\mathbf{1,95,122}$ |
 | *Less:* Initial Outlay | | | $(2,00,000)$ | | $(50,000)$ |
-| **NET PRESENT VALUE (NPV)** | | | $\mathbf{-₹13,307}$ | | $\mathbf{+₹1,45,122}$ |
+| **NET PRESENT VALUE (NPV)** | | | **- \text{Rs. } 13,307** | | **+ \text{Rs. } 1,45,122** |
 
 **Recommendation:**  
-**Project A is rejected** because its $\text{NPV} < 0$, which would erode ₹13,307 of shareholder capital. **Project B is strongly recommended** because it yields an enormous positive $\text{NPV} = +₹1,45,122$.
+**Project A is rejected** because its $\text{NPV} < 0$, which would erode ₹13,307 of shareholder capital. **Project B is strongly recommended** because it yields an enormous positive $\text{NPV} = + \text{Rs. } 1,45,122$.
 
 ---
 
@@ -1410,7 +1410,7 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 
 2. **Evaluation of Project A vs. Project B (Outlay: Rs 1,00,000 each; Rate: 10%) [6M]:**
 
-| Year ($t$) | PV Factor ($10\%$) | Project A Inflows ($₹$) | Project A PV ($₹$) | Project B Inflows ($₹$) | Project B PV ($₹$) |
+| Year ($t$) | PV Factor ($10\%$) | Project A Inflows (₹) | Project A PV (₹) | Project B Inflows (₹) | Project B PV (₹) |
 |:---:|:---:|---:|---:|---:|---:|
 | 1 | $0.909$ | $10,000$ | $9,090$ | $18,000$ | $16,362$ |
 | 2 | $0.826$ | $25,000$ | $20,650$ | $27,000$ | $22,302$ |
@@ -1419,11 +1419,11 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 | 5 | $0.621$ | $10,000$ | $6,210$ | $2,000$ | $1,242$ |
 | **Gross PV of Inflows** | | | $\mathbf{94,336}$ | | $\mathbf{1,00,409}$ |
 | *Less:* Initial Outlay | | | $(1,00,000)$ | | $(1,00,000)$ |
-| **NET PRESENT VALUE (NPV)** | | | $\mathbf{-₹5,664}$ | | $\mathbf{+₹409}$ |
+| **NET PRESENT VALUE (NPV)** | | | **- \text{Rs. } 5,664** | | **+ \text{Rs. } 409** |
 
 **3. Opinion & Acceptability:**  
-- **Project A must be Rejected:** Its $\text{NPV} = -₹5,664 < 0$, which would destroy firm value.
-- **Project B is Acceptable:** Its $\text{NPV} = +₹409 > 0$, covering the required $10\%$ cost of capital with a modest surplus.
+- **Project A must be Rejected:** Its $\text{NPV} = - \text{Rs. } 5,664 < 0$, which would destroy firm value.
+- **Project B is Acceptable:** Its $\text{NPV} = + \text{Rs. } 409 > 0$, covering the required $10\%$ cost of capital with a modest surplus.
 
 ---
 

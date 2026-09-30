@@ -249,7 +249,7 @@ Producing assembly language as an intermediate target instead of absolute binary
 In the lexical analysis phase, the stream of source characters is transformed into structured tokens through a formal 3-way distinction:
 
 1. **Token:** An abstract syntactic category treated as an indivisible terminal symbol by the parser. Formally represented as a tuple:
-   $$\langle \text{token\_name}, \text{attribute\_value} \rangle$$
+   $$\langle \text{tokenName}, \text{attributeValue} \rangle$$
 2. **Pattern:** The formal descriptive rule (typically specified using a Regular Expression) that a sequence of characters must satisfy to belong to a given token class.
 3. **Lexeme:** The concrete, contiguous sequence of source code characters in the input buffer matched by the pattern and extracted as an instance of that token.
 
@@ -273,19 +273,19 @@ In the lexical analysis phase, the stream of source characters is transformed in
 
 ##### 1. Regular Expressions for C Language Primitives
 - **C Identifiers:** Must begin with an alphabetic letter or underscore, followed by zero or more alphanumeric characters or underscores:
-  $$\text{letter\_} \to [a\text{-}zA\text{-}Z\_]$$
+  $$\text{nondigit} \to [a\text{-}zA\text{-}Z] \mid \_$$
   $$\text{digit} \to [0\text{-}9]$$
-  $$\mathbf{ID} = \text{letter\_} \, (\text{letter\_} \mid \text{digit})^*$$
+  $$\mathbf{ID} = \text{nondigit} \, (\text{nondigit} \mid \text{digit})^*$$
 - **C Integer Constants:** Unsigned decimal, octal, or hexadecimal constants:
-  $$\text{dec\_const} \to [1\text{-}9][0\text{-}9]^* \mid 0$$
-  $$\text{oct\_const} \to 0[0\text{-}7]+$$
-  $$\text{hex\_const} \to 0[xX][0\text{-}9a\text{-}fA\text{-}F]+$$
-  $$\mathbf{INT\_CONST} = \text{dec\_const} \mid \text{oct\_const} \mid \text{hex\_const}$$
+  $$\text{decConst} \to [1\text{-}9][0\text{-}9]^* \mid 0$$
+  $$\text{octConst} \to 0[0\text{-}7]+$$
+  $$\text{hexConst} \to 0[xX][0\text{-}9a\text{-}fA\text{-}F]+$$
+  $$\mathbf{INT\_CONST} = \text{decConst} \mid \text{octConst} \mid \text{hexConst}$$
 - **C Floating-Point Constants:** Supports fraction and optional exponent:
   $$\text{digits} \to [0\text{-}9]+$$
-  $$\text{optional\_fraction} \to (\cdot \, \text{digits}) \mid \epsilon$$
-  $$\text{optional\_exponent} \to ([eE][+\text{-}]? \, \text{digits}) \mid \epsilon$$
-  $$\mathbf{FLOAT\_CONST} = \text{digits} \cdot \text{digits} \, \text{optional\_exponent} \mid \text{digits} \, [eE][+\text{-}]? \, \text{digits}$$
+  $$\text{optionalFraction} \to (\cdot \, \text{digits}) \mid \epsilon$$
+  $$\text{optionalExponent} \to ([eE][+\text{-}]? \, \text{digits}) \mid \epsilon$$
+  $$\mathbf{FLOAT\_CONST} = \text{digits} \cdot \text{digits} \, \text{optionalExponent} \mid \text{digits} \, [eE][+\text{-}]? \, \text{digits}$$
 
 ##### 2. How Finite Automata Recognize Tokens in Lexical Analysis
 The lexical analyzer compiles the combined regular expressions of all language tokens into a single Deterministic Finite Automaton (DFA) using Thompson's construction followed by subset construction. 
@@ -514,18 +514,18 @@ $$M[A', a] = \{A' \to a A', \; A' \to ab A'\}$$
 Because $M[A', a]$ has a multiple-definition collision, **the grammar is NOT LL(1)**.
 
 ##### 4. Parsing Trace for String $dcab$
-Attempting predictive parsing on input $w = dcab\$$ illustrates the non-deterministic conflict:
+Attempting predictive parsing on input `w = dcab$` illustrates the non-deterministic conflict:
 
 | Step | Stack | Remaining Input | Action Taken / Production Applied |
 | :---: | :--- | :--- | :--- |
-| 1 | $\$ A$ | $dcab \$$ | Expand $A \to Bc A'$ (via $M[A, d]$) |
-| 2 | $\$ A' c B$ | $dcab \$$ | Expand $B \to d B'$ (via $M[B, d]$) |
-| 3 | $\$ A' c B' d$ | $dcab \$$ | Match terminal $d$ |
-| 4 | $\$ A' c B'$ | $cab \$$ | Expand $B' \to \epsilon$ (via $c \in \text{FOLLOW}(B')$) |
-| 5 | $\$ A' c$ | $cab \$$ | Match terminal $c$ |
-| 6 | $\$ A'$ | $ab \$$ | **CONFLICT AT $M[A', a]$:** Cannot deterministically choose between $A' \to a A'$ and $A' \to ab A'$. |
+| 1 | `$ A` | `dcab \ $` | Expand $A \to Bc A'$ (via $M[A, d]$) |
+| 2 | `$ A' c B` | `dcab \ $` | Expand $B \to d B'$ (via $M[B, d]$) |
+| 3 | `$ A' c B' d` | `dcab \ $` | Match terminal $d$ |
+| 4 | `$ A' c B'` | `cab \ $` | Expand $B' \to \epsilon$ (via $c \in \text{FOLLOW}(B')$) |
+| 5 | `$ A' c` | `cab \ $` | Match terminal $c$ |
+| 6 | `$ A'` | `ab \ $` | **CONFLICT AT $M[A', a]$:** Cannot deterministically choose between $A' \to a A'$ and $A' \to ab A'$. |
 
-*(If $A' \to ab A'$ is selected: stack becomes $\$ A' b a$, matches $a$, then $b$, and finally expands $A' \to \epsilon$ on $\$$, successfully parsing the string).*
+*(If $A' \to ab A'$ is selected: stack becomes `$ A' b a`, matches $a$, then $b$, and finally expands $A' \to \epsilon$ on `$` , successfully parsing the string).*
 
 ---
 
@@ -951,7 +951,7 @@ $$\text{FOLLOW}(D) = \{\$, d, e, f, g\}$$
 
 ##### Predictive Parsing Table $M[X, Y]$
 
-| Non-Terminal | $a$ | $d$ | $e$ | $f$ | $g$ | $\$$ |
+| Non-Terminal | $a$ | $d$ | $e$ | $f$ | $g$ | `$` |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **$S$** | $S \to ABD$ | $S \to ABD$ | $S \to ABD$ | $S \to ABD$ | $S \to ABD$ | *error* |
 | **$A$** | $A \to a$ | $A \to \epsilon$ | **$A \to DB$**<br>**$A \to \epsilon$** | **$A \to DB$**<br>**$A \to \epsilon$** | $A \to \epsilon$ | *error* |
@@ -967,22 +967,22 @@ Derivation: $S \Rightarrow ABD \Rightarrow aBD \Rightarrow a\epsilon D \Rightarr
 
 | Step | Stack | Input | Action |
 | :---: | :--- | :--- | :--- |
-| 1 | $\$ S$ | $a e \$$ | $S \to ABD$ |
-| 2 | $\$ D B A$ | $a e \$$ | $A \to a$ |
-| 3 | $\$ D B a$ | $a e \$$ | Match terminal $a$ |
-| 4 | $\$ D B$ | $e \$$ | $B \to \epsilon$ (unambiguous entry on $e$) |
-| 5 | $\$ D$ | $e \$$ | $D \to e$ |
-| 6 | $\$ e$ | $e \$$ | Match terminal $e$ |
-| 7 | $\$$ | $\$$ | **ACCEPT (String Valid)** |
+| 1 | `$ S` | `a e \ $` | $S \to ABD$ |
+| 2 | `$ D B A` | `a e \ $` | $A \to a$ |
+| 3 | `$ D B a` | `a e \ $` | Match terminal $a$ |
+| 4 | `$ D B` | `e \ $` | $B \to \epsilon$ (unambiguous entry on $e$) |
+| 5 | `$ D` | `e \ $` | $D \to e$ |
+| 6 | `$ e` | `e \ $` | Match terminal $e$ |
+| 7 | `| 7 |  | `| 7 | `\ $` |  | **ACCEPT (String Valid)** |
 
 ##### 2. Invalid String Simulation: $w_2 = a a$
 
 | Step | Stack | Input | Action |
 | :---: | :--- | :--- | :--- |
-| 1 | $\$ S$ | $a a \$$ | $S \to ABD$ |
-| 2 | $\$ D B A$ | $a a \$$ | $A \to a$ |
-| 3 | $\$ D B a$ | $a a \$$ | Match terminal $a$ |
-| 4 | $\$ D B$ | $a \$$ | **ERROR:** $M[B, a]$ is blank (no production exists). Parser halts and rejects string. |
+| 1 | `$ S` | `a a \ $` | $S \to ABD$ |
+| 2 | `$ D B A` | `a a \ $` | $A \to a$ |
+| 3 | `$ D B a` | `a a \ $` | Match terminal $a$ |
+| 4 | `$ D B` | `a \ $` | **ERROR:** $M[B, a]$ is blank (no production exists). Parser halts and rejects string. |
 
 ---
 
@@ -1031,49 +1031,49 @@ The Shift-Reduce parser consists of:
 ##### 1. Augmented Grammar
 $$
 \begin{aligned}
-(0) &\; S' \to S, \; \$ \\
-(1) &\; S \to CC, \; \$ \\
-(2) &\; C \to cC, \; c/d/\$ \\
-(3) &\; C \to d, \; c/d/\$ \\
-(4) &\; C \to \epsilon, \; c/d/\$
+(0) &\; S' \to S, \; \text{\$} \\
+(1) &\; S \to CC, \; \text{\$} \\
+(2) &\; C \to cC, \; c/d/\text{\$} \\
+(3) &\; C \to d, \; c/d/\text{\$} \\
+(4) &\; C \to \epsilon, \; c/d/\text{\$}
 \end{aligned}
 $$
 
 ##### 2. Canonical Collection of $LR(1)$ Items
-- **State $I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \$]\})$:**
+- **State $I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \text{\$}]\})$:**
   $$
   \begin{aligned}
-  S' &\to \cdot S, \; \$ \\
-  S &\to \cdot CC, \; \$ \\
-  C &\to \cdot cC, \; c/d/\$ \quad (\text{since } \text{FIRST}(C\$) = \{c, d, \$\}) \\
-  C &\to \cdot d, \; c/d/\$ \\
-  C &\to \cdot, \; c/d/\$
+  S' &\to \cdot S, \; \text{\$} \\
+  S &\to \cdot CC, \; \text{\$} \\
+  C &\to \cdot cC, \; c/d/\text{\$} \quad (\text{since } \text{FIRST}(C\text{\$}) = \{c, d, \$\}) \\
+  C &\to \cdot d, \; c/d/\text{\$} \\
+  C &\to \cdot, \; c/d/\text{\$}
   \end{aligned}
   $$
 - **Transitions from $I_0$:**
-  - $\text{GOTO}(I_0, S) = I_1 = \{[S' \to S \cdot, \$]\} \implies \text{ACCEPT on } \$$
-  - $\text{GOTO}(I_0, C) = I_2 = \text{CLOSURE}(\{[S \to C \cdot C, \$]\}) = \{[S \to C \cdot C, \$], [C \to \cdot cC, \$], [C \to \cdot d, \$], [C \to \cdot, \$]\}$
-  - $\text{GOTO}(I_0, c) = I_3 = \text{CLOSURE}(\{[C \to c \cdot C, c/d/\$]\}) = \{[C \to c \cdot C, c/d/\$], [C \to \cdot cC, c/d/\$], [C \to \cdot d, c/d/\$], [C \to \cdot, c/d/\$]\}$
-  - $\text{GOTO}(I_0, d) = I_4 = \{[C \to d \cdot, c/d/\$]\}$
+  - $\text{GOTO}(I_0, S) = I_1 = \{[S' \to S \cdot, \text{\$}]\} \implies$ ACCEPT on `$`
+  - $\text{GOTO}(I_0, C) = I_2 = \text{CLOSURE}(\{[S \to C \cdot C, \text{\$}]\}) = \{[S \to C \cdot C, \text{\$}], [C \to \cdot cC, \text{\$}], [C \to \cdot d, \text{\$}], [C \to \cdot, \text{\$}]\}$
+  - $\text{GOTO}(I_0, c) = I_3 = \text{CLOSURE}(\{[C \to c \cdot C, c/d/\text{\$}]\}) = \{[C \to c \cdot C, c/d/\text{\$}], [C \to \cdot cC, c/d/\text{\$}], [C \to \cdot d, c/d/\text{\$}], [C \to \cdot, c/d/\text{\$}]\}$
+  - $\text{GOTO}(I_0, d) = I_4 = \{[C \to d \cdot, c/d/\text{\$}]\}$
 
 - **State $I_2$ Transitions:**
-  - $\text{GOTO}(I_2, C) = I_5 = \{[S \to CC \cdot, \$]\}$
-  - $\text{GOTO}(I_2, c) = I_6 = \text{CLOSURE}(\{[C \to c \cdot C, \$]\}) = \{[C \to c \cdot C, \$], [C \to \cdot cC, \$], [C \to \cdot d, \$], [C \to \cdot, \$]\}$
-  - $\text{GOTO}(I_2, d) = I_7 = \{[C \to d \cdot, \$]\}$
+  - $\text{GOTO}(I_2, C) = I_5 = \{[S \to CC \cdot, \text{\$}]\}$
+  - $\text{GOTO}(I_2, c) = I_6 = \text{CLOSURE}(\{[C \to c \cdot C, \text{\$}]\}) = \{[C \to c \cdot C, \text{\$}], [C \to \cdot cC, \text{\$}], [C \to \cdot d, \text{\$}], [C \to \cdot, \text{\$}]\}$
+  - $\text{GOTO}(I_2, d) = I_7 = \{[C \to d \cdot, \text{\$}]\}$
 
 - **State $I_3$ Transitions:**
-  - $\text{GOTO}(I_3, C) = I_8 = \{[C \to cC \cdot, c/d/\$]\}$
+  - $\text{GOTO}(I_3, C) = I_8 = \{[C \to cC \cdot, c/d/\text{\$}]\}$
   - $\text{GOTO}(I_3, c) = I_3$ (loop)
   - $\text{GOTO}(I_3, d) = I_4$
 
 - **State $I_6$ Transitions:**
-  - $\text{GOTO}(I_6, C) = I_9 = \{[C \to cC \cdot, \$]\}$
+  - $\text{GOTO}(I_6, C) = I_9 = \{[C \to cC \cdot, \text{\$}]\}$
   - $\text{GOTO}(I_6, c) = I_6$ (loop)
   - $\text{GOTO}(I_6, d) = I_7$
 
 ##### 3. The Complete CLR(1) Parsing Table
 
-| State | ACTION: $c$ | ACTION: $d$ | ACTION: $\$$ | GOTO: $S$ | GOTO: $C$ |
+| State | ACTION: $c$ | ACTION: $d$ | ACTION: `$` | GOTO: $S$ | GOTO: $C$ |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | **0** | $s_3$ / $r_4$ | $s_4$ / $r_4$ | $r_4$ | 1 | 2 |
 | **1** | | | **acc** | | |
@@ -1168,18 +1168,18 @@ Computes the resultant data type and flags operator-operand mismatches:
 - **Identifier Lookup:**
   $$E \to id \quad \implies \quad E.type = \text{lookup}(id.entry)$$
 - **Constant Literals:**
-  $$E \to \text{int\_const} \quad \implies \quad E.type = \mathbf{integer}$$
-  $$E \to \text{float\_const} \quad \implies \quad E.type = \mathbf{real}$$
+  $$E \to \text{intConst} \quad \implies \quad E.type = \mathbf{integer}$$
+  $$E \to \text{floatConst} \quad \implies \quad E.type = \mathbf{real}$$
 - **Binary Arithmetic Operations ($+$):**
   $$E \to E_1 + E_2 \quad \implies \quad E.type = \begin{cases} 
   \mathbf{integer} & \text{if } E_1.type = \mathbf{integer} \land E_2.type = \mathbf{integer} \\
   \mathbf{real} & \text{if } E_1.type = \mathbf{real} \land E_2.type = \mathbf{real} \\
-  \mathbf{type\_error} & \text{otherwise}
+  \mathbf{typeError} & \text{otherwise}
   \end{cases}$$
 - **Relational Expressions ($<$):**
   $$E \to E_1 < E_2 \quad \implies \quad E.type = \begin{cases}
   \mathbf{boolean} & \text{if } E_1.type = E_2.type \land E_1.type \in \{\mathbf{integer}, \mathbf{real}\} \\
-  \mathbf{type\_error} & \text{otherwise}
+  \mathbf{typeError} & \text{otherwise}
   \end{cases}$$
 
 #### 2. Type Checking of Statements
@@ -1187,17 +1187,17 @@ Statements do not return values; they verify control conditions and assignment c
 - **Assignment Statement:**
   $$S \to id = E; \quad \implies \quad S.type = \begin{cases}
   \mathbf{void} & \text{if } \text{lookup}(id.entry) = E.type \\
-  \mathbf{type\_error} & \text{otherwise}
+  \mathbf{typeError} & \text{otherwise}
   \end{cases}$$
 - **Conditional Statement (`if-then`):**
   $$S \to \text{if } (E) \; S_1 \quad \implies \quad S.type = \begin{cases}
   \mathbf{void} & \text{if } E.type = \mathbf{boolean} \land S_1.type = \mathbf{void} \\
-  \mathbf{type\_error} & \text{otherwise}
+  \mathbf{typeError} & \text{otherwise}
   \end{cases}$$
 - **Sequence of Statements:**
   $$S \to S_1 ; S_2 \quad \implies \quad S.type = \begin{cases}
   \mathbf{void} & \text{if } S_1.type = \mathbf{void} \land S_2.type = \mathbf{void} \\
-  \mathbf{type\_error} & \text{otherwise}
+  \mathbf{typeError} & \text{otherwise}
   \end{cases}$$
 
 #### 3. Type Checking of Functions & Applications
@@ -1207,7 +1207,7 @@ Uses function type constructor arrow ($\to$):
 - **Function Application (Call):**
   $$E \to E_1(E_2) \quad \implies \quad E.type = \begin{cases}
   t & \text{if } E_1.type = (s \to t) \land E_2.type = s \\
-  \mathbf{type\_error} & \text{otherwise}
+  \mathbf{typeError} & \text{otherwise}
   \end{cases}$$
 
 ---
@@ -1240,7 +1240,7 @@ Uses function type constructor arrow ($\to$):
 ![Language Processing Pipeline](images/fig01_language_processing_pipeline.png)
 
 ##### 1. Primary Functions of a Lexical Analyzer (Scanner)
-1. **Token Generation:** Reads source characters linearly, matches lexemes via regular expression patterns, and outputs structured token tuples $\langle \text{token\_name}, \text{attribute} \rangle$ to the parser.
+1. **Token Generation:** Reads source characters linearly, matches lexemes via regular expression patterns, and outputs structured token tuples $\langle \text{tokenName}, \text{attribute} \rangle$ to the parser.
 2. **Whitespace and Comment Stripping:** Filters out spaces, tabs, newlines, and block/line comments so downstream phases process clean syntax.
 3. **Symbol Table Interfacing:** Identifies identifier literals, inserts new symbols, and populates initial attributes.
 4. **Source Coordinate Tracking:** Tracks current line numbers and column offsets to provide accurate compiler error diagnostics.
@@ -1390,7 +1390,7 @@ $$
 
 ##### LL(1) Parsing Table $M[X, Y]$
 
-| Non-Terminal | $a$ | $b$ | $+$ | $*$ | $\$$ |
+| Non-Terminal | $a$ | $b$ | $+$ | $*$ | `$` |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | **$E$** | $E \to T E'$ | $E \to T E'$ | | | |
 | **$E'$** | | | $E' \to + T E'$ | | $E' \to \epsilon$ |
@@ -1399,32 +1399,32 @@ $$
 | **$F$** | $F \to a F'$ | $F \to b F'$ | | | |
 | **$F'$** | $F' \to \epsilon$ | $F' \to \epsilon$ | $F' \to \epsilon$ | $F' \to * F'$ | $F' \to \epsilon$ |
 
-##### 4. Parsing Trace for Input $a + a + a \$$
+##### 4. Parsing Trace for Input `a + a + a $`
 
 | Step | Stack | Remaining Input | Action / Production Applied |
 | :---: | :--- | :--- | :--- |
-| 1 | $\$ E$ | $a + a + a \$$ | $E \to T E'$ |
-| 2 | $\$ E' T$ | $a + a + a \$$ | $T \to F T'$ |
-| 3 | $\$ E' T' F$ | $a + a + a \$$ | $F \to a F'$ |
-| 4 | $\$ E' T' F' a$ | $a + a + a \$$ | Match terminal $a$ |
-| 5 | $\$ E' T' F'$ | $+ a + a \$$ | $F' \to \epsilon$ (on lookahead $+$) |
-| 6 | $\$ E' T'$ | $+ a + a \$$ | $T' \to \epsilon$ (on lookahead $+$) |
-| 7 | $\$ E'$ | $+ a + a \$$ | $E' \to + T E'$ |
-| 8 | $\$ E' T +$ | $+ a + a \$$ | Match terminal $+$ |
-| 9 | $\$ E' T$ | $a + a \$$ | $T \to F T'$ |
-| 10 | $\$ E' T' F$ | $a + a \$$ | $F \to a F'$ |
-| 11 | $\$ E' T' F' a$ | $a + a \$$ | Match terminal $a$ |
-| 12 | $\$ E' T' F'$ | $+ a \$$ | $F' \to \epsilon$ |
-| 13 | $\$ E' T'$ | $+ a \$$ | $T' \to \epsilon$ |
-| 14 | $\$ E'$ | $+ a \$$ | $E' \to + T E'$ |
-| 15 | $\$ E' T +$ | $+ a \$$ | Match terminal $+$ |
-| 16 | $\$ E' T$ | $a \$$ | $T \to F T'$ |
-| 17 | $\$ E' T' F$ | $a \$$ | $F \to a F'$ |
-| 18 | $\$ E' T' F' a$ | $a \$$ | Match terminal $a$ |
-| 19 | $\$ E' T' F'$ | $\$$ | $F' \to \epsilon$ |
-| 20 | $\$ E' T'$ | $\$$ | $T' \to \epsilon$ |
-| 21 | $\$ E'$ | $\$$ | $E' \to \epsilon$ |
-| 22 | $\$$ | $\$$ | **ACCEPT (Successfully Parsed)** |
+| 1 | `$ E` | `a + a + a \ $` | $E \to T E'$ |
+| 2 | `$ E' T` | `a + a + a \ $` | $T \to F T'$ |
+| 3 | `$ E' T' F` | `a + a + a \ $` | $F \to a F'$ |
+| 4 | `$ E' T' F' a` | `a + a + a \ $` | Match terminal $a$ |
+| 5 | `$ E' T' F'` | `+ a + a \ $` | $F' \to \epsilon$ (on lookahead $+$) |
+| 6 | `$ E' T'` | `+ a + a \ $` | $T' \to \epsilon$ (on lookahead $+$) |
+| 7 | `$ E'` | `+ a + a \ $` | $E' \to + T E'$ |
+| 8 | `$ E' T +` | `+ a + a \ $` | Match terminal $+$ |
+| 9 | `$ E' T` | `a + a \ $` | $T \to F T'$ |
+| 10 | `$ E' T' F` | `a + a \ $` | $F \to a F'$ |
+| 11 | `$ E' T' F' a` | `a + a \ $` | Match terminal $a$ |
+| 12 | `$ E' T' F'` | `+ a \ $` | $F' \to \epsilon$ |
+| 13 | `$ E' T'` | `+ a \ $` | $T' \to \epsilon$ |
+| 14 | `$ E'` | `+ a \ $` | $E' \to + T E'$ |
+| 15 | `$ E' T +` | `+ a \ $` | Match terminal $+$ |
+| 16 | `$ E' T` | `a \ $` | $T \to F T'$ |
+| 17 | `$ E' T' F` | `a \ $` | $F \to a F'$ |
+| 18 | `$ E' T' F' a` | `a \ $` | Match terminal $a$ |
+| 19 | `$ E' T' F'` | `| 19 | `$ E' T' F'` |  | $F' \to \epsilon$ |
+| 20 | `$ E' T'` | `| 20 | `$ E' T'` |  | $T' \to \epsilon$ |
+| 21 | `$ E'` | `| 21 | `$ E'` |  | $E' \to \epsilon$ |
+| 22 | `| 22 |  | `| 22 | `\ $` |  | **ACCEPT (Successfully Parsed)** |
 
 ---
 
@@ -1461,9 +1461,9 @@ A **Lookahead LR (LALR(1))** parser is formed by taking the canonical collection
 Augmented grammar:
 $$S' \to S, \; \$ \quad (0)$$
 $$S \to CC, \; \$ \quad (1)$$
-$$C \to cC, \; c/d/\$ \quad (2)$$
-$$C \to c, \; c/d/\$ \quad (3)$$
-$$C \to d, \; c/d/\$ \quad (4)$$
+$$C \to cC, \; c/d/\text{\$} \quad (2)$$
+$$C \to c, \; c/d/\text{\$} \quad (3)$$
+$$C \to d, \; c/d/\text{\$} \quad (4)$$
 
 The canonical LR(1) collection produces pairs of states that share the same item core:
 - State with core $\{C \to c \cdot C, C \to c \cdot, C \to \cdot cC, C \to \cdot c, C \to \cdot d\}$ has lookahead $\{c, d\}$ in one branch and $\{\$\}$ in another.
@@ -1474,7 +1474,7 @@ The canonical LR(1) collection produces pairs of states that share the same item
 
 ##### LALR(1) Parsing Table
 
-| State | $c$ | $d$ | $\$$ | $S$ | $C$ |
+| State | $c$ | $d$ | `$` | $S$ | $C$ |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | **0** | $s_{36}$ | $s_{47}$ | | 1 | 2 |
 | **1** | | | **acc** | | |
@@ -1638,32 +1638,32 @@ Lexical analysis is the initial phase of a compiler that converts an incoming st
 
 *(FIRST and FOLLOW tables and LL(1) proof are identical to [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion--ll1-parsing-2--6--8-marks)).*
 
-##### Complete Parsing Trace for $a + b + a \$$
+##### Complete Parsing Trace for `a + b + a $`
 
 | Step | Stack | Remaining Input | Action Taken / Production Applied |
 | :---: | :--- | :--- | :--- |
-| 1 | $\$ E$ | $a + b + a \$$ | $E \to T E'$ |
-| 2 | $\$ E' T$ | $a + b + a \$$ | $T \to F T'$ |
-| 3 | $\$ E' T' F$ | $a + b + a \$$ | $F \to a F'$ |
-| 4 | $\$ E' T' F' a$ | $a + b + a \$$ | Match terminal $a$ |
-| 5 | $\$ E' T' F'$ | $+ b + a \$$ | $F' \to \epsilon$ |
-| 6 | $\$ E' T'$ | $+ b + a \$$ | $T' \to \epsilon$ |
-| 7 | $\$ E'$ | $+ b + a \$$ | $E' \to + T E'$ |
-| 8 | $\$ E' T +$ | $+ b + a \$$ | Match terminal $+$ |
-| 9 | $\$ E' T$ | $b + a \$$ | $T \to F T'$ |
-| 10 | $\$ E' T' F$ | $b + a \$$ | $F \to b F'$ |
-| 11 | $\$ E' T' F' b$ | $b + a \$$ | Match terminal $b$ |
-| 12 | $\$ E' T' F'$ | $+ a \$$ | $F' \to \epsilon$ |
-| 13 | $\$ E' T'$ | $+ a \$$ | $T' \to \epsilon$ |
-| 14 | $\$ E'$ | $+ a \$$ | $E' \to + T E'$ |
-| 15 | $\$ E' T +$ | $+ a \$$ | Match terminal $+$ |
-| 16 | $\$ E' T$ | $a \$$ | $T \to F T'$ |
-| 17 | $\$ E' T' F$ | $a \$$ | $F \to a F'$ |
-| 18 | $\$ E' T' F' a$ | $a \$$ | Match terminal $a$ |
-| 19 | $\$ E' T' F'$ | $\$$ | $F' \to \epsilon$ |
-| 20 | $\$ E' T'$ | $\$$ | $T' \to \epsilon$ |
-| 21 | $\$ E'$ | $\$$ | $E' \to \epsilon$ |
-| 22 | $\$$ | $\$$ | **ACCEPT (String Valid)** |
+| 1 | `$ E` | `a + b + a \ $` | $E \to T E'$ |
+| 2 | `$ E' T` | `a + b + a \ $` | $T \to F T'$ |
+| 3 | `$ E' T' F` | `a + b + a \ $` | $F \to a F'$ |
+| 4 | `$ E' T' F' a` | `a + b + a \ $` | Match terminal $a$ |
+| 5 | `$ E' T' F'` | `+ b + a \ $` | $F' \to \epsilon$ |
+| 6 | `$ E' T'` | `+ b + a \ $` | $T' \to \epsilon$ |
+| 7 | `$ E'` | `+ b + a \ $` | $E' \to + T E'$ |
+| 8 | `$ E' T +` | `+ b + a \ $` | Match terminal $+$ |
+| 9 | `$ E' T` | `b + a \ $` | $T \to F T'$ |
+| 10 | `$ E' T' F` | `b + a \ $` | $F \to b F'$ |
+| 11 | `$ E' T' F' b` | `b + a \ $` | Match terminal $b$ |
+| 12 | `$ E' T' F'` | `+ a \ $` | $F' \to \epsilon$ |
+| 13 | `$ E' T'` | `+ a \ $` | $T' \to \epsilon$ |
+| 14 | `$ E'` | `+ a \ $` | $E' \to + T E'$ |
+| 15 | `$ E' T +` | `+ a \ $` | Match terminal $+$ |
+| 16 | `$ E' T` | `a \ $` | $T \to F T'$ |
+| 17 | `$ E' T' F` | `a \ $` | $F \to a F'$ |
+| 18 | `$ E' T' F' a` | `a \ $` | Match terminal $a$ |
+| 19 | `$ E' T' F'` | `| 19 | `$ E' T' F'` |  | $F' \to \epsilon$ |
+| 20 | `$ E' T'` | `| 20 | `$ E' T'` |  | $T' \to \epsilon$ |
+| 21 | `$ E'` | `| 21 | `$ E'` |  | $E' \to \epsilon$ |
+| 22 | `| 22 |  | `| 22 | `\ $` |  | **ACCEPT (String Valid)** |
 
 ---
 
@@ -2063,13 +2063,13 @@ Without left factoring, a top-down predictive parser seeing lookahead token in $
 > 
 > **Conclusion:** The multiple-entry table collisions prove **the grammar is NOT LL(1)**.
 
-##### 4. Parsing Walkthrough for Input $ghhg\$$
-Attempting to parse $ghhg\$$ with an LL(1) driver demonstrates where determinism breaks down:
-1. Stack: $\$ S$, Input: $ghhg\$$
+##### 4. Parsing Walkthrough for Input `ghhg$`
+Attempting to parse `ghhg$` with an LL(1) driver demonstrates where determinism breaks down:
+1. Stack: `$ S`, Input: `ghhg$``
 2. Lookahead is $g$. Table entry $M[S, g]$ has a conflict between $S \to ACB$ and $S \to Ba$.
 3. If $S \to ACB$ is chosen:
-   - Stack becomes $\$ B C A$.
-   - $A$ on lookahead $g$ expands via $A \to BC$, giving stack $\$ B C C B$.
+   - Stack becomes `$ B C A`.
+   - $A$ on lookahead $g$ expands via $A \to BC$, giving stack `$ B C C B`.
    - $B$ expands to $g$, matching terminal $g$.
    - Next input is $h$. Stack top is $C$. $C \to h$ matches $h$.
    - Next input is $h$. Stack top is $C$. $C \to h$ matches second $h$.
@@ -2143,7 +2143,7 @@ Attempting to parse $ghhg\$$ with an LL(1) driver demonstrates where determinism
 - **SLR(1) Parsing Table Rules:**
   - If $[A \to \alpha \cdot a \beta] \in I_i$ and $\text{GOTO}(I_i, a) = I_j$, set $\text{ACTION}[i, a] = \text{shift } j$.
   - If $[A \to \alpha \cdot] \in I_i$, set $\text{ACTION}[i, a] = \text{reduce } A \to \alpha$ for all $a \in \mathbf{FOLLOW}(A)$.
-  - If $[S' \to S \cdot] \in I_i$, set $\text{ACTION}[i, \$] = \mathbf{accept}$.
+  - If $[S' \to S \cdot] \in I_i$, set $\text{ACTION}[i, \text{\$}] = \mathbf{accept}$.
 
 ---
 
