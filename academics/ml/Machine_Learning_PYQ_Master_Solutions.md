@@ -876,20 +876,20 @@ An instance is misclassified whenever $y_i (\mathbf{w}^T \mathbf{x}_i) \le 0$.
 ##### 2. Formal Proof of Convergence (Novikoff Theorem, 1962)
 
 ###### Assumptions:
-1. **Linear Separability:** There exists an optimal unit weight vector $\mathbf{w}^*$ ($\|\mathbf{w}^*\| = 1$) and a positive margin $\gamma > 0$ such that for all $i = 1, \dots, m$:
-   $$y_i ((\mathbf{w}^*)^T \mathbf{x}_i) \ge \gamma > 0$$
+1. **Linear Separability:** There exists an optimal unit weight vector $\mathbf{w}^{\ast}$ ($\|\mathbf{w}^{\ast}\| = 1$) and a positive margin $\gamma > 0$ such that for all $i = 1, \dots, m$:
+   $$y_i ((\mathbf{w}^{\ast})^T \mathbf{x}_i) \ge \gamma > 0$$
 2. **Bounded Data Hypersphere:** All feature vectors are bounded within a ball of radius $R$:
    $$\|\mathbf{x}_i\| \le R \quad \forall i$$
 
 ###### The Convergence Proof:
 Let $\mathbf{w}_k$ denote the weight vector after $k$ mistakes, starting from $\mathbf{w}_0 = \mathbf{0}$. Suppose at step $k$, a mistake occurs on $(\mathbf{x}_i, y_i)$, so $\mathbf{w}_{k+1} = \mathbf{w}_k + y_i \mathbf{x}_i$.
 
-- **Step 1: Lower Bounding the Inner Product $(\mathbf{w}^*)^T \mathbf{w}_k$:**
-  $$(\mathbf{w}^*)^T \mathbf{w}_{k+1} = (\mathbf{w}^*)^T (\mathbf{w}_k + y_i \mathbf{x}_i) = (\mathbf{w}^*)^T \mathbf{w}_k + y_i (\mathbf{w}^*)^T \mathbf{x}_i$$
-  By linear separability, $y_i (\mathbf{w}^*)^T \mathbf{x}_i \ge \gamma$. Therefore:
-  $$(\mathbf{w}^*)^T \mathbf{w}_{k+1} \ge (\mathbf{w}^*)^T \mathbf{w}_k + \gamma$$
+- **Step 1: Lower Bounding the Inner Product $(\mathbf{w}^{\ast})^T \mathbf{w}_k$:**
+  $$(\mathbf{w}^{\ast})^T \mathbf{w}_{k+1} = (\mathbf{w}^{\ast})^T (\mathbf{w}_k + y_i \mathbf{x}_i) = (\mathbf{w}^{\ast})^T \mathbf{w}_k + y_i (\mathbf{w}^{\ast})^T \mathbf{x}_i$$
+  By linear separability, $y_i (\mathbf{w}^{\ast})^T \mathbf{x}_i \ge \gamma$. Therefore:
+  $$(\mathbf{w}^{\ast})^T \mathbf{w}_{k+1} \ge (\mathbf{w}^{\ast})^T \mathbf{w}_k + \gamma$$
   Since $\mathbf{w}_0 = \mathbf{0}$, telescoping across $k$ mistake updates yields:
-  $$(\mathbf{w}^*)^T \mathbf{w}_k \ge k\gamma \quad \implies \quad ((\mathbf{w}^*)^T \mathbf{w}_k)^2 \ge k^2 \gamma^2 \quad \text{--- (Equation 1)}$$
+  $$(\mathbf{w}^{\ast})^T \mathbf{w}_k \ge k\gamma \quad \implies \quad ((\mathbf{w}^{\ast})^T \mathbf{w}_k)^2 \ge k^2 \gamma^2 \quad \text{--- (Equation 1)}$$
 
 - **Step 2: Upper Bounding the Squared Norm $\|\mathbf{w}_k\|^2$:**
   $$\|\mathbf{w}_{k+1}\|^2 = \|\mathbf{w}_k + y_i \mathbf{x}_i\|^2 = \|\mathbf{w}_k\|^2 + 2 y_i \mathbf{w}_k^T \mathbf{x}_i + y_i^2 \|\mathbf{x}_i\|^2$$
@@ -900,9 +900,9 @@ Let $\mathbf{w}_k$ denote the weight vector after $k$ mistakes, starting from $\
 
 - **Step 3: Synthesizing Bounds via Cauchy-Schwarz Inequality:**
   By the Cauchy-Schwarz inequality, for any two vectors:
-  $$((\mathbf{w}^*)^T \mathbf{w}_k)^2 \le \|\mathbf{w}^*\|^2 \|\mathbf{w}_k\|^2$$
-  Since $\|\mathbf{w}^*\| = 1$, substituting Equations (1) and (2):
-  $$k^2 \gamma^2 \le ((\mathbf{w}^*)^T \mathbf{w}_k)^2 \le \|\mathbf{w}_k\|^2 \le k R^2$$
+  $$((\mathbf{w}^{\ast})^T \mathbf{w}_k)^2 \le \|\mathbf{w}^{\ast}\|^2 \|\mathbf{w}_k\|^2$$
+  Since $\|\mathbf{w}^{\ast}\| = 1$, substituting Equations (1) and (2):
+  $$k^2 \gamma^2 \le ((\mathbf{w}^{\ast})^T \mathbf{w}_k)^2 \le \|\mathbf{w}_k\|^2 \le k R^2$$
   $$k^2 \gamma^2 \le k R^2$$
   Dividing both sides by $k \gamma^2$ ($k > 0, \gamma > 0$):
   $$\mathbf{k \le \left(\frac{R}{\gamma}\right)^2}$$

@@ -239,8 +239,8 @@ flowchart LR
 **Direct Solution:**
 1. **Stability of the Keynesian Cross [1.5M]:**  
    The equilibrium where Planned Expenditure ($PE = a + \bar{I} + \bar{G} + bY$) intersects Actual Output ($AE = Y$) is self-stabilizing due to the **unintended inventory adjustment mechanism**:
-   - **If Output is Below Equilibrium ($Y_1 < Y^*$):** Planned spending exceeds current production ($PE > AE$). Firms witness an *unanticipated depletion (decumulation) of inventory*. To restore buffer stocks, firms recruit labour and expand production, driving $Y \uparrow$ back to $Y^*$.
-   - **If Output is Above Equilibrium ($Y_2 > Y^*$):** Output exceeds market demand ($AE > PE$). Unsold goods pile up in warehouses as an *unanticipated accumulation of inventory*. Firms curtail manufacturing and reduce shifts, pushing $Y \downarrow$ back to $Y^*$.
+   - **If Output is Below Equilibrium ($Y_1 < Y^{\ast}$):** Planned spending exceeds current production ($PE > AE$). Firms witness an *unanticipated depletion (decumulation) of inventory*. To restore buffer stocks, firms recruit labour and expand production, driving $Y \uparrow$ back to $Y^{\ast}$.
+   - **If Output is Above Equilibrium ($Y_2 > Y^{\ast}$):** Output exceeds market demand ($AE > PE$). Unsold goods pile up in warehouses as an *unanticipated accumulation of inventory*. Firms curtail manufacturing and reduce shifts, pushing $Y \downarrow$ back to $Y^{\ast}$.
 
 2. **Expansionary Fiscal Policy [1.5M]:**  
    A macroeconomic stabilization policy deployed by the central government during recessions to stimulate aggregate demand through:
@@ -282,7 +282,7 @@ flowchart LR
    $$q_x^d \propto \frac{1}{P_x} \quad \Longleftrightarrow \quad P_x \uparrow \;\implies\; q_x^d \downarrow$$
 
 2. **Equilibrium Price Determination [3M]:**  
-   Market price is determined at the unique point of intersection $e(P^*, q^*)$ where consumer demand balances supplier output ($q_x^d = q_x^s$):
+   Market price is determined at the unique point of intersection $e(P^{\ast}, q^{\ast})$ where consumer demand balances supplier output ($q_x^d = q_x^s$):
 
 ```mermaid
 flowchart TD
@@ -300,8 +300,8 @@ flowchart TD
     end
 ```
 
-- **Surplus at $P_1 > P^*$:** Quantity supplied exceeds quantity demanded ($q^s > q^d$). Unsold stock forces competing sellers to cut prices until $P^*$ is reached.
-- **Shortage at $P_2 < P^*$:** Quantity demanded exceeds quantity supplied ($q^d > q^s$). Consumers bid prices up until market clears at $P^*$.
+- **Surplus at $P_1 > P^{\ast}$:** Quantity supplied exceeds quantity demanded ($q^s > q^d$). Unsold stock forces competing sellers to cut prices until $P^{\ast}$ is reached.
+- **Shortage at $P_2 < P^{\ast}$:** Quantity demanded exceeds quantity supplied ($q^d > q^s$). Consumers bid prices up until market clears at $P^{\ast}$.
 
 ---
 
@@ -557,9 +557,9 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 2. **Significance for the Investment Multiplier [2M]:**  
    The investment multiplier $k = \frac{1}{1 - b}$. As $b \to 1$, $(1 - b) \to 0$, causing $k \to \infty$. A higher MPC means households respend a larger fraction of injected income in subsequent cycles, amplifying the cumulative economic expansion from private investment.
 3. **Why Keynesian Cross is a Stable Equilibrium [2M]:**  
-   If the economy deviates from $Y^*$, unintended inventory fluctuations self-correct the gap:
-   - At $Y < Y^*$, demand exceeds production ($PE > AE$), depleting inventory and prompting firms to raise output.
-   - At $Y > Y^*$, production exceeds demand ($AE > PE$), unsold stocks pile up, and firms reduce production back to $Y^*$.
+   If the economy deviates from $Y^{\ast}$, unintended inventory fluctuations self-correct the gap:
+   - At $Y < Y^{\ast}$, demand exceeds production ($PE > AE$), depleting inventory and prompting firms to raise output.
+   - At $Y > Y^{\ast}$, production exceeds demand ($AE > PE$), unsold stocks pile up, and firms reduce production back to $Y^{\ast}$.
 
 ---
 
@@ -687,7 +687,7 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 | Audit Fees | Statutory compliance and auditing | $1,60,000$ |
 | Office Rent | Facility charge for executive office | $1,50,000$ |
 | Depreciation of Photo Copier | Office appliance wear-and-tear | $50,000$ |
-| Electricity (50% for Office) | Total ₹1,00,000 $-$ 50% Factory (₹50,000) | $50,000$ |
+| Electricity (50% for Office) | Total ₹1,00,000 - 50% Factory (₹50,000) | 50,000 |
 | Telephone Charges | Administrative telecommunication | $70,000$ |
 | **TOTAL ADMINISTRATIVE OVERHEADS** | | **₹10,45,000** |
 
@@ -848,8 +848,8 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 1. **Graphical Effect of Autonomous Government Expenditure ($\Delta G > 0$):**
    - In the Keynesian Cross diagram, Planned Expenditure is $PE = (a + \bar{I} + G) + bY$.
    - An increase in government expenditure by $\Delta G$ shifts the entire planned expenditure line upward in parallel by $\Delta G$.
-   - At the original output level $Y_1^*$, demand exceeds production, causing unanticipated inventory decumulation.
-   - Firms expand production along the $45^\circ$ line until the new equilibrium $Y_2^*$ is established.
+   - At the original output level $Y_1^{\ast}$, demand exceeds production, causing unanticipated inventory decumulation.
+   - Firms expand production along the $45^\circ$ line until the new equilibrium $Y_2^{\ast}$ is established.
    - Through the multiplier process, the expansion in income is larger than the initial injection:
      $$\frac{dY}{dG} = \frac{1}{1 - b} \implies \Delta Y = \frac{\Delta G}{1 - b} > \Delta G$$
 
@@ -1066,7 +1066,7 @@ Henri Fayol pioneered modern administrative management by conceptualizing manage
 > *Explain how fractional reserve banking creates money supply in an economy. [3]*
 
 **Direct Solution:**
-Under fractional-reserve banking, commercial banks are mandated by the central bank to hold only a fraction of public deposits in reserve ($\text{CRR}$). When a customer deposits ₹10,000 and $\text{CRR} = 10\%$, the bank reserves ₹1,000 and lends out ₹9,000. The borrower spends this loan, which is redeposited into the banking system, allowing another bank to lend $90\%$ of that deposit (₹8,100). Through this successive lending multiplier ($m = \frac{1}{\text{CRR}} = 10$), an initial cash deposit of ₹10,000 creates up to ₹1,00,000 of total money supply in the economy.
+Under fractional-reserve banking, commercial banks are mandated by the central bank to hold only a fraction of public deposits in reserve ($\text{CRR}$). When a customer deposits ₹10,000 and $\text{CRR} = 0.10$ (10%), the bank reserves ₹1,000 and lends out ₹9,000. The borrower spends this loan, which is redeposited into the banking system, allowing another bank to lend 90% of that deposit (₹8,100). Through this successive lending multiplier ($m = \frac{1}{\text{CRR}} = 10$), an initial cash deposit of ₹10,000 creates up to ₹1,00,000 of total money supply in the economy.
 
 ---
 
@@ -1078,7 +1078,7 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 
 **Direct Solution:**
 1. **Diagrammatic Mechanism [4M]:**  
-   Planned Expenditure is $PE = a + bY + \bar{I} + G$. An autonomous increase in government spending by $\Delta G$ shifts the $PE$ curve vertically upward. At initial income $Y_1^*$, demand exceeds production ($PE > AE$), triggering an unintended decumulation of inventory. In response, firms expand employment and production along the $45^\circ$ line until actual output matches planned expenditure at the higher equilibrium $Y_2^*$. The output expansion is $\Delta Y = \frac{\Delta G}{1 - b}$.
+   Planned Expenditure is $PE = a + bY + \bar{I} + G$. An autonomous increase in government spending by $\Delta G$ shifts the $PE$ curve vertically upward. At initial income $Y_1^{\ast}$, demand exceeds production ($PE > AE$), triggering an unintended decumulation of inventory. In response, firms expand employment and production along the $45^\circ$ line until actual output matches planned expenditure at the higher equilibrium $Y_2^{\ast}$. The output expansion is $\Delta Y = \frac{\Delta G}{1 - b}$.
 2. **One Important Assumption of the Keynesian Model [1M]:**  
    Prices and wages are sticky/fixed in the short run; aggregate output responds strictly to shifts in aggregate demand, operating below full employment capacity.
 
@@ -1345,8 +1345,8 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 - **Impact of Rising Income on Equilibrium Price [4M]:**
   - Income is a non-price demand determinant ($M \uparrow$).
   - For a normal good, higher income causes a **rightward shift of the entire demand curve** from $D_1 \to D_2$.
-  - At the prevailing market price $P_1^*$, demand now exceeds supply, generating **excess demand (shortage)**.
-  - Competing consumers bid up the price until a new market equilibrium is established at a **higher price ($P_2^* > P_1^*$)** and higher cleared volume ($q_2^* > q_1^*$).
+  - At the prevailing market price $P_1^{\ast}$, demand now exceeds supply, generating **excess demand (shortage)**.
+  - Competing consumers bid up the price until a new market equilibrium is established at a **higher price ($P_2^{\ast} > P_1^{\ast}$)** and higher cleared volume ($q_2^{\ast} > q_1^{\ast}$).
 
 ---
 
@@ -1372,9 +1372,9 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 **Direct Solution:**
 1. **Define GDP [1M]:** Aggregate market value of all final goods and services produced within national territorial borders in a year.
 2. **Calculation of GNP [2M]:**
-   $$\text{GDP} = C + I + G + (X - M) = 450 + 700 + 300 + (1,000 - 550) = 1,450 + 450 = \mathbf{\$1,900}$$
-   $$\text{NFIA} = \text{Income from abroad } (500) - \text{Payments to abroad } (200) = \mathbf{+\$300}$$
-   $$\text{GNP} = \text{GDP} + \text{NFIA} = 1,900 + 300 = \mathbf{\$2,200}$$
+   $\text{GDP} = C + I + G + (X - M) = 450 + 700 + 300 + (1,000 - 550) = 1,450 + 450 = \mathbf{1,900 \text{ Dollars}}$
+   $$\text{NFIA} = \text{Income from abroad } (500) - \text{Payments to abroad } (200) = \mathbf{+300 \text{ Dollars}}$$
+   $\text{GNP} = \text{GDP} + \text{NFIA} = 1,900 + 300 = \mathbf{2,200 \text{ Dollars}}$
 3. **Flaw in "High GDP Ensures Greater Welfare" [2M]:** High GDP does not guarantee fair income distribution; a tiny elite may capture all national surplus while the majority lives in poverty. Furthermore, it completely ignores environmental degradation, mental health, and unpaid domestic caregiving.
 
 ---

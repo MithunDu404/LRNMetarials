@@ -131,7 +131,7 @@ xychart-beta
 | **2025 End** | Q1(b) | 2 | Peephole Optimization: Redundant & Unreachable Code | **Uncovered** | *Deferred to Final Chapter (Beyond Reference Notes)* |
 | **2025 End** | Q2(a) | 4 | Ambiguity Analysis of $S \to L = R \mid R$ | **Answered** | [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#4.2 Architectural Rationale: The Viable-Prefix Property\|Note 2 §4.2]] |
 | **2025 End** | Q2(b) | 4 | Recursive Descent Parsing & Inherent Limitations | **Answered** | [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#2.3 Formal Mechanics: Top-Down vs. Bottom-Up Scanners\|Note 2 §2.3]], [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#12. Viva Voce Defense & Examiner Traps\|Note 2 §12 Q3]] |
-| **2025 End** | Q2(c) | 3 | DFA Construction for $(0+1)^*(00+11)(0+1)^*$ | **Answered** | [[compiler_design_intro_and_lexical_analysis_visual_guide#6.3 Formal 5-Tuple Definitions: DFA, NFA, and \epsilon-NFA\|Note 1 §6.3]] |
+| **2025 End** | Q2(c) | 3 | DFA Construction for $(0+1)^{\ast}(00+11)(0+1)^{\ast}$ | **Answered** | [[compiler_design_intro_and_lexical_analysis_visual_guide#6.3 Formal 5-Tuple Definitions: DFA, NFA, and \epsilon-NFA\|Note 1 §6.3]] |
 | **2025 End** | Q3(a-d)| 11 | FIRST/FOLLOW, Non-LL(1) Predictive Table & Parse Trace | **Answered** | [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#3.3 Formal Mechanics: Heuristics for Synchronizing Sets\|Note 2 §3.3]] |
 | **2025 End** | Q4(a) | 5 | Shift-Reduce Parser Model & Conflict Typology | **Answered** | [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#2.3 Formal Mechanics: Top-Down vs. Bottom-Up Scanners\|Note 2 §2.3]] |
 | **2025 End** | Q4(b) | 6 | CLR Parsing Table for $S \to CC; C \to cC \mid d \mid \epsilon$ | **Answered** | [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#4.3 Formal Mechanics: The Canonical SLR Table with Error Routines\|Note 2 §4.3]] |
@@ -273,19 +273,25 @@ In the lexical analysis phase, the stream of source characters is transformed in
 
 ##### 1. Regular Expressions for C Language Primitives
 - **C Identifiers:** Must begin with an alphabetic letter or underscore, followed by zero or more alphanumeric characters or underscores:
-  $$\text{nondigit} \to [a\text{-}zA\text{-}Z] \mid \_$$
-  $$\text{digit} \to [0\text{-}9]$$
-  $$\mathbf{ID} = \text{nondigit} \, (\text{nondigit} \mid \text{digit})^*$$
+  ```lex
+  nondigit     -> [a-zA-Z_]
+  digit        -> [0-9]
+  ID           -> nondigit (nondigit | digit)*
+  ```
 - **C Integer Constants:** Unsigned decimal, octal, or hexadecimal constants:
-  $$\text{decConst} \to [1\text{-}9][0\text{-}9]^* \mid 0$$
-  $$\text{octConst} \to 0[0\text{-}7]+$$
-  $$\text{hexConst} \to 0[xX][0\text{-}9a\text{-}fA\text{-}F]+$$
-  $$\mathbf{INT\_CONST} = \text{decConst} \mid \text{octConst} \mid \text{hexConst}$$
+  ```lex
+  dec_const    -> [1-9][0-9]* | 0
+  oct_const    -> 0[0-7]+
+  hex_const    -> 0[xX][0-9a-fA-F]+
+  INT_CONST    -> dec_const | oct_const | hex_const
+  ```
 - **C Floating-Point Constants:** Supports fraction and optional exponent:
-  $$\text{digits} \to [0\text{-}9]+$$
-  $$\text{optionalFraction} \to (\cdot \, \text{digits}) \mid \epsilon$$
-  $$\text{optionalExponent} \to ([eE][+\text{-}]? \, \text{digits}) \mid \epsilon$$
-  $$\mathbf{FLOAT\_CONST} = \text{digits} \cdot \text{digits} \, \text{optionalExponent} \mid \text{digits} \, [eE][+\text{-}]? \, \text{digits}$$
+  ```lex
+  digits       -> [0-9]+
+  opt_frac     -> (\.[0-9]+)?
+  opt_exp      -> ([eE][+-]?[0-9]+)?
+  FLOAT_CONST  -> digits opt_frac opt_exp
+  ```
 
 ##### 2. How Finite Automata Recognize Tokens in Lexical Analysis
 The lexical analyzer compiles the combined regular expressions of all language tokens into a single Deterministic Finite Automaton (DFA) using Thompson's construction followed by subset construction. 
@@ -478,11 +484,11 @@ $$
 - $\text{FIRST}(B') = \text{FIRST}(Aa B') \cup \{\epsilon\} = \text{FIRST}(A) \cup \{\epsilon\} = \{d, \epsilon\}$
 
 ##### 2. Computation of FOLLOW Sets
-Start symbol is $A \implies \$ \in \text{FOLLOW}(A)$.
+Start symbol is $A \implies$ `$` $\in \text{FOLLOW}(A)$.
 - From $B' \to Aa B'$: after $A$ comes $a \implies a \in \text{FOLLOW}(A)$.  
   Thus:
-  $$\text{FOLLOW}(A) = \{\$, a\}$$
-- From $A \to Bc A'$: $\text{FOLLOW}(A') = \text{FOLLOW}(A) = \{\$, a\}$.
+  - $\text{FOLLOW}(A) =$ `{$ , a}`
+- From $A \to Bc A'$: $\text{FOLLOW}(A') = \text{FOLLOW}(A) =$ `{$ , a}`.
 - From $A \to Bc A'$: after $B$ comes $c \implies c \in \text{FOLLOW}(B)$.  
   Thus:
   $$\text{FOLLOW}(B) = \{c\}$$
@@ -492,8 +498,8 @@ Start symbol is $A \implies \$ \in \text{FOLLOW}(A)$.
 
 | Non-Terminal ($X$) | $\text{FIRST}(X)$ | $\text{FOLLOW}(X)$ |
 | :---: | :---: | :---: |
-| $A$ | $\{d\}$ | $\{\$, a\}$ |
-| $A'$ | $\{a, \epsilon\}$ | $\{\$, a\}$ |
+| $A$ | $\{d\}$ | `{$ , a}` |
+| $A'$ | $\{a, \epsilon\}$ | `{$ , a}` |
 | $B$ | $\{d\}$ | $\{c\}$ |
 | $B'$ | $\{d, \epsilon\}$ | $\{c\}$ |
 
@@ -604,7 +610,7 @@ A conflict arises when the parser cannot uniquely determine its next mechanical 
 
 ##### 1. Definition of a Handle and Handle Pruning
 - **Handle:** A handle of a right-sentential form $\gamma = \alpha \beta w$ (where $w$ is a string of terminals) is a production rule $A \to \beta$ and a position in $\gamma$ where the substring $\beta$ may be replaced by $A$ to produce the previous right-sentential form in a rightmost derivation:
-  $$S \Rightarrow_{\text{rm}}^* \alpha A w \Rightarrow_{\text{rm}} \alpha \beta w$$
+  $$S \Rightarrow_{\text{rm}}^{\ast} \alpha A w \Rightarrow_{\text{rm}} \alpha \beta w$$
 - **Handle Pruning:** The process of repeatedly discovering the handle $\beta$ in the current right-sentential form and replacing ("pruning") it with its left-hand non-terminal $A$, tracing backwards through the rightmost derivation in reverse:
   $$\gamma_n \to \gamma_{n-1} \to \gamma_{n-2} \to \dots \to S$$
 
@@ -654,17 +660,17 @@ $$
 $$
 
 **Computation of FOLLOW Sets:**
-- Start symbol $S' \implies \$ \in \text{FOLLOW}(S)$.
-- From $S' \to S$ and $S \to R$: $\text{FOLLOW}(S) = \{\$\}$.
-- From $S \to R$: $\text{FOLLOW}(S) \subseteq \text{FOLLOW}(R) \implies \$ \in \text{FOLLOW}(R)$.
+- Start symbol $S' \implies$ `$` $\in \text{FOLLOW}(S)$.
+- From $S' \to S$ and $S \to R$: $\text{FOLLOW}(S) =$ `{$}`.
+- From $S \to R$: $\text{FOLLOW}(S) \subseteq \text{FOLLOW}(R) \implies$ `$` $\in \text{FOLLOW}(R)$.
 - From $S \to L = R$: after $L$ comes `$=$`, so $= \in \text{FOLLOW}(L)$. Also $\text{FOLLOW}(S) \subseteq \text{FOLLOW}(R)$.
 - From $L \to *R$: $\text{FOLLOW}(L) \subseteq \text{FOLLOW}(R) \implies = \in \text{FOLLOW}(R)$.
 - From $R \to L$: $\text{FOLLOW}(R) \subseteq \text{FOLLOW}(L)$.
 
 Thus:
-$$\text{FOLLOW}(S) = \{\$\}$$
-$$\text{FOLLOW}(L) = \{=, \$\}$$
-$$\mathbf{FOLLOW}(R) = \{=, \$\}$$
+- $\text{FOLLOW}(S) =$ `{$}`
+- $\text{FOLLOW}(L) =$ `{=, $}`
+- $\mathbf{FOLLOW}(R) =$ `{=, $}`
 
 #### Step 2: Construct the Canonical Collection of $LR(0)$ Items
 - **State $I_0 = \text{CLOSURE}(\{S' \to \cdot S\})$:**
@@ -701,7 +707,7 @@ According to the SLR(1) parsing table construction algorithm:
    $$\text{ACTION}[2, =] = \text{Shift to State } 6 \quad (\text{where } I_6 = \text{GOTO}(I_2, =))$$
 2. **Reduce Action:** Because $R \to L \cdot$ is a completed item corresponding to production $(5)$, the parser must place a reduce action for all terminals $a \in \text{FOLLOW}(R)$:
    $$\text{ACTION}[2, a] = \text{Reduce by } R \to L \quad \forall a \in \text{FOLLOW}(R)$$
-   Since $\text{FOLLOW}(R) = \{=, \$\}$, for lookahead `$=$`:
+   Since $\mathbf{FOLLOW}(R) =$ `{=, $}`, for lookahead `$=$`:
    $$\text{ACTION}[2, =] = \text{Reduce by } R \to L \quad (\text{Rule 5})$$
 
 > [!failure] Definitive SLR(1) Verdict
@@ -723,7 +729,7 @@ According to the SLR(1) parsing table construction algorithm:
 > [!tip] Exam Hall Selection Advisory
 > **Compulsory:** Question 1 (Attempt 1(a) for 4 marks; 1(b) is peephole optimization).  
 > **Recommended Selection (Pick 4 of the remaining covered questions):**
-> 1. **Question 2 (11 Marks):** Highly modular (Ambiguity proof of pointer grammar + Recursive descent problems + FA for $(0+1)^*(00+11)(0+1)^*$).
+> 1. **Question 2 (11 Marks):** Highly modular (Ambiguity proof of pointer grammar + Recursive descent problems + FA for $(0+1)^{\ast}(00+11)(0+1)^{\ast}$).
 > 2. **Question 3 (11 Marks):** Pure algorithmic predictive table construction and parsing.
 > 3. **Question 4 (11 Marks):** Shift-reduce model + Standard CLR parsing table construction.
 > 4. **Question 6(a) (6 Marks) & Question 5(b) (5 Marks):** Focus on core semantic analysis and symbol tables.
@@ -793,7 +799,7 @@ While the grammar fails the SLR(1) condition due to an inadequate lookahead appr
    Take any valid string generated by the grammar:
    - For string `id = id`:
      - $S \Rightarrow L = R \Rightarrow id = R \Rightarrow id = L \Rightarrow id = id$.
-     - No alternative derivation tree exists because $S \to R \Rightarrow^* id = id$ is impossible (the `$=$` token can only be introduced by the single production $S \to L = R$).
+     - No alternative derivation tree exists because $S \to R \Rightarrow^{\ast} id = id$ is impossible (the `$=$` token can only be introduced by the single production $S \to L = R$).
    - For string `*id = id`:
      - Must start with $S \to L = R \to *R = R \to *L = R \to *id = id$.
    - For string `id`:
@@ -829,7 +835,7 @@ A Recursive Descent parser is a top-down syntax analysis technique where:
 #### Part (c)
 > **(c) Construct a Finite Automata equivalent to the regular expression:**
 > 
-> $$(0 + 1)^*(00 + 11)(0 + 1)^*$$
+> $$(0 + 1)^{\ast}(00 + 11)(0 + 1)^{\ast}$$
 > 
 > **[3 Marks]**
 
@@ -837,7 +843,7 @@ A Recursive Descent parser is a top-down syntax analysis technique where:
 
 ##### 1. Language Semantics
 The regular expression describes the language:
-$$L = \{w \in \{0, 1\}^* \mid w \text{ contains either '00' or '11' as a contiguous substring}\}$$
+$$L = \{w \in \{0, 1\}^{\ast} \mid w \text{ contains either '00' or '11' as a contiguous substring}\}$$
 
 ##### 2. State Transition Design
 We design a 4-state Deterministic Finite Automaton (DFA) $M = (Q, \Sigma, \delta, q_0, F)$:
@@ -913,9 +919,9 @@ flowchart LR
   - Thus: $\text{FIRST}(S) = \{a, e, f\} \cup \{g, d\} \cup \{e, f\} = \{a, d, e, f, g\}$.
 
 ##### 2. FOLLOW Sets
-- Start symbol $S \implies \$ \in \text{FOLLOW}(S)$.
+- Start symbol $S \implies$ `$` $\in \text{FOLLOW}(S)$.
 - For $\text{FOLLOW}(D)$:
-  - From $S \to ABD$: $D$ is at the right end $\implies \text{FOLLOW}(S) \subseteq \text{FOLLOW}(D) \implies \$ \in \text{FOLLOW}(D)$.
+  - From $S \to ABD$: $D$ is at the right end $\implies \text{FOLLOW}(S) \subseteq \text{FOLLOW}(D) \implies$ `$` $\in \text{FOLLOW}(D)$.
   - From $A \to DB$: followed by $B \implies (\text{FIRST}(B) \setminus \{\epsilon\}) \subseteq \text{FOLLOW}(D) \implies \{g, d\} \subseteq \text{FOLLOW}(D)$.
     - And since $\epsilon \in \text{FIRST}(B)$, $\text{FOLLOW}(A) \subseteq \text{FOLLOW}(D)$.
   - From $B \to gD$: at right end $\implies \text{FOLLOW}(B) \subseteq \text{FOLLOW}(D)$.
@@ -930,7 +936,7 @@ flowchart LR
 Solving the mutual dependencies $\text{FOLLOW}(A) = \text{FOLLOW}(B)$:
 $$\text{FOLLOW}(A) = \{d, e, f, g\}$$
 $$\text{FOLLOW}(B) = \{d, e, f, g\}$$
-$$\text{FOLLOW}(D) = \{\$, d, e, f, g\}$$
+- $\text{FOLLOW}(D) =$ `{$, d, e, f, g}`
 
 ---
 
@@ -997,17 +1003,17 @@ Derivation: $S \Rightarrow ABD \Rightarrow aBD \Rightarrow a\epsilon D \Rightarr
 
 ##### Detailed Operational Model
 The Shift-Reduce parser consists of:
-1. **Input Buffer:** Holds the string of terminals to be parsed, terminated by the right endmarker `\$`.
+1. **Input Buffer:** Holds the string of terminals to be parsed, terminated by the right endmarker `$`.
 2. **Pushdown Stack:** Stores alternating sequences of grammar symbols and parser states:
    $$S_0 \, X_1 \, S_1 \, X_2 \, S_2 \dots X_m \, S_m$$
    where $S_m$ is the state currently on top of the stack.
 3. **Parsing Table:** Partitioned into two matrices:
-   - $\text{ACTION}[S_m, a_i]$: Indexed by state $S_m$ and lookahead terminal $a_i \in \Sigma \cup \{\$\}$.
+   - $\text{ACTION}[S_m, a_i]$: Indexed by state $S_m$ and lookahead terminal $a_i \in \Sigma \cup$ `{$}`.
    - $\text{GOTO}[S_m, A]$: Indexed by state $S_m$ and non-terminal $A \in V_N$.
 4. **Driver Program:** Executes the four canonical moves:
    - **Shift $s$:** Push lookahead terminal $a_i$ and target state $s$ onto stack; advance input pointer.
    - **Reduce $A \to \beta$:** Let $|\beta| = k$. Pop $2k$ items from stack (revealing state $S_{m-k}$). Push non-terminal $A$, then push state $\text{GOTO}[S_{m-k}, A]$.
-   - **Accept:** Input successfully parsed when $S' \to S \cdot$ is reached on `\$`.
+   - **Accept:** Input successfully parsed when $S' \to S \cdot$ is reached on `$`.
    - **Error:** Parser invokes error-handling routine when an empty table entry is looked up.
 
 *(For detailed Shift/Reduce and Reduce/Reduce conflict definitions, refer directly to [2025 Mid Q4(a)](#question-4-shift-reduce-architecture--handle-pruning-3--5--8-marks)).*
@@ -1031,43 +1037,43 @@ The Shift-Reduce parser consists of:
 ##### 1. Augmented Grammar
 $$
 \begin{aligned}
-(0) &\; S' \to S, \; \text{\$} \\
-(1) &\; S \to CC, \; \text{\$} \\
-(2) &\; C \to cC, \; c/d/\text{\$} \\
-(3) &\; C \to d, \; c/d/\text{\$} \\
-(4) &\; C \to \epsilon, \; c/d/\text{\$}
+(0) &\; S' \to S, \; \text{EOF} \\
+(1) &\; S \to CC, \; \text{EOF} \\
+(2) &\; C \to cC, \; c/d/\text{EOF} \\
+(3) &\; C \to d, \; c/d/\text{EOF} \\
+(4) &\; C \to \epsilon, \; c/d/\text{EOF}
 \end{aligned}
 $$
 
 ##### 2. Canonical Collection of $LR(1)$ Items
-- **State $I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \text{\$}]\})$:**
+- **State $I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \text{EOF}]\}):**
   $$
   \begin{aligned}
-  S' &\to \cdot S, \; \text{\$} \\
-  S &\to \cdot CC, \; \text{\$} \\
-  C &\to \cdot cC, \; c/d/\text{\$} \quad (\text{since } \text{FIRST}(C\text{\$}) = \{c, d, \$\}) \\
-  C &\to \cdot d, \; c/d/\text{\$} \\
-  C &\to \cdot, \; c/d/\text{\$}
+  S' &\to \cdot S, \; \text{EOF} \\
+  S &\to \cdot CC, \; \text{EOF} \\
+  C &\to \cdot cC, \; c/d/\text{EOF} \quad (\text{since } \text{FIRST}(C\text{EOF}) = \{c, d, \text{EOF}\}) \\
+  C &\to \cdot d, \; c/d/\text{EOF} \\
+  C &\to \cdot, \; c/d/\text{EOF}
   \end{aligned}
   $$
 - **Transitions from $I_0$:**
-  - $\text{GOTO}(I_0, S) = I_1 = \{[S' \to S \cdot, \text{\$}]\} \implies$ ACCEPT on `$`
-  - $\text{GOTO}(I_0, C) = I_2 = \text{CLOSURE}(\{[S \to C \cdot C, \text{\$}]\}) = \{[S \to C \cdot C, \text{\$}], [C \to \cdot cC, \text{\$}], [C \to \cdot d, \text{\$}], [C \to \cdot, \text{\$}]\}$
-  - $\text{GOTO}(I_0, c) = I_3 = \text{CLOSURE}(\{[C \to c \cdot C, c/d/\text{\$}]\}) = \{[C \to c \cdot C, c/d/\text{\$}], [C \to \cdot cC, c/d/\text{\$}], [C \to \cdot d, c/d/\text{\$}], [C \to \cdot, c/d/\text{\$}]\}$
-  - $\text{GOTO}(I_0, d) = I_4 = \{[C \to d \cdot, c/d/\text{\$}]\}$
+  - $\text{GOTO}(I_0, S) = I_1 = \{[S' \to S \cdot, \text{EOF}]\} \implies$ ACCEPT on `$`
+  - $\text{GOTO}(I_0, C) = I_2 = \text{CLOSURE}(\{[S \to C \cdot C, \text{EOF}]\}) = \{[S \to C \cdot C, \text{EOF}], [C \to \cdot cC, \text{EOF}], [C \to \cdot d, \text{EOF}], [C \to \cdot, \text{EOF}]\}$
+  - $\text{GOTO}(I_0, c) = I_3 = \text{CLOSURE}(\{[C \to c \cdot C, c/d/\text{EOF}]\}) = \{[C \to c \cdot C, c/d/\text{EOF}], [C \to \cdot cC, c/d/\text{EOF}], [C \to \cdot d, c/d/\text{EOF}], [C \to \cdot, c/d/\text{EOF}]\}$
+  - $\text{GOTO}(I_0, d) = I_4 = \{[C \to d \cdot, c/d/\text{EOF}]\}$
 
 - **State $I_2$ Transitions:**
-  - $\text{GOTO}(I_2, C) = I_5 = \{[S \to CC \cdot, \text{\$}]\}$
-  - $\text{GOTO}(I_2, c) = I_6 = \text{CLOSURE}(\{[C \to c \cdot C, \text{\$}]\}) = \{[C \to c \cdot C, \text{\$}], [C \to \cdot cC, \text{\$}], [C \to \cdot d, \text{\$}], [C \to \cdot, \text{\$}]\}$
-  - $\text{GOTO}(I_2, d) = I_7 = \{[C \to d \cdot, \text{\$}]\}$
+  - $\text{GOTO}(I_2, C) = I_5 = \{[S \to CC \cdot, \text{EOF}]\}$
+  - $\text{GOTO}(I_2, c) = I_6 = \text{CLOSURE}(\{[C \to c \cdot C, \text{EOF}]\}) = \{[C \to c \cdot C, \text{EOF}], [C \to \cdot cC, \text{EOF}], [C \to \cdot d, \text{EOF}], [C \to \cdot, \text{EOF}]\}$
+  - $\text{GOTO}(I_2, d) = I_7 = \{[C \to d \cdot, \text{EOF}]\}$
 
 - **State $I_3$ Transitions:**
-  - $\text{GOTO}(I_3, C) = I_8 = \{[C \to cC \cdot, c/d/\text{\$}]\}$
+  - $\text{GOTO}(I_3, C) = I_8 = \{[C \to cC \cdot, c/d/\text{EOF}]\}$
   - $\text{GOTO}(I_3, c) = I_3$ (loop)
   - $\text{GOTO}(I_3, d) = I_4$
 
 - **State $I_6$ Transitions:**
-  - $\text{GOTO}(I_6, C) = I_9 = \{[C \to cC \cdot, \text{\$}]\}$
+  - $\text{GOTO}(I_6, C) = I_9 = \{[C \to cC \cdot, \text{EOF}]\}$
   - $\text{GOTO}(I_6, c) = I_6$ (loop)
   - $\text{GOTO}(I_6, d) = I_7$
 
@@ -1296,7 +1302,7 @@ To recover gracefully without looping:
    - If $M[A, a]$ is blank and $a \in \text{SYNC}(A)$: Non-terminal $A$ is **popped from the stack**. A diagnostic message indicates $A$ was synthesized/closed, and parsing continues.
 
 ##### 2. Concrete Worked Example
-Consider grammar $E \to T E', \; E' \to + T E' \mid \epsilon, \; T \to F T', \dots$ with $\text{FOLLOW}(E) = \{\$, )\}$.  
+Consider grammar $E \to T E', \; E' \to + T E' \mid \epsilon, \; T \to F T', \dots$ with $\text{FOLLOW}(E) =$ `{$, )}`.  
 If the input contains a malformed expression `) + id`, on encountering lookahead `)` with $E$ on the stack:
 - Since `)` $\in \text{FOLLOW}(E) = \text{SYNC}(E)$, the parser pops $E$, reports "Missing operand before closing parenthesis", and successfully matches the remaining input.
 
@@ -1362,25 +1368,25 @@ $$
 - $\text{FIRST}(E) = \text{FIRST}(T) = \{a, b\}$
 
 ##### 2. FOLLOW Sets
-- Start symbol $E \implies \$ \in \text{FOLLOW}(E)$.
-- From $E \to T E'$: $\text{FOLLOW}(E') = \text{FOLLOW}(E) = \{\$\}$.
+- Start symbol $E \implies$ `$` $\in \text{FOLLOW}(E)$.
+- From $E \to T E'$: $\text{FOLLOW}(E') = \text{FOLLOW}(E) =$ `{$}`.
 - From $E \to T E'$ and $E' \to + T E'$:  
-  $\text{FOLLOW}(T) = \text{FIRST}(E') \cup \text{FOLLOW}(E) = \{+, \$\}$.
-- From $T \to F T'$: $\text{FOLLOW}(T') = \text{FOLLOW}(T) = \{+, \$\}$.
+  $\text{FOLLOW}(T) = \text{FIRST}(E') \cup \text{FOLLOW}(E) =$ `{+, $}`.
+- From $T \to F T'$: $\text{FOLLOW}(T') = \text{FOLLOW}(T) =$ `{+, $}`.
 - From $T \to F T'$ and $T' \to F T'$:  
-  $\text{FOLLOW}(F) = (\text{FIRST}(T') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T') = \{a, b, +, \$\}$.
-- From $F \to a F' \mid b F'$: $\text{FOLLOW}(F') = \text{FOLLOW}(F) = \{a, b, +, \$\}$.
+  $\text{FOLLOW}(F) = (\text{FIRST}(T') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T') =$ `{a, b, +, $}`.
+- From $F \to a F' \mid b F'$: $\text{FOLLOW}(F') = \text{FOLLOW}(F) =$ `{a, b, +, $}`.
 
 ##### FIRST & FOLLOW Summary Table
 
 | Non-Terminal | FIRST Set | FOLLOW Set |
 | :---: | :---: | :---: |
-| **$E$** | $\{a, b\}$ | $\{\$\}$ |
-| **$E'$** | $\{+, \epsilon\}$ | $\{\$\}$ |
-| **$T$** | $\{a, b\}$ | $\{+, \$\}$ |
-| **$T'$** | $\{a, b, \epsilon\}$ | $\{+, \$\}$ |
-| **$F$** | $\{a, b\}$ | $\{a, b, +, \$\}$ |
-| **$F'$** | $\{*, \epsilon\}$ | $\{a, b, +, \$\}$ |
+| **$E$** | $\{a, b\}$ | `{$}` |
+| **$E'$** | $\{+, \epsilon\}$ | `{$}` |
+| **$T$** | $\{a, b\}$ | `{+, $}` |
+| **$T'$** | $\{a, b, \epsilon\}$ | `{+, $}` |
+| **$F$** | $\{a, b\}$ | `{a, b, +, $}` |
+| **$F'$** | $\{*, \epsilon\}$ | `{a, b, +, $}` |
 
 ##### 3. LL(1) Parsing Table Verification
 > [!success] LL(1) Grammatical Status
@@ -1459,18 +1465,22 @@ A **Lookahead LR (LALR(1))** parser is formed by taking the canonical collection
 
 ##### 2. LALR(1) Construction Trace
 Augmented grammar:
-$$S' \to S, \; \$ \quad (0)$$
-$$S \to CC, \; \$ \quad (1)$$
-$$C \to cC, \; c/d/\text{\$} \quad (2)$$
-$$C \to c, \; c/d/\text{\$} \quad (3)$$
-$$C \to d, \; c/d/\text{\$} \quad (4)$$
+$$
+\begin{aligned}
+(0) &\quad S' \to S, &&[\text{EOF}] \\
+(1) &\quad S \to CC, &&[\text{EOF}] \\
+(2) &\quad C \to cC, &&[c/d/\text{EOF}] \\
+(3) &\quad C \to c, &&[c/d/\text{EOF}] \\
+(4) &\quad C \to d, &&[c/d/\text{EOF}]
+\end{aligned}
+$$
 
 The canonical LR(1) collection produces pairs of states that share the same item core:
-- State with core $\{C \to c \cdot C, C \to c \cdot, C \to \cdot cC, C \to \cdot c, C \to \cdot d\}$ has lookahead $\{c, d\}$ in one branch and $\{\$\}$ in another.
+- State with core $\{C \to c \cdot C, C \to c \cdot, C \to \cdot cC, C \to \cdot c, C \to \cdot d\}$ has lookahead $\{c, d\}$ in one branch and `{EOF}` in another.
 - Merging these produces single combined LALR states:
-  - $I_{36}$: merges $I_3$ and $I_6$ with lookahead $\{c, d, \$\}$.
-  - $I_{47}$: merges $I_4$ and $I_7$ with lookahead $\{c, d, \$\}$.
-  - $I_{89}$: merges $I_8$ and $I_9$ with lookahead $\{c, d, \$\}$.
+  - $I_{36}$: merges $I_3$ and $I_6$ with lookahead `{c, d, $}`.
+  - $I_{47}$: merges $I_4$ and $I_7$ with lookahead `{c, d, $}`.
+  - $I_{89}$: merges $I_8$ and $I_9$ with lookahead `{c, d, $}`.
 
 ##### LALR(1) Parsing Table
 
@@ -1520,18 +1530,18 @@ The canonical LR(1) collection produces pairs of states that share the same item
 **Direct Reference:** [[compiler_design_intro_and_lexical_analysis_visual_guide#5.3 Inductive Definitions & Algebraic Laws of Regular Expressions|Note 1 §5.3]], [[compiler_design_intro_and_lexical_analysis_visual_guide#6.3 Formal 5-Tuple Definitions: DFA, NFA, and \epsilon-NFA|Note 1 §6.3]]
 
 ##### 1. Interpretation
-The language consists of all strings $w \in \{a, b\}^*$ where the number of $a$'s is even ($N_a(w) \equiv 0 \pmod 2$) AND the number of $b$'s is even ($N_b(w) \equiv 0 \pmod 2$).
+The language consists of all strings $w \in \{a, b\}^{\ast}$ where the number of $a$'s is even ($N_a(w) \equiv 0 \pmod 2$) AND the number of $b$'s is even ($N_b(w) \equiv 0 \pmod 2$).
 
 ##### 2. 4-State Parity Automaton Derivation
 States track parity: $q_0 = (\text{even}, \text{even})$, $q_1 = (\text{odd}, \text{even})$, $q_2 = (\text{even}, \text{odd})$, $q_3 = (\text{odd}, \text{odd})$.  
 Using state elimination on this 4-state DFA yields the closed-form regular expression:
-$$\mathbf{r} = \left( aa \mid bb \mid (ab \mid ba)(aa \mid bb)^*(ab \mid ba) \right)^*$$
+$$\mathbf{r} = \left( aa \mid bb \mid (ab \mid ba)(aa \mid bb)^{\ast}(ab \mid ba) \right)^{\ast}$$
 
 ##### 3. Algebraic Verification
 - Basis: $\epsilon$ is accepted (0 $a$'s, 0 $b$'s).
 - Substring $aa$: adds $+2$ $a$'s (even parity preserved).
 - Substring $bb$: adds $+2$ $b$'s (even parity preserved).
-- Substring $(ab \mid ba)$: transitions to odd-odd state; must be paired with another $(ab \mid ba)$ (possibly separated by even chunks $(aa \mid bb)^*$) to return parity to $(0, 0)$.
+- Substring $(ab \mid ba)$: transitions to odd-odd state; must be paired with another $(ab \mid ba)$ (possibly separated by even chunks $(aa \mid bb)^{\ast}$) to return parity to $(0, 0)$.
 
 ---
 
@@ -1901,9 +1911,9 @@ $$T \to TF \mid F \quad (3, 4)$$
 $$F \to F* \mid a \mid b \quad (5, 6, 7)$$
 
 FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion--ll1-parsing-2--6--8-marks)):
-$$\text{FOLLOW}(E) = \{+, \$\}$$
-$$\text{FOLLOW}(T) = \{a, b, +, \$\}$$
-$$\text{FOLLOW}(F) = \{a, b, *, +, \$\}$$
+- $\text{FOLLOW}(E) =$ `{+, $}`
+- $\text{FOLLOW}(T) =$ `{a, b, +, $}`
+- $\text{FOLLOW}(F) =$ `{a, b, *, +, $}`
 
 #### Step 2: Canonical Collection of $LR(0)$ Items
 - **$I_0 = \text{CLOSURE}(\{E' \to \cdot E\})$:**
@@ -1925,16 +1935,16 @@ $$\text{FOLLOW}(F) = \{a, b, *, +, \$\}$$
 #### Step 3: Conflict Analysis in State $I_3$
 Examine State $I_3$:
 $$I_3 = \{T \to F \cdot, \quad F \to F \cdot *\}$$
-1. $T \to F \cdot$ is a complete reduction item (Production 4). In SLR(1), reduce for all lookaheads in $\text{FOLLOW}(T) = \{a, b, +, \$\}$.
+1. $T \to F \cdot$ is a complete reduction item (Production 4). In SLR(1), reduce for all lookaheads in $\text{FOLLOW}(T) =$ `{a, b, +, $}`.
 2. $F \to F \cdot *$ requires a shift on input `$*$`.
 3. Check the intersection:
-   $$\text{FOLLOW}(T) \cap \{*\} = \{a, b, +, \$\} \cap \{*\} = \emptyset$$
+   $$\text{FOLLOW}(T) \cap \{*\} = \emptyset$$
    Because the set of reduce lookaheads and the shift symbol are completely disjoint, **there is no conflict in State $I_3$**.
 
 #### Step 4: Conflict Analysis in State $I_7$
 Examine State $I_7$:
 $$I_7 = \{T \to TF \cdot, \quad F \to F \cdot *\}$$
-1. $T \to TF \cdot$ is a reduction item (Production 3). Reduce for lookaheads in $\text{FOLLOW}(T) = \{a, b, +, \$\}$.
+1. $T \to TF \cdot$ is a reduction item (Production 3). Reduce for lookaheads in $\text{FOLLOW}(T) =$ `{a, b, +, $}`.
 2. $F \to F \cdot *$ shifts on `$*$`.
 3. Check the intersection:
    $$\text{FOLLOW}(T) \cap \{*\} = \emptyset$$
@@ -2019,7 +2029,7 @@ Without left factoring, a top-down predictive parser seeing lookahead token in $
 > [!important] Crucial Examiner Audit
 > Examine whether any non-terminal $X$ can derive a sentential form beginning with $X$ ($X \Rightarrow^+ X\alpha$):
 > 1. $B \to g \mid \epsilon$ and $C \to h \mid \epsilon$ have only terminal or $\epsilon$ right-hand sides (no recursion).
-> 2. $A \to da \mid BC$: right-hand sides start with terminal $d$ or non-terminal $B$. Expanding $B$ yields $g$ or $\epsilon$, producing $A \Rightarrow^* da \mid gC \mid h \mid \epsilon$. It cannot derive $A$.
+> 2. $A \to da \mid BC$: right-hand sides start with terminal $d$ or non-terminal $B$. Expanding $B$ yields $g$ or $\epsilon$, producing $A \Rightarrow^{\ast} da \mid gC \mid h \mid \epsilon$. It cannot derive $A$.
 > 3. $S \to ACB \mid CbB \mid Ba$: expanding leads to terminals $d, g, h, b, a$ or $\epsilon$.
 > 
 > **Finding:** The grammar contains **zero left recursion** (neither immediate nor indirect). The productions remain as originally stated.
@@ -2035,16 +2045,16 @@ Without left factoring, a top-down predictive parser seeing lookahead token in $
 - $\text{FIRST}(S) = \text{FIRST}(ACB) \cup \text{FIRST}(CbB) \cup \text{FIRST}(Ba) = \{a, b, d, g, h, \epsilon\}$
 
 ##### 2. FOLLOW Sets
-- Start symbol $S \implies \$ \in \text{FOLLOW}(S)$.
-- From $S \to ACB$: after $A$ comes $CB \implies \text{FOLLOW}(A) = \text{FIRST}(CB) = \{g, h, \$\}$.
+- Start symbol $S \implies$ `$` $\in \text{FOLLOW}(S)$.
+- From $S \to ACB$: after $A$ comes $CB \implies \text{FOLLOW}(A) = \text{FIRST}(CB) =$ `{g, h, $}`.
 - For $\text{FOLLOW}(B)$:
   - From $S \to Ba$: followed by $a \implies a \in \text{FOLLOW}(B)$.
-  - From $S \to ACB \mid CbB$: at end $\implies \$ \in \text{FOLLOW}(B)$.
-  - Thus: $\text{FOLLOW}(B) = \{a, h, \$\}$.
+  - From $S \to ACB \mid CbB$: at end $\implies$ `$` $\in \text{FOLLOW}(B)$.
+  - Thus: $\text{FOLLOW}(B) =$ `{a, h, $}`.
 - For $\text{FOLLOW}(C)$:
   - From $S \to CbB$: followed by $b \implies b \in \text{FOLLOW}(C)$.
-  - From $S \to ACB$: followed by $B \implies g \in \text{FOLLOW}(C)$ and $\$ \in \text{FOLLOW}(C)$.
-  - Thus: $\text{FOLLOW}(C) = \{b, g, h, \$\}$.
+  - From $S \to ACB$: followed by $B \implies g \in \text{FOLLOW}(C)$ and `$` $\in \text{FOLLOW}(C)$.
+  - Thus: $\text{FOLLOW}(C) =$ `{b, g, h, $}`.
 
 ##### 3. LL(1) Determinism Check
 > [!failure] Non-LL(1) Proof
@@ -2065,7 +2075,7 @@ Without left factoring, a top-down predictive parser seeing lookahead token in $
 
 ##### 4. Parsing Walkthrough for Input `ghhg$`
 Attempting to parse `ghhg$` with an LL(1) driver demonstrates where determinism breaks down:
-1. Stack: `$ S`, Input: `ghhg$``
+1. Stack: `$ S`, Input: `ghhg$`
 2. Lookahead is $g$. Table entry $M[S, g]$ has a conflict between $S \to ACB$ and $S \to Ba$.
 3. If $S \to ACB$ is chosen:
    - Stack becomes `$ B C A`.
@@ -2074,7 +2084,7 @@ Attempting to parse `ghhg$` with an LL(1) driver demonstrates where determinism 
    - Next input is $h$. Stack top is $C$. $C \to h$ matches $h$.
    - Next input is $h$. Stack top is $C$. $C \to h$ matches second $h$.
    - Next input is $g$. Stack top is $B$. $B \to g$ matches final $g$.
-   - Reaches end of input `\$`, successfully accepting through backtracking.
+   - Reaches end of input `$`, successfully accepting through backtracking.
 
 ---
 
@@ -2143,7 +2153,7 @@ Attempting to parse `ghhg$` with an LL(1) driver demonstrates where determinism 
 - **SLR(1) Parsing Table Rules:**
   - If $[A \to \alpha \cdot a \beta] \in I_i$ and $\text{GOTO}(I_i, a) = I_j$, set $\text{ACTION}[i, a] = \text{shift } j$.
   - If $[A \to \alpha \cdot] \in I_i$, set $\text{ACTION}[i, a] = \text{reduce } A \to \alpha$ for all $a \in \mathbf{FOLLOW}(A)$.
-  - If $[S' \to S \cdot] \in I_i$, set $\text{ACTION}[i, \text{\$}] = \mathbf{accept}$.
+  - If $[S' \to S \cdot] \in I_i$, set $\text{ACTION}[i, \text{EOF}] = \mathbf{accept}$ (on lookahead endmarker `$` ).
 
 ---
 
