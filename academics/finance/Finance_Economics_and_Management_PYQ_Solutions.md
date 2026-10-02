@@ -104,7 +104,9 @@
 | **2023 7th End** | Mod II Q10 (OR) | GDP/GNP Calculation & Welfare Flaw | 5M | **Answered** | [[Finance_Economics_and_Management_Midterm_Study_Guide#2.2 GDP Mechanics: Mathematical Valuation, Nominal vs Real, and National Aggregates|Section 2.2: GDP Mechanics & Welfare Critiques]] |
 | **2023 8th Final** | Mod I B(i) | Explain NPV Or PBP Or IRR | 2M | **Answered** | [[Finance_Economics_and_Management_Midterm_Study_Guide#Alternative Capital Budgeting Methodologies|Section 6.2: Alternative Capital Budgeting Methodologies]] |
 | **2023 8th Final** | Mod I B(ii) | Project A vs Project B NPV Acceptability | 6M | **Answered** | [[Finance_Economics_and_Management_Midterm_Study_Guide#Net Present Value (NPV) Decision Rule|Section 6.2: Net Present Value Decision Rule]] |
-| **2023 8th Final** | Mod II Q4 | Investment Multiplier Concept | 2.5M | **Answered** | [[Finance_Economics_and_Management_Midterm_Study_Guide#3. Autonomous Investment Multiplier ($\\frac{dY}{dI}$)|Section 2.3: Multiplier Derivations]] |
+| **2023 8th Final** | Mod II Q4 | Investment Multiplier Concept | 2.5M | **Answered** | [[Finance_Economics_and_Management_Midterm_Study_Guide#3. Autonomous Investment Multiplier (\\frac{dY}{dI})|Section 2.3: Multiplier Derivations]] |
+
+---
 
 ---
 
@@ -126,38 +128,38 @@
 |:---|:---|---:|---:|
 | **Stage 1: Raw Materials Consumed** | Opening Stock of Raw Materials | $50,000$ | |
 | | *Add:* Purchase of Raw Materials | $1,20,000$ | |
-| | *Add:* Carriage Inwards (Freight on Purchases) | $4,000$ | |
-| | *Less:* Purchase Returns (Returns to Suppliers) | $(2,000)$ | |
+| | *Add:* Carriage Inwards (Freight to bring materials in) | $4,000$ | |
+| | *Less:* Purchase Returns (Defective items sent back) | $(2,000)$ | |
 | | *Less:* Closing Stock of Raw Materials | $(32,000)$ | $\mathbf{1,40,000}$ |
-| | *Add:* Direct Wages / Productive Labour | | $60,000$ |
-| | *Add:* Direct Expenses (Chargeable Expenses / Tooling) | | $10,000$ |
-| **Stage 2: PRIME COST** | *(Sum of all Direct Elements)* | | $\mathbf{2,10,000}$ |
-| | *Add: Factory / Works Overheads:* | | |
-| | - Factory Rent & Workshop Rates | $25,000$ | |
-| | - Motive Power & Fuel | $15,000$ | |
-| | - Indirect Wages & Supervision | $12,000$ | |
-| | - Depreciation on Plant & Machinery | $18,000$ | $70,000$ |
+| | *Add:* Direct Wages (Paid to factory workers making the product) | | $60,000$ |
+| | *Add:* Direct Expenses (Special tools hired for the job) | | $10,000$ |
+| **Stage 2: PRIME COST** | *(Total Direct Costs: Material + Labour + Expenses)* | | $\mathbf{2,10,000}$ |
+| | *Add: Factory / Works Overheads (Indirect factory costs):* | | |
+| | - Factory Rent and Rates | $25,000$ | |
+| | - Power and Fuel for Machines | $15,000$ | |
+| | - Factory Supervisor Salaries | $12,000$ | |
+| | - Depreciation on Factory Machinery | $18,000$ | $70,000$ |
 | **Gross Factory Cost** | *(Prime Cost + Factory Overheads)* | | $\mathbf{2,80,000}$ |
 | | *Add:* Opening Stock of Work-in-Progress (WIP) | $15,000$ | |
 | | *Less:* Closing Stock of Work-in-Progress (WIP) | $(10,000)$ | $+5,000$ |
-| **Stage 3: ADJUSTED FACTORY COST (Works Cost)** | *(Gross Factory Cost $\pm$ WIP Adjustment)* | | $\mathbf{2,85,000}$ |
-| | *Add: Office & Administrative Overheads:* | | |
+| **Stage 3: WORKS COST (Adjusted Factory Cost)** | *(Gross Factory Cost $\pm$ WIP Adjustment)* | | $\mathbf{2,85,000}$ |
+| | *Add: Office & Administrative Overheads (Head office costs):* | | |
 | | - Office Salaries & Legal Audit Fees | $20,000$ | |
 | | - Office Rent, Lighting & Stationery | $10,000$ | $30,000$ |
-| **Stage 4: COST OF PRODUCTION (COP)** | *(Adjusted Factory Cost + Admin Overheads)* | | $\mathbf{3,15,000}$ |
-| | *Add:* Opening Stock of Finished Goods (FG) | $25,000$ | |
-| | *Less:* Closing Stock of Finished Goods (FG) | $(15,000)$ | $+10,000$ |
-| **Stage 5: COST OF GOODS SOLD (COGS)** | *(Cost of Production $\pm$ FG Adjustment)* | | $\mathbf{3,25,000}$ |
-| | *Add: Selling & Distribution Overheads:* | | |
+| **Stage 4: COST OF PRODUCTION (COP)** | *(Works Cost + Office & Admin Overheads)* | | $\mathbf{3,15,000}$ |
+| | *Add:* Opening Stock of Finished Goods | $25,000$ | |
+| | *Less:* Closing Stock of Finished Goods | $(15,000)$ | $+10,000$ |
+| **Stage 5: COST OF GOODS SOLD (COGS)** | *(Cost of Production $\pm$ Finished Goods Adjustment)* | | $\mathbf{3,25,000}$ |
+| | *Add: Selling & Distribution Overheads (Sales costs):* | | |
 | | - Advertising & Product Promotion | $15,000$ | |
-| | - Salesmen Salaries, Commissions & Showroom Expenses | $12,000$ | |
-| | - Carriage Outwards (Freight on Sales) | $8,000$ | $35,000$ |
-| **Stage 6: COST OF SALES (TOTAL COST)** | *(COGS + Selling & Distribution Overheads)* | | $\mathbf{3,60,000}$ |
-| | *Add:* **Net Profit (Balancing Margin)** | | $\mathbf{40,000}$ |
-| **STAGE 7: TOTAL SALES REVENUE** | *(Cost of Sales + Profit)* | | $\mathbf{4,00,000}$ |
+| | - Salesmen Salaries & Showroom Rent | $12,000$ | |
+| | - Carriage Outwards (Freight to deliver goods to customers) | $8,000$ | $35,000$ |
+| **Stage 6: TOTAL COST (Cost of Sales)** | *(COGS + Selling & Distribution Overheads)* | | $\mathbf{3,60,000}$ |
+| | *Add:* **Profit Margin (Balancing Figure)** | | $\mathbf{40,000}$ |
+| **STAGE 7: TOTAL SALES REVENUE** | *(Total Cost + Profit)* | | $\mathbf{4,00,000}$ |
 
 > [!danger] ⚠️ **Exam Hall Trap Alert:**
-> Never include **interest on debentures/loans, dividend payments, preliminary expenses, or balance sheet debtor/creditor balances** in this statement. They are financing and appropriation items, strictly excluded from the Cost Sheet.
+> Never include **interest on loans/debentures, dividend payments, income tax, or balance sheet items (debtors and creditors)** in a Cost Sheet. These are financial expenses and balance sheet items, not costs of making products.
 
 ---
 
@@ -167,32 +169,46 @@
 > **Question Statement:**  
 > *Write notes (any two): (i) Fixed assets, (ii) Internal Liabilities, (iii) Process Costing, (iv) Elementwise classification of Cost, (v) Measurement in Accounting. [2 × 3 = 6]*
 
-*(All 5 concepts provided for comprehensive exam preparation; write any two in exam)*
+*(All 5 concepts provided below; write any two in the exam)*
 
 **1. (i) Fixed Assets:**
-- **Definition & Horizon:** Tangible or intangible resources controlled by an enterprise with an economic lifespan exceeding 12 months, held for generating goods/services and not intended for immediate trading or resale.
-- **Key Characteristics:** Subject to wear-and-tear (depreciation for plant/machinery) or amortization (patents/goodwill).
-- **Core Principle:** Funded strictly via long-term capital (equity, debt) to avoid asset-liability maturity mismatches. Examples include factory land, industrial blast furnaces, and specialized machine tooling.
+- **Definition:** Long-term assets bought for running the business and producing goods, with a useful life of more than 1 year. They are not intended for immediate resale.
+- **Value Reduction:** 
+  - Physical assets (like machinery) lose value over time due to wear and tear (**Depreciation**).
+  - Non-physical assets (like software licenses and patents) are written off over time (**Amortization**).
+- **Financing Rule:** Because they last many years, they should be bought using long-term money (equity shares or long-term loans), never short-term loans.
+- **Examples:** Factory land, buildings, CNC machines, and transport trucks.
 
 **2. (ii) Internal Liabilities:**
-- **Definition:** The financial claims and obligations that the legal corporate entity owes back to its primary owners and promoters.
-- **Components:** Equity share capital, preference share capital, reserves & surplus, and retained earnings.
-- **Distinction from External Liabilities:** Internal liabilities are permanent/irrefundable during the operating life of the firm (redeemed only on liquidation) and do not carry a legally enforceable fixed interest charge; dividends are paid at the board's discretion.
+- **Definition:** The money that a business legally owes back to its own owners and shareholders.
+- **Main Items:** Equity share capital, preference share capital, reserves, and retained profits.
+- **Key Difference from External Debt:** 
+  - Internal liabilities do not have to be repaid during the normal life of the company (they are returned only if the company closes down).
+  - The company is not legally forced to pay a fixed interest; dividends are paid only if the company earns a profit.
 
 **3. (iii) Process Costing:**
-- **Definition:** A method of operational costing applied when finished products result from a continuous, automated flow of standardized, indistinguishable units through a succession of stages (processes).
-- **Mechanics:** The finished output of Process 1 immediately becomes the raw input of Process 2.
-- **Applicable Industries:** Chemical processing, crude petroleum refineries, textile manufacturing, and paper mills.
+- **Definition:** A costing method used when identical, standardized products are made through a continuous, non-stop series of stages (called processes).
+- **How it Works:** The finished product of Process 1 immediately becomes the raw material for Process 2, until the final product is completed.
+- **Unit Cost Formula:**
+  $$\text{Cost per Unit} = \frac{\text{Total Process Cost in Period}}{\text{Total Units Produced in Period}}$$
+- **Common Industries:** Oil refineries, chemical factories, sugar mills, and paper plants.
 
 **4. (iv) Elementwise Classification of Cost:**
-- **Core Elements:**
-  1. *Material Cost:* The expenditure on physical substances entering production (Direct Material e.g., raw steel; Indirect Material e.g., lubricating oil).
-  2. *Labour Cost:* Remuneration paid to the workforce (Direct Labour e.g., assembly machinists; Indirect Labour e.g., factory sweepers and security guards).
-  3. *Expenses:* All operational costs other than material and labour (Direct Expenses e.g., job-specific die-casting charges; Indirect Expenses e.g., factory lighting and plant rent).
+Costs are divided into three basic elements:
+1. **Materials:** Cost of physical substances used to make the product.
+   - *Direct Material:* Main material in the final product (e.g., steel for a car, wood for a desk).
+   - *Indirect Material:* Small helping items (e.g., machine oil, cleaning rags).
+2. **Labour:** Wages paid to workers.
+   - *Direct Labour:* Workers directly making the good (e.g., lathe operator, carpenter).
+   - *Indirect Labour:* Supporting staff (e.g., factory security guard, cleaner).
+3. **Expenses:** All other business costs besides materials and labour.
+   - *Direct Expenses:* Special costs for one specific job (e.g., hiring a special tool for one project).
+   - *Indirect Expenses:* General factory bills (e.g., factory rent, electric power bill).
 
 **5. (v) Measurement in Accounting:**
-- **Definition:** The second foundational pillar of the American Accounting Association (AAA) framework: assigning stable monetary numerical values (INR, USD) to identified business transactions.
-- **Role & Boundary:** Financial accounting only records events that can be reliably quantified in monetary terms. Qualitative factors—such as an engineer's technical brilliance, brand goodwill without transaction, or worker morale—are omitted from formal balance sheets.
+- **Definition:** The process of putting a clear monetary value (in Rupees or Dollars) on business transactions so they can be recorded.
+- **Money Measurement Rule:** Accounting records only those events that can be measured reliably in money.
+- **Important Limitation:** Many valuable things cannot be measured in money—such as an engineer's talent, worker honesty, or high team morale—so they cannot appear on a formal balance sheet.
 
 ---
 
@@ -206,18 +222,19 @@
 
 **Direct Solution:**
 1. **Why Money Flow is Constant [1M]:**  
-   In the standard two-sector circular flow model, the economic system is closed and operates under the assumption of **zero leakages and zero injections** ($\text{Savings } S = 0$, $\text{Taxes } T = 0$, $\text{Imports } M = 0$). Because households spend their entire wage earnings on consumer goods and firms disburse all revenue received from sales back to households as factor wages, no financial purchasing power leaves or enters the system. The total quantum of circulating money remains invariant over successive cycles.
+   In a simple two-sector economy with only **households** and **firms**:
+   - **No Leakages or Injections:** People do not save money ($S = 0$), pay taxes ($T = 0$), or buy imported goods ($M = 0$).
+   - **Complete Spending Loop:** Households spend all the wages they earn to buy goods from firms. Firms pay out all the sales money they receive back to households as wages, rent, and profit.
+   - Because no money leaves the loop and no new money is added, the total amount of money circulating stays constant.
 
 2. **Why National Income and National Expenditure are Identical [2M]:**  
-   Every market transaction is a two-sided exchange:
-   $$\text{Every Rupee of Buyer Expenditure} \equiv \text{A Rupee of Seller Factor Income}$$
-   In the closed two-sector economy:
-   - Firms utilize factor inputs (labour) to manufacture output (bread). The total market value of goods produced equals total sales receipts.
-   - All revenue collected by firms is exhausted in compensating the factors of production as wages, rent, interest, and residual profit:
-     $$\text{Total Factor Income} \equiv \text{Total Market Value of Production}$$
-   - Households spend their entire earned income buying that physical output:
-     $$\text{Total Factor Income (NI)} \equiv \text{Total Consumption Expenditure (NE)}$$
-   Hence: $\mathbf{\text{National Income (NI)} \equiv \text{National Production (NP)} \equiv \text{National Expenditure (NE)}}$.
+   Every rupee spent by a buyer becomes a rupee of income for the seller:
+   - **Step 1:** Firms produce goods and sell them to households. The total sales value is **Total Expenditure**.
+   - **Step 2:** Firms use all that sales revenue to pay households for their work and land (wages, rent, interest, profit). This is **Total Income**.
+   - **Step 3:** Households use all this income to buy goods from firms in the next round.
+   
+   Therefore, National Income, National Production, and National Expenditure are always equal:
+   $$\mathbf{\text{National Income (NI)} \equiv \text{National Production (NP)} \equiv \text{National Expenditure (NE)}}$$
 
 ```mermaid
 flowchart LR
@@ -225,7 +242,7 @@ flowchart LR
     classDef intermediate fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
     
     H["Households"]:::primary -- "Consumer Expenditure (NE)" --> F["Firms"]:::intermediate
-    F -- "Factor Payments / Wages (NI)" --> H
+    F -- "Wages, Rent, Profit (NI)" --> H
 ```
 
 ---
@@ -237,16 +254,18 @@ flowchart LR
 > *Why do you think the Keynesian cross is a stable equilibrium, if at all? What is an expansionary fiscal policy? [1 + 2 = 3]*
 
 **Direct Solution:**
-1. **Stability of the Keynesian Cross [1.5M]:**  
-   The equilibrium where Planned Expenditure ($PE = a + \bar{I} + \bar{G} + bY$) intersects Actual Output ($AE = Y$) is self-stabilizing due to the **unintended inventory adjustment mechanism**:
-   - **If Output is Below Equilibrium ($Y_1 < Y^{\ast}$):** Planned spending exceeds current production ($PE > AE$). Firms witness an *unanticipated depletion (decumulation) of inventory*. To restore buffer stocks, firms recruit labour and expand production, driving $Y \uparrow$ back to $Y^{\ast}$.
-   - **If Output is Above Equilibrium ($Y_2 > Y^{\ast}$):** Output exceeds market demand ($AE > PE$). Unsold goods pile up in warehouses as an *unanticipated accumulation of inventory*. Firms curtail manufacturing and reduce shifts, pushing $Y \downarrow$ back to $Y^{\ast}$.
+1. **Why the Keynesian Cross is a Stable Equilibrium [1.5M]:**  
+   The economy naturally pulls itself back to balance through **automatic inventory adjustments**:
+   - **When Output is Below Balance ($Y_1 < Y^{\ast}$):** Buyers want to buy more than what is being made ($PE > AE$). Goods in stores run out faster than planned (inventory drops). To restock shelves, firms hire more workers and raise production, pushing income $Y$ up to $Y^{\ast}$.
+   - **When Output is Above Balance ($Y_2 > Y^{\ast}$):** Factories produce more than people buy ($AE > PE$). Unsold goods pile up in warehouses. Firms cut back on production and shifts, bringing output $Y$ back down to $Y^{\ast}$.
 
-2. **Expansionary Fiscal Policy [1.5M]:**  
-   A macroeconomic stabilization policy deployed by the central government during recessions to stimulate aggregate demand through:
-   - **Increasing Government Spending ($\Delta G > 0$):** Injects direct demand into infrastructure, public works, and procurement.
-   - **Cutting Taxes ($\Delta T < 0$):** Increases household disposable income $(Y - T)$, boosting private consumption.
-   Via the Keynesian multiplier ($\Delta Y = \frac{\Delta G}{1 - b}$), a rupee of government injection expands national income by more than one rupee.
+2. **What is Expansionary Fiscal Policy? [1.5M]:**  
+   A policy used by the government during recessions to create jobs and boost demand:
+   - **Increasing Government Spending ($\Delta G > 0$):** Spending money on roads, bridges, and public projects creates direct jobs and orders for goods.
+   - **Cutting Taxes ($\Delta T < 0$):** Lower taxes leave people with more take-home pay, encouraging them to spend more on goods and services.
+   
+   Through the multiplier effect, national income grows by more than the initial government spending:
+   $$\Delta Y = \frac{\Delta G}{1 - b}$$
 
 ---
 
@@ -258,15 +277,15 @@ flowchart LR
 
 **Direct Solution:**
 1. **The Three Core Functions of Money [2M]:**
-   - **Medium of Exchange:** Serves as a universally accepted intermediary in commercial transactions, overcoming the barter barrier of "double coincidence of wants".
-   - **Unit of Account:** The common standard denominator used to quote market prices, record accounting transactions, and calculate GDP.
-   - **Store of Value:** Enables individuals to transfer purchasing power from the present into the future in a liquid form (though subject to erosion by rising price levels).
+   - **Medium of Exchange:** Money is accepted by everyone for buying and selling. It solves the barter problem where two people had to want exactly what the other had ("double coincidence of wants").
+   - **Unit of Account:** Money gives a single measuring tape to price goods and keep business records (for example, quoting a book at ₹300 rather than 5 kg of wheat).
+   - **Store of Value:** People can save money today and spend it in the future without it spoiling (unlike physical goods like milk or vegetables), though inflation can reduce its buying power.
 
 2. **Definition & Causes of Inflation [2M]:**
-   - **Definition:** A sustained, generalized increase in the overall price level of goods and services in an economy over time, which erodes the purchasing power of the domestic currency.
-   - **Core Causes:**
-     1. *Demand-Pull Pressure:* Aggregate spending exceeds the productive capacity of the economy ($\sum P \cdot q$ increases via excess money supply growth).
-     2. *Cost-Push / Supply Disruption:* Exogenous supply shocks (e.g., fuel spikes, raw material shortages) shift the aggregate supply curve backward, driving equilibrium market prices upward.
+   - **Definition:** A continuous, general rise in the price level of goods and services over time, which reduces what your money can buy.
+   - **Two Main Causes:**
+     1. **Demand-Pull Inflation:** Buyers want more goods than the economy can produce ("too much money chasing too few goods").
+     2. **Cost-Push Inflation:** The cost of making goods rises (due to jumps in oil prices, raw material costs, or worker wages), forcing firms to raise prices.
 
 ---
 
@@ -278,11 +297,11 @@ flowchart LR
 
 **Direct Solution:**
 1. **The Law of Demand [1M]:**  
-   The quantity demanded of a product is inversely related to its unit price, *ceteris paribus* (holding all other determinants such as income, prices of related goods, and consumer preferences constant):
-   $$q_x^d \propto \frac{1}{P_x} \quad \Longleftrightarrow \quad P_x \uparrow \;\implies\; q_x^d \downarrow$$
+   When the price of a good rises, people buy less of it; when the price falls, people buy more—provided other factors like income and preferences stay unchanged (*ceteris paribus*):
+   $$P_x \uparrow \;\implies\; q_x^d \downarrow \quad \text{and} \quad P_x \downarrow \;\implies\; q_x^d \uparrow$$
 
 2. **Equilibrium Price Determination [3M]:**  
-   Market price is determined at the unique point of intersection $e(P^{\ast}, q^{\ast})$ where consumer demand balances supplier output ($q_x^d = q_x^s$):
+   The market price settles at the point where the **Demand Curve** crosses the **Supply Curve** (where quantity demanded equals quantity supplied: $q_x^d = q_x^s$):
 
 ```mermaid
 flowchart TD
@@ -290,18 +309,18 @@ flowchart TD
     classDef control fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
     classDef success fill:#F0FDF4,stroke:#059669,stroke-width:1.5px,color:#065F46;
 
-    subgraph PriceHigh["Price Above Equilibrium (P1 > P*)"]
-        H1["Supply > Demand"]:::primary --> H2["Excess Supply (Surplus)"]:::control
-        H2 --> H3["Sellers Cut Prices ⟹ P Falls to P*"]:::success
+    subgraph PriceHigh["Price Too High (P1 > P*)"]
+        H1["Supply > Demand"]:::primary --> H2["Surplus (Unsold Goods)"]:::control
+        H2 --> H3["Sellers Cut Prices ⟹ Price Falls to P*"]:::success
     end
-    subgraph PriceLow["Price Below Equilibrium (P2 < P*)"]
-        L1["Demand > Supply"]:::primary --> L2["Excess Demand (Shortage)"]:::control
-        L2 --> L3["Buyers Bid Up Prices ⟹ P Rises to P*"]:::success
+    subgraph PriceLow["Price Too Low (P2 < P*)"]
+        L1["Demand > Supply"]:::primary --> L2["Shortage (Too Few Goods)"]:::control
+        L2 --> L3["Buyers Bid Up Prices ⟹ Price Rises to P*"]:::success
     end
 ```
 
-- **Surplus at $P_1 > P^{\ast}$:** Quantity supplied exceeds quantity demanded ($q^s > q^d$). Unsold stock forces competing sellers to cut prices until $P^{\ast}$ is reached.
-- **Shortage at $P_2 < P^{\ast}$:** Quantity demanded exceeds quantity supplied ($q^d > q^s$). Consumers bid prices up until market clears at $P^{\ast}$.
+- **Surplus at $P_1 > P^{\ast}$:** Sellers bring more goods to market than buyers want ($q^s > q^d$). Unsold stock forces competing sellers to lower their prices until the market price falls back to $P^{\ast}$.
+- **Shortage at $P_2 < P^{\ast}$:** Buyers want more goods than sellers have provided ($q^d > q^s$). Buyers compete and bid prices up until the price rises back to $P^{\ast}$.
 
 ---
 
@@ -321,27 +340,24 @@ flowchart TD
 *(All three sub-questions answered below)*
 
 **1. Sub-question 1: Early Utility vs. Later Limitations of Autocratic Management [5M]:**
-- **Early-Stage Utility:**  
-  In the formative startup phase, resources were highly constrained, and market survival required rapid execution, strict quality enforcement, and absolute adherence to client commitments. Centralizing authority in the founding team eliminated deliberation lag, ensured rigorous cost minimization, and established a uniform corporate culture with zero role ambiguity.
-- **Later Limitations (Growing Scale):**  
-  As Infosys grew into a global IT enterprise employing tens of thousands of skilled knowledge workers, top-down autocratic management created severe operational bottlenecks:
-  1. *Decision Congestion:* Top executives could not micro-manage hundreds of distributed client projects.
-  2. *Employee Disengagement & Attrition:* Software engineers and project managers felt undervalued when denied autonomy, stifling innovation and critical thinking.
+- **Why it worked in the Early Stage:**  
+  When Infosys was a small startup, money was tight and survival was critical. Having the founders make all decisions ensured quick action without long debates, kept costs very low, and maintained strict software quality to win the trust of global clients.
+- **Why it failed as Infosys Grew:**  
+  When Infosys grew into a global company with thousands of skilled engineers, top-down control caused major problems:
+  1. *Decision Bottlenecks:* A few top executives could not make daily decisions for hundreds of client projects around the world.
+  2. *Low Morale & Resignations:* Talented software engineers felt micromanaged and ignored when they had no say, leading to frustration, less creativity, and high employee turnover.
 
-**2. Sub-question 2: Balancing Democratic Participation with Quick Decision-Making [5M]:**
-- **Tiered Delegation Strategy:**  
-  Adopt a hybrid framework where decision-making authority matches the hierarchical scope:
-  1. *Project & Technical Architecture (Democratic/Participative):* Frontline engineers, architects, and UI leads collaboratively design solutions and evaluate peer code, ensuring technical buy-in and catching bugs early.
-  2. *Operational Milestones (Time-Bounded Consensus):* Establish "time-boxed" consultative windows (e.g., 24-hour sprint reviews). If consensus is not reached, the Project Manager exercises directive authority to avoid project deadlock.
-  3. *Crisis & Security Incident Management (Directive):* For cybersecurity breaches or critical production outages, the command structure shifts immediately to centralized directive management.
+**2. Sub-question 2: Balancing Democratic Participation with Quick Decisions [5M]:**
+As an engineering manager, use a three-level framework based on the situation:
+1. **Technical Architecture & Code Design (Democratic):** Involve developers and architects in system design discussions and code reviews. This catches bugs early and builds team ownership.
+2. **Sprint Deadlines & Project Milestones (Time-Boxed Consultation):** Give the team a set time window (e.g., 24 hours) to share opinions. If the team cannot agree, the Project Manager makes the final decision so the project stays on schedule.
+3. **Emergencies & Security Breaches (Directive/Quick):** During live server crashes or security leaks, take direct command immediately. Fix the issue first, and hold team reviews after systems are safe.
 
 **3. Sub-question 3: Transformational vs. Autocratic Leadership in Knowledge Industries [5M]:**
-- **Sustainability Rationale:**  
-  Transformational leadership is vastly more sustainable in knowledge-based industries like IT.
-- **Core Reasoning:**
-  - *Intellectual Capital Motivation:* Knowledge workers cannot be coerced into creative problem-solving or architectural innovation through fear or rigid control.
-  - *Value-Driven Alignment:* Leaders like Narayana Murthy articulated a higher purpose (global respect for Indian engineering, ethical governance, wealth sharing via ESOPs), creating emotional ownership.
-  - *Psychological Safety:* As proven by Google's Project Aristotle, teams thrive when they feel psychologically safe to propose novel algorithms and voice dissenting technical opinions without fear of reprimand.
+**Transformational leadership is far more sustainable in the IT industry.**
+- **Creative Work Cannot Be Forced:** Writing high-quality software requires creativity and problem-solving. Engineers cannot be forced into great ideas through fear or strict commands.
+- **Inspiring Vision:** Leaders like Narayana Murthy gave engineers a bigger purpose—building a globally respected Indian tech company and sharing company wealth through employee stock options (ESOPs).
+- **Psychological Safety:** When team members feel safe to share bold ideas and admit mistakes without fear of blame, teams solve harder problems and stay with the company longer.
 
 ---
 
@@ -363,26 +379,26 @@ flowchart TD
 > | 4 | ₹25,000 | ₹13,000 |  
 > | 5 | ₹23,000 | ₹11,000 |
 
-**1. Mathematical Formulation:**
+**1. Mathematical Formula:**
 $$\text{PV Factor} = \frac{1}{(1 + r)^t} = (1.11)^{-t}$$
-$$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initial Investment } (I_0)$$
+$$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initial Cost } (I_0)$$
 
-**2. Tabular Calculation of Present Values:**
+**2. Step-by-Step Calculation Table:**
 
-| Year ($t$) | PV Factor ($11\%$) | Equipment A Cash Inflow (₹) | Equipment A PV (₹) | Equipment B Cash Inflow (₹) | Equipment B PV (₹) |
+| Year ($t$) | PV Factor ($11\%$) | Equipment A Inflow (₹) | Equipment A PV (₹) | Equipment B Inflow (₹) | Equipment B PV (₹) |
 |:---:|:---:|---:|---:|---:|---:|
 | 1 | $0.9009$ | $20,000$ | $18,018.02$ | $14,000$ | $12,612.61$ |
 | 2 | $0.8116$ | $18,000$ | $14,609.20$ | $18,000$ | $14,609.20$ |
 | 3 | $0.7312$ | $22,000$ | $16,086.21$ | $12,000$ | $8,774.30$ |
 | 4 | $0.6587$ | $25,000$ | $16,468.27$ | $13,000$ | $8,563.50$ |
 | 5 | $0.5935$ | $23,000$ | $13,649.38$ | $11,000$ | $6,527.96$ |
-| **Gross PV of Inflows** | | | $\mathbf{78,831.09}$ | | $\mathbf{51,087.58}$ |
-| *Less:* Initial Outlay ($I_0$) | | | $(75,000.00)$ | | $(50,000.00)$ |
+| **Total PV of Inflows** | | | $\mathbf{78,831.09}$ | | $\mathbf{51,087.58}$ |
+| *Less:* Initial Cost ($I_0$) | | | $(75,000.00)$ | | $(50,000.00)$ |
 | **NET PRESENT VALUE (NPV)** | | | **+ \text{Rs. } 3,831.09** | | **+ \text{Rs. } 1,087.58** |
 
-**3. Managerial Comment on Acceptability:**
-- **Independent Project Criteria:** Both Equipment A ($\text{NPV} = + \text{Rs. } 3,831.09 > 0$) and Equipment B ($\text{NPV} = + \text{Rs. } 1,087.58 > 0$) generate returns exceeding the $11\%$ required cost of capital. Both are financially acceptable on an individual basis.
-- **Mutually Exclusive Selection:** If the firm can install only one machine, **Equipment A is recommended** because it yields a significantly higher Net Present Value (**₹3,831.09 > ₹1,087.58**), creating more absolute wealth for shareholders.
+**3. Managerial Decision on Acceptability:**
+- **If Projects are Independent:** Both Equipment A ($\text{NPV} = + \text{Rs. } 3,831.09 > 0$) and Equipment B ($\text{NPV} = + \text{Rs. } 1,087.58 > 0$) earn more than the $11\%$ required rate of return. Both projects are financially acceptable on their own.
+- **If Mutually Exclusive (Can choose only one):** Choose **Equipment A** because it delivers a higher Net Present Value (**₹3,831.09 > ₹1,087.58**), creating more net wealth for the company.
 
 ---
 
@@ -392,13 +408,13 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > **Question Statement:**  
 > *Write notes (any one): (a) Cost, (b) Cost of Capital, (c) PBP, (d) Debt Capital. [4]*
 
-*(Write any one in exam; all four provided below)*
+*(Write any one in exam; all four explained below)*
 
-- **(a) Cost:** The monetary measurement of the total quantum of scarce economic resources (materials, labour, machine time) sacrificed or foregone to accomplish a specific operational objective.
-- **(b) Cost of Capital ($K$):** The minimum expected rate of return demanded by capital providers (debt holders, equity shareholders) to compensate them for the perceived investment risk and time value of their funds.
-- **(c) Payback Period (PBP):** The exact operational time (in years/months) required for cumulative nominal cash inflows from an investment project to fully recover the initial capital outlay ($I_0$).
-  > ⚠️ *Limitation:* It completely ignores the time value of money and ignores all cash flows received after the payback threshold.
-- **(d) Debt Capital:** Long-term external borrowing (debentures, bank term loans) carrying a contractual, mandatory obligation to pay periodic interest and refund the principal upon maturity, enjoying a tax shield because interest is tax-deductible ($K_d(1-t)$).
+- **(a) Cost:** The total money spent on resources (materials, worker wages, electricity, machine time) to make a product or deliver a service.
+- **(b) Cost of Capital ($K$):** The minimum percentage return that a company must earn on its investments so that lenders and shareholders are satisfied with their risk.
+- **(c) Payback Period (PBP):** The time (in years or months) required for a project's cash earnings to fully recover the initial money invested.
+  > ⚠️ *Main Drawback:* It completely ignores the time value of money, and it ignores all profits earned after the payback year.
+- **(d) Debt Capital:** Long-term borrowed funds (such as bank loans or debentures). The company must pay regular interest and repay the loan amount when it matures. *Big Advantage:* Interest paid on debt is tax-deductible, which saves the company money on taxes.
 
 ---
 
@@ -442,9 +458,9 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *What do you understand by real GDP? What advantages does it have over nominal GDP? Mention one flaw of using GDP as a measure of welfare. [3]*
 
 **Direct Solution:**
-- **Real GDP Definition:** The total market value of all final goods and services produced within a nation evaluated at **constant, fixed base-year prices** ($\text{GDP}_R = \sum P_{\text{base}} \cdot q_t$).
-- **Advantages over Nominal GDP:** Nominal GDP can increase purely due to price inflation without any expansion in physical output. Real GDP eliminates inflationary distortion, directly reflecting genuine changes in physical volume and productive capacity.
-- **One Major Flaw as a Measure of Welfare:** GDP records only monetized market transactions and completely omits **unpaid domestic care work and household labour** (disproportionately performed by women), negative environmental externalities (pollution), and income inequality.
+- **Real GDP Definition:** The total value of all final goods and services produced in a country, calculated using **constant, fixed base-year prices** ($\text{GDP}_R = \sum P_{\text{base}} \cdot q_t$).
+- **Advantages over Nominal GDP:** Nominal GDP can increase simply because market prices rose (inflation), even if factories made zero extra goods. Real GDP removes the effect of inflation and measures true growth in physical output.
+- **One Major Flaw as a Welfare Measure:** GDP counts only paid market transactions. It completely ignores **unpaid housework and caregiving** (like cooking, cleaning, child care), ignores environmental destruction (pollution), and ignores whether wealth is shared fairly among citizens.
 
 ---
 
@@ -462,12 +478,12 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 1. **Verbatim AAA Definition:**  
    > *"Accounting is the process of identifying, measuring, and communicating economic information to permit informed judgments and decision making by the users of information."* — American Accounting Association (AAA)
 
-2. **Keyword Deconstruction:**
-   - **Process:** A continuous, chronological cycle of recording, classifying, summarizing, and reporting financial data.
-   - **Identifying:** Filtering events to capture only those that have a **financial character** and alter asset/liability balances.
-   - **Measuring:** Quantifying identified transactions in terms of a common, stable monetary standard (INR).
-   - **Communicating:** Synthesizing quantified data into standardized financial statements (Balance Sheet, P&L Statement) shared with stakeholders.
-   - **Informed Judgments by Users:** Equipping investors, creditors, and managers with verified metrics to allocate scarce capital effectively.
+2. **Step-by-Step Meaning (Easy to Memorize):**
+   - **Process:** A regular, step-by-step cycle of recording, classifying, summarizing, and reporting business data.
+   - **Identifying:** Deciding which business events involve money and need to be recorded in the books.
+   - **Measuring:** Putting a clear money value (in Rupees or Dollars) on each transaction.
+   - **Communicating:** Preparing standard reports (like the Balance Sheet and Profit & Loss Statement) so people can easily understand them.
+   - **Informed Decisions by Users:** Helping business owners, investors, banks, and managers make smart choices about where to spend or invest money.
 
 ---
 
@@ -478,9 +494,9 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *Write Short Notes on: (i) Contract Costing, (ii) Process Costing. [5]*
 
 **Direct Solution:**
-- **(i) Contract Costing:** A variation of job costing applied to large-scale, non-repetitive, multi-year engineering and construction projects (e.g., highway flyovers, maritime docks, high-rise buildings). Work is executed on-site according to client specifications, and profit is recognized progressively using the percentage-of-completion method.
-- **(ii) Process Costing:** Applied where output results from a continuous, automated flow through a sequence of continuous chemical/physical processes (e.g., oil refining, chemical plants). Cost per unit is calculated as:
-  $$\text{Unit Cost} = \frac{\text{Total Process Cost incurred in period}}{\text{Total Units produced in period}}$$
+- **(i) Contract Costing:** A costing method used for large, long-term construction projects that take months or years to finish (e.g., building bridges, dams, highways, or ships). Work is done at the customer's site, and profit is recognized gradually as different milestones are completed.
+- **(ii) Process Costing:** A costing method used in industries where identical, standardized products pass continuously through a series of stages (processes). Example: oil refineries, sugar mills, chemical plants.  
+  $$\text{Unit Cost} = \frac{\text{Total Process Cost in Period}}{\text{Total Units Produced in Period}}$$
 
 ---
 
@@ -502,9 +518,9 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **Direct Solution:**
 1. **Governing Formula:**
-   $$\mathbf{\text{Raw Material Consumed}} = \text{Opening Stock of RM} + \text{Purchases of RM} + \text{Carriage Inwards} - \text{Returns to Suppliers} - \text{Closing Stock of RM}$$
+   $$\mathbf{\text{Raw Material Consumed}} = \text{Opening Stock} + \text{Purchases} + \text{Carriage Inwards} - \text{Returns to Suppliers} - \text{Closing Stock}$$
 
-2. **Computational Table:**
+2. **Calculation Table:**
 
 | Particulars | Inner Amount (₹) | Outer Amount (₹) |
 |:---|---:|---:|
@@ -516,10 +532,10 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 | *Less:* Closing Stock of Raw Materials | $(10,800)$ | |
 | **RAW MATERIAL CONSUMED** | | **₹2,52,700** |
 
-3. **Explicit List of Excluded Items (Belonging to Later Stages):**
-   - *Direct Charges / Prime Cost:* Productive Wages (₹10,000), Direct Chargeable Expenses (₹2,800).
+3. **Items Excluded from this Calculation (Belonging to Later Stages):**
+   - *Direct Wages / Prime Cost:* Productive Wages (₹10,000), Direct Chargeable Expenses (₹2,800).
    - *Factory Overheads:* Repairs to Plant (₹9,600), Workshop Rent (₹42,500), Non-productive Wages (₹22,000), Fuel/Gas/Water (₹21,000), Depreciation on Machinery (₹41,400).
-   - *Administrative Overheads:* Office Expenses (₹41,500), Office Salaries (₹45,000).
+   - *Office / Admin Overheads:* Office Expenses (₹41,500), Office Salaries (₹45,000).
 
 ---
 
@@ -532,15 +548,15 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *Define GDP of an economy. With the help of the Circular flow of income model, explain why total factor income is equivalent to total expenditure. [2 + 3 = 5]*
 
 **Direct Solution:**
-1. **GDP Definition [2M]:**  
-   The aggregate market value of all **final goods and services** produced within the **geographical boundaries** of an economy over a **specified period of time** (typically one fiscal year).
+1. **Definition of GDP [2M]:**  
+   The total market value of all **final goods and services** produced **within the geographical boundaries of a country** over a **specific time period** (normally one year).
 
-2. **Circular Flow Factor Income Equivalence [3M]:**  
-   In the circular flow model:
-   - Firms hire productive factors from households and disburse factor payments (wages, rent, interest, profit) equal to the net output value.
-   - Households spend this factor income on the final output produced by firms.
-   - Since one party's expenditure is strictly another party's income:
-     $$\mathbf{\text{Total Factor Income Received} \equiv \text{Total Production Market Value} \equiv \text{Total Consumer Expenditure}}$$
+2. **Why Total Factor Income Equals Total Expenditure [3M]:**  
+   In a circular flow economy:
+   - Firms hire workers and land from households to make goods. When firms sell these goods, they pay all their sales revenue back to households as wages, rent, interest, and profits.
+   - Households take that income and spend it to buy goods from firms.
+   - Since every rupee spent by a buyer is a rupee received by a seller:
+     $$\mathbf{\text{Total Factor Income Earned} \equiv \text{Total Production Value} \equiv \text{Total Consumer Expenditure}}$$
 
 ---
 
@@ -552,14 +568,19 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **Direct Solution:**
 1. **Marginal Propensity to Consume (MPC) [1M]:**  
-   The fraction of an additional unit of disposable national income spent on consumption:
-   $$\text{MPC} = b = \frac{dC}{dY}, \quad \text{where } 0 < b < 1$$
+   The fraction of any extra income that a person spends on consumption:
+   $$\text{MPC} = b = \frac{\Delta C}{\Delta Y}, \quad \text{where } 0 < b < 1$$
+
 2. **Significance for the Investment Multiplier [2M]:**  
-   The investment multiplier $k = \frac{1}{1 - b}$. As $b \to 1$, $(1 - b) \to 0$, causing $k \to \infty$. A higher MPC means households respend a larger fraction of injected income in subsequent cycles, amplifying the cumulative economic expansion from private investment.
-3. **Why Keynesian Cross is a Stable Equilibrium [2M]:**  
-   If the economy deviates from $Y^{\ast}$, unintended inventory fluctuations self-correct the gap:
-   - At $Y < Y^{\ast}$, demand exceeds production ($PE > AE$), depleting inventory and prompting firms to raise output.
-   - At $Y > Y^{\ast}$, production exceeds demand ($AE > PE$), unsold stocks pile up, and firms reduce production back to $Y^{\ast}$.
+   The investment multiplier formula is:
+   $$k = \frac{1}{1 - b}$$
+   - When MPC ($b$) is higher, $(1 - b)$ is smaller, so the multiplier $k$ becomes **much larger**.
+   - This means when people spend a larger share of their extra earnings, every rupee of business investment creates more rounds of income across the economy.
+
+3. **Why the Keynesian Cross is a Stable Equilibrium [2M]:**  
+   If production deviates from balance ($Y^{\ast}$), automatic inventory changes correct it:
+   - **If Output is Too Low ($Y < Y^{\ast}$):** People want to buy more than what is made ($PE > AE$). Inventories in stores drop unexpectedly. Firms respond by hiring more workers and producing more goods, bringing $Y$ up to $Y^{\ast}$.
+   - **If Output is Too High ($Y > Y^{\ast}$):** Firms produce more than people buy ($AE > PE$). Unsold goods pile up in warehouses. Firms cut back on production, bringing $Y$ down to $Y^{\ast}$.
 
 ---
 
@@ -577,13 +598,21 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *v. How can you reduce capacity leakage in an organization?*
 
 **Direct Solution:**
-- **i. Role of CSR & Sustainable Development Goals [2M]:** Corporate Social Responsibility ensures a company balances profit with societal well-being and ecological sustainability (reducing waste, promoting clean energy, fair wages), directly supporting UN Sustainable Development Goals (SDGs 8, 12, 13).
+- **i. Role of CSR & Sustainable Development Goals [2M]:** CSR ensures companies do not focus only on profits, but also protect the environment and care for society (e.g., reducing factory pollution, saving energy, paying fair wages). This directly supports UN Sustainable Development Goals like Decent Work (SDG 8), Responsible Production (SDG 12), and Climate Action (SDG 13).
 - **ii. Management: Science, Art, or Profession? [2M]:** Management is **both science and art**:
-  - *Science:* Grounded in systematic principles, empirical evidence, and quantitative methods.
-  - *Art:* Relies on intuition, personal leadership, emotional empathy, and situational flexibility. It is also an evolving *profession* governed by formal education and ethics.
-- **iii. Coordinating Management Functions as an Engineer [2M]:** Systematically integrate Fayol's 5 classical functions: Plan project technical milestones $\to$ Organize equipment and team roles $\to$ Command daily engineering sprints $\to$ Coordinate across hardware/software interfaces $\to$ Control defect rates and budget variances.
-- **iv. Model to Reduce Employee Attrition [2M]:** Apply the 4-quadrant workforce model by providing competitive fair compensation, transparent career progression, and psychological safety (Project Aristotle), transforming "burned-out" staff into engaged star performers.
-- **v. Reducing Capacity Leakage [2M]:** Implement Toyota Lean principles (*Muda* elimination)—streamlining process workflows, eliminating idle machine waiting times, and automating routine reporting.
+  - *Science:* It uses proven principles, data, statistical methods, and formulas (like project scheduling and financial metrics).
+  - *Art:* It requires personal skill, creativity, emotional empathy, and good communication to lead people.
+  - *Profession:* It is also an evolving profession with formal university degrees and ethical codes of conduct.
+- **iii. Coordinating Management Functions as an Engineer [2M]:** Apply Henri Fayol's 5 classical steps:
+  Plan project technical milestones $\to$ Organize tools, computers, and roles $\to$ Lead daily standup meetings $\to$ Coordinate work between hardware and software teams $\to$ Control defect rates, testing results, and budgets.
+- **iv. Model to Reduce Employee Attrition [2M]:**
+  - Offer fair, competitive salaries.
+  - Provide clear career advancement paths and technical training.
+  - Build a supportive culture where engineers feel safe to ask questions and take smart risks without fear of harsh blame (**Psychological Safety**).
+- **v. Reducing Capacity Leakage [2M]:** Apply Lean principles:
+  - Eliminate idle machine waiting time between factory runs.
+  - Cut out unnecessary meetings and slow approval processes.
+  - Automate routine, repetitive paperwork.
 
 ---
 
@@ -601,14 +630,21 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *v. Propose a new management structure that includes top, middle, and lower-level managers for better coordination and decision-making.*
 
 **Direct Solution:**
-- **i. Fayol Principles Missing [2M]:** *Unity of Direction* (lack of cross-team coordination), *Scalar Chain* (inflexible communication), and *Initiative* (middle/lower management have no voice).
-- **ii. Leadership Style for Motivation [2M]:** Adopt a **Democratic/Participative style** combined with transformational elements. Involve project leads in roadmap discussions and conduct open technical retrospectives.
-- **iii. Top-Down vs. Participative Approach [2M]:** Top-down is too rigid for 500+ tech employees. A participative approach improves ownership, boosts software code quality, and reduces developer burnout.
-- **iv. Applying Toyota Lean Management [2M]:** Eliminate *Muda* (redundant meetings, duplicate code reviews) and institute *Kaizen* (continuous bottom-up employee feedback loops for operational efficiency).
-- **v. Proposed Structure [2M]:**
-  - *Top Management (CEO/CTO):* Strategic market roadmap and capital allocation.
-  - *Middle Management (Engineering Managers):* Translate strategy into sprint deliverables and coordinate cross-functional teams.
-  - *Lower Management (Scrum Leads/Supervisors):* Manage daily code deployments and mentor junior engineers.
+- **i. Missing Fayol Principles [2M]:**
+  - *Unity of Direction:* Different teams are pulling in different directions, causing project delays.
+  - *Scalar Chain:* Communication is too slow and rigid from top to bottom.
+  - *Initiative:* Middle managers and developers are not allowed to suggest ideas.
+- **ii. Recommended Leadership Style [2M]:** Adopt a **Democratic / Participative style**. Involve project leads and senior engineers in setting sprint roadmaps, and hold open team retrospectives to hear their feedback.
+- **iii. Top-Down vs. Participative Approach [2M]:** Top-down decision-making fails in a 500+ person software company because executives cannot know every technical detail. A participative approach gives developers ownership of their work, improves code quality, and reduces developer burnout.
+- **iv. Applying Toyota Lean Management [2M]:**
+  - Eliminate *Muda* (Waste): Cancel unnecessary meetings, remove duplicate code reviews, and stop writing unused documentation.
+  - Implement *Kaizen* (Continuous Improvement): Let developers submit small weekly suggestions to improve deployment tools and workflows.
+- **v. Proposed Three-Level Structure [2M]:**
+  - *Top Management (CEO/CTO):* Decides overall company vision, major client contracts, and resource budgets.
+  - *Middle Management (Engineering Managers):* Translates business goals into sprint milestones and coordinates between teams.
+  - *Lower Management (Tech Leads / Scrum Masters):* Manages daily coding tasks, resolves technical blockers, and mentors junior engineers.
+
+---
 
 ---
 
@@ -625,10 +661,20 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *Discuss four major Long term Sources of Corporate Finance. [4]*
 
 **Direct Solution:**
-1. **Equity Share Capital:** The primary risk-bearing ownership capital of a corporation. It is permanent/irrefundable (repaid only on liquidation), carries voting rights, and has no fixed dividend obligation, serving as the financial loss cushion.
-2. **Retained Earnings (Internal Accruals):** Undistributed profits ploughed back into business expansion, carrying zero debt burden and avoiding share issuance costs.
-3. **Debentures / Corporate Bonds:** Long-term debt instruments carrying a fixed contractual interest rate and specified maturity date. Interest is tax-deductible ($K_d(1-t)$), providing a debt tax shield.
-4. **Preference Share Capital:** Hybrid securities carrying a fixed dividend rate that takes legal priority over common equity dividends, often cumulative in nature.
+1. **Equity Share Capital:**
+   - The primary ownership money of the company.
+   - It is permanent and never repaid during the company's normal life (repaid only if the company closes down).
+   - Shareholders get voting rights to elect the board of directors, but dividends are paid only when there is profit.
+2. **Retained Earnings (Internal Profits):**
+   - Company profits kept aside and reinvested into business expansion rather than paid out as dividends.
+   - It has no interest burden, requires no collateral, and avoids the fees of issuing new shares.
+3. **Debentures / Corporate Bonds:**
+   - Long-term loans taken from the public.
+   - The company must pay a fixed interest rate every year and repay the borrowed principal on a set maturity date.
+   - *Advantage:* Interest paid is tax-deductible, which lowers the company's tax bill.
+4. **Preference Share Capital:**
+   - Hybrid securities that pay a fixed dividend percentage before any dividend can be paid to common equity shareholders.
+   - Preference shareholders usually do not have voting rights.
 
 ---
 
@@ -640,12 +686,14 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **Direct Solution:**
 1. **Definition of Cost [2M]:**  
-   The monetary value of scarce economic resources sacrificed to achieve a specific operational objective.
-2. **Functional Classification with Examples [4M]:**
-   - *Manufacturing / Factory Cost:* Incurred in converting raw materials into finished products (e.g., factory power, machine operator wages, plant depreciation).
-   - *Administrative Cost:* Expenses incurred in general policy formulation, board direction, and legal compliance (e.g., office rent, audit fees, executive salaries).
-   - *Selling & Distribution Cost:* Incurred in marketing, winning orders, and delivering finished goods to customers (e.g., advertising, carriage outwards, showroom lighting).
-   - *Research & Development Cost:* Expenses incurred to formulate new products or optimize industrial engineering processes.
+   The total money spent on resources (materials, labour, electricity, and machine time) to make a product or deliver a service.
+
+2. **Functional Classification with Examples [4M]:**  
+   Dividing expenses based on the business department where they happen:
+   - **Manufacturing / Factory Cost:** Costs incurred inside the plant to produce the good (e.g., raw steel, machine operator wages, factory electric power).
+   - **Administrative Cost:** Costs of running the head office and managing overall business operations (e.g., office rent, clerk salaries, legal and audit fees).
+   - **Selling & Distribution Cost:** Costs of advertising, winning customer orders, and delivering goods (e.g., billboard ads, salesmen commissions, delivery van fuel).
+   - **Research & Development (R&D) Cost:** Money spent on inventing new products or improving engineering technology (e.g., prototype testing, laboratory materials).
 
 ---
 
@@ -677,23 +725,23 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **Direct Solution:**
 
-| Item | Classification & Rationale | Amount (₹) |
+| Item | Reason for Inclusion | Amount (₹) |
 |:---|:---|---:|
-| Clerk's Salary | Office administrative staff salary | $1,80,000$ |
-| Postage | Administrative communication expense | $5,000$ |
-| Stationery | General office supply | $80,000$ |
-| Meeting Expenses | Executive / administrative meeting cost | $50,000$ |
-| Accounting Charges | Record-keeping and accounting fees | $2,50,000$ |
-| Audit Fees | Statutory compliance and auditing | $1,60,000$ |
-| Office Rent | Facility charge for executive office | $1,50,000$ |
-| Depreciation of Photo Copier | Office appliance wear-and-tear | $50,000$ |
+| Clerk's Salary | Salary of office administrative staff | $1,80,000$ |
+| Postage | Office communication expense | $5,000$ |
+| Stationery | General office supplies and paperwork | $80,000$ |
+| Meeting Expenses | Cost of executive and board meetings | $50,000$ |
+| Accounting Charges | Bookkeeping and financial record fees | $2,50,000$ |
+| Audit Fees | Statutory compliance and legal audit | $1,60,000$ |
+| Office Rent | Rent paid for head office premises | $1,50,000$ |
+| Depreciation of Photo Copier | Wear-and-tear of office copying machine | $50,000$ |
 | Electricity (50% for Office) | Total ₹1,00,000 - 50% Factory (₹50,000) | 50,000 |
-| Telephone Charges | Administrative telecommunication | $70,000$ |
+| Telephone Charges | Administrative telephone lines | $70,000$ |
 | **TOTAL ADMINISTRATIVE OVERHEADS** | | **₹10,45,000** |
 
-*Excluded Items & Respective Stages:*
+*Items Excluded (Belonging to other stages):*
 - *Prime Cost:* Direct Materials (₹10,00,000), Direct Wages (₹8,00,000), Direct Expenses (₹2,00,000).
-- *Factory Overheads:* Indirect Wages (₹50,000), Factory Electricity (₹50,000).
+- *Factory Overheads:* Indirect Wages (₹50,000), Factory Electricity 50% (₹50,000).
 - *Selling & Distribution Overheads:* Packing Charges (₹50,000), Advertisements (₹1,00,000).
 - *Revenue:* Sales (₹90,00,000).
 
@@ -711,10 +759,11 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *(d) How does inflation affect the calculation of an economy's real GDP? [2]*
 
 **Direct Solution:**
-- **(a) What is GDP? [1M]:** The total market value of all final goods and services produced within the geographical boundaries of a country during a specified time period.
-- **(b) Previous Year Goods Excluded [1M]:** GDP measures **current productive output**. Goods produced in previous years were already counted in those respective years' GDP; including them again upon resale would constitute double counting.
-- **(c) Inference if GDP is Much Lower than GNP [1M]:** Since $\text{GNP} = \text{GDP} + \text{NFIA}$, if $\text{GDP} < \text{GNP}$, then $\text{NFIA} > 0$. This indicates the country's citizens and corporations earn substantial factor income abroad (e.g., massive overseas worker remittances, overseas investments) that far exceed the factor payments remitted out to foreign entities operating domestically.
-- **(d) How Inflation Affects Real GDP [2M]:** Inflation inflates nominal GDP by raising prices ($P \uparrow$) without increasing physical goods ($q$). Real GDP corrects for this by valuing current output at constant base-year prices:
+- **(a) What is GDP? [1M]:** The total market value of all final goods and services produced within the geographic borders of a country during one year.
+- **(b) Why Previous Year Goods are Excluded [1M]:** GDP measures only **current year production**. Goods made in earlier years were already counted in the year they were manufactured. Counting them again when resold would be double counting.
+- **(c) What it means if GDP is much lower than GNP [1M]:**  
+  Since $\text{GNP} = \text{GDP} + \text{NFIA}$, if $\text{GDP} < \text{GNP}$, then Net Factor Income from Abroad ($\text{NFIA}$) is positive and large. This means the country's citizens and companies earn substantial money overseas (like citizens working abroad sending remittances home, or foreign investments) that is much greater than what foreign entities earn inside this country.
+- **(d) How Inflation Affects Real GDP [2M]:** Inflation pushes up prices ($P$), making nominal GDP look larger even if factories produced no extra physical goods. Real GDP corrects for inflation by valuing current output at fixed base-year prices:
   $$\text{Real GDP} = \frac{\text{Nominal GDP}}{\text{GDP Deflator}} \times 100$$
 
 ---
@@ -727,8 +776,14 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *(b) State and explain the functions of money. [2]*
 
 **Direct Solution:**
-- **(a) Reserve Requirement Cut & Money Supply [3M]:** The statement is **valid**. Commercial banks create money through fractional-reserve lending. The theoretical credit multiplier is $m = \frac{1}{\text{CRR}}$. Cutting the Cash Reserve Ratio lowers the mandatory cash idle in bank vaults, freeing up excess reserves that banks lend out, expanding the broader money supply ($M_3$).
-- **(b) Functions of Money [2M]:** (1) Universal Medium of Exchange, (2) Standard Unit of Account, (3) Store of Value.
+- **(a) Reserve Requirement Cut & Money Supply [3M]:**  
+  The statement is **valid**. Commercial banks create money by lending out deposits. The credit multiplier formula is:
+  $$m = \frac{1}{\text{CRR}}$$
+  When the Central Bank cuts the Cash Reserve Ratio ($\text{CRR}$), commercial banks need to keep less cash idle in vaults. This leaves banks with more money to lend out to businesses and consumers, expanding the overall money supply ($M_3$) in the economy.
+- **(b) The Functions of Money [2M]:**
+  1. *Medium of Exchange:* Used by everyone to buy and sell goods without needing barter.
+  2. *Unit of Account:* Gives a single standard price tag to compare values and keep business accounts.
+  3. *Store of Value:* Allows people to save purchasing power today and spend it in the future.
 
 ---
 
@@ -743,13 +798,13 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **Direct Solution:**
 1. **(a) Relevance of Management in Making Successful Teams (Project Aristotle) [5M]:**
-   - Project Aristotle analyzed 180 Google teams and discovered that individual talent, IQ, and elite credentials did not correlate with team effectiveness.
-   - The decisive factor was **Psychological Safety**—a managerial climate where team members feel safe taking risks, admitting errors, and pitching radical ideas without fear of embarrassment.
-   - Management's role is establishing conversational turn-taking, empathetic listening, and structural clarity, transforming individual ability into collaborative synergy.
+   - Google studied 180 engineering teams to find what made teams effective. They found that individual intelligence, coding skills, and elite degrees did not predict team success.
+   - The #1 factor was **Psychological Safety**—a team culture where members feel safe to take risks, ask questions, and propose unusual ideas without fear of being laughed at or blamed.
+   - Management's role is to build this culture by ensuring everyone gets equal speaking time in meetings, listening actively, and treating mistakes as learning opportunities.
 
 2. **(b) Management as Both Systematic Science and Intuitive Art [5M]:**
-   - **Evidence-Based Science:** Functions like operational budgeting, statistical quality control (Six Sigma), critical path scheduling, and discounted cash flow analysis require quantitative, empirical algorithms.
-   - **Intuitive Art:** Functions like resolving interpersonal conflict, motivating burned-out engineers, navigating unquantifiable geopolitical risk, and leading organizational turnaround depend on personal emotional intelligence, charisma, and intuition.
+   - **Management as a Science (Data & Formulas):** Functions like project scheduling (Critical Path Method), inventory formulas (EOQ), quality control charts (Six Sigma), and capital budgeting (NPV) rely strictly on quantitative data and mathematical rules.
+   - **Management as an Art (People & Intuition):** Functions like motivating burned-out developers, resolving personality clashes, negotiating client conflicts, and leading during a crisis depend on personal empathy, communication, and leadership judgment.
 
 ---
 
@@ -764,18 +819,18 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 > *According to Functional classification, indicate what type of Overheads are the following items (any Seven): [7]*  
 > *a. Lubricants, b. Advertisement, c. Carriage outwards, d. Meeting Expenses, e. Depreciation of Delivery Van, f. Stationery, g. Power and Fuel, h. Cotton Waste, i. Director's Fees, j. General Expenses.*
 
-*(Classify any seven in exam; all 10 itemized below)*
+*(All 10 items classified below; write any seven in exam)*
 
-1. **Lubricants:** Factory / Works Overhead (indirect material maintaining machinery).
-2. **Advertisement:** Selling & Distribution Overhead (marketing to generate consumer demand).
-3. **Carriage Outwards:** Selling & Distribution Overhead (freight paid to deliver finished goods).
-4. **Meeting Expenses:** Office & Administrative Overhead (board/management meeting costs).
-5. **Depreciation of Delivery Van:** Selling & Distribution Overhead (logistics equipment wear).
-6. **Stationery:** Office & Administrative Overhead (general paperwork and office supplies).
-7. **Power and Fuel:** Factory / Works Overhead (operating plant machinery).
-8. **Cotton Waste:** Factory / Works Overhead (cleaning and machine maintenance).
-9. **Director's Fees:** Office & Administrative Overhead (corporate governance compensation).
-10. **General Expenses:** Office & Administrative Overhead (sundry administrative expenses).
+1. **Lubricants:** Factory / Works Overhead (machine maintenance consumable).
+2. **Advertisement:** Selling & Distribution Overhead (marketing to attract buyers).
+3. **Carriage Outwards:** Selling & Distribution Overhead (freight paid to ship goods to clients).
+4. **Meeting Expenses:** Office & Administrative Overhead (board and management meetings).
+5. **Depreciation of Delivery Van:** Selling & Distribution Overhead (wear-and-tear of delivery vehicle).
+6. **Stationery:** Office & Administrative Overhead (office paper and desk supplies).
+7. **Power and Fuel:** Factory / Works Overhead (electricity and fuel to run factory machines).
+8. **Cotton Waste:** Factory / Works Overhead (cloth used to clean factory equipment).
+9. **Director's Fees:** Office & Administrative Overhead (compensation for company directors).
+10. **General Expenses:** Office & Administrative Overhead (miscellaneous office running costs).
 
 ---
 
@@ -797,19 +852,19 @@ $$\text{NPV} = \sum_{t=1}^5 \frac{\text{Cash Inflow}_t}{(1.11)^t} - \text{Initia
 
 **Direct Solution:**
 
-| Year ($t$) | Discount Factor ($10\%$) | Machine A EAT (₹) | Machine A PV (₹) | Machine B EAT (₹) | Machine B PV (₹) |
+| Year ($t$) | Discount Factor ($10\%$) | Machine A Inflow (₹) | Machine A PV (₹) | Machine B Inflow (₹) | Machine B PV (₹) |
 |:---:|:---:|---:|---:|---:|---:|
 | 1 | $0.9091$ | $24,000$ | $21,818.18$ | $8,000$ | $7,272.73$ |
 | 2 | $0.8264$ | $32,000$ | $26,446.28$ | $24,000$ | $19,834.71$ |
 | 3 | $0.7513$ | $40,000$ | $30,052.59$ | $32,000$ | $24,042.07$ |
 | 4 | $0.6830$ | $24,000$ | $16,392.32$ | $48,000$ | $32,784.65$ |
 | 5 | $0.6209$ | $16,000$ | $9,934.74$ | $32,000$ | $19,869.48$ |
-| **Gross PV of Inflows** | | | $\mathbf{1,04,644.12}$ | | $\mathbf{1,03,803.64}$ |
-| *Less:* Initial Outlay | | | $(80,000.00)$ | | $(80,000.00)$ |
+| **Total PV of Inflows** | | | $\mathbf{1,04,644.12}$ | | $\mathbf{1,03,803.64}$ |
+| *Less:* Initial Cost | | | $(80,000.00)$ | | $(80,000.00)$ |
 | **NET PRESENT VALUE (NPV)** | | | **+ \text{Rs. } 24,644.12** | | **+ \text{Rs. } 23,803.64** |
 
-**Decision Recommendation:**  
-Both machines have substantial positive NPVs ($> 0$). Under mutually exclusive choice, **Machine A is selected** because its NPV (₹24,644.12) exceeds Machine B (₹23,803.64).
+**Decision & Recommendation:**  
+Both machines have positive NPVs ($> 0$), meaning both earn more than the 10% cost of capital. When choosing between the two machines, **Machine A is selected** because its NPV is higher (**₹24,644.12 > ₹23,803.64**), adding more wealth to the firm.
 
 ---
 
@@ -822,8 +877,8 @@ Both machines have substantial positive NPVs ($> 0$). Under mutually exclusive c
 > *State the law of demand. [1]*
 
 **Direct Solution:**  
-The quantity demanded of a commodity is inversely related to its unit price, *ceteris paribus* (holding all other determinants like consumer income and tastes constant):
-$$q_x^d \propto \frac{1}{P_x} \quad \Longleftrightarrow \quad P_x \uparrow \;\implies\; q_x^d \downarrow$$
+When the price of a good rises, the quantity demanded falls; when the price falls, demand rises—provided consumer income, tastes, and prices of related goods remain constant (*ceteris paribus*):
+$$P_x \uparrow \;\implies\; q_x^d \downarrow \quad \text{and} \quad P_x \downarrow \;\implies\; q_x^d \uparrow$$
 
 ---
 
@@ -834,7 +889,7 @@ $$q_x^d \propto \frac{1}{P_x} \quad \Longleftrightarrow \quad P_x \uparrow \;\im
 > *What is the purpose of fixing a base year for calculating the GDP of a country? [2]*
 
 **Direct Solution:**  
-The purpose of fixing a base year is to establish an unchanging, constant price benchmark ($P_{\text{base}}$). This removes the distorting effects of price inflation from GDP calculations, ensuring that observed growth in Real GDP reflects only genuine increases in the physical volume of goods and services produced.
+The purpose of fixing a base year is to keep prices constant at a fixed benchmark ($P_{\text{base}}$). This removes the artificial effect of inflation, ensuring that any increase in Real GDP shows only a genuine increase in the physical volume of goods and services produced.
 
 ---
 
@@ -845,22 +900,23 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 > *Explain in graphically how, in a Keynesian framework, an autonomous increase in government expenditure influences the equilibrium income in the economy. Does an increase in taxes have the same impact on equilibrium income? Explain. [4 + 2 = 6]*
 
 **Direct Solution:**
-1. **Graphical Effect of Autonomous Government Expenditure ($\Delta G > 0$):**
-   - In the Keynesian Cross diagram, Planned Expenditure is $PE = (a + \bar{I} + G) + bY$.
-   - An increase in government expenditure by $\Delta G$ shifts the entire planned expenditure line upward in parallel by $\Delta G$.
-   - At the original output level $Y_1^{\ast}$, demand exceeds production, causing unanticipated inventory decumulation.
-   - Firms expand production along the $45^\circ$ line until the new equilibrium $Y_2^{\ast}$ is established.
-   - Through the multiplier process, the expansion in income is larger than the initial injection:
+1. **Effect of Autonomous Government Expenditure ($\Delta G > 0$) [4M]:**
+   - Planned spending in the economy is $PE = a + \bar{I} + G + bY$.
+   - When government spending rises by $\Delta G$, the entire planned expenditure line shifts straight up by $\Delta G$.
+   - At the old income level $Y_1^{\ast}$, demand is now higher than production ($PE > AE$). Goods in stores run out faster than planned (inventory drops).
+   - In response, firms hire more workers and produce more goods along the $45^\circ$ line until the new balance $Y_2^{\ast}$ is reached.
+   - Because of the multiplier effect, total income expands by more than the initial spending:
      $$\frac{dY}{dG} = \frac{1}{1 - b} \implies \Delta Y = \frac{\Delta G}{1 - b} > \Delta G$$
 
 2. **Does a Tax Increase Have the Same Impact? [2M]:**
-   - **No, the impact is strictly smaller in magnitude and opposite in sign.**
-   - When taxes rise by $\Delta T$, disposable income falls, reducing consumption by $b \cdot \Delta T$ (since households cushion the loss by cutting savings).
-   - The tax multiplier is:
+   - **No. The tax impact is smaller in size and opposite in direction.**
+   - When taxes increase by $\Delta T$, household take-home income drops. But people do not cut their spending by the full tax amount; they absorb part of it by cutting their savings.
+   - Therefore, initial spending falls by only $b \cdot \Delta T$.
+   - The tax multiplier formula is:
      $$\frac{dY}{dT} = -\frac{b}{1 - b}$$
-   - Comparing magnitudes:
-     $$\left|\frac{-b}{1 - b}\right| = \frac{1}{1 - b} - 1 < \frac{1}{1 - b}$$
-   - A ₹100 crore tax hike contracts national income by less than a ₹100 crore spending cut would.
+   - Comparing the two:
+     $$\left|\frac{-b}{1 - b}\right| < \frac{1}{1 - b}$$
+   - For example, if MPC $b = 0.8$, the spending multiplier is $\frac{1}{0.2} = 5$, while the tax multiplier is $-\frac{0.8}{0.2} = -4$. A ₹100 crore tax increase slows the economy less than a ₹100 crore spending cut would.
 
 ---
 
@@ -878,12 +934,12 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 > *iii. The suitability of different management styles for a manufacturing setup from an engineering perspective. [4]*
 
 **Direct Solution:**
-- **i. Impact on Motivation & Retention [2M]:** One-way top-down communication treats engineers and technicians as mechanical cogs, causing burnout, absenteeism, and high turnover as skilled workers seek empowering environments.
-- **ii. Impact of Employee Involvement [2M]:** Involving shop-floor workers via participative management taps tacit shop-floor knowledge, fosters psychological ownership, and enables proactive quality defect prevention.
-- **iii. Engineering Suitability of Styles [4M]:**
-  - *Autocratic:* Essential during emergency maintenance shutdowns, hazardous chemical handling, or critical safety violations.
-  - *Democratic / Participative:* Highly effective for assembly line optimization, root-cause failure analysis (Kaizen), and tooling redesign.
-  - *Laissez-Faire:* Generally unsuitable on a high-risk production shop-floor, but applicable to the plant's separate advanced process R&D cell.
+- **i. Impact on Motivation and Retention [2M]:** Strict top-down orders treat skilled technicians and engineers like machines. Workers feel undervalued, which leads to mental burnout, frequent absenteeism, and high employee turnover.
+- **ii. How Employee Involvement Improves Productivity [2M]:** Shop-floor technicians work with the machines every day and know practical problems best. Involving them in discussions gives them pride in their work, prevents machine breakdowns, and helps catch product defects early.
+- **iii. Suitability of Styles in Manufacturing [4M]:**
+  - **Autocratic (Strict Control):** Essential during plant emergencies, safety violations, hazardous chemical handling, or fires, where instant decisions save lives.
+  - **Democratic / Participative (Team Collaboration):** Best for everyday operations, reducing machine bottlenecks, assembly line balancing, and continuous quality improvement (**Kaizen**).
+  - **Laissez-Faire (Hands-off):** Not suitable on a dangerous factory floor, but excellent for a separate plant R&D department designing new engineering prototypes.
 
 ---
 
@@ -910,27 +966,29 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 > | | | Insurance of Plant | 25,000 |
 
 **Direct Solution:**
-1. **Part A: Cost Classifications According to Traceability [4M]:**
-   - **Direct Costs:** Costs directly, easily, and economically traceable to a specific cost object (e.g., direct raw materials, assembly line direct labour).
-   - **Indirect Costs (Overheads):** Shared operational expenses that benefit multiple operations and cannot be traced to a single unit (e.g., factory lighting, supervisory salaries, plant depreciation).
+1. **Part A: Cost Classifications by Traceability [4M]:**
+   - **Direct Costs:** Costs that can be easily and directly traced to a specific product.  
+     *Example:* Raw wood used to make a table, or wages paid to the carpenter making it.
+   - **Indirect Costs (Overheads):** General costs that benefit the entire factory and cannot be traced to a single unit.  
+     *Example:* Factory lighting, lubricants for machines, factory security guard salary.
 
-2. **Part B: Numerical Calculation of Works Overheads Only [6M]:**
+2. **Part B: Calculation of Works Overheads Only [6M]:**
 
-| Item | Classification & Rationale | Amount (₹) |
+| Item | Reason for Inclusion | Amount (₹) |
 |:---|:---|---:|
-| Indirect Materials | Factory consumable materials | $60,000$ |
-| Indirect Wages | Factory maintenance / helper wages | $1,00,000$ |
-| Rent: Factory | Workshop rental | $75,000$ |
-| Lighting (50% for Factory) | 50% of ₹88,000 | $44,000$ |
-| Power | Motive power for plant machinery | $60,000$ |
-| Depreciation of Plant | Machine capital wear-and-tear | $1,15,500$ |
-| Salary of Works Manager | Factory production head salary | $95,000$ |
-| Lubricant | Factory machine consumable | $10,000$ |
-| Factory Guards Salary | Factory physical security | $30,000$ |
-| Insurance of Plant | Production asset risk coverage | $25,000$ |
+| Indirect Materials | Factory cleaning rags and small consumables | $60,000$ |
+| Indirect Wages | Wages of maintenance workers and helpers | $1,00,000$ |
+| Rent: Factory | Factory workshop premises rent | $75,000$ |
+| Lighting (50% for Factory) | 50% of ₹88,000 factory share | $44,000$ |
+| Power | Electricity to run heavy plant machinery | $60,000$ |
+| Depreciation of Plant | Wear-and-tear of manufacturing machines | $1,15,500$ |
+| Salary of Works Manager | Salary of the factory production in-charge | $95,000$ |
+| Lubricant | Machine maintenance oil | $10,000$ |
+| Factory Guards Salary | Security staff guarding the factory gates | $30,000$ |
+| Insurance of Plant | Insurance coverage for factory machines | $25,000$ |
 | **TOTAL WORKS OVERHEADS** | | **₹6,14,500** |
 
-*Exclusions:* Direct Materials (₹10 L), Direct Wages (₹2 L) [Prime Cost]; Advertisement (₹50 k) [Selling OH]; Rent Office (₹1.15 L), Salary Admin Staff (₹80 k), Office Lighting (₹44 k) [Admin OH].
+*Items Excluded:* Direct Materials (₹10 Lakh) and Direct Wages (₹2 Lakh) [part of Prime Cost]; Advertisement (₹50,000) [Selling Overhead]; Office Rent (₹1.15 Lakh), Admin Staff Salary (₹80,000), and Office Lighting (₹44,000) [Admin Overhead].
 
 ---
 
@@ -947,11 +1005,14 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 > *(c) Why do you think the critics in the above paragraph would argue that higher nominal GDP growth along with higher inflation cast doubt on the real underlying economic activity? [3]*
 
 **Direct Solution:**
-1. **Nominal vs. Real GDP [2M]:** Nominal GDP evaluates output at current market prices ($\sum P_t q_t$); Real GDP evaluates output at constant base-year prices ($\sum P_{\text{base}} q_t$).
-2. **GDP Deflator Definition [2M]:** The price index measuring the overall price level of all domestically produced final goods and services:
+1. **Nominal vs. Real GDP [2M]:**
+   - **Nominal GDP:** Evaluates goods and services at **current market prices** ($\sum P_t \cdot q_t$). It rises when prices rise, even if physical production does not change.
+   - **Real GDP:** Evaluates goods and services at **constant base-year prices** ($\sum P_{\text{base}} \cdot q_t$). It changes only when the actual physical quantity of goods changes.
+2. **Definition of GDP Deflator [2M]:**
+   A price index that measures the overall price level of all domestically produced final goods:
    $$\text{GDP Deflator} = \frac{\text{Nominal GDP}}{\text{Real GDP}} \times 100$$
 3. **Why Critics Question High Nominal Growth during Inflation [3M]:**  
-   If nominal GDP expands rapidly while inflation is high, the apparent growth is driven by the price component ($P \uparrow$) rather than physical output ($q$). A country could have $100\%$ nominal GDP growth while actual physical production of food and machinery is completely stagnant or contracting, offering zero extra societal welfare.
+   If prices jump by 100%, nominal GDP will double even if factories produce the exact same number of cars, shirts, and bags! Real human well-being depends on having more physical goods and services, not on higher price tags. Therefore, when inflation is high, strong nominal GDP growth gives a false impression of prosperity.
 
 ---
 
@@ -962,9 +1023,9 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 > *What was the Keynesian suggestion to uplift the economy from a period of sustained recession? If the investment multiplier has a value Five (5), calculate the value of marginal propensity to consume in the economy. [1 + 2 = 3]*
 
 **Direct Solution:**
-1. **Keynesian Suggestion for Sustained Recession [1M]:**  
-   Aggressive government intervention through **expansionary fiscal policy** (autonomous public infrastructure spending $\Delta G$) to inject purchasing power and revive aggregate demand.
-2. **Calculation of MPC from Multiplier ($k = 5$) [2M]:**
+1. **Keynesian Suggestion for a Recession [1M]:**  
+   The government must step in with **expansionary fiscal policy**—directly spending money on public infrastructure (roads, bridges, railways) to create jobs and put wages in people's pockets.
+2. **Calculation of MPC when Multiplier $k = 5$ [2M]:**
    $$k = \frac{1}{1 - \text{MPC}} \implies 5 = \frac{1}{1 - b}$$
    $$1 - b = \frac{1}{5} = 0.2 \implies b = 1 - 0.2 = \mathbf{0.8}$$
    $$\mathbf{\text{Marginal Propensity to Consume (MPC)}} = \mathbf{0.80}$$
@@ -978,10 +1039,11 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 > *State the functions of money. What do you understand by the term Broad Money? [1 + 2 = 3]*
 
 **Direct Solution:**
-- **Functions of Money [1M]:** Medium of exchange, unit of account, store of value.
-- **Broad Money ($M_3$) [2M]:** The standard measure of aggregate liquidity in the banking system:
+- **Functions of Money [1M]:** (1) Medium of exchange, (2) Unit of account, (3) Store of value.
+- **Broad Money ($M_3$) [2M]:**  
+  The broad measure of total money available in the banking system:
   $$M_3 = M_1 + \text{Time Deposits (Fixed Deposits) with Commercial Banks}$$
-  $$M_3 = \text{Currency with Public } (CC) + \text{Demand Deposits } (DD) + \text{Bank Time Deposits}$$
+  $$M_3 = \text{Currency with Public } (CC) + \text{Demand Deposits } (DD) + \text{Bank Fixed Deposits}$$
 
 ---
 
@@ -994,12 +1056,12 @@ The purpose of fixing a base year is to establish an unchanging, constant price 
 > *Discuss in detail contributions of Henry Fayol in Modern Management era for developing the Management subject. [5]*
 
 **Direct Solution:**
-Henri Fayol pioneered modern administrative management by conceptualizing management as a distinct, universal skill that can be taught. His core framework defines the **5 Classical Functions of Management**:
-1. **Planning:** Anticipating future market trends, establishing institutional goals, and defining execution roadmaps.
-2. **Organizing:** Grouping workflows, allocating machinery and capital, and defining authority relationships.
-3. **Commanding (Leading):** Supervising staff, communicating directives, and inspiring team output.
-4. **Coordinating:** Harmonizing disparate departments to ensure operational synergy and avoid duplicate effort.
-5. **Controlling:** Comparing actual results against planned targets and implementing corrective actions.
+Henri Fayol is known as the father of modern administrative management. He proved that management is a universal skill that can be studied and taught. He defined the **5 Classical Functions of Management**:
+1. **Planning:** Looking ahead, setting business goals, and deciding the steps needed to reach them.
+2. **Organizing:** Arranging tools, equipment, materials, and assigning tasks to workers.
+3. **Commanding (Leading):** Guiding, motivating, and giving clear instructions to staff.
+4. **Coordinating:** Making sure all departments work together smoothly without conflict or wasted effort.
+5. **Controlling:** Checking that work matches the plan and correcting any mistakes.
 
 ---
 
@@ -1017,12 +1079,13 @@ Henri Fayol pioneered modern administrative management by conceptualizing manage
 > *c. Internal Rate of Return*  
 > *d. Long Term Sources of Corporate Finance*
 
-*(Answer any two in exam; all four provided)*
+*(Answer any two in exam; all four explained below)*
 
-- **a. Functional Classification of Cost:** Segregating operational expenditure by business department: Manufacturing Cost, Administrative Cost, Selling & Distribution Cost, and R&D Cost.
-- **b. Payback Period (PBP):** The time required for nominal cash inflows to recover the initial capital outlay. Fast liquidity indicator, but flawed because it ignores TVM.
-- **c. Internal Rate of Return (IRR):** The specific discount rate $r$ that equates the present value of future cash inflows to the initial capital outlay ($\text{NPV} = 0$). Project is accepted if $\text{IRR} > \text{Cost of Capital } (K)$.
-- **d. Long-Term Sources of Corporate Finance:** Permanent and long-horizon funding structures: Equity shares, retained earnings, preference shares, and debentures/term loans.
+- **a. Functional Classification of Cost:** Dividing expenses by department: Factory Costs (making goods), Admin Costs (managing office), Selling Costs (marketing), and R&D Costs (new product development).
+- **b. Payback Period (PBP):** The time needed for a project's cash earnings to fully recover the initial money invested.  
+  *Limitation:* It ignores the time value of money and ignores any profits earned after the payback period.
+- **c. Internal Rate of Return (IRR):** The exact interest rate $r$ that makes the project's Net Present Value equal to zero ($\text{NPV} = 0$). If $\text{IRR} > \text{Cost of Capital}$, accept the project.
+- **d. Long-Term Sources of Corporate Finance:** Permanent and multi-year funding sources: Equity shares, retained profits, preference shares, and debentures/bank loans.
 
 ---
 
@@ -1036,11 +1099,11 @@ Henri Fayol pioneered modern administrative management by conceptualizing manage
 
 **Direct Solution:**
 
-| Style | Authority & Decision-Making | Communication | Core Strengths | Critical Weaknesses | Ideal Scenario |
+| Management Style | Decision-Making | Communication | Main Advantages | Main Disadvantages | Best Used In |
 |:---|:---|:---|:---|:---|:---|
-| **Autocratic** | Centralized in leader; zero team input. | 1-way (Top-down directives). | Instant decisions, clear accountability. | Kills initiative, triggers high turnover. | Crisis turnaround, military, plant safety hazards. |
-| **Democratic** | Shared collaboratively with team. | 2-way (Open consultation). | High team morale, creative problem solving. | Slower decisions; risk of consensus deadlock. | Software design, university faculty, R&D strategy. |
-| **Laissez-Faire** | Subordinates operate with full autonomy. | Horizontal / Peer-to-peer. | Maximizes individual intellectual freedom. | Risk of drift, lack of coordination. | Advanced scientific labs, senior engineering teams. |
+| **Autocratic** | Leader decides alone; no input from staff. | 1-way (Top to bottom commands). | Quick decisions; clear instructions. | Kills worker creativity; causes high turnover. | Emergencies, military operations, factory safety crises. |
+| **Democratic** | Leader shares decisions with the team. | 2-way (Open discussions). | High team morale; creative ideas. | Slower decisions; debates can take time. | Software engineering, product design, college faculty. |
+| **Laissez-Faire** | Leader lets staff work freely on their own. | Horizontal (Peer to peer). | Gives maximum freedom to experts. | Risk of drifting without direction. | Research laboratories, senior software architects. |
 
 ---
 
@@ -1052,8 +1115,14 @@ Henri Fayol pioneered modern administrative management by conceptualizing manage
 > *(b) What are the importance and needs of management? [4]*
 
 **Direct Solution:**
-- **(a) Measuring Managerial Success [4M]:** Evaluated through **Efficiency** (cost minimization: completing projects within budget with minimal resource waste) and **Effectiveness** (goal attainment: achieving planned milestones, technical quality, and customer satisfaction).
-- **(b) Importance and Need of Management [4M]:** Management optimizes scarce resources, coordinates disparate human efforts, adapts the enterprise to dynamic technological changes, and balances shareholder return with corporate social responsibility.
+- **(a) Measuring Managerial Success [4M]:**  
+  Measured using two key standards:
+  1. **Efficiency ("Doing things right"):** Achieving goals with minimum waste of time, raw materials, and money.
+  2. **Effectiveness ("Doing the right things"):** Achieving the company's planned targets, meeting customer expectations, and delivering high quality.
+- **(b) Importance and Need of Management [4M]:**
+  - Brings together workers, machines, and money to achieve a common goal.
+  - Helps the organization adapt to changing technology and market competition.
+  - Balances business profits with fair treatment of workers and environmental responsibility.
 
 ---
 
@@ -1066,7 +1135,15 @@ Henri Fayol pioneered modern administrative management by conceptualizing manage
 > *Explain how fractional reserve banking creates money supply in an economy. [3]*
 
 **Direct Solution:**
-Under fractional-reserve banking, commercial banks are mandated by the central bank to hold only a fraction of public deposits in reserve ($\text{CRR}$). When a customer deposits ₹10,000 and $\text{CRR} = 0.10$ (10%), the bank reserves ₹1,000 and lends out ₹9,000. The borrower spends this loan, which is redeposited into the banking system, allowing another bank to lend 90% of that deposit (₹8,100). Through this successive lending multiplier ($m = \frac{1}{\text{CRR}} = 10$), an initial cash deposit of ₹10,000 creates up to ₹1,00,000 of total money supply in the economy.
+Under fractional-reserve banking, commercial banks do not keep all deposited cash in vaults; they are required to hold only a small fraction as cash reserves ($\text{CRR}$):
+1. Suppose a customer deposits ₹10,000 in Bank A, and the reserve requirement is $10\%$ ($\text{CRR} = 0.10$).
+2. Bank A keeps ₹1,000 in reserve and lends out the remaining ₹9,000 to a borrower.
+3. The borrower spends this ₹9,000, and the seller deposits it in Bank B.
+4. Bank B keeps $10\%$ (₹900) and lends out ₹8,100.
+5. This cycle continues across the banking network.  
+Through the money multiplier formula:
+$$\text{Total Money Created} = \text{Initial Deposit} \times \frac{1}{\text{CRR}} = 10,000 \times \frac{1}{0.10} = \mathbf{\text{Rs. } 1,00,000}$$
+An initial cash deposit of ₹10,000 expands into ₹1,00,000 of total money supply.
 
 ---
 
@@ -1077,10 +1154,17 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > *Explain diagrammatically how an autonomous increase in government expenditure affects equilibrium income in a Keynesian economy. State one important assumption of Keynes' model of income determination. [4 + 1 = 5]*
 
 **Direct Solution:**
-1. **Diagrammatic Mechanism [4M]:**  
-   Planned Expenditure is $PE = a + bY + \bar{I} + G$. An autonomous increase in government spending by $\Delta G$ shifts the $PE$ curve vertically upward. At initial income $Y_1^{\ast}$, demand exceeds production ($PE > AE$), triggering an unintended decumulation of inventory. In response, firms expand employment and production along the $45^\circ$ line until actual output matches planned expenditure at the higher equilibrium $Y_2^{\ast}$. The output expansion is $\Delta Y = \frac{\Delta G}{1 - b}$.
-2. **One Important Assumption of the Keynesian Model [1M]:**  
-   Prices and wages are sticky/fixed in the short run; aggregate output responds strictly to shifts in aggregate demand, operating below full employment capacity.
+1. **How Government Spending Affects Income [4M]:**  
+   Planned spending is $PE = a + bY + \bar{I} + G$.
+   - When the government increases spending by $\Delta G$, the entire planned expenditure line shifts upward by $\Delta G$.
+   - At the initial income level $Y_1^{\ast}$, demand exceeds production ($PE > AE$). Goods in stores sell out faster than planned (inventory drops).
+   - Seeing this, firms hire more workers and increase production along the $45^\circ$ line until actual production catches up with planned spending at the higher level $Y_2^{\ast}$.
+   - The total expansion in income is:
+     $$\Delta Y = \frac{\Delta G}{1 - b}$$
+2. **One Important Assumption of Keynes' Model [1M]:**  
+   Prices and wages are fixed in the short run, and factories have spare capacity to increase production whenever demand rises.
+
+---
 
 ---
 
@@ -1097,15 +1181,41 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > *(a) Define cost. (b) What is costing? (c) Briefly explain the methods of costing. (d) Why are different methods of costing needed? [2 + 1 + 5 + 2 = 10]*
 
 **Direct Solution:**
-1. **Define Cost [2M]:** The monetary sacrifice of scarce resources incurred to produce a good or service.
-2. **What is Costing? [1M]:** The techniques and processes of ascertaining costs.
-3. **Methods of Costing [5M]:**
-   - *Job Costing:* Unique, custom orders executed to customer specifications (repair shops, print presses).
-   - *Batch Costing:* Identical units produced in distinct lots (pharmaceutical pills).
-   - *Contract Costing:* Long-duration construction projects (bridges, ships).
-   - *Process Costing:* Continuous automated progression through successive chemical stages (chemical/refining).
-   - *Operating / Service Costing:* Companies providing intangible services (transport passenger-km, hospitals).
-4. **Why Different Methods are Needed [2M]:** Production processes differ fundamentally across industries (e.g., building a multi-year dam requires contract accounting, whereas refining identical barrels of petrol requires process accounting).
+
+**1. (a) Define Cost [2 Marks]:**
+- **Definition:** **Cost** is the total amount of money spent (or resources used up) to manufacture a product, provide a service, or perform an activity.
+- **Key Idea:** It measures the economic sacrifice made by a business to create value.
+- *Example:* The money spent on raw wood, worker wages, and factory electricity to make a wooden table.
+
+**2. (b) What is Costing? [1 Mark]:**
+- **Definition:** **Costing** is the actual technique, process, and daily system used by an organization to calculate and track the total cost of its products or services.
+- It answers the practical question: *"Exactly how many rupees did this unit cost us to make?"*
+
+**3. (c) Methods of Costing [5 Marks]:**
+Businesses use different methods of costing depending on how they manufacture their goods:
+- **1. Job Costing:**
+  - Used when work is done strictly according to custom orders and unique customer specifications. Each job is treated as a separate cost unit.
+  - *Example:* A custom auto repair shop, an interior design project, or a printing press printing personalized wedding cards.
+- **2. Batch Costing:**
+  - Used when identical items are produced in groups or batches rather than individually. Total cost of the batch is divided by the number of units to find the cost per unit.
+  - *Example:* Pharmaceutical factories making 50,000 antibiotic tablets in one run, or a bakery making a batch of 500 loaves of bread.
+- **3. Contract Costing:**
+  - Used for massive, high-value, long-term construction projects that take months or years to complete and are usually carried out at a customer's site.
+  - *Example:* Constructing a flyover bridge, a hydroelectric dam, or a naval battleship.
+- **4. Process Costing:**
+  - Used when raw materials pass through continuous, automated chemical or mechanical stages where output from one stage becomes input for the next. Products are completely uniform.
+  - *Example:* Oil refining (crude oil to petrol), chemical manufacturing, cement plants, or sugar mills.
+- **5. Operating / Service Costing:**
+  - Used by businesses that do not sell physical goods, but provide intangible services to the public. Costs are calculated per service unit.
+  - *Example:* A passenger bus service (cost per passenger-kilometer), an airline, a hotel (cost per room-day), or a hospital (cost per patient-bed-day).
+
+**4. (d) Why Different Methods of Costing are Needed [2 Marks]:**
+- Every industry operates with completely different production processes, timelines, and product types.
+- You cannot calculate costs for building a 3-year metro bridge the same way you calculate costs for refining continuous barrels of crude oil or making custom wedding invites:
+  - A construction project needs **contract costing** to track long-term subcontractor bills and progress payments.
+  - A chemical refinery needs **process costing** to handle continuous flows, chemical losses, and by-products.
+  - A custom furniture shop needs **job costing** to track separate materials for each unique order.
+- Having customized costing methods ensures that prices are calculated accurately, waste is identified, and managers make sound financial decisions.
 
 ---
 
@@ -1132,20 +1242,38 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > | Stores Manager Salary | 80,000 |
 
 **Direct Solution:**
-1. **(a) Traceability Classification [2M]:** Direct costs (traceable to cost unit) vs. Indirect costs (shared overheads).
-2. **(b) Tabular Calculation of Selling & Distribution Overheads [8M]:**
 
-| Item | Classification & Rationale | Amount (₹) |
+**1. (a) Cost Classification Based on Traceability [2 Marks]:**
+Traceability refers to whether a cost can be directly connected to a specific product or cost center:
+- **Direct Costs:** Expenses that can be easily, cleanly, and completely traced to a single product or job.
+  - *Example:* Fabric and zippers used to make a jacket, or wages paid to the tailor sewing that specific jacket.
+- **Indirect Costs (Overheads):** Shared operating expenses that benefit the entire business and cannot be directly traced to any single item.
+  - *Example:* Factory building rent, factory lighting, and the salary of the overall security guard.
+
+---
+
+**2. (b) Calculation of Selling & Distribution Overheads [8 Marks]:**
+- **Rule:** **Selling Overheads** are costs incurred to promote goods and win customer orders. **Distribution Overheads** are costs incurred to pack, warehouse, and deliver finished goods to customers.
+- Items related to the factory, general office administration, balance sheet, or revenues must be strictly excluded.
+
+| Item | Category / Reason | Amount (₹) |
 |:---|:---|---:|
-| Advertisement | Brand promotion and marketing | $1,80,000$ |
-| Salesmen's Salaries & Commissions | Field salesforce remuneration | $1,00,000$ |
-| Packing Charges | Finished goods distribution packaging | $56,000$ |
-| Carriage Outwards | Freight paid on customer deliveries | $67,000$ |
-| Showroom Rent | Retail showroom premises rent | $70,000$ |
-| Showroom Lighting | Retail showroom illumination | $58,000$ |
+| Advertisement | Marketing and brand promotion to attract buyers | 1,80,000 |
+| Salesmen's Salaries & Commissions | Direct pay and incentive commission given to sales team | 1,00,000 |
+| Packing Charges | Packaging finished goods safely for dispatch to customers | 56,000 |
+| Carriage Outwards | Delivery freight paid to transport goods to buyers | 67,000 |
+| Showroom Rent | Rent paid for retail display and sales showroom premises | 70,000 |
+| Showroom Lighting | Electricity and lighting for the customer sales showroom | 58,000 |
 | **TOTAL SELLING & DISTRIBUTION OVERHEADS** | | **₹5,31,000** |
 
-*Exclusions:* Power & Fuel (₹10 k), Stores Manager Salary (₹80 k) [Factory OH]; Meeting Expenses (₹54 k), Office Rent (₹95 k) [Admin OH]; Debtors (₹1.34 L), Creditors (₹32 k) [Balance Sheet]; Sales (₹5.32 L) [Revenue].
+**Items Excluded with Clear Examination Reasons:**
+1. **Power & Fuel (₹10,000):** Factory Overhead (used to run plant machinery).
+2. **Stores Manager Salary (₹80,000):** Factory Overhead (manages raw material warehouse inside plant).
+3. **Meeting Expenses (₹54,000):** Administrative Overhead (general executive management meetings).
+4. **Office Rent (₹95,000):** Administrative Overhead (headquarters office facility cost).
+5. **Debtors (₹1,34,000):** Current Asset on the Balance Sheet (money owed by customers, not an expense).
+6. **Creditors (₹32,000):** Current Liability on the Balance Sheet (money owed to suppliers).
+7. **Sales (₹5,32,000):** Revenue / Turnover (money earned from sales, not a cost).
 
 ---
 
@@ -1158,8 +1286,27 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > *(a) Define GDP and state the differences between GDP and GNP. (b) Suppose you sell your three-year-old mobile phone to your friend. Will the income earned by you be counted in the current year's GDP? Explain. [2 + 1 = 3]*
 
 **Direct Solution:**
-- **(a) GDP vs. GNP [2M]:** GDP is territorial (produced *inside* domestic boundaries: $C + I + G + NX$). GNP is national (earned by domestic citizens: $\text{GNP} = \text{GDP} + \text{NFIA}$).
-- **(b) Reselling a Three-Year-Old Mobile Phone [1M]:** **No**, the income is **not** counted in the current year's GDP. The phone was counted in the GDP of the year it was manufactured; resale is a secondary transfer of an existing asset without new physical production.
+
+**1. (a) GDP vs. GNP [2 Marks]:**
+- **Gross Domestic Product (GDP):** The total market value of all final goods and services produced **within the geographic boundaries** of a country during a financial year. It depends strictly on **where** the production happens.
+  $$\text{GDP} = C + I + G + (X - M)$$
+- **Gross National Product (GNP):** The total market value of all final goods and services produced by the **citizens and businesses of a country**, regardless of where they are located in the world. It depends strictly on **who** owns the production.
+  $$\text{GNP} = \text{GDP} + \text{Net Factor Income from Abroad (NFIA)}$$
+
+| Comparison Feature | Gross Domestic Product (GDP) | Gross National Product (GNP) |
+|:---|:---|:---|
+| **Core Meaning** | Location-based (inside geographic borders). | Ownership-based (produced by normal residents). |
+| **Foreigners Working Inside India** | **Included** in India's GDP. | **Excluded** from India's GNP. |
+| **Indians Working Abroad** | **Excluded** from India's GDP. | **Included** in India's GNP. |
+
+---
+
+**2. (b) Reselling a Three-Year-Old Mobile Phone [1 Mark]:**
+- **Answer:** **No, it is NOT counted in the current year's GDP.**
+- **Reason:**
+  - GDP only counts the production of **brand new goods** produced in the current accounting year.
+  - The mobile phone was already manufactured and counted 3 years ago in that year's GDP.
+  - Selling a used phone to a friend is merely a **transfer of ownership of an existing asset**. No new physical good was manufactured, and no new value was added to the economy.
 
 ---
 
@@ -1172,8 +1319,10 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > *(b) In the circular-flow-of-income model, without leakages and injections, the magnitude of income flowing in the system remains: (i) constant, (ii) increases as time passes, (iii) undecided, (iv) doubles as time passes.*
 
 **Direct Solution:**
-- **(a) Factor payments/wages are made to:** **(ii) Households**.
-- **(b) Without leakages and injections, the magnitude of flowing income remains:** **(i) constant**.
+- **(a) Factor payments/wages are made to:** **(ii) Households**.  
+  *(Reason: Households own the factors of production—labor, land, capital—and supply them to firms, receiving wages, rent, and interest in return).*
+- **(b) Without leakages and injections, the magnitude of income flowing in the system remains:** **(i) constant**.  
+  *(Reason: In a closed system with no leakages like savings or imports and no injections like investment or government spending, every rupee spent by households returns as income to firms, keeping circulating money constant).*
 
 ---
 
@@ -1189,10 +1338,20 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > | Oranges | ₹12 | 150 kg | ₹8 |
 
 **Direct Solution:**
-- **Nominal GDP 2023:** $(20 \times 100) + (12 \times 150) = 2,000 + 1,800 = \mathbf{\text{Rs. } 3,800}$.
-- **Real GDP 2023 (at 2020 Base Prices):** $(5 \times 100) + (8 \times 150) = 500 + 1,200 = \mathbf{\text{Rs. } 1,700}$.
-- **GDP Deflator:**
+
+**1. Calculate Nominal GDP for 2023 [Current Year Quantities $\times$ Current Year Prices]:**
+$$\text{Nominal GDP}_{2023} = (P_{\text{apples}}^{2023} \times Q_{\text{apples}}^{2023}) + (P_{\text{oranges}}^{2023} \times Q_{\text{oranges}}^{2023})$$
+$$\text{Nominal GDP}_{2023} = (20 \times 100) + (12 \times 150) = 2,000 + 1,800 = \mathbf{\text{Rs. } 3,800}$$
+
+**2. Calculate Real GDP for 2023 [Current Year Quantities $\times$ Base Year 2020 Prices]:**
+$$\text{Real GDP}_{2023} = (P_{\text{apples}}^{2020} \times Q_{\text{apples}}^{2023}) + (P_{\text{oranges}}^{2020} \times Q_{\text{oranges}}^{2023})$$
+$$\text{Real GDP}_{2023} = (5 \times 100) + (8 \times 150) = 500 + 1,200 = \mathbf{\text{Rs. } 1,700}$$
+
+**3. Define and Calculate GDP Deflator:**
+- **Definition:** The **GDP Deflator** is an economic index that measures the overall level of price inflation in an economy across all domestically produced goods. It tells us how much of the increase in GDP is due to rising prices rather than actual increases in output.
+- **Formula & Calculation:**
   $$\text{GDP Deflator} = \frac{\text{Nominal GDP}}{\text{Real GDP}} \times 100 = \frac{3,800}{1,700} \times 100 = \mathbf{223.53\%}$$
+- *Interpretation:* Overall prices in Country X have risen by $123.53\%$ since the base year 2020.
 
 ---
 
@@ -1216,14 +1375,24 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > | Depreciation | 25 |
 
 **Direct Solution:**
-1. **Gross Domestic Product at Market Price ($\text{GDP}_{\text{MP}}$):**
-   $$\text{GDP}_{\text{MP}} = C + I + G + (X - M) = 300 + 80 + 200 + (250 - 550) = 580 - 300 = \mathbf{\text{Rs. } 280}$$
-2. **Net Factor Income from Abroad (NFIA):**
-   $$\text{NFIA} = \text{Income from abroad} (500) - \text{Payments to abroad} (100) = \mathbf{+ \text{Rs. } 400}$$
-3. **Gross National Product at Market Price ($\text{GNP}_{\text{MP}}$):**
-   $$\text{GNP}_{\text{MP}} = \text{GDP}_{\text{MP}} + \text{NFIA} = 280 + 400 = \mathbf{\text{Rs. } 680}$$
-4. **Gross National Product at Factor Cost ($\text{GNP}_{\text{FC}}$):**
-   $$\text{GNP}_{\text{FC}} = \text{GNP}_{\text{MP}} - \text{Net Indirect Taxes} = 680 - 100 = \mathbf{\text{Rs. } 580}$$
+
+**Step 1: Calculate Gross Domestic Product at Market Price ($\text{GDP}_{\text{MP}}$)**
+Using the expenditure method:
+$$\text{GDP}_{\text{MP}} = C + I + G + (X - M)$$
+$$\text{GDP}_{\text{MP}} = 300 + 80 + 200 + (250 - 550) = 580 - 300 = \mathbf{\text{Rs. } 280}$$
+
+**Step 2: Calculate Net Factor Income from Abroad (NFIA)**
+$$\text{NFIA} = \text{Income earned from abroad} - \text{Payments made to abroad}$$
+$$\text{NFIA} = 500 - 100 = \mathbf{+ \text{Rs. } 400}$$
+
+**Step 3: Calculate Gross National Product at Market Price ($\text{GNP}_{\text{MP}}$)**
+$$\text{GNP}_{\text{MP}} = \text{GDP}_{\text{MP}} + \text{NFIA} = 280 + 400 = \mathbf{\text{Rs. } 680}$$
+
+**Step 4: Calculate Gross National Product at Factor Cost ($\text{GNP}_{\text{FC}}$)**
+To find cost at the factory gate, remove net indirect taxes (indirect taxes minus subsidies):
+$$\text{GNP}_{\text{FC}} = \text{GNP}_{\text{MP}} - \text{Net Indirect Taxes} = 680 - 100 = \mathbf{\text{Rs. } 580}$$
+
+*(Note: Debt interest income and depreciation are extra distractors not needed for these three aggregates).*
 
 ---
 
@@ -1237,14 +1406,50 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > *6. State the differences between a Commercial Bank and a Central Bank of a country. Explain how commercial banks create money supply. [2 + 4 = 6]*
 
 **Direct Solution:**
-- **Q5. Item Money Functions Evaluation [4M]:**
-  - *(a) Cash Money:* Satisfies all three functions: Medium of exchange, unit of account, and store of value.
-  - *(b) Bitcoin:* Functions imperfectly as an alternative medium of exchange and speculative store of value; fails as a standard unit of account due to extreme price volatility.
-  - *(c) Real-Estate Property:* Strong store of value; fails as a medium of exchange (completely illiquid) and fails as a unit of account.
-- **Q6. Commercial Bank vs. Central Bank & Money Creation [6M]:**
-  - *Differences:* Central Bank is the apex regulator, banker of banks, and currency issuer; general public cannot open accounts. Commercial banks are profit-driven retail institutions accepting public deposits and advancing loans.
-  - *Credit Creation Mechanics:* When a customer deposits cash, the bank retains a fraction as mandatory Cash Reserve Ratio (CRR) and lends out the remainder. Borrowers spend the loan, which is redeposited in the banking system, initiating rounds of deposit creation:
-    $$\text{Total Money Created} = \text{Initial Deposit} \times \frac{1}{\text{CRR}}$$
+
+**1. Question 5: Functions of Money & Item Evaluation [4 Marks]:**
+- **The 3 Core Functions of Money:**
+  1. **Medium of Exchange:** Widely accepted as payment for goods, services, and debts without requiring a barter trade.
+  2. **Unit of Account:** A standard common measuring stick used to quote prices, compare market values, and keep financial accounts.
+  3. **Store of Value:** Allows individuals to save purchasing power today and spend it reliably in the future.
+
+- **Evaluation of the Three Items:**
+  - **(a) Cash Money (Currency Notes / Coins):**
+    - **Satisfies all 3 functions completely.**
+    - It is universally accepted legal tender (medium of exchange), all prices are tagged in it (unit of account), and it preserves nominal value over time (store of value, subject to inflation).
+  - **(b) Bitcoin (Cryptocurrency):**
+    - **Medium of Exchange:** Satisfies only partially / weakly. Very few merchants directly accept Bitcoin for daily groceries or rent.
+    - **Unit of Account:** **Fails.** Goods are almost never priced natively in Bitcoin due to extreme daily price volatility.
+    - **Store of Value:** Satisfies as a high-risk, speculative asset. Many investors hold it like "digital gold," but its purchasing power fluctuates wildly.
+  - **(c) Real-Estate Property (Land / Building):**
+    - **Medium of Exchange:** **Fails completely.** You cannot buy a cup of tea or pay bus fare with a slice of a building. It is highly illiquid.
+    - **Unit of Account:** **Fails.** Buildings are not divisible, identical units and cannot be used to price other market goods.
+    - **Store of Value:** **Satisfies very strongly.** Land and real estate usually protect wealth against inflation and preserve value over decades.
+
+---
+
+**2. Question 6: Commercial Bank vs. Central Bank & Money Creation [6 Marks]:**
+
+**(a) Key Differences (Commercial Bank vs. Central Bank):**
+
+| Feature | Commercial Bank (e.g., SBI, HDFC) | Central Bank (e.g., Reserve Bank of India - RBI) |
+|:---|:---|:---|
+| **Primary Goal** | Profit-making by lending money at interest. | Public welfare, economic stability, and price control. |
+| **Customers** | General public, households, and private companies. | The Government and other commercial banks (Banker to Banks). |
+| **Currency Authority** | Cannot print or issue currency notes. | Holds sole legal monopoly to print and issue currency. |
+| **Account Opening** | Any citizen can open a savings or current account. | General public cannot open personal accounts. |
+| **Regulation** | Regulated and inspected by the central bank. | The apex regulator of the entire national banking system. |
+
+**(b) How Commercial Banks Create Money Supply (Credit Creation):**
+Commercial banks do not print paper currency, but they expand the nation's money supply by creating bank deposits through loans (called **Fractional Reserve Banking**):
+1. **Initial Cash Deposit:** A saver deposits ₹10,000 cash in Bank A.
+2. **Mandatory Reserve (CRR):** By central bank regulation, the bank must keep a fraction as cash reserves—say $10\%$ Cash Reserve Ratio (CRR)—which equals ₹1,000.
+3. **Lending the Excess:** Bank A lends the remaining ₹9,000 to a borrower by crediting a bank account.
+4. **Circulation & Redeposit:** The borrower spends ₹9,000 to buy supplies. The seller takes that ₹9,000 and deposits it into Bank B.
+5. **Successive Rounds:** Bank B keeps $10\%$ (₹900) and lends out ₹8,100.
+6. **Total Money Expansion:** This chain reaction continues across all banks until no excess reserves remain. The total money created is:
+   $$\text{Total Money Created} = \text{Initial Cash Deposit} \times \frac{1}{\text{CRR}} = 10,000 \times \frac{1}{0.10} = \mathbf{\text{Rs. } 1,00,000}$$
+- Thus, ₹10,000 of fresh physical cash expanded into ₹1,00,000 of checkable money in the economy!
 
 ---
 
@@ -1257,12 +1462,31 @@ Under fractional-reserve banking, commercial banks are mandated by the central b
 > *What are the different types of managerial functions? [5]*
 
 **Direct Solution:**
-As codified by Henri Fayol, managerial functions comprise five interdependent activities:
-1. **Planning:** Looking ahead, establishing vision and setting quantifiable targets.
-2. **Organizing:** Defining roles, assembling capital, tools, and labor.
-3. **Commanding (Leading):** Guiding and mentoring the workforce to execute operations.
-4. **Coordinating:** Harmonizing multi-departmental workflows into a unified stream.
-5. **Controlling:** Comparing output metrics against initial plans and implementing feedback corrections.
+As first classified by Henri Fayol, management involves five continuous, interrelated core functions:
+
+1. **1. Planning:**
+   - Deciding in advance **what to do, how to do it, when to do it, and who will do it**.
+   - It bridges the gap between where the organization is today and where it wants to be in the future by setting clear targets and action steps.
+   - *Example:* A software project manager setting sprint milestones and delivery dates for an application launch.
+
+2. **2. Organizing:**
+   - Grouping activities, assembling physical and financial resources, and assigning specific responsibilities to team members.
+   - It creates the organizational structure and decides who reports to whom.
+   - *Example:* Assigning backend development to one team, UI/UX design to another, and giving each team its budget and servers.
+
+3. **3. Commanding (Leading / Directing):**
+   - Guiding, supervising, motivating, and communicating with employees to help them perform at their highest capability.
+   - Good leadership inspires trust and resolves day-to-day work obstacles.
+   - *Example:* A team lead conducting daily stand-up meetings to remove blockers and keep developers motivated.
+
+4. **4. Coordinating:**
+   - Connecting and harmonizing the efforts of different departments so they work smoothly together without friction or duplication of effort.
+   - *Example:* Making sure the marketing team launches advertising on the exact day that manufacturing finishes packaging the goods.
+
+5. **5. Controlling:**
+   - Measuring actual work performance against the original targets planned in Step 1.
+   - If actual performance falls behind, the manager investigates the causes and takes corrective action immediately.
+   - *Example:* Checking if weekly defect rates exceed target tolerances and assigning extra testing if bugs are too high.
 
 ---
 
@@ -1278,8 +1502,40 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 > *2. Explain briefly the long-term sources of finance. [4]*
 
 **Direct Solution:**
-- **Q1. Behaviour-Wise Cost Classification [6M]:** Fixed costs (remain constant regardless of output within capacity, e.g., plant rent), Variable costs (vary directly with production volume, e.g., raw steel), and Semi-Variable costs (contain fixed baseline charge plus usage surcharge, e.g., telephone bill).
-- **Q2. Long-Term Sources of Corporate Finance [4M]:** Equity shares (ownership buffer), preference shares (fixed dividend priority), debentures/bonds (tax-deductible debt), and retained earnings (internal reinvestment).
+
+**1. Behaviour-Wise Cost Classification [6 Marks]:**
+Cost behavior describes how an expense changes when production volume goes up or down. Costs are divided into three groups:
+
+- **1. Fixed Costs:**
+  - Expenses that **remain completely constant in total amount**, regardless of how many units are produced, up to normal factory capacity.
+  - *Per-Unit Behavior:* As production volume increases, fixed cost per unit decreases (economies of scale).
+  - *Example:* Factory building rent of ₹50,000 per month. Whether you make 0 units or 10,000 units, the rent is ₹50,000.
+- **2. Variable Costs:**
+  - Expenses that **change directly and in exact proportion to production volume**. If output doubles, total variable cost doubles. If output is zero, variable cost is zero.
+  - *Per-Unit Behavior:* Variable cost per unit remains constant.
+  - *Example:* Direct raw materials like steel in car manufacturing or leather in shoes.
+- **3. Semi-Variable Costs (Mixed Costs):**
+  - Expenses that contain both a fixed minimum baseline charge plus a variable charge that depends on usage.
+  - *Example:* Factory electricity bill (fixed meter connection charge + variable charge per kilowatt-hour of power used) or a telephone plan.
+
+---
+
+**2. Long-Term Sources of Corporate Finance [4 Marks]:**
+Companies raise long-term capital (funds needed for more than 5 years) through four primary sources:
+1. **Equity Share Capital:**
+   - Funds raised by selling ownership shares to investors.
+   - *Advantage:* No fixed repayment obligation and no compulsory dividend.
+   - *Disadvantage:* Dilutes voting control and ownership of founders.
+2. **Preference Share Capital:**
+   - Hybrid security that pays a fixed dividend rate and has priority over equity shareholders in receiving dividends and repayment during liquidation.
+   - *Advantage:* Does not dilute voting rights of equity holders.
+3. **Debentures / Long-Term Debt:**
+   - Formal loan certificates issued to the public or banks where the company promises to pay fixed interest regularly and return principal at maturity.
+   - *Advantage:* Interest paid is a tax-deductible business expense, lowering the company's tax bill.
+   - *Disadvantage:* High legal risk; failure to pay interest can push the company into bankruptcy.
+4. **Retained Earnings (Internal Accruals):**
+   - The portion of net profits kept inside the company instead of distributed as dividends to shareholders.
+   - *Advantage:* Zero issuance fees, no debt liability, and no dilution of control. It is the cheapest source of equity capital.
 
 ---
 
@@ -1303,19 +1559,32 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 
 **Direct Solution:**
 
-| Year ($t$) | PV Factor ($10\%$) | Project A Inflow (₹) | Project A PV (₹) | Project B Inflow (₹) | Project B PV (₹) |
+**1. What is Net Present Value (NPV)? [2 Marks]**
+- **Definition:** **NPV** is the difference between the present value (PV) of all expected future cash inflows and the initial cash outlay (investment) of a project.
+  $$\text{NPV} = \sum_{t=1}^n \frac{\text{CF}_t}{(1 + r)^t} - I_0$$
+- **Core Principle:** A rupee received in the future is worth less than a rupee received today due to inflation, risk, and opportunity cost. NPV converts all future money into today's purchasing power using a discount rate.
+- **Decision Rule:**
+  - If $\text{NPV} > 0$: Accept (adds wealth to the business).
+  - If $\text{NPV} < 0$: Reject (destroys wealth).
+
+---
+
+**2. Step-by-Step Discounted Cash Flow Table [4 Marks]:**
+
+| Year ($t$) | Discount Factor ($10\%$) | Project A Inflow (₹) | Project A PV (₹) | Project B Inflow (₹) | Project B PV (₹) |
 |:---:|:---:|---:|---:|---:|---:|
 | 1 | $0.909$ | $50,000$ | $45,450$ | $35,000$ | $31,815$ |
 | 2 | $0.826$ | $56,000$ | $46,256$ | $66,000$ | $54,516$ |
 | 3 | $0.751$ | $61,000$ | $45,811$ | $64,000$ | $48,064$ |
 | 4 | $0.683$ | $72,000$ | $49,176$ | $68,000$ | $46,444$ |
 | 5 | $0.621$ | $\text{Nil}$ | $0$ | $23,000$ | $14,283$ |
-| **Gross PV of Inflows** | | | $\mathbf{1,86,693}$ | | $\mathbf{1,95,122}$ |
-| *Less:* Initial Outlay | | | $(2,00,000)$ | | $(50,000)$ |
+| **Total Present Value of Inflows** | | | $\mathbf{1,86,693}$ | | $\mathbf{1,95,122}$ |
+| *Less:* Initial Investment Outlay | | | $(2,00,000)$ | | $(50,000)$ |
 | **NET PRESENT VALUE (NPV)** | | | **- \text{Rs. } 13,307** | | **+ \text{Rs. } 1,45,122** |
 
-**Recommendation:**  
-**Project A is rejected** because its $\text{NPV} < 0$, which would erode ₹13,307 of shareholder capital. **Project B is strongly recommended** because it yields an enormous positive $\text{NPV} = + \text{Rs. } 1,45,122$.
+**3. Clear Recommendation:**
+- **Reject Project A:** Its $\text{NPV} = - \text{Rs. } 13,307$. Because NPV is negative, it fails to recover the company's $10\%$ cost of capital and would destroy ₹13,307 of shareholder value.
+- **Select Project B:** Its $\text{NPV} = + \text{Rs. } 1,45,122$. It requires a much smaller initial investment (₹50,000 vs. ₹2,00,000) and creates a massive net surplus of ₹1,45,122 above the required return.
 
 ---
 
@@ -1328,9 +1597,36 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 > *Explain the simple Keynesian model of income determination graphically. Explain the concept of the investment multiplier. If the marginal propensity to consume rises, what happens to the magnitude of the investment multiplier? [3 + 1 + 2 = 6]*
 
 **Direct Solution:**
-- **Keynesian Model Equilibrium [3M]:** Output clears where planned spending equals actual output ($Y = PE = a + bY + \bar{I} + \bar{G}$).
-- **Investment Multiplier Concept [1M]:** Measures the ratio of change in national income resulting from a change in autonomous investment: $k = \frac{\Delta Y}{\Delta I} = \frac{1}{1 - b}$.
-- **Effect of Rise in MPC [2M]:** When MPC ($b$) rises, $(1 - b)$ contracts, causing the investment multiplier $\frac{1}{1 - b}$ to **increase in magnitude**.
+
+**1. Graphical Explanation of Keynesian Model [3 Marks]:**
+- In the simple Keynesian model, equilibrium national income is determined where **Planned Aggregate Expenditure ($PE$)** equals total actual output/income ($Y$).
+- **The $45^\circ$ Reference Line:** Represents all points where spending equals output ($Y = PE$).
+- **Aggregate Expenditure Line ($PE$):**
+  $$PE = C + \bar{I} + \bar{G} = (a + bY) + \bar{I} + \bar{G} = (a + \bar{I} + \bar{G}) + bY$$
+  - Here, $(a + \bar{I} + \bar{G})$ is autonomous spending (vertical intercept), and $b$ (Marginal Propensity to Consume) is the slope of the line ($0 < b < 1$).
+- **Equilibrium Point ($E^{\ast}$):**
+  - The economy reaches equilibrium where the upward-sloping $PE$ line intersects the $45^\circ$ line. At this point, $Y^{\ast} = \frac{a + \bar{I} + \bar{G}}{1 - b}$.
+  - **Self-Correcting Adjustment:**
+    - If output is above equilibrium ($Y > Y^{\ast}$), businesses produce more than people buy, unsold inventory piles up, and firms cut production back to $Y^{\ast}$.
+    - If output is below equilibrium ($Y < Y^{\ast}$), spending exceeds output, inventories fall unexpectedly, and firms hire workers and increase production to meet demand.
+
+---
+
+**2. Concept of the Investment Multiplier [1 Mark]:**
+- **Definition:** The **Investment Multiplier ($k$)** measures how many times national income ($Y$) expands when there is a one-rupee increase in autonomous investment ($\bar{I}$).
+- **Formula:**
+  $$k = \frac{\Delta Y}{\Delta I} = \frac{1}{1 - \text{MPC}} = \frac{1}{\text{MPS}}$$
+- It works because one person's spending becomes another person's income, triggering consecutive waves of spending throughout the economy.
+
+---
+
+**3. What Happens when Marginal Propensity to Consume (MPC) Rises? [2 Marks]:**
+- When MPC ($b$) rises, people spend a larger percentage of every extra rupee they earn rather than saving it.
+- In the multiplier formula $k = \frac{1}{1 - b}$:
+  - A higher $b$ makes the denominator $(1 - b)$ **smaller**.
+  - Dividing $1$ by a smaller fraction results in a **larger number**.
+- **Conclusion:** **The magnitude of the investment multiplier increases.**
+  - *Example:* If $\text{MPC} = 0.5$, $k = \frac{1}{1 - 0.5} = 2$. But if $\text{MPC}$ rises to $0.8$, $k = \frac{1}{1 - 0.8} = 5$. Higher consumption habits create much larger economic expansion.
 
 ---
 
@@ -1341,12 +1637,25 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 > *State the law of demand. Keeping in mind that price is determined at the point of interaction of supply and demand curves, consider a rise in an individual's income. What happens to the equilibrium price? Explain using demand and supply curves. [1 + 4 = 5]*
 
 **Direct Solution:**
-- **Law of Demand [1M]:** Inverse relationship between unit price and quantity demanded, *ceteris paribus*.
-- **Impact of Rising Income on Equilibrium Price [4M]:**
-  - Income is a non-price demand determinant ($M \uparrow$).
-  - For a normal good, higher income causes a **rightward shift of the entire demand curve** from $D_1 \to D_2$.
-  - At the prevailing market price $P_1^{\ast}$, demand now exceeds supply, generating **excess demand (shortage)**.
-  - Competing consumers bid up the price until a new market equilibrium is established at a **higher price ($P_2^{\ast} > P_1^{\ast}$)** and higher cleared volume ($q_2^{\ast} > q_1^{\ast}$).
+
+**1. Law of Demand [1 Mark]:**
+- **Definition:** Other factors remaining constant (*ceteris paribus*), when the price of a good **falls**, the quantity demanded **increases**; and when the price of a good **rises**, the quantity demanded **decreases**.
+- It shows an **inverse relationship** between the unit price and quantity demanded.
+
+---
+
+**2. Impact of Rising Income on Equilibrium Price [4 Marks]:**
+- **Step 1: Initial Equilibrium:** The market price $P_1^{\ast}$ and quantity $Q_1^{\ast}$ are initially set where the downward-sloping demand curve ($D_1$) intersects the upward-sloping supply curve ($S_1$).
+- **Step 2: Increase in Income (Shift in Demand):**
+  - Income is a non-price factor. For a normal good, when consumers earn higher incomes, their purchasing power increases.
+  - At every possible price level, people now want to buy more of the good.
+  - This causes the **entire demand curve to shift to the right**, from $D_1$ to $D_2$, while the supply curve ($S_1$) remains unchanged.
+- **Step 3: Market Shortage & Price Adjustment:**
+  - At the original market price $P_1^{\ast}$, quantity demanded now exceeds quantity supplied, creating an **excess demand (shortage)**.
+  - Eager buyers compete for the limited stock, bidding the price upward.
+  - As the price rises, suppliers are motivated to produce more (movement up along the supply curve) until a new equilibrium is reached.
+- **Conclusion:**
+  - The new equilibrium occurs at a **higher equilibrium price ($P_2^{\ast} > P_1^{\ast}$)** and a **higher equilibrium quantity ($Q_2^{\ast} > Q_1^{\ast}$)**.
 
 ---
 
@@ -1370,12 +1679,32 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 > | Depreciation | 25 |
 
 **Direct Solution:**
-1. **Define GDP [1M]:** Aggregate market value of all final goods and services produced within national territorial borders in a year.
-2. **Calculation of GNP [2M]:**
-   $\text{GDP} = C + I + G + (X - M) = 450 + 700 + 300 + (1,000 - 550) = 1,450 + 450 = \mathbf{1,900 \text{ Dollars}}$
-   $$\text{NFIA} = \text{Income from abroad } (500) - \text{Payments to abroad } (200) = \mathbf{+300 \text{ Dollars}}$$
-   $\text{GNP} = \text{GDP} + \text{NFIA} = 1,900 + 300 = \mathbf{2,200 \text{ Dollars}}$
-3. **Flaw in "High GDP Ensures Greater Welfare" [2M]:** High GDP does not guarantee fair income distribution; a tiny elite may capture all national surplus while the majority lives in poverty. Furthermore, it completely ignores environmental degradation, mental health, and unpaid domestic caregiving.
+
+**1. Define GDP [1 Mark]:**
+- **Gross Domestic Product (GDP)** is the total market value of all final goods and services produced within the geographic borders of a country during one financial year.
+
+---
+
+**2. Step-by-Step Calculation of GNP [2 Marks]:**
+
+- **Step A: Calculate GDP using the expenditure method:**
+  $$\text{GDP} = C + I + G + (X - M)$$
+  $$\text{GDP} = 450 + 700 + 300 + (1,000 - 550) = 1,450 + 450 = \mathbf{1,900 \text{ Dollars}}$$
+
+- **Step B: Calculate Net Factor Income from Abroad (NFIA):**
+  $$\text{NFIA} = \text{Factor income received from abroad} - \text{Factor payments made abroad}$$
+  $$\text{NFIA} = 500 - 200 = \mathbf{+300 \text{ Dollars}}$$
+
+- **Step C: Calculate GNP:**
+  $$\text{GNP} = \text{GDP} + \text{NFIA} = 1,900 + 300 = \mathbf{2,200 \text{ Dollars}}$$
+
+---
+
+**3. Flaw in "High GDP Ensures Greater Welfare" [2 Marks]:**
+The statement is flawed because GDP measures only the total dollar value of market output, not genuine human well-being:
+1. **Ignores Income Inequality:** A country can have a huge GDP where $90\%$ of the wealth is owned by the top $1\%$, leaving the majority in poverty. High GDP does not mean an ordinary citizen lives well.
+2. **Ignores Environmental Damage:** Industrial pollution, toxic dumping, and deforestation increase GDP (through clean-up spending and factory output), but destroy public health and living standards.
+3. **Ignores Unpaid Care Work & Leisure:** Cooking, childcare, eldercare, and community volunteering are excluded from GDP because no money changes hands, yet they are vital for human welfare. High GDP driven by 80-hour work weeks also destroys leisure time and mental health.
 
 ---
 
@@ -1403,27 +1732,30 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 > *(PV factors at 10%: Year 1 = 0.909, Year 2 = 0.826, Year 3 = 0.751, Year 4 = 0.683, Year 5 = 0.621)*
 
 **Direct Solution:**
-1. **Definitions (Explain any one in exam) [2M]:**
-   - *NPV:* Present value of future cash inflows minus initial capital outlay.
-   - *PBP:* Time required for undiscounted cash flows to recover initial investment.
-   - *IRR:* Discount rate at which project $\text{NPV} = 0$.
 
-2. **Evaluation of Project A vs. Project B (Outlay: Rs 1,00,000 each; Rate: 10%) [6M]:**
+**1. (i) Capital Budgeting Definitions (Explain any one in exam) [2 Marks]:**
+- **Net Present Value (NPV):** The total present value of all future cash inflows discounted at the company's cost of capital, minus the initial cash investment outlay.
+- **Payback Period (PBP):** The exact number of years it takes for an investment to recover its initial cash outlay from operational cash inflows.
+- **Internal Rate of Return (IRR):** The specific discount rate that makes the project's $\text{NPV} = 0$. If $\text{IRR} > \text{Cost of Capital}$, the project is accepted.
 
-| Year ($t$) | PV Factor ($10\%$) | Project A Inflows (₹) | Project A PV (₹) | Project B Inflows (₹) | Project B PV (₹) |
+---
+
+**2. (ii) Evaluation of Project A vs. Project B using NPV [6 Marks]:**
+
+| Year ($t$) | PV Factor ($10\%$) | Project A Inflow (₹) | Project A PV (₹) | Project B Inflow (₹) | Project B PV (₹) |
 |:---:|:---:|---:|---:|---:|---:|
 | 1 | $0.909$ | $10,000$ | $9,090$ | $18,000$ | $16,362$ |
 | 2 | $0.826$ | $25,000$ | $20,650$ | $27,000$ | $22,302$ |
 | 3 | $0.751$ | $35,000$ | $26,285$ | $36,000$ | $27,036$ |
 | 4 | $0.683$ | $47,000$ | $32,101$ | $49,000$ | $33,467$ |
 | 5 | $0.621$ | $10,000$ | $6,210$ | $2,000$ | $1,242$ |
-| **Gross PV of Inflows** | | | $\mathbf{94,336}$ | | $\mathbf{1,00,409}$ |
+| **Total Present Value of Inflows** | | | $\mathbf{94,336}$ | | $\mathbf{1,00,409}$ |
 | *Less:* Initial Outlay | | | $(1,00,000)$ | | $(1,00,000)$ |
 | **NET PRESENT VALUE (NPV)** | | | **- \text{Rs. } 5,664** | | **+ \text{Rs. } 409** |
 
-**3. Opinion & Acceptability:**  
-- **Project A must be Rejected:** Its $\text{NPV} = - \text{Rs. } 5,664 < 0$, which would destroy firm value.
-- **Project B is Acceptable:** Its $\text{NPV} = + \text{Rs. } 409 > 0$, covering the required $10\%$ cost of capital with a modest surplus.
+**3. Opinion and Reason:**
+- **Reject Project A:** Its $\text{NPV} = - \text{Rs. } 5,664$. A negative NPV means the project fails to recover its $10\%$ cost of capital and will destroy ₹5,664 of firm value.
+- **Accept Project B:** Its $\text{NPV} = + \text{Rs. } 409$. Because NPV is positive ($\text{NPV} > 0$), it recovers all capital, earns the required $10\%$ rate of return, and leaves a surplus of ₹409 for the owners.
 
 ---
 
@@ -1435,60 +1767,69 @@ As codified by Henri Fayol, managerial functions comprise five interdependent ac
 > **Question Statement:**  
 > *What is Investment Multiplier? [2.5]*
 
-**Direct Solution:**  
-The Investment Multiplier measures the factor by which total national income ($Y$) expands in response to an initial change in autonomous investment spending ($\bar{I}$):
-$$k = \frac{\Delta Y}{\Delta I} = \frac{1}{1 - \text{MPC}} = \frac{1}{1 - b}$$
-Because the Marginal Propensity to Consume $b \in (0, 1)$, the denominator $(1 - b)$ is a fraction $< 1$, making $k > 1$. Every rupee invested generates successive rounds of worker income and consumer spending throughout the economy.
+**Direct Solution:**
+- **Definition:** The **Investment Multiplier ($k$)** measures the number of times total national income ($Y$) expands as a result of an initial increase in autonomous investment spending ($\bar{I}$).
+- **Mathematical Formula:**
+  $$k = \frac{\Delta Y}{\Delta I} = \frac{1}{1 - \text{MPC}} = \frac{1}{1 - b}$$
+- **How It Works (Intuition):**
+  - When a company invests ₹1 crore to construct a factory, that ₹1 crore immediately becomes wages and income for construction workers and suppliers.
+  - Since the Marginal Propensity to Consume ($b$) is between 0 and 1, workers spend a large portion of that new income on food, clothes, and housing.
+  - This spending becomes income for shopkeepers and manufacturers, who in turn spend a portion of it.
+  - Through this chain reaction, the initial investment creates multiple rounds of economic activity, expanding total national income by far more than the initial ₹1 crore ($k > 1$).
 
 ---
 
 ## 5. Master Quick-Recall Formula & Concept Sheet
 
-| Topic / Domain | Mathematical Formula / Standard Rule | Exam Hall Notes |
+| Topic / Domain | Mathematical Formula / Standard Rule | Simple Exam-Hall Memory Tip |
 |:---|:---|:---|
-| **Law of Demand** | $q_x^d \propto \frac{1}{P_x}$ (*ceteris paribus*) | Movement along curve is price-driven; shifts are income/taste-driven. |
-| **GDP Expenditure Identity** | $\text{GDP}_{\text{MP}} = C + I + G + (X - M)$ | Final goods only; excludes transfer payments and used asset resales. |
-| **GNP & Net Foreign Income** | $\text{GNP}_{\text{MP}} = \text{GDP}_{\text{MP}} + \text{NFIA}$ | $\text{NFIA} = \text{Income from Abroad} - \text{Payments to Abroad}$. |
-| **Factor Cost vs Market Price** | $\text{GNP}_{\text{FC}} = \text{GNP}_{\text{MP}} - \text{Net Indirect Taxes}$ | $\text{NIT} = \text{Indirect Taxes} - \text{Subsidies}$. |
-| **National Income (Formal)** | $\text{National Income} \equiv \text{NNP}_{\text{FC}} = \text{GNP}_{\text{FC}} - \text{Depreciation}$ | Deducts both net taxes and physical capital consumption. |
-| **GDP Deflator** | $\text{Deflator} = \frac{\text{Nominal GDP}}{\text{Real GDP}} \times 100$ | Measures economy-wide inflation; eliminates price distortions. |
-| **Keynesian Consumption** | $C = a + bY \quad (a > 0,\, 0 < b < 1)$ | $a = \text{autonomous consumption}$; $b = \text{MPC} = \frac{dC}{dY}$. |
-| **Govt Expenditure Multiplier** | $\frac{dY}{dG} = \frac{1}{1 - b}$ | Always $> 1$; higher MPC amplifies expansion. |
-| **Lump-Sum Tax Multiplier** | $\frac{dY}{dT} = -\frac{b}{1 - b}$ | Strictly smaller in magnitude than expenditure multiplier: $\left\|\frac{-b}{1-b}\right\| = \frac{1}{1-b} - 1$. |
-| **Investment Multiplier** | $k = \frac{\Delta Y}{\Delta I} = \frac{1}{1 - \text{MPC}}$ | E.g., if $k = 5 \implies \text{MPC} = 0.8$. |
-| **RBI Money Aggregates** | $M_1 = CC + DD$, $M_3 = M_1 + \text{Bank Time Deposits}$ | Liquidity ranking: $M_1 > M_2 > M_3 > M_4$. |
-| **Raw Material Consumed** | $\text{Op RM} + \text{Purchases} + \text{Carriage In} - \text{Returns} - \text{Cl RM}$ | Excludes sales returns; includes freight on raw inputs. |
-| **Prime Cost** | $\text{RM Consumed} + \text{Direct Wages} + \text{Direct Expenses}$ | Sum of direct production elements. |
-| **Adjusted Factory Cost** | $\text{Prime Cost} + \text{Factory OH} + \text{Op WIP} - \text{Cl WIP}$ | Work-in-Progress adjusted inside Factory stage. |
-| **Cost of Production (COP)** | $\text{Adjusted Factory Cost} + \text{Office \& Admin OH}$ | Factory cost plus administrative burden. |
-| **Cost of Goods Sold (COGS)**| $\text{COP} + \text{Op FG} - \text{Cl FG}$ | Finished Goods inventory adjusted here. |
-| **Cost of Sales (Total Cost)**| $\text{COGS} + \text{Selling \& Distribution OH}$ | Total operational cost before profit margin. |
-| **Cost Sheet Exclusions** | Exclude Interest on Debentures, Debtors, Creditors, Dividends | Pure financing, balance sheet assets, and profit appropriations omitted. |
-| **Net Present Value (NPV)** | $\text{NPV} = \sum_{t=1}^n \frac{CF_t}{(1 + r)^t} - I_0$ | Accept if $\text{NPV} > 0$; select project with maximum NPV. |
-| **Cost of Capital Hierarchy** | $K_d < K_p < K_r < K_e$ | Debt holders face lowest risk; equity holders demand highest return. |
+| **Law of Demand** | $q_x^d \propto \frac{1}{P_x}$ (*ceteris paribus*) | Price changes cause **movement along the curve**; income or taste changes **shift the entire curve**. |
+| **GDP Expenditure Identity** | $\text{GDP}_{\text{MP}} = C + I + G + (X - M)$ | Count only brand new, final goods; exclude transfer payments, second-hand resales, and intermediate inputs. |
+| **GNP & Net Foreign Income** | $\text{GNP}_{\text{MP}} = \text{GDP}_{\text{MP}} + \text{NFIA}$ | $\text{NFIA} = \text{Income earned by our citizens abroad} - \text{Income earned by foreigners inside our country}$. |
+| **Factor Cost vs. Market Price** | $\text{GNP}_{\text{FC}} = \text{GNP}_{\text{MP}} - \text{Net Indirect Taxes}$ | To get factory gate cost, subtract indirect taxes and add government subsidies ($\text{NIT} = \text{Taxes} - \text{Subsidies}$). |
+| **National Income (Formal NNP)**| $\text{National Income} \equiv \text{NNP}_{\text{FC}} = \text{GNP}_{\text{FC}} - \text{Depreciation}$ | Deduct both indirect taxes and the physical wear-and-tear of machines (depreciation). |
+| **GDP Deflator** | $\text{GDP Deflator} = \frac{\text{Nominal GDP}}{\text{Real GDP}} \times 100$ | Measures overall inflation across all goods produced; removes price distortions from output. |
+| **Keynesian Consumption** | $C = a + bY \quad (a > 0,\, 0 < b < 1)$ | $a =$ minimum survival spending (autonomous); $b = \text{MPC} =$ fraction of extra income spent on consumption. |
+| **Govt Expenditure Multiplier** | $\frac{dY}{dG} = \frac{1}{1 - b}$ | Always $> 1$; higher MPC makes the economy expand more with government spending. |
+| **Lump-Sum Tax Multiplier** | $\frac{dY}{dT} = -\frac{b}{1 - b}$ | Strictly smaller in impact than spending multiplier because households absorb part of any tax cut as savings. |
+| **Investment Multiplier** | $k = \frac{\Delta Y}{\Delta I} = \frac{1}{1 - \text{MPC}} = \frac{1}{\text{MPS}}$ | E.g., if $k = 5$, then $\text{MPC} = 0.8$ ($80\%$ of extra income is spent). |
+| **RBI Money Aggregates** | $M_1 = CC + DD$, $M_3 = M_1 + \text{Bank Fixed Deposits}$ | Liquidity order: $M_1 > M_2 > M_3 > M_4$. $M_1$ is Narrow Money; $M_3$ is Broad Money. |
+| **Raw Material Consumed** | $\text{Op RM} + \text{Purchases} + \text{Carriage Inwards} - \text{Returns Outward} - \text{Cl RM}$ | Excludes sales returns; includes freight paid on bringing raw materials into the factory. |
+| **Prime Cost** | $\text{Raw Materials Consumed} + \text{Direct Labor} + \text{Direct Expenses}$ | Sum of all direct, traceable production expenses. |
+| **Adjusted Factory Cost** | $\text{Prime Cost} + \text{Factory Overheads} + \text{Op WIP} - \text{Cl WIP}$ | Work-in-Progress (partially finished goods) is adjusted only inside the Factory stage. |
+| **Cost of Production (COP)** | $\text{Adjusted Factory Cost} + \text{Office \& Administrative Overheads}$ | Factory cost plus headquarters management expenses. |
+| **Cost of Goods Sold (COGS)**| $\text{COP} + \text{Opening Finished Goods} - \text{Closing Finished Goods}$ | Finished Goods inventory is adjusted only after finding Cost of Production. |
+| **Cost of Sales (Total Cost)**| $\text{COGS} + \text{Selling \& Distribution Overheads}$ | Total operating cost before adding profit margin to set the selling price. |
+| **Cost Sheet Pure Exclusions** | Exclude Interest on Loans/Debentures, Income Tax, Dividends, Debtors, Creditors | Financing charges, tax/dividend appropriations, and balance sheet assets/liabilities are NEVER included. |
+| **Net Present Value (NPV)** | $\text{NPV} = \sum_{t=1}^n \frac{\text{CF}_t}{(1 + r)^t} - I_0$ | Accept if $\text{NPV} > 0$; when choosing between two projects, pick the one with higher positive NPV. |
+| **Cost of Capital Hierarchy** | $K_d < K_p < K_r < K_e$ | Debt ($K_d$) is cheapest due to tax deduction; Equity ($K_e$) is dearest because owners take the highest risk. |
 
 ---
 
 ## 6. Exam Hall Fatal Traps & Pitfalls Catalog
 
-> [!danger] ⚠️ **Trap 1: The Cost Sheet Inventory Stage Placement Error**
-> Adjusting inventory at the wrong stages is the #1 reason students lose marks in cost accounting:
-> - **Raw Materials** must be adjusted *before* Prime Cost.
-> - **Work-in-Progress (WIP)** must be adjusted *inside* Factory Cost (Gross Factory Cost + Op WIP - Cl WIP = Adjusted Factory Cost).
-> - **Finished Goods (FG)** must be adjusted *after* Cost of Production (COP + Op FG - Cl FG = Cost of Goods Sold).
+> [!danger] ⚠️ **Trap 1: Putting Inventories at the Wrong Cost Sheet Stages**
+> Mixing up inventory stages is the single most common mistake students make in cost accounting:
+> - **Raw Materials Inventory:** Must be adjusted *before* Prime Cost (Opening RM + Purchases - Closing RM).
+> - **Work-in-Progress (WIP) Inventory:** Must be adjusted *inside* Factory Cost (Gross Factory Cost + Opening WIP - Closing WIP = Adjusted Factory Cost).
+> - **Finished Goods (FG) Inventory:** Must be adjusted *after* Cost of Production (COP + Opening FG - Closing FG = Cost of Goods Sold).
+> - *Memory Rule:* Adjust materials in order of manufacturing: raw inputs first $\to$ semi-finished goods in factory $\to$ completed products ready for sale!
 
-> [!danger] ⚠️ **Trap 2: Financing Charges Slipped into Cost Statements**
-> Examiners deliberately include items like **"Interest on debentures ₹15,000"** or **"Debtors ₹1,34,000"**.
-> - Interest is a financing charge and debtors are balance sheet assets. **Neither ever appears in a Cost Sheet!**
+> [!danger] ⚠️ **Trap 2: Accidentally Including Pure Financial Items in Cost Sheets**
+> Examiners deliberately add items like **"Interest on debentures ₹15,000"**, **"Debtors ₹1,34,000"**, or **"Provision for Income Tax ₹20,000"** to test your knowledge:
+> - Interest is a financing charge (not a manufacturing cost).
+> - Income tax and dividends are appropriations of profit (decided after profit is earned).
+> - Debtors and creditors are balance sheet assets and liabilities (not expenses).
+> - **None of these ever belong in a Cost Sheet!** Always write a short note listing them as excluded.
 
-> [!danger] ⚠️ **Trap 3: Freight Inward vs. Freight Outward Misclassification**
-> - **Carriage Inwards (Freight on Purchases):** Transport to bring raw inputs into the factory $\implies$ Add to **Raw Material Purchases**.
-> - **Carriage Outwards (Freight on Sales):** Transport to deliver finished products to clients $\implies$ Add to **Selling & Distribution Overheads**.
+> [!danger] ⚠️ **Trap 3: Confusing Carriage Inwards with Carriage Outwards**
+> - **Carriage Inwards (Freight on Raw Purchases):** The shipping cost to bring raw materials into your factory $\implies$ **Add to Raw Material Purchases** before Prime Cost.
+> - **Carriage Outwards (Freight on Finished Sales):** The shipping cost to deliver finished products to customers $\implies$ **Add to Selling & Distribution Overheads**.
 
-> [!danger] ⚠️ **Trap 4: Setting the Tax Multiplier Equal to the Spending Multiplier**
-> - Expenditure Multiplier: $\frac{dY}{dG} = \frac{1}{1-b}$ (Positive and larger).
-> - Tax Multiplier: $\frac{dY}{dT} = -\frac{b}{1-b}$ (Negative and smaller).
-> - Taxes first pass through household savings; spending directly impacts aggregate demand.
+> [!danger] ⚠️ **Trap 4: Treating the Tax Multiplier as Equal to the Government Spending Multiplier**
+> - Government Spending Multiplier: $\frac{dY}{dG} = \frac{1}{1-b}$ (Positive and larger).
+> - Lump-Sum Tax Multiplier: $\frac{dY}{dT} = -\frac{b}{1-b}$ (Negative and smaller).
+> - *Why are they different?* When government spends ₹100, the full ₹100 directly boosts aggregate demand. But when government cuts taxes by ₹100, households save a portion $(1-b)$ and only spend $b \times 100$. Thus, tax cuts have a smaller impact on GDP than direct government spending!
 
 ---
 
