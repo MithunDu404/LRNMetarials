@@ -10,14 +10,14 @@
 
 ## Contents
 
-1. [The Language Processing System & Architectural Foundations](#1-the-language-processing-system--architectural-foundations)
-2. [The Six Phases of a Compiler & The End-to-End Assignment Trace](#2-the-six-phases-of-a-compiler--the-end-to-end-assignment-trace)
-3. [Role of the Lexical Analyzer, Separation of Concerns, & Input Buffering](#3-role-of-the-lexical-analyzer-separation-of-concerns--input-buffering)
+1. [The Language Processing System & Architectural Foundations](#1-the-language-processing-system-architectural-foundations)
+2. [The Six Phases of a Compiler & The End-to-End Assignment Trace](#2-the-six-phases-of-a-compiler-the-end-to-end-assignment-trace)
+3. [Role of the Lexical Analyzer, Separation of Concerns, & Input Buffering](#3-role-of-the-lexical-analyzer-separation-of-concerns-input-buffering)
 4. [Tokens, Patterns, Lexemes, and Lexical Error Recovery Strategies](#4-tokens-patterns-lexemes-and-lexical-error-recovery-strategies)
-5. [Formal Specification of Tokens: Strings, Alphabets, & Regular Expressions](#5-formal-specification-of-tokens-strings-alphabets--regular-expressions)
-6. [Automata Formalisms: Deterministic & Nondeterministic Finite Automata (DFA, NFA, ε-NFA)](#6-automata-formalisms-deterministic--nondeterministic-finite-automata-dfa-nfa-ε-nfa)
-7. [Token Recognition Algorithms: Thompson's Construction, Subset Construction, & DFA Minimization](#7-token-recognition-algorithms-thompsons-construction-subset-construction--dfa-minimization)
-8. [Implementation of a Lexical Analyzer & LEX / Flex Generator Architecture](#8-implementation-of-a-lexical-analyzer--lex--flex-generator-architecture)
+5. [Formal Specification of Tokens: Strings, Alphabets, & Regular Expressions](#5-formal-specification-of-tokens-strings-alphabets-regular-expressions)
+6. [Automata Formalisms: Deterministic & Nondeterministic Finite Automata (DFA, NFA, ε-NFA)](#6-automata-formalisms-deterministic-nondeterministic-finite-automata-dfa-nfa-ε-nfa)
+7. [Token Recognition Algorithms: Thompson's Construction, Subset Construction, & DFA Minimization](#7-token-recognition-algorithms-thompsons-construction-subset-construction-dfa-minimization)
+8. [Implementation of a Lexical Analyzer & LEX / Flex Generator Architecture](#8-implementation-of-a-lexical-analyzer-lex-flex-generator-architecture)
 9. [Pre-Exam High-Density Cheat Sheet](#9-pre-exam-high-density-cheat-sheet)
 
 ---
@@ -329,13 +329,13 @@ $$\text{position} = \text{initial} + \text{rate} * 60$$
 6. **Phase 6: Target Code Generation:**
    - Inputs: Optimized TAC + target CPU architecture specification.
    - Actions: Selects machine instructions, allocates hardware registers (`R1`, `R2`), and handles memory storage:
-     ```assembly
-     MOVF id3,   R2     ; Load floating-point rate into register R2
-     MULF #60.0, R2     ; Multiply R2 by literal constant 60.0
-     MOVF id2,   R1     ; Load floating-point initial into register R1
-     ADDF R2,    R1     ; Add R2 into R1: R1 = initial + (rate * 60.0)
-     MOVF R1,    id1    ; Store result back into position in memory
-     ```
+   ```assembly
+   MOVF id3,   R2     ; Load floating-point rate into register R2
+   MULF #60.0, R2     ; Multiply R2 by literal constant 60.0
+   MOVF id2,   R1     ; Load floating-point initial into register R1
+   ADDF R2,    R1     ; Add R2 into R1: R1 = initial + (rate * 60.0)
+   MOVF R1,    id1    ; Store result back into position in memory
+   ```
 
 ### 2.4 Comparative Analysis of Compiler Construction Tools
 
@@ -451,7 +451,7 @@ flowchart LR
 The parser and lexical analyzer operate in a **producer-consumer pull architecture**:
 1. The parser calls `getNextToken()`.
 2. The scanner scans forward from `lexemeBegin` using the `forward` pointer.
-3. When a token pattern is matched, the scanner constructs the token tuple $\langle \text{token\_name}, \text{attribute\_value} \rangle$ and returns control to the parser.
+3. When a token pattern is matched, the scanner constructs the token tuple $`\langle \text{token\_name}, \text{attribute\_value} \rangle`$ and returns control to the parser.
 4. If an identifier is found, it is entered into the Symbol Table.
 
 #### The Input Buffering Bottleneck:
@@ -754,9 +754,9 @@ A regular expression $r$ over alphabet $\Sigma$ denotes a language $L(r)$ define
 
 ##### Inductive Step:
 If $r_1$ and $r_2$ are regular expressions denoting languages $L(r_1)$ and $L(r_2)$:
-1. **Union (Alternation):** $r_1 + r_2$ (or $r_1 \mid r_2$) is a regular expression denoting:
+1. **Union (Alternation):** $`r_1 + r_2`$ (or $`r_1 \mid r_2`$) is a regular expression denoting:
    $$L(r_1 + r_2) = L(r_1) \cup L(r_2)$$
-2. **Concatenation:** $r_1 \cdot r_2$ (or $r_1 r_2$) is a regular expression denoting:
+2. **Concatenation:** $`r_1 \cdot r_2`$ (or $`r_1 r_2`$) is a regular expression denoting:
    $$L(r_1 \cdot r_2) = L(r_1) L(r_2) = \{xy \mid x \in L(r_1), y \in L(r_2)\}$$
 3. **Kleene Closure (Star):** $r_1^*$ is a regular expression denoting:
    $$L(r_1^*) = (L(r_1))^* = \bigcup_{i=0}^{\infty} L(r_1)^i \quad \text{where } L^0 = \{\epsilon\}$$
@@ -777,8 +777,8 @@ Example: $a + b \cdot c^*$ is parsed strictly as $(a) + (b \cdot (c^*))$.
 | **Identity for Union** | $r + \emptyset = \emptyset + r = r$ | $\emptyset$ contributes zero strings |
 | **Identity for Concatenation** | $r\epsilon = \epsilon r = r$ | $\epsilon$ contributes empty string |
 | **Annihilator for Concatenation** | $r\emptyset = \emptyset r = \emptyset$ | Concatenating with nothing yields nothing |
-| **Idempotency of Star** | $(r^*)^* = r^*$ | Repeating repetitions adds no new strings |
-| **Star Decompositions** | $\epsilon + r r^* = r^*$ and $(r + s)^* = (r^* s^*)^*$ | Fundamental closure identities |
+| **Idempotency of Star** | $`(r^*)^* = r^*`$ | Repeating repetitions adds no new strings |
+| **Star Decompositions** | $`\epsilon + r r^* = r^*`$ and $`(r + s)^* = (r^* s^*)^*`$ | Fundamental closure identities |
 
 ### 5.4 Extended Regular Expression Shorthands & Equivalences
 
@@ -804,7 +804,7 @@ $$\{a, b\} \{\epsilon, a, aa, aaa, \dots\} = \{a, aa, aaa, aaaa, \dots\} \cup \{
 > On Slide 14, the notes print:
 > `L((a + b).a*) = {a, aa, aaa, ..., b, bb, bbb, ...}`
 > - **Slide Exam Reproduction Track:** The slide mistakenly writes $b, bb, bbb, \dots$.
-> - **True Mathematical Ground-Truth Track:** $(a + b)a^*$ can NEVER produce $bb$ or $bbb$! Any string starting with $b$ must be followed exclusively by powers of $a$: $\{b, ba, baa, baaa, \dots\}$. To produce $\{b, bb, bbb\}$, the expression would have to be $(a+b)b^*$ or $a^* + b^*$.
+> - **True Mathematical Ground-Truth Track:** $(a + b)a^*$ can NEVER produce $bb$ or $bbb$! Any string starting with $b$ must be followed exclusively by powers of $a$: $\{b, ba, baa, baaa, \dots\}$. To produce $\{b, bb, bbb\}$, the expression would have to be $(a+b)b^*$ or $`a^* + b^*`$.
 
 #### Audit Example 2: Strings Without Consecutive Zeros (Slide 14 vs Slide 15)
 - In Slide 14/36: The slide prints $r = (1 + 01)^*(0 + \lambda)$.
@@ -824,7 +824,7 @@ $$\{a, b\} \{\epsilon, a, aa, aaa, \dots\} = \{a, aa, aaa, aaaa, \dots\} \cup \{
   - $\emptyset$ denotes the empty language containing **zero strings**: $|\emptyset| = 0$.
   - $\{\epsilon\}$ denotes a language containing **one string** (the empty string): $|\{\epsilon\}| = 1$.
   - Concatenation: $L \cdot \emptyset = \emptyset$, but $L \cdot \{\epsilon\} = L$.
-- ⚠️ **Examiner Trap 2 ($(r + s)^* \neq r^* + s^*$):** Students frequently confuse union inside the star with the sum of stars. $(a + b)^*$ generates *all* strings of $a$'s and $b$'s in any order (`"abaabb"`). In contrast, $a^* + b^*$ can only generate all $a$'s (`"aaaa"`) OR all $b$'s (`"bbbb"`), but never mixed strings like `"ab"`.
+- ⚠️ **Examiner Trap 2 ($`(r + s)^* \neq r^* + s^*`$):** Students frequently confuse union inside the star with the sum of stars. $(a + b)^*$ generates *all* strings of $a$'s and $b$'s in any order (`"abaabb"`). In contrast, $`a^* + b^*`$ can only generate all $a$'s (`"aaaa"`) OR all $b$'s (`"bbbb"`), but never mixed strings like `"ab"`.
 
 ---
 
@@ -894,7 +894,7 @@ An NFA is a 5-tuple:
 $$M = (Q, \Sigma, \delta, q_0, F)$$
 Where the transition function maps to the **power set** $2^Q$:
 $$\delta: Q \times \Sigma \longrightarrow 2^Q$$
-*(For a given state and input, the machine may transition to a set of states $\{q_1, q_2, \dots\}$, or to $\emptyset$).*
+*(For a given state and input, the machine may transition to a set of states $`\{q_1, q_2, \dots\}`$, or to $\emptyset$).*
 
 #### 3. NFA with $\epsilon$-transitions ($\epsilon$-NFA):
 An $\epsilon$-NFA allows transitions on the empty string:
@@ -924,7 +924,7 @@ $$\epsilon\text{-CLOSURE}(T) = \bigcup_{t \in T} \epsilon\text{-CLOSURE}(t)$$
 Let us examine the exact DFA presented on Slide 18/36:
 Language $L = \{\text{"abba"}\}$.
 Alphabet $\Sigma = \{a, b\}$.
-States $Q = \{q_0, q_1, q_2, q_3, q_4, q_5\}$.
+States $`Q = \{q_0, q_1, q_2, q_3, q_4, q_5\}`$.
 Start state $= q_0$, Final state $F = \{q_4\}$, Trap state $= q_5$.
 
 #### Audited Transition Table:
@@ -945,7 +945,7 @@ Start state $= q_0$, Final state $F = \{q_4\}$, Trap state $= q_5$.
 3. Trace for prefix string $w_3 = \text{"abb"}$:
    $$\hat{\delta}(q_0, \text{"abb"}) = q_3 \notin F \quad \implies \mathbf{REJECTED}$$
 
-> 📐 **Audit Check:** Notice that state $q_5$ is a **sink (dead) state**: $\delta(q_5, a) = q_5$ and $\delta(q_5, b) = q_5$. Once the automaton transitions into $q_5$, it can never escape. This guarantees that any string that does not start with `"abba"` or continues after `"abba"` is rejected.
+> 📐 **Audit Check:** Notice that state $q_5$ is a **sink (dead) state**: $`\delta(q_5, a) = q_5`$ and $`\delta(q_5, b) = q_5`$. Once the automaton transitions into $q_5$, it can never escape. This guarantees that any string that does not start with `"abba"` or continues after `"abba"` is rejected.
 
 ### 6.7 Examiner Traps & Common Pitfalls
 - ⚠️ **Examiner Trap 1 (DFA Totality Requirement):** In formal automata theory, the transition function $\delta$ of a DFA must be a **total function**. That means *every* state must have an outgoing transition for *every* symbol in $\Sigma$. If your drawing omits the `'b'` transition from $q_0$, it is technically an incomplete transition graph; the missing transition implicitly goes to an unwritten dead state $q_5$.
@@ -1010,8 +1010,8 @@ Builds an $\epsilon$-NFA inductively from regular expression $r$:
 ##### Structural Assembly Rules:
 1. **Base Case $\epsilon$:** Start state $i \xrightarrow{\epsilon} f$ (accept).
 2. **Base Case $a \in \Sigma$:** Start state $i \xrightarrow{a} f$ (accept).
-3. **Concatenation $r_1 \cdot r_2$:** Merge accept state of $NFA(r_1)$ directly with start state of $NFA(r_2)$.
-4. **Union $r_1 \mid r_2$:** Create a new start state $i$ with $\epsilon$-transitions to the start states of $NFA(r_1)$ and $NFA(r_2)$. Create a new accept state $f$ with $\epsilon$-transitions from the accept states of $NFA(r_1)$ and $NFA(r_2)$ into $f$.
+3. **Concatenation $`r_1 \cdot r_2`$:** Merge accept state of $NFA(r_1)$ directly with start state of $NFA(r_2)$.
+4. **Union $`r_1 \mid r_2`$:** Create a new start state $i$ with $\epsilon$-transitions to the start states of $NFA(r_1)$ and $NFA(r_2)$. Create a new accept state $f$ with $\epsilon$-transitions from the accept states of $NFA(r_1)$ and $NFA(r_2)$ into $f$.
 5. **Kleene Star $r_1^*$:** Create new start state $i$ and new accept state $f$.
    - Add $\epsilon$-transition from $i$ to start of $NFA(r_1)$.
    - Add $\epsilon$-transition from accept of $NFA(r_1)$ to $f$.
@@ -1021,8 +1021,8 @@ Builds an $\epsilon$-NFA inductively from regular expression $r$:
 ---
 
 #### Algorithm 2: The Subset Construction (NFA / $\epsilon$-NFA $\to$ DFA)
-- **Input:** An $\epsilon$-NFA $N = (Q_N, \Sigma, \delta_N, s_0, F_N)$.
-- **Output:** A DFA $D = (Q_D, \Sigma, \delta_D, S_0, F_D)$ where each DFA state is a subset of $Q_N$.
+- **Input:** An $\epsilon$-NFA $`N = (Q_N, \Sigma, \delta_N, s_0, F_N)`$.
+- **Output:** A DFA $`D = (Q_D, \Sigma, \delta_D, S_0, F_D)`$ where each DFA state is a subset of $Q_N$.
 
 ##### Mathematical Operations:
 1. $\epsilon\text{-CLOSURE}(s)$: Set of NFA states reachable from state $s$ on $\epsilon$-transitions.
@@ -1063,7 +1063,7 @@ Finds the unique minimal-state DFA by partitioning states into groups of **indis
    For every symbol $a \in \Sigma$, if states $p, q \in G$ transition to different groups in partition $P$:
    $$\delta(p, a) \in G_1 \quad \text{and} \quad \delta(q, a) \in G_2 \quad (G_1 \neq G_2)$$
    Then split $G$ into sub-groups containing states that transition to the same target groups.
-3. **Termination:** Repeat Step 2 until $P_{k+1} = P_k$ (no further splits possible).
+3. **Termination:** Repeat Step 2 until $`P_{k+1} = P_k`$ (no further splits possible).
 4. **Reconstruction:** Choose one representative state from each final group to form the minimal DFA.
 
 ### 7.4 Comparative Complexity & Invariants of the Automata Algorithms

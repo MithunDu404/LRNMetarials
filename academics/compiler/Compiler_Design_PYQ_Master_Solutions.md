@@ -15,49 +15,46 @@
 
 ## Contents
 
-- [1. Executive Summary & Verification Matrix](#1-executive-summary--verification-matrix)
-- [2. Multi-Year Frequency & Recurrence Analysis](#2-multi-year-frequency--recurrence-analysis)
-- [3. Comprehensive Question Audit & Coverage Matrix](#3-comprehensive-question-audit--coverage-matrix)
+- [1. Executive Summary & Verification Matrix](#1-executive-summary-verification-matrix)
+- [2. Multi-Year Frequency & Recurrence Analysis](#2-multi-year-frequency-recurrence-analysis)
+- [3. Comprehensive Question Audit & Coverage Matrix](#3-comprehensive-question-audit-coverage-matrix)
 - [4. 2025 Mid-Semester Examination Solutions](#4-2025-mid-semester-examination-solutions)
-  - [Question 1: Language Processing & Lexical Foundations [3 + 3 = 6 Marks]](#question-1-language-processing--lexical-foundations-3--3--6-marks)
-  - [Question 2: Token Specifications & Postfix Ambiguity Proof [4 + 4 = 8 Marks]](#question-2-token-specifications--postfix-ambiguity-proof-4--4--8-marks)
-  - [Question 3: Left Recursion Elimination & LL(1) Table Verification [2 + 6 = 8 Marks]](#question-3-left-recursion-elimination--ll1-table-verification-2--6--8-marks)
-  - [Question 4: Shift-Reduce Architecture & Handle Pruning [3 + 5 = 8 Marks]](#question-4-shift-reduce-architecture--handle-pruning-3--5--8-marks)
-  - [Question 5: Formal SLR(1) Grammar Verification & Conflict Proof [5 + 3 = 8 Marks]](#question-5-formal-slr1-grammar-verification--conflict-proof-5--3--8-marks)
+  - [Question 1: Language Processing & Lexical Foundations [3 + 3 = 6 Marks]](#question-1-language-processing-lexical-foundations-3-3-6-marks)
+  - [Question 2: Token Specifications & Postfix Ambiguity Proof [4 + 4 = 8 Marks]](#question-2-token-specifications-postfix-ambiguity-proof-4-4-8-marks)
+  - [Question 3: Left Recursion Elimination & LL(1) Table Verification [2 + 6 = 8 Marks]](#question-3-left-recursion-elimination-ll1-table-verification-2-6-8-marks)
+  - [Question 4: Shift-Reduce Architecture & Handle Pruning [3 + 5 = 8 Marks]](#question-4-shift-reduce-architecture-handle-pruning-3-5-8-marks)
+  - [Question 5: Formal SLR(1) Grammar Verification & Conflict Proof [5 + 3 = 8 Marks]](#question-5-formal-slr1-grammar-verification-conflict-proof-5-3-8-marks)
 - [5. 2025 End-Semester Examination Solutions](#5-2025-end-semester-examination-solutions)
   - [Question 1(a): Syntax Error Recovery Architecture [4 Marks]](#question-1a-syntax-error-recovery-architecture-4-marks)
-  - [Question 2: Pointer Ambiguity, Recursive Descent & DFA Construction [4 + 4 + 3 = 11 Marks]](#question-2-pointer-ambiguity-recursive-descent--dfa-construction-4--4--3--11-marks)
-  - [Question 3: Non-LL(1) Predictive Parsing & Conflict Matrix [3 + 3 + 3 + 2 = 11 Marks]](#question-3-non-ll1-predictive-parsing--conflict-matrix-3--3--3--2--11-marks)
-  - [Question 4: Shift-Reduce Model & CLR Parsing Table Construction [5 + 6 = 11 Marks]](#question-4-shift-reduce-model--clr-parsing-table-construction-5--6--11-marks)
-  - [Question 5(b): Symbol Table Engineering & Hash Table Architecture [5 Marks]](#question-5b-symbol-table-engineering--hash-table-architecture-5-marks)
-  - [Question 6(a): Type Checker Simplification for Statements, Expressions & Functions [6 Marks]](#question-6a-type-checker-simplification-for-statements-expressions--functions-6-marks)
+  - [Question 2: Pointer Ambiguity, Recursive Descent & DFA Construction [4 + 4 + 3 = 11 Marks]](#question-2-pointer-ambiguity-recursive-descent-dfa-construction-4-4-3-11-marks)
+  - [Question 3: Non-LL(1) Predictive Parsing & Conflict Matrix [3 + 3 + 3 + 2 = 11 Marks]](#question-3-non-ll1-predictive-parsing-conflict-matrix-3-3-3-2-11-marks)
+  - [Question 4: Shift-Reduce Model & CLR Parsing Table Construction [5 + 6 = 11 Marks]](#question-4-shift-reduce-model-clr-parsing-table-construction-5-6-11-marks)
+  - [Question 5(b): Symbol Table Engineering & Hash Table Architecture [5 Marks]](#question-5b-symbol-table-engineering-hash-table-architecture-5-marks)
+  - [Question 6(a): Type Checker Simplification for Statements, Expressions & Functions [6 Marks]](#question-6a-type-checker-simplification-for-statements-expressions-functions-6-marks)
 - [6. 2024 Mid-Semester Examination Solutions](#6-2024-mid-semester-examination-solutions)
-  - [Question 1: Lexical Functions, Phase Decoupling & Compiler Errors [3 + 3 = 6 Marks]](#question-1-lexical-functions-phase-decoupling--compiler-errors-3--3--6-marks)
-  - [Question 2: Token Automata & LL(1) Panic-Mode Synchronizing Sets [4 + 4 = 8 Marks]](#question-2-token-automata--ll1-panic-mode-synchronizing-sets-4--4--8-marks)
-  - [Question 3: Canonical Expression Left Recursion & LL(1) Parsing [2 + 6 = 8 Marks]](#question-3-canonical-expression-left-recursion--ll1-parsing-2--6--8-marks)
-  - [Question 4: Shift-Reduce Parser Conflicts & Handle Pruning [3 + 5 = 8 Marks]](#question-4-shift-reduce-parser-conflicts--handle-pruning-3--5--8-marks)
-  - [Question 5: LALR(1) Parsing Table Construction & State Merging [3 + 5 = 8 Marks]](#question-5-lalr1-parsing-table-construction--state-merging-3--5--8-marks)
+  - [Question 1: Lexical Functions, Phase Decoupling & Compiler Errors [3 + 3 = 6 Marks]](#question-1-lexical-functions-phase-decoupling-compiler-errors-3-3-6-marks)
+  - [Question 2: Token Automata & LL(1) Panic-Mode Synchronizing Sets [4 + 4 = 8 Marks]](#question-2-token-automata-ll1-panic-mode-synchronizing-sets-4-4-8-marks)
+  - [Question 3: Canonical Expression Left Recursion & LL(1) Parsing [2 + 6 = 8 Marks]](#question-3-canonical-expression-left-recursion-ll1-parsing-2-6-8-marks)
+  - [Question 4: Shift-Reduce Parser Conflicts & Handle Pruning [3 + 5 = 8 Marks]](#question-4-shift-reduce-parser-conflicts-handle-pruning-3-5-8-marks)
+  - [Question 5: LALR(1) Parsing Table Construction & State Merging [3 + 5 = 8 Marks]](#question-5-lalr1-parsing-table-construction-state-merging-3-5-8-marks)
 - [7. 2024 End-Semester Examination Solutions](#7-2024-end-semester-examination-solutions)
-  - [Question 1: Symbol Table Hashing & Even-Length Regular Expressions [3 + 3 = 6 Marks]](#question-1-symbol-table-hashing--even-length-regular-expressions-3--3--6-marks)
-  - [Question 2: Token-Lexeme-Pattern Mapping & Transition Diagrams [4 + 7 = 11 Marks]](#question-2-token-lexeme-pattern-mapping--transition-diagrams-4--7--11-marks)
-  - [Question 3: Left Recursion Rules & LL(1) Parsing of $a+b+a$ [3 + 8 = 11 Marks]](#question-3-left-recursion-rules--ll1-parsing-of-aba-3--8--11-marks)
-  - [Question 4: Shift-Reduce Parsing Model & CLR Table Construction [5 + 6 = 11 Marks]](#question-4-shift-reduce-parsing-model--clr-table-construction-5--6--11-marks)
-  - [Question 5: SDT Evaluation Orders & Three-Address Code Generation [6 + 5 = 11 Marks]](#question-5-sdt-evaluation-orders--three-address-code-generation-6--5--11-marks)
+  - [Question 1: Symbol Table Hashing & Even-Length Regular Expressions [3 + 3 = 6 Marks]](#question-1-symbol-table-hashing-even-length-regular-expressions-3-3-6-marks)
+  - [Question 2: Token-Lexeme-Pattern Mapping & Transition Diagrams [4 + 7 = 11 Marks]](#question-2-token-lexeme-pattern-mapping-transition-diagrams-4-7-11-marks)
+  - [Question 3: Left Recursion Rules & LL(1) Parsing of $a+b+a$ [3 + 8 = 11 Marks]](#question-3-left-recursion-rules-ll1-parsing-of-aba-3-8-11-marks)
+  - [Question 4: Shift-Reduce Parsing Model & CLR Table Construction [5 + 6 = 11 Marks]](#question-4-shift-reduce-parsing-model-clr-table-construction-5-6-11-marks)
+  - [Question 5: SDT Evaluation Orders & Three-Address Code Generation [6 + 5 = 11 Marks]](#question-5-sdt-evaluation-orders-three-address-code-generation-6-5-11-marks)
   - [Question 6(b): Expression DAG Construction via Value-Numbering [3 Marks]](#question-6b-expression-dag-construction-via-value-numbering-3-marks)
 - [8. 2023 Mid-Semester Examination Solutions](#8-2023-mid-semester-examination-solutions)
-  - [Question 1: Lexical Functions & Compiler Error Taxonomy [3 + 3 = 6 Marks]](#question-1-lexical-functions--compiler-error-taxonomy-3--3--6-marks)
-  - [Question 2: Lexical Token Recognition & Predictive Panic Recovery [4 + 4 = 8 Marks]](#question-2-lexical-token-recognition--predictive-panic-recovery-4--4--8-marks)
-  - [Question 3: Expression Left Recursion Elimination & LL(1) Parsing [2 + 6 = 8 Marks]](#question-3-expression-left-recursion-elimination--ll1-parsing-2--6--8-marks)
-  - [Question 4: Shift-Reduce Operational Mechanics & Handle Pruning [3 + 5 = 8 Marks]](#question-4-shift-reduce-operational-mechanics--handle-pruning-3--5--8-marks)
-  - [Question 5: SLR(1) Item Collection & Parsing Table Verification [5 + 3 = 8 Marks]](#question-5-slr1-item-collection--parsing-table-verification-5--3--8-marks)
+  - [Questions 1–4: (Identical to 2024 Mid-Semester Questions 1–4)](#6-2024-mid-semester-examination-solutions)
+  - [Question 5: SLR(1) Item Collection & Parsing Table Verification [5 + 3 = 8 Marks]](#question-5-slr1-item-collection-parsing-table-verification-5-3-8-marks)
 - [9. 2023 End-Semester Examination Solutions](#9-2023-end-semester-examination-solutions)
-  - [Question 1: Short Concepts: Token REs, Left Factoring & Handles [2 + 2 + 2 = 6 Marks]](#question-1-short-concepts-token-res-left-factoring--handles-2--2--2--6-marks)
-  - [Question 2: Grammar Recursion Analysis & Non-LL(1) Proof [3 + 8 = 11 Marks]](#question-2-grammar-recursion-analysis--non-ll1-proof-3--8--11-marks)
-  - [Question 3: Shift-Reduce Model & CLR Table Construction [5 + 6 = 11 Marks]](#question-3-shift-reduce-model--clr-table-construction-5--6--11-marks)
-  - [Question 4: Symbol Table Architecture & Branching Control SDD [6 + 5 = 11 Marks]](#question-4-symbol-table-architecture--branching-control-sdd-6--5--11-marks)
+  - [Question 1: Short Concepts: Token REs, Left Factoring & Handles [2 + 2 + 2 = 6 Marks]](#question-1-short-concepts-token-res-left-factoring-handles-2-2-2-6-marks)
+  - [Question 2: Grammar Recursion Analysis & Non-LL(1) Proof [3 + 8 = 11 Marks]](#question-2-grammar-recursion-analysis-non-ll1-proof-3-8-11-marks)
+  - [Question 3: Shift-Reduce Model & CLR Table Construction [5 + 6 = 11 Marks]](#question-3-shift-reduce-model-clr-table-construction-5-6-11-marks)
+  - [Question 4: Symbol Table Architecture & Branching Control SDD [6 + 5 = 11 Marks]](#question-4-symbol-table-architecture-branching-control-sdd-6-5-11-marks)
 - [10. Master Quick-Recall Formula Sheet](#10-master-quick-recall-formula-sheet)
-- [11. Exam Hall Fatal Traps & Pitfalls Catalog](#11-exam-hall-fatal-traps--pitfalls-catalog)
-- [12. Unanswered / Uncovered Questions (Not in Reference Notes)](#12-unanswered--uncovered-questions-not-in-reference-notes)
+- [11. Exam Hall Fatal Traps & Pitfalls Catalog](#11-exam-hall-fatal-traps-pitfalls-catalog)
+- [12. Unanswered / Uncovered Questions (Not in Reference Notes)](#12-unanswered-uncovered-questions-not-in-reference-notes)
 
 ---
 
@@ -68,8 +65,8 @@ This manual provides complete, easy-to-read solutions for **CS 4101: Compiler De
 Every derivation, grammar check, item set, and parsing table is kept 100% mathematically correct. The explanations use clean, everyday English so that students can understand and memorize the core ideas quickly.
 
 All solutions link directly to the course reference notes:
-- [[compiler_design_intro_and_lexical_analysis_visual_guide|Note 1: Introduction & Lexical Analysis Guide]]
-- [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide|Note 2: Syntax Error Recovery & Semantic Analysis Guide]]
+- [Note 1: Introduction & Lexical Analysis Guide](compiler_design_intro_and_lexical_analysis_visual_guide.md)
+- [Note 2: Syntax Error Recovery & Semantic Analysis Guide](compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide.md)
 
 ### Ground-Truth Computational Audit Summary
 
@@ -186,13 +183,13 @@ xychart-beta
 
 ## 4. 2025 Mid-Semester Examination Solutions
 
-> [!abstract] Examination Session Metadata
+> [!NOTE] Examination Session Metadata
 > **Indian Institute of Engineering Science and Technology, Shibpur**  
 > **B.Tech. - M.Tech. Dual Degree 7th Mid-Semester (CST) Examination, September 2025**  
 > **Compiler Design (CS 4101)** | **Full Marks: 30** | **Time: 2 Hours**  
 > *Instructions: Answer Question-1 and any three from the remaining.*
 
-> [!tip] Exam Hall Selection Advisory
+> [!TIP] Exam Hall Selection Advisory
 > **Compulsory:** Question 1 (6 Marks) must be answered.  
 > **Recommended Selection (Pick 3 of 4):**
 > 1. **Question 2 (8 Marks):** High scoring, deterministic derivations and standard regular expressions.
@@ -298,7 +295,7 @@ During lexical analysis, the compiler turns raw characters into tokens using thr
 ##### 2. How Finite Automata Recognize Tokens
 The compiler converts these regular expressions into a Deterministic Finite Automaton (DFA):
 1. It reads input characters one by one.
-2. It transitions between states: $\delta(s_i, c) = s_{i+1}$.
+2. It transitions between states: $`\delta(s_i, c) = s_{i+1}`$.
 3. When it reaches an accepting state and no longer matches any further characters (**Maximal Munch / Longest Match Rule**), it packages the matched lexeme into a token and returns to the start state.
 
 ```mermaid
@@ -402,10 +399,10 @@ flowchart TD
     classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
 ```
 
-Reading leaves from left to right yields: $a \cdot a \cdot + \cdot a \cdot * = aa+a*$.
+Reading leaves from left to right yields: $`a \cdot a \cdot + \cdot a \cdot * = aa+a*`$.
 
 ##### iv. Ambiguity Analysis and Proof
-> [!important] Ambiguity Status
+> [!IMPORTANT] Ambiguity Status
 > **The grammar is UNAMBIGUOUS.**
 
 **Why it is unambiguous:**
@@ -500,7 +497,7 @@ Start symbol is $A \implies \text{\$} \in \text{FOLLOW}(A)$.
 | $B'$ | $\{d, \epsilon\}$ | $\{c\}$ |
 
 ##### 3. Check if the Grammar is LL(1)
-> [!failure] LL(1) Conflict Proof
+> [!CAUTION] LL(1) Conflict Proof
 > For a grammar to be LL(1), alternate choices for the same non-terminal must have disjoint FIRST sets:
 > $$\text{FIRST}(\alpha) \cap \text{FIRST}(\beta) = \emptyset$$
 
@@ -680,17 +677,17 @@ Thus:
   \end{aligned}
   $$
 - **Transitions from $I_0$:**
-  - $\text{GOTO}(I_0, S) = I_1 = \{S' \to S \cdot\}$
-  - **$\mathbf{GOTO}(I_0, L) = I_2$:**
+  - $`\text{GOTO}(I_0, S) = I_1 = \{S' \to S \cdot\}`$
+  - **$`\mathbf{GOTO}(I_0, L) = I_2`$:**
     $$
     \begin{aligned}
     S &\to L \cdot = R \\
     R &\to L \cdot
     \end{aligned}
     $$
-  - $\text{GOTO}(I_0, R) = I_3 = \{S \to R \cdot\}$
-  - $\text{GOTO}(I_0, *) = I_4 = \text{CLOSURE}(\{L \to * \cdot R\})$
-  - $\text{GOTO}(I_0, id) = I_5 = \{L \to id \cdot\}$
+  - $`\text{GOTO}(I_0, R) = I_3 = \{S \to R \cdot\}`$
+  - $`\text{GOTO}(I_0, *) = I_4 = \text{CLOSURE}(\{L \to * \cdot R\})`$
+  - $`\text{GOTO}(I_0, id) = I_5 = \{L \to id \cdot\}`$
 
 #### Step 3: Conflict in State $I_2$
 Look closely at State $I_2$:
@@ -702,7 +699,7 @@ Under SLR(1) parsing rules:
    Since $\mathbf{FOLLOW}(R) = \{=, \text{\$} \}$, the symbol `$=$` is in $\text{FOLLOW}(R)$:
    $$\text{ACTION}[2, =] = \text{Reduce by Rule 5 } (R \to L)$$
 
-> [!failure] Definitive SLR(1) Verdict
+> [!CAUTION] Definitive SLR(1) Verdict
 > State $I_2$ has **both** a Shift and a Reduce on lookahead `$=$`:
 > $$\text{ACTION}[2, =] = \{\text{Shift } 6, \; \text{Reduce } 5\}$$
 > This is a fatal **Shift/Reduce Conflict**.  
@@ -712,13 +709,13 @@ Under SLR(1) parsing rules:
 
 ## 5. 2025 End-Semester Examination Solutions
 
-> [!abstract] Examination Session Metadata
+> [!NOTE] Examination Session Metadata
 > **Indian Institute of Engineering Science and Technology, Shibpur**  
 > **Dual Degree (B.Tech. - M.Tech.) 7th Semester (CST) Examination, November 2025**  
 > **Compiler Design (CS 4101)** | **Full Marks: 50** | **Time: 3 Hours**  
 > *Instructions: Answer Question-1 and any four from the remaining.*
 
-> [!tip] Exam Hall Selection Advisory
+> [!TIP] Exam Hall Selection Advisory
 > **Compulsory:** Question 1 (Attempt 1(a) for 4 marks; 1(b) is peephole optimization).  
 > **Recommended Selection (Pick 4 covered questions):**
 > 1. **Question 2 (11 Marks):** Highly modular (Pointer ambiguity proof + Recursive descent problems + DFA for $(0+1)^{\ast}(00+11)(0+1)^{\ast}$).
@@ -776,7 +773,7 @@ The syntax analyzer (parser) is the main place where errors are caught because i
 
 **Direct Reference:** [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#4.2 Architectural Rationale: The Viable-Prefix Property|Note 2 §4.2]]
 
-> [!important] Ambiguity Status
+> [!IMPORTANT] Ambiguity Status
 > **The grammar is UNAMBIGUOUS.**
 
 **Clear Explanation:**
@@ -814,7 +811,7 @@ A Recursive Descent parser is a top-down parser written using code functions:
 1. **Left Recursion Causes Infinite Loops:**  
    If a rule has left recursion ($A \to A\alpha$), the function `A()` immediately calls `A()` again before consuming any input, causing a stack overflow crash.
 2. **Backtracking Overhead:**  
-   If two choices start with the same prefix ($A \to \alpha \beta_1 \mid \alpha \beta_2$), picking the wrong choice forces the parser to rewind the input and undo function calls, leading to very slow exponential running time.
+   If two choices start with the same prefix ($`A \to \alpha \beta_1 \mid \alpha \beta_2`$), picking the wrong choice forces the parser to rewind the input and undo function calls, leading to very slow exponential running time.
 3. **Grammar Must Be Rewritten:**  
    To make it fast and deterministic ($O(N)$), the grammar must be manually transformed to eliminate all left recursion and common prefixes (left factoring).
 4. **Hard to Locate Errors:**  
@@ -914,7 +911,7 @@ flowchart LR
 
 #### Part (b) & (d): Predictive Parsing Table & LL(1) Justification
 
-> [!failure] LL(1) Conflict Proof
+> [!CAUTION] LL(1) Conflict Proof
 > A table cell $M[X, t]$ gets filled whenever $t \in \text{FIRST}(\text{RHS})$, and if RHS can derive $\epsilon$, for all $t \in \text{FOLLOW}(X)$:
 > 1. For $A \to DB$: $\text{FIRST}(DB) = \{e, f\} \implies$ place $A \to DB$ in $M[A, e]$ and $M[A, f]$.
 > 2. For $A \to \epsilon$: $\text{FOLLOW}(A) = \{d, e, f, g\} \implies$ place $A \to \epsilon$ in $M[A, d], M[A, e], M[A, f], M[A, g]$.
@@ -982,7 +979,7 @@ Derivation: $S \Rightarrow ABD \Rightarrow aBD \Rightarrow a\epsilon D \Rightarr
    - **Accept:** Input is valid; announce success.
    - **Error:** Trigger error recovery routine.
 
-*(For detailed explanations of Shift/Reduce and Reduce/Reduce conflicts, see [2025 Mid Q4(a)](#question-4-shift-reduce-architecture--handle-pruning-3--5--8-marks)).*
+*(For detailed explanations of Shift/Reduce and Reduce/Reduce conflicts, see [2025 Mid Q4(a)](#question-4-shift-reduce-architecture-handle-pruning-3-5-8-marks)).*
 
 ---
 
@@ -1012,7 +1009,7 @@ $$
 $$
 
 ##### 2. Canonical Collection of $LR(1)$ Items
-- **State $I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \text{\$} ]\}):**
+- **State $I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \text{\$} ]\})$:**
   $$
   \begin{aligned}
   S' &\to \cdot S, \; \text{\$} \\
@@ -1110,7 +1107,7 @@ flowchart LR
     classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
 ```
 
-1. **Hash Function:** Converts a variable name string $s = c_0 c_1 \dots c_{k-1}$ into a bucket index:
+1. **Hash Function:** Converts a variable name string $`s = c_0 c_1 \dots c_{k-1}`$ into a bucket index:
    $$h(s) = \left( \sum_{i=0}^{k-1} c_i \cdot p^i \right) \pmod M$$
    where $p$ is a prime number (like 31) and $M$ is the size of the table.
 2. **Handling Collisions:** Multiple identifiers that produce the same hash index are linked together in a list (**Separate Chaining**).
@@ -1133,50 +1130,60 @@ Computes the resulting type of an expression:
 - **Constants:**
   $$E \to \text{intConst} \implies E.type = \mathbf{integer}, \quad E \to \text{floatConst} \implies E.type = \mathbf{real}$$
 - **Arithmetic ($+$):**
-  $$E \to E_1 + E_2 \quad \implies \quad E.type = \begin{cases} 
+  $$
+  E \to E_1 + E_2 \quad \implies \quad E.type = \begin{cases} 
   \mathbf{integer} & \text{if } E_1.type = \mathbf{integer} \land E_2.type = \mathbf{integer} \\
   \mathbf{real} & \text{if } E_1.type = \mathbf{real} \land E_2.type = \mathbf{real} \\
   \mathbf{typeError} & \text{otherwise}
-  \end{cases}$$
+  \end{cases}
+  $$
 - **Comparison ($<$):**
-  $$E \to E_1 < E_2 \quad \implies \quad E.type = \begin{cases}
+  $$
+  E \to E_1 < E_2 \quad \implies \quad E.type = \begin{cases}
   \mathbf{boolean} & \text{if both are numeric} \\
   \mathbf{typeError} & \text{otherwise}
-  \end{cases}$$
+  \end{cases}
+  $$
 
 #### 2. Checking Statements
 Statements do not produce values; they return $\mathbf{void}$ if correct, or $\mathbf{typeError}$ if invalid:
 - **Assignment:**
-  $$S \to id = E; \quad \implies \quad S.type = \begin{cases}
+  $$
+  S \to id = E; \quad \implies \quad S.type = \begin{cases}
   \mathbf{void} & \text{if } \text{lookup}(id) = E.type \\
   \mathbf{typeError} & \text{otherwise}
-  \end{cases}$$
+  \end{cases}
+  $$
 - **If Statement:**
-  $$S \to \text{if } (E) \; S_1 \quad \implies \quad S.type = \begin{cases}
+  $$
+  S \to \text{if } (E) \; S_1 \quad \implies \quad S.type = \begin{cases}
   \mathbf{void} & \text{if } E.type = \mathbf{boolean} \land S_1.type = \mathbf{void} \\
   \mathbf{typeError} & \text{otherwise}
-  \end{cases}$$
+  \end{cases}
+  $$
 
 #### 3. Checking Functions & Function Calls
 - **Function Definition:**
   $$F \to \text{id}(x : T_1) : T_2 \; \{ S \} \quad \implies \quad F.type = (T_1 \to T_2) \quad \text{if } S.type = \mathbf{void}$$
 - **Function Call:**
-  $$E \to E_1(E_2) \quad \implies \quad E.type = \begin{cases}
+  $$
+  E \to E_1(E_2) \quad \implies \quad E.type = \begin{cases}
   t & \text{if } E_1.type = (s \to t) \land E_2.type = s \\
   \mathbf{typeError} & \text{otherwise}
-  \end{cases}$$
+  \end{cases}
+  $$
 
 ---
 
 ## 6. 2024 Mid-Semester Examination Solutions
 
-> [!abstract] Examination Session Metadata
+> [!NOTE] Examination Session Metadata
 > **Indian Institute of Engineering Science and Technology, Shibpur**  
 > **B.Tech. - M.Tech. Dual Degree 7th Mid-Semester (CST) Examination, September 2024**  
 > **Compiler Design (CS 4101)** | **Full Marks: 30** | **Time: 2 Hours**  
 > *Instructions: Answer Question-1 and any three from the remaining.*
 
-> [!tip] Exam Hall Selection Advisory
+> [!TIP] Exam Hall Selection Advisory
 > **Compulsory:** Question 1 (6 Marks) must be answered.  
 > **Recommended Selection (Pick 3 of 4):**
 > 1. **Question 2 (8 Marks):** Direct regular expressions and clean panic-mode error recovery explanation.
@@ -1229,7 +1236,7 @@ Errors are classified by the compiler phase that detects them:
 #### Part (a)
 > **(a) Write regular expressions for specifying identifiers and constants of C. Discuss how finite automata is used to represent tokens and performs lexical analysis with examples. [4 Marks]**
 
-*(Full solution identical to [2025 Mid Q2(a)](#question-2-token-specifications--postfix-ambiguity-proof-4--4--8-marks)).*
+*(Full solution identical to [2025 Mid Q2(a)](#question-2-token-specifications-postfix-ambiguity-proof-4-4-8-marks)).*
 
 ---
 
@@ -1339,7 +1346,7 @@ $$
 | **$F'$** | $\{*, \epsilon\}$ | $\{a, b, +, \text{\$} \}$ |
 
 ##### 3. LL(1) Table Check
-> [!success] LL(1) Grammatical Status
+> [!TIP] LL(1) Grammatical Status
 > Each choice has disjoint FIRST sets and no conflict with FOLLOW sets.
 > Every cell $M[X, a]$ has at most one production.
 > **Therefore, the grammar is strictly LL(1).**
@@ -1386,7 +1393,7 @@ $$
 
 ### Question 4: Shift-Reduce Parser Conflicts & Handle Pruning [3 + 5 = 8 Marks]
 
-*(Full solution identical to [2025 Mid Q4(a) & (b)](#question-4-shift-reduce-architecture--handle-pruning-3--5--8-marks)).*
+*(Full solution identical to [2025 Mid Q4(a) & (b)](#question-4-shift-reduce-architecture-handle-pruning-3-5-8-marks)).*
 
 ---
 
@@ -1444,13 +1451,13 @@ When we build the full CLR(1) states, several pairs of states have identical cor
 
 ## 7. 2024 End-Semester Examination Solutions
 
-> [!abstract] Examination Session Metadata
+> [!NOTE] Examination Session Metadata
 > **Indian Institute of Engineering Science and Technology, Shibpur**  
 > **Dual Degree (B.Tech. - M.Tech.) 7th Semester (CST) Examination, November 2024**  
 > **Compiler Design (CS 4101)** | **Full Marks: 50** | **Time: 3 Hours**  
 > *Instructions: Answer Question-1 and any four from the remaining.*
 
-> [!tip] Exam Hall Selection Advisory
+> [!TIP] Exam Hall Selection Advisory
 > **Compulsory:** Question 1 (6 Marks) must be answered.  
 > **Recommended Selection (Pick 4 covered questions):**
 > 1. **Question 2 (11 Marks):** Highly scoring (Lexeme-token table + Relop & unsigned number DFAs).
@@ -1466,7 +1473,7 @@ When we build the full CLR(1) states, several pairs of states have identical cor
 #### Part (a)
 > **(a) Describe hash-table based data structures for symbol table management. [3 Marks]**
 
-*(Full solution identical to [2025 End Q5(b)](#question-5b-symbol-table-engineering--hash-table-architecture-5-marks)).*
+*(Full solution identical to [2025 End Q5(b)](#question-5b-symbol-table-engineering-hash-table-architecture-5-marks)).*
 
 ---
 
@@ -1579,23 +1586,23 @@ Lexical analysis is the first phase of a compiler that converts raw source chara
 **Direct Reference:** [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#2.3 Formal Mechanics: Top-Down vs. Bottom-Up Scanners|Note 2 §2.3]]
 
 ##### General Algorithm to Eliminate Left Recursion
-1. Arrange all non-terminals in order: $A_1, A_2, \dots, A_n$.
+1. Arrange all non-terminals in order: $`A_1, A_2, \dots, A_n`$.
 2. For each $i$ from 1 to $n$:
-   - Replace any production $A_i \to A_j \gamma$ (where $j < i$) with the expansions of $A_j$.
+   - Replace any production $`A_i \to A_j \gamma`$ (where $j < i$) with the expansions of $A_j$.
    - Eliminate immediate left recursion:
      $$A_i \to A_i \alpha_1 \mid \dots \mid A_i \alpha_m \mid \beta_1 \mid \dots \mid \beta_k$$
      is rewritten as:
      $$A_i \to \beta_1 A_i' \mid \dots \mid \beta_k A_i'$$
      $$A_i' \to \alpha_1 A_i' \mid \dots \mid \alpha_m A_i' \mid \epsilon$$
 
-*(For the step-by-step elimination on this grammar, refer to [2024 Mid Q3(a)](#question-3-canonical-expression-left-recursion--ll1-parsing-2--6--8-marks)).*
+*(For the step-by-step elimination on this grammar, refer to [2024 Mid Q3(a)](#question-3-canonical-expression-left-recursion-ll1-parsing-2-6-8-marks)).*
 
 ---
 
 #### Part (b)
 > **(b) Compute FIRST & FOLLOW set for the non-terminals. Check the grammar is LL(1) or not; Show the parsing for $a + b + a$. [8 Marks]**
 
-*(FIRST, FOLLOW, and LL(1) table are identical to [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion--ll1-parsing-2--6--8-marks)).*
+*(FIRST, FOLLOW, and LL(1) table are identical to [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion-ll1-parsing-2-6-8-marks)).*
 
 ##### Complete Parsing Trace for `a + b + a $`
 
@@ -1628,7 +1635,7 @@ Lexical analysis is the first phase of a compiler that converts raw source chara
 
 ### Question 4: Shift-Reduce Parsing Model & CLR Table Construction [5 + 6 = 11 Marks]
 
-*(Full solution identical to [2025 End Q4(a) & (b)](#question-4-shift-reduce-model--clr-parsing-table-construction-5--6--11-marks)).*
+*(Full solution identical to [2025 End Q4(a) & (b)](#question-4-shift-reduce-model-clr-parsing-table-construction-5-6-11-marks)).*
 
 ---
 
@@ -1707,11 +1714,11 @@ In Syntax-Directed Translation (SDT), semantic rules compute attributes for node
 
 | Grammar Production | Semantic Rules |
 | :--- | :--- |
-| $S \to \text{if } (B) \; S_1 \; \text{else } S_2$ | $B.\text{true} = \text{newlabel}()$ <br> $B.\text{false} = \text{newlabel}()$ <br> $S.\text{next} = \text{newlabel}()$ <br> $S_1.\text{next} = S.\text{next}$ <br> $S_2.\text{next} = S.\text{next}$ <br> $S.\text{code} = B.\text{code} \parallel \text{gen}(B.\text{true} \text{ ':'}) \parallel S_1.\text{code} \parallel \text{gen}(\text{'goto '} S.\text{next}) \parallel \text{gen}(B.\text{false} \text{ ':'}) \parallel S_2.\text{code} \parallel \text{gen}(S.\text{next} \text{ ':'})$ |
-| $B \to E_1 > E_2$ | $B.\text{code} = \text{gen}(\text{'if '} E_1.\text{addr} \text{ '>' } E_2.\text{addr} \text{ ' goto '} B.\text{true}) \parallel \text{gen}(\text{'goto '} B.\text{false})$ |
+| $`S \to \text{if } (B) \; S_1 \; \text{else } S_2`$ | $B.\text{true} = \text{newlabel}()$ <br> $B.\text{false} = \text{newlabel}()$ <br> $S.\text{next} = \text{newlabel}()$ <br> $S_1.\text{next} = S.\text{next}$ <br> $S_2.\text{next} = S.\text{next}$ <br> $`S.\text{code} = B.\text{code} \parallel \text{gen}(B.\text{true} \text{ ':'}) \parallel S_1.\text{code} \parallel \text{gen}(\text{'goto '} S.\text{next}) \parallel \text{gen}(B.\text{false} \text{ ':'}) \parallel S_2.\text{code} \parallel \text{gen}(S.\text{next} \text{ ':'})`$ |
+| $`B \to E_1 > E_2`$ | $`B.\text{code} = \text{gen}(\text{'if '} E_1.\text{addr} \text{ '>' } E_2.\text{addr} \text{ ' goto '} B.\text{true}) \parallel \text{gen}(\text{'goto '} B.\text{false})`$ |
 | $S \to id = E;$ | $S.\text{code} = E.\text{code} \parallel \text{gen}(id.\text{entry} \text{ ':=' } E.\text{addr})$ |
-| $E \to E_1 + E_2$ | $E.\text{addr} = \text{newtemp}()$ <br> $E.\text{code} = \text{gen}(E.\text{addr} \text{ ':=' } E_1.\text{addr} \text{ '+' } E_2.\text{addr})$ |
-| $E \to E_1 - E_2$ | $E.\text{addr} = \text{newtemp}()$ <br> $E.\text{code} = \text{gen}(E.\text{addr} \text{ ':=' } E_1.\text{addr} \text{ '-' } E_2.\text{addr})$ |
+| $`E \to E_1 + E_2`$ | $E.\text{addr} = \text{newtemp}()$ <br> $`E.\text{code} = \text{gen}(E.\text{addr} \text{ ':=' } E_1.\text{addr} \text{ '+' } E_2.\text{addr})`$ |
+| $`E \to E_1 - E_2`$ | $E.\text{addr} = \text{newtemp}()$ <br> $`E.\text{code} = \text{gen}(E.\text{addr} \text{ ':=' } E_1.\text{addr} \text{ '-' } E_2.\text{addr})`$ |
 
 ##### 2. Generated Three-Address Code (3AC)
 
@@ -1825,7 +1832,7 @@ Statement 3 ($t_3 := 4 * i$) calculates the exact same expression as statement 1
 
 ## 8. 2023 Mid-Semester Examination Solutions
 
-> [!abstract] Examination Session Metadata
+> [!NOTE] Examination Session Metadata
 > **Indian Institute of Engineering Science and Technology, Shibpur**  
 > **B.Tech. - M.Tech. Dual Degree 7th Semester (CST) Examination (Mid Semester) 2023**  
 > **Compiler Design (CS 4101)** | **Full Marks: 30** | **Time: 2 Hours**  
@@ -1861,7 +1868,7 @@ $$
 \end{aligned}
 $$
 
-FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion--ll1-parsing-2--6--8-marks)):
+FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion-ll1-parsing-2-6-8-marks)):
 - $\text{FOLLOW}(E) = \{+, \text{\$} \}$
 - $\text{FOLLOW}(T) = \{a, b, +, \text{\$} \}$
 - $\text{FOLLOW}(F) = \{a, b, *, +, \text{\$} \}$
@@ -1870,15 +1877,15 @@ FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursi
 - **$I_0 = \text{CLOSURE}(\{E' \to \cdot E\})$:**
   $$E' \to \cdot E, \; E \to \cdot E + T, \; E \to \cdot T, \; T \to \cdot TF, \; T \to \cdot F, \; F \to \cdot F*, \; F \to \cdot a, \; F \to \cdot b$$
 - **Transitions from $I_0$:**
-  - $\text{GOTO}(I_0, E) = I_1 = \{E' \to E \cdot, \; E \to E \cdot + T\}$
-  - $\text{GOTO}(I_0, T) = I_2 = \{E \to T \cdot, \; T \to T \cdot F, \; F \to \cdot F*, \; F \to \cdot a, \; F \to \cdot b\}$
-  - $\text{GOTO}(I_0, F) = I_3 = \{T \to F \cdot, \; F \to F \cdot *\}$
-  - $\text{GOTO}(I_0, a) = I_4 = \{F \to a \cdot\}$
-  - $\text{GOTO}(I_0, b) = I_5 = \{F \to b \cdot\}$
+  - $`\text{GOTO}(I_0, E) = I_1 = \{E' \to E \cdot, \; E \to E \cdot + T\}`$
+  - $`\text{GOTO}(I_0, T) = I_2 = \{E \to T \cdot, \; T \to T \cdot F, \; F \to \cdot F*, \; F \to \cdot a, \; F \to \cdot b\}`$
+  - $`\text{GOTO}(I_0, F) = I_3 = \{T \to F \cdot, \; F \to F \cdot *\}`$
+  - $`\text{GOTO}(I_0, a) = I_4 = \{F \to a \cdot\}`$
+  - $`\text{GOTO}(I_0, b) = I_5 = \{F \to b \cdot\}`$
 - **Transitions from $I_1$ and $I_2$:**
-  - $\text{GOTO}(I_1, +) = I_6 = \{E \to E + \cdot T, \dots\}$
-  - $\text{GOTO}(I_2, F) = I_7 = \{T \to TF \cdot, \; F \to F \cdot *\}$
-  - $\text{GOTO}(I_3, *) = I_8 = \{F \to F * \cdot\}$
+  - $`\text{GOTO}(I_1, +) = I_6 = \{E \to E + \cdot T, \dots\}`$
+  - $`\text{GOTO}(I_2, F) = I_7 = \{T \to TF \cdot, \; F \to F \cdot *\}`$
+  - $`\text{GOTO}(I_3, *) = I_8 = \{F \to F * \cdot\}`$
 
 #### Step 3: Conflict Checks in States $I_3$ and $I_7$
 1. **In State $I_3 = \{T \to F \cdot, \; F \to F \cdot *\}$:**
@@ -1894,7 +1901,7 @@ FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursi
      $$\text{FOLLOW}(T) \cap \{*\} = \emptyset$$
    - **There is NO conflict in $I_7$**.
 
-> [!success] SLR(1) Grammar Status
+> [!TIP] SLR(1) Grammar Status
 > All table intersections between Shift actions and Reduce $\text{FOLLOW}$ sets are empty.  
 > **Therefore, the grammar is strictly SLR(1).**
 
@@ -1902,13 +1909,13 @@ FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursi
 
 ## 9. 2023 End-Semester Examination Solutions
 
-> [!abstract] Examination Session Metadata
+> [!NOTE] Examination Session Metadata
 > **Indian Institute of Engineering Science and Technology, Shibpur**  
 > **Dual Degree (B.Tech.-M.Tech.) 7th Semester (CST) Examination (End Semester) November, 2023**  
 > **Compiler Design (CS 4101)** | **Full Marks: 50** | **Time: 3 Hours**  
 > *Instructions: Answer Question-1 and any four from the remaining.*
 
-> [!tip] Exam Hall Selection Advisory
+> [!TIP] Exam Hall Selection Advisory
 > **Compulsory:** Question 1 (6 Marks) must be answered.  
 > **Recommended Selection (Pick 4):**
 > 1. **Question 2 (11 Marks):** Left recursion audit + Non-LL(1) proof and trace of $ghhg$.
@@ -1923,7 +1930,7 @@ FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursi
 #### Part (a)
 > **(a) Write regular expressions to specify the identifiers and constants of C. [2 Marks]**
 
-*(Full solution identical to [2025 Mid Q2(a)](#question-2-token-specifications--postfix-ambiguity-proof-4--4--8-marks)).*
+*(Full solution identical to [2025 Mid Q2(a)](#question-2-token-specifications-postfix-ambiguity-proof-4-4-8-marks)).*
 
 ---
 
@@ -1947,7 +1954,7 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 #### Part (c)
 > **(c) What is a handle in bottom up parsing? Explain. [2 Marks]**
 
-*(Full solution identical to [2025 Mid Q4(b) Part 1](#question-4-shift-reduce-architecture--handle-pruning-3--5--8-marks)).*
+*(Full solution identical to [2025 Mid Q4(b) Part 1](#question-4-shift-reduce-architecture-handle-pruning-3-5-8-marks)).*
 
 ---
 
@@ -1970,7 +1977,7 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 **Direct Reference:** [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#2.3 Formal Mechanics: Top-Down vs. Bottom-Up Scanners|Note 2 §2.3]], [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#3.3 Formal Mechanics: Heuristics for Synchronizing Sets|Note 2 §3.3]]
 
 #### Part (a): Left Recursion Check
-> [!important] Crucial Examiner Audit
+> [!IMPORTANT] Crucial Examiner Audit
 > We check if any non-terminal $X$ can derive a string starting with $X$ ($X \Rightarrow^+ X\alpha$):
 > 1. $B \to g \mid \epsilon$ and $C \to h \mid \epsilon$ only produce terminals or $\epsilon$. No recursion.
 > 2. $A \to da \mid BC$: starts with terminal $d$ or $B$. Since $B \Rightarrow g \mid \epsilon$, $A$ derives strings starting with $d, g, h$, or $\epsilon$. It never derives $A$.
@@ -2001,7 +2008,7 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
   - Thus: $\text{FOLLOW}(C) = \{b, g, h, \text{\$} \}$.
 
 ##### 3. LL(1) Determinism Check
-> [!failure] Non-LL(1) Proof
+> [!CAUTION] Non-LL(1) Proof
 > Check the choices for start symbol $S$:
 > - $S \to ACB \implies \text{FIRST}(ACB) = \{d, g, h, \epsilon\}$
 > - $S \to CbB \implies \text{FIRST}(CbB) = \{h, b\}$
@@ -2033,7 +2040,7 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 
 ### Question 3: Shift-Reduce Model & CLR Table Construction [5 + 6 = 11 Marks]
 
-*(Shift-reduce model identical to [2025 End Q4(a)](#question-4-shift-reduce-model--clr-parsing-table-construction-5--6--11-marks); CLR table derivation for pointer grammar identical to [2025 Mid Q5](#question-5-formal-slr1-grammar-verification--conflict-proof-5--3--8-marks)).*
+*(Shift-reduce model identical to [2025 End Q4(a)](#question-4-shift-reduce-model-clr-parsing-table-construction-5-6-11-marks); CLR table derivation for pointer grammar identical to [2025 Mid Q5](#question-5-formal-slr1-grammar-verification-conflict-proof-5-3-8-marks)).*
 
 ---
 
@@ -2045,7 +2052,7 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 **Direct Reference:** [[compiler_design_intro_and_lexical_analysis_visual_guide#2.3 Step-by-Step Phase Decomposition: The Canonical Assignment Trace|Note 1 §2.3]]
 
 ##### 1. Role of the Symbol Table
-*(Refer to [2025 End Q5(b)](#question-5b-symbol-table-engineering--hash-table-architecture-5-marks)).*
+*(Refer to [2025 End Q5(b)](#question-5b-symbol-table-engineering-hash-table-architecture-5-marks)).*
 
 ##### 2. Key Attributes Stored in a Symbol Table Entry
 1. **Identifier Name:** The variable or function name string.
@@ -2069,7 +2076,7 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 > 
 > **Here datatype for $x$, $a$ and $b$ are int. [5 Marks]**
 
-*(Full solution identical to [2024 End Q5(b)](#question-5-sdt-evaluation-orders--three-address-code-generation-6--5--11-marks)).*
+*(Full solution identical to [2024 End Q5(b)](#question-5-sdt-evaluation-orders-three-address-code-generation-6-5-11-marks)).*
 
 ---
 
@@ -2098,19 +2105,19 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 
 ## 11. Exam Hall Fatal Traps & Pitfalls Catalog
 
-> [!danger] Exam Hall Trap 1: The Postfix Ambiguity Fallacy (Mid 2025 Q2(b))
+> [!CAUTION] Exam Hall Trap 1: The Postfix Ambiguity Fallacy (Mid 2025 Q2(b))
 > **Trap:** Thinking that postfix expressions ($S \to SS+ \mid SS* \mid a$) are ambiguous like infix expressions ($E \to E+E$).  
 > **Defense:** Postfix notation is **inherently unambiguous**! Operators strictly consume the nearest two preceding operands in linear order. There is only one possible parse tree for any valid postfix string.
 
-> [!danger] Exam Hall Trap 2: The SLR(1) FOLLOW Omission Trap (Mid 2025 Q5 & Mid 2023 Q5)
+> [!CAUTION] Exam Hall Trap 2: The SLR(1) FOLLOW Omission Trap (Mid 2025 Q5 & Mid 2023 Q5)
 > **Trap:** Forgetting that `=` belongs to $\text{FOLLOW}(R)$ for grammar $S \to L = R \mid R; \; L \to *R \mid id; \; R \to L$.  
 > **Defense:** Because $S \to L = R$, terminal `=` is in $\text{FOLLOW}(L)$. Because $R \to L$, this puts $=$ in $\text{FOLLOW}(R)$. In state $I_2 = \{S \to L \cdot = R, \; R \to L \cdot\}$, this creates a fatal **Shift/Reduce Conflict** on `=`.
 
-> [!danger] Exam Hall Trap 3: The Phantom Left-Recursion Trap (End 2023 Q2(a))
+> [!CAUTION] Exam Hall Trap 3: The Phantom Left-Recursion Trap (End 2023 Q2(a))
 > **Trap:** Blindly applying elimination formulas without checking if recursion actually exists.  
 > **Defense:** For $S \to ACB \mid CbB \mid Ba; \; A \to da \mid BC; \; B \to g \mid \epsilon; \; C \to h \mid \epsilon$, no non-terminal ever derives itself on the left. State clearly: **"Zero left recursion exists in this grammar; productions remain unchanged."**
 
-> [!danger] Exam Hall Trap 4: The Expression DAG Reuse Trap (End 2024 Q6(b))
+> [!CAUTION] Exam Hall Trap 4: The Expression DAG Reuse Trap (End 2024 Q6(b))
 > **Trap:** Drawing separate multiplication nodes for $t_1 = 4 * i$ and $t_3 = 4 * i$.  
 > **Defense:** In a DAG, value-numbering detects identical subexpressions. Statement 3 reuses **Node 3**, pointing array access $b[t_3]$ directly to the existing node!
 
@@ -2118,7 +2125,7 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 
 ## 12. Unanswered / Uncovered Questions (Not in Reference Notes)
 
-> [!warning] Strict Syllabus Scope Enforcement
+> [!WARNING] Strict Syllabus Scope Enforcement
 > The questions below appeared on IIEST Shibpur examination papers but are omitted from the main solutions because they cover downstream back-end phases (Peephole Optimization, Basic Blocks & Leaders, Loop Optimization, Stack Allocations, and Quadruples/Triples). These topics are **not present in the authorized reference notes**:
 > - `academics/compiler/compiler_design_intro_and_lexical_analysis_visual_guide.md`
 > - `academics/compiler/compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide.md`
