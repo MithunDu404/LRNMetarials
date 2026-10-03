@@ -342,11 +342,11 @@ Independently computing the FIRST and FOLLOW sets:
 - $\text{FIRST}(E') = \{ +, \epsilon \}$
 - $\text{FIRST}(E) = \text{FIRST}(T) = \{ (, \mathbf{id} \}$
 
-- $\text{FOLLOW}(E) = \{ ), \mathdollar \}$
-- $\text{FOLLOW}(E\') = \text{FOLLOW}(E) = \{ ), \mathdollar \}$
-- $\text{FOLLOW}(T) = (\text{FIRST}(E\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(E\') = \{ +, ), \mathdollar \}$
-- $\text{FOLLOW}(T\') = \text{FOLLOW}(T) = \{ +, ), \mathdollar \}$
-- $\text{FOLLOW}(F) = (\text{FIRST}(T\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T\') = \{ *, +, ), \mathdollar \}$
+- $\text{FOLLOW}(E) = \{ ), \$ \}$
+- $\text{FOLLOW}(E\') = \text{FOLLOW}(E) = \{ ), \$ \}$
+- $\text{FOLLOW}(T) = (\text{FIRST}(E\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(E\') = \{ +, ), \$ \}$
+- $\text{FOLLOW}(T\') = \text{FOLLOW}(T) = \{ +, ), \$ \}$
+- $\text{FOLLOW}(F) = (\text{FIRST}(T\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T\') = \{ *, +, ), \$ \}$
 
 #### The Audited Predictive Parsing Table with Synchronizing Tokens
 
@@ -377,7 +377,7 @@ When the predictive parser driver executes:
 Let us trace the complete execution of the predictive parser on the erroneous input string:
 
 $$
-w = \; ) \; \mathbf{id} \; * \; + \; \mathbf{id} \; \mathdollar
+w = \; ) \; \mathbf{id} \; * \; + \; \mathbf{id} \; \$
 
 $$
 
@@ -491,27 +491,27 @@ flowchart LR
     classDef neutral fill:#F8FAFC,stroke:#64748B,stroke-width:1.5px,color:#0F172A;
 ```
 
-The stack starts with $\mathdollar$ and $E$.
+The stack starts with `$` and $E$.
 
 | Step | Stack Contents | Remaining Input | Parser Action & Diagnostic |
 |:---|:---|:---|:---|
-| **(1)** | $\mathdollar E$ | $) \mathbf{id} * + \mathbf{id} \mathdollar$ | Error! `)` is an unexpected symbol (or not in $\text{FIRST}(E)$). **Skip token `)`.** |
-| **(2)** | $\mathdollar E$ | $\mathbf{id} * + \mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(E)$. Expand $E \to T E'$. Output: $E \to T E'$. |
-| **(3)** | $\mathdollar E' T$ | $\mathbf{id} * + \mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
-| **(4)** | $\mathdollar E' T' F$ | $\mathbf{id} * + \mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
-| **(5)** | $\mathdollar E' T' \mathbf{id}$ | $\mathbf{id} * + \mathbf{id} \mathdollar$ | Terminal match! Pop $\mathbf{id}$, advance input. |
-| **(6)** | $\mathdollar E' T'$ | $* + \mathbf{id} \mathdollar$ | $* \in \text{FIRST}(T')$. Expand $T' \to * F T'$. Output: $T' \to * F T'$. |
-| **(7)** | $\mathdollar E' T' F *$ | $* + \mathbf{id} \mathdollar$ | Terminal match! Pop $*$, advance input. |
-| **(8)** | $\mathdollar E' T' F$ | $+ \mathbf{id} \mathdollar$ | Error! Lookahead is `+`. Table entry $M[F, +] = \mathbf{synch}$! **Pop $F$ from stack.** |
-| **(9)** | $\mathdollar E' T'$ | $+ \mathbf{id} \mathdollar$ | $F$ popped. Lookahead `+` is in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
-| **(10)** | $\mathdollar E'$ | $+ \mathbf{id} \mathdollar$ | $+ \in \text{FIRST}(E')$. Expand $E' \to + T E'$. Output: $E' \to + T E'$. |
-| **(11)** | $\mathdollar E' T +$ | $+ \mathbf{id} \mathdollar$ | Terminal match! Pop $+$, advance input. |
-| **(12)** | $\mathdollar E' T$ | $\mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
-| **(13)** | $\mathdollar E' T' F$ | $\mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
-| **(14)** | $\mathdollar E' T' \mathbf{id}$ | $\mathbf{id} \mathdollar$ | Terminal match! Pop $\mathbf{id}$, advance input. |
-| **(15)** | $\mathdollar E' T'$ | $\mathdollar$ | $\mathdollar \in \text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
-| **(16)** | $\mathdollar E'$ | $\mathdollar$ | $\mathdollar \in \text{FOLLOW}(E')$. Expand $E' \to \epsilon$. |
-| **(17)** | $\mathdollar$ | $\mathdollar$ | **Acceptance!** Both stack and input empty. Parse completes successfully. |
+| **(1)** | `$ E` | `) \mathbf{id} * + \mathbf{id} $` | Error! `)` is an unexpected symbol (or not in $\text{FIRST}(E)$). **Skip token `)`.** |
+| **(2)** | `$ E` | `\mathbf{id} * + \mathbf{id} $` | $\mathbf{id} \in \text{FIRST}(E)$. Expand $E \to T E'$. Output: $E \to T E'$. |
+| **(3)** | `$ E' T` | `\mathbf{id} * + \mathbf{id} $` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
+| **(4)** | `$ E' T' F` | `\mathbf{id} * + \mathbf{id} $` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
+| **(5)** | `$ E' T' \mathbf{id}` | `\mathbf{id} * + \mathbf{id} $` | Terminal match! Pop $\mathbf{id}$, advance input. |
+| **(6)** | `$ E' T'` | `* + \mathbf{id} $` | $* \in \text{FIRST}(T')$. Expand $T' \to * F T'$. Output: $T' \to * F T'$. |
+| **(7)** | `$ E' T' F *` | `* + \mathbf{id} $` | Terminal match! Pop $*$, advance input. |
+| **(8)** | `$ E' T' F` | `+ \mathbf{id} $` | Error! Lookahead is `+`. Table entry $M[F, +] = \mathbf{synch}$! **Pop $F$ from stack.** |
+| **(9)** | `$ E' T'` | `+ \mathbf{id} $` | $F$ popped. Lookahead `+` is in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
+| **(10)** | `$ E'` | `+ \mathbf{id} $` | $+ \in \text{FIRST}(E')$. Expand $E' \to + T E'$. Output: $E' \to + T E'$. |
+| **(11)** | `$ E' T +` | `+ \mathbf{id} $` | Terminal match! Pop $+$, advance input. |
+| **(12)** | `$ E' T` | `\mathbf{id} $` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
+| **(13)** | `$ E' T' F` | `\mathbf{id} $` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
+| **(14)** | `$ E' T' \mathbf{id}` | `\mathbf{id} $` | Terminal match! Pop $\mathbf{id}$, advance input. |
+| **(15)** | `$ E' T'` | `$` | $\$ \in \text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
+| **(16)** | `$ E'` | `$` | $\$ \in \text{FOLLOW}(E')$. Expand $E' \to \epsilon$. |
+| **(17)** | `$` | `$` | **Acceptance!** Both stack and input empty. Parse completes successfully. |
 
 > 📐 **Verification Check:** Notice that despite two major syntax errors (an initial unmatched `)` and an illegal operator sequence `* +`), the parser recovered completely and produced a valid sub-parse for the trailing `+ id`, verifying the precision of the synchronizing heuristics!
 
@@ -556,7 +556,7 @@ Consider the canonical grammar for arithmetic expressions:
 
 The SLR parser consists of 12 states ($0 \dots 11$). Below is the complete parsing table from Prof. Samit Biswas's notes with integrated error procedures:
 
-| State | $\mathbf{id}$ | $+$ | $*$ | $($ | $)$ | $\mathdollar$ | $E$ | $T$ | $F$ |
+| State | $\mathbf{id}$ | $+$ | $*$ | $($ | $)$ | `$` | $E$ | $T$ | $F$ |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **0** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_1$ | 1 | 2 | 3 |
 | **1** | $e_3$ | $S_6$ | $e_4$ | $e_3$ | $e_2$ | **Accept** | | | |
