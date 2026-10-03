@@ -333,15 +333,15 @@ Independently computing the FIRST and FOLLOW sets:
 - $\text{FIRST}(E') = \{ +, \epsilon \}$
 - $\text{FIRST}(E) = \text{FIRST}(T) = \{ (, \mathbf{id} \}$
 
-- $\text{FOLLOW}(E) = \{ ), \$ \}$
-- $\text{FOLLOW}(E') = \text{FOLLOW}(E) = \{ ), \$ \}$
-- $\text{FOLLOW}(T) = (\text{FIRST}(E') \setminus \{\epsilon\}) \cup \text{FOLLOW}(E') = \{ +, ), \$ \}$
-- $\text{FOLLOW}(T') = \text{FOLLOW}(T) = \{ +, ), \$ \}$
-- $\text{FOLLOW}(F) = (\text{FIRST}(T') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T') = \{ *, +, ), \$ \}$
+- $`\text{FOLLOW}(E) = \{ ), \$ \}`$
+- $`\text{FOLLOW}(E\') = \text{FOLLOW}(E) = \{ ), \$ \}`$
+- $`\text{FOLLOW}(T) = (\text{FIRST}(E\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(E\') = \{ +, ), \$ \}`$
+- $`\text{FOLLOW}(T\') = \text{FOLLOW}(T) = \{ +, ), \$ \}`$
+- $`\text{FOLLOW}(F) = (\text{FIRST}(T\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T\') = \{ *, +, ), \$ \}`$
 
 #### The Audited Predictive Parsing Table with Synchronizing Tokens
 
-| Non-Terminal | $\mathbf{id}$ | $+$ | $*$ | $($ | $)$ | \$ |
+| Non-Terminal | $\mathbf{id}$ | $+$ | $*$ | $($ | $)$ | `$` |
 |:---|:---|:---|:---|:---|:---|:---|
 | **$E$** | $E \to T E'$ | *blank* | *blank* | $E \to T E'$ | `synch` | `synch` |
 | **$E'$** | *blank* | $E' \to + T E'$ | *blank* | *blank* | $E' \to \epsilon$ | $E' \to \epsilon$ |
@@ -370,46 +370,6 @@ Let us trace the complete execution of the predictive parser on the erroneous in
 $$
 w = \; ) \; \mathbf{id} \; * \; + \; \mathbf{id} \; \$
 $$
-
-The stack starts with $\$ E$.
-
-| Step | Stack Contents | Remaining Input | Parser Action & Diagnostic |
-|:---|:---|:---|:---|
-| **(1)** | `\$ E` | `) id * + id \$` | Error! `)` is an unexpected symbol (or not in $\text{FIRST}(E)$). **Skip token `)`.** |
-| **(2)** | `\$ E` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(E)$. Expand $E \to T E'$. Output: $E \to T E'$. |
-| **(3)** | `\$ E' T` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
-| **(4)** | `\$ E' T' F` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
-| **(5)** | `\$ E' T' id` | `id * + id \$` | Terminal match! Pop $\mathbf{id}$, advance input. |
-| **(6)** | `\$ E' T'` | `* + id \$` | $* \in \text{FIRST}(T')$. Expand $T' \to * F T'$. Output: $T' \to * F T'$. |
-| **(7)** | `\$ E' T' F *` | `* + id \$` | Terminal match! Pop $*$, advance input. |
-| **(8)** | `\$ E' T' F` | `+ id \$` | Error! Lookahead is `+`. Table entry $M[F, +] = \mathbf{synch}$! **Pop $F$ from stack.** |
-| **(9)** | `\$ E' T'` | `+ id \$` | $F$ popped. Lookahead `+` is in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
-| **(10)** | `\$ E'` | `+ id \$` | $+ \in \text{FIRST}(E')$. Expand $E' \to + T E'$. Output: $E' \to + T E'$. |
-| **(11)** | `\$ E' T +` | `+ id \$` | Terminal match! Pop $+$, advance input. |
-| **(12)** | `\$ E' T` | `id \$` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
-| **(13)** | `\$ E' T' F` | `id \$` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
-| **(14)** | `\$ E' T' id` | `id \$` | Terminal match! Pop $\mathbf{id}$, advance input. |
-| **(15)** | `\$ E' T'` | `\$` | \$ in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
-| **(16)** | `\$ E'` | `\$` | \$ in $\text{FOLLOW}(E')$. Expand $E' \to \epsilon$. |
-| **(17)** | `\$` | `\$` | **Acceptance!** Both stack and input empty. Parse completes successfully. |
-
-> 📐 **Verification Check:** Notice that despite two major syntax errors (an initial unmatched `)` and an illegal operator sequence `* +`), the parser recovered completely and produced a valid sub-parse for the trailing `+ id`, verifying the precision of the synchronizing heuristics!
-
-### 3.6 Phrase-Level Recovery & Error Productions in LL(1)
-- **Phrase-Level Recovery (Inserting Missing Tokens):** If two identifiers appear with no operator (`id id`), the predictive parsing table for row $T'$, column $\mathbf{id}$ can be filled with `insert *`. The driver emits a warning, inserts `*` into the input stream, and retries the production $T' \to * F T'$.
-- **Error Productions:** Alternatively, we augment the grammar with the error production $T' \to F T'$. When the parser encounters `id` where an operator was expected, it triggers $T' \to F T'$, parsing the second identifier directly while issuing a diagnostic: *"Missing operator between identifiers"*.
-
-### 3.7 Examiner Traps & Misconceptions
-- ⚠️ **Examiner Trap 1 (Synch vs Blank Actions):** Students routinely flip these two actions during exams:
-  - Blank entry $\implies$ **SKIP INPUT TOKEN** (do not pop stack).
-  - Synch entry $\implies$ **POP STACK SYMBOL** (do not skip input).
-  Flipping them causes the parser to dump the entire stack on the first blank entry!
-- ⚠️ **Examiner Trap 2 (What if FOLLOW contains \$?):** If $M[A, \$] = \text{synch}$ and the parser encounters EOF, it pops $A$. If $A$ was the root start symbol $E$, the stack becomes empty and parsing terminates.
-
----
-
-## 4. Error Recovery in LR Parsing: Phrase-Level Routines & Panic Mode
-
 ```mermaid
 ---
 config:
@@ -448,49 +408,6 @@ flowchart LR
     classDef alert fill:#FEF2F2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
     classDef neutral fill:#F8FAFC,stroke:#64748B,stroke-width:1.5px,color:#0F172A;
 ```
-
-### 4.1 The Cruise Control Interlock Analogy
-Imagine the automatic braking system in a modern automobile:
-- The system operates via a finite-state controller that tracks speed, distance, and gear selection.
-- If the transmission receives an illegal signal (e.g. attempting to engage Reverse while traveling forward at 70 mph), the controller does not shut down the engine or lock the steering wheel.
-- Instead, a dedicated error circuit engages: it ignores the reverse shift command (**phrase-level routine $e_2$**), flashes a dashboard warning (*"Shift rejected"*), and maintains current drive speed.
-- If multiple severe sensor faults occur simultaneously, the car falls back to **Limp Home Mode (Panic Mode)**, disabling cruise control and safely pulling onto the shoulder.
-
-LR parsers apply this exact philosophy: rather than crashing, each blank cell in the parsing table is populated with a custom error procedure that makes the most plausible local correction.
-
-### 4.2 Architectural Rationale: The Viable-Prefix Property
-Why are LR parsers the premier choice for production compilers?
-- **The Viable-Prefix Invariant:** An LR parser is mathematically guaranteed to detect a syntax error **at the very first token that cannot form a valid prefix of any continuation of the program**. It will never shift an invalid token onto the stack.
-- **Table Density Advantage:** In an LR parsing table, the majority of cells in the `Action` table are empty! Instead of leaving them unmapped, compiler designers replace empty cells with pointers to specific error handling functions: $`e_1, e_2, e_3, e_4, e_5`$.
-
-### 4.3 Formal Mechanics: The Canonical SLR Table with Error Routines
-Consider the canonical grammar for arithmetic expressions:
-1. $E \to E + T$
-2. $E \to T$
-3. $T \to T * F$
-4. $T \to F$
-5. $F \to ( E )$
-6. $F \to \mathbf{id}$
-
-The SLR parser consists of 12 states ($0 \dots 11$). Below is the complete parsing table from Prof. Samit Biswas's notes with integrated error procedures:
-
-| State | $\mathbf{id}$ | $+$ | $*$ | $($ | $)$ | \$ | $E$ | $T$ | $F$ |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **0** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_1$ | 1 | 2 | 3 |
-| **1** | $e_3$ | $S_6$ | $e_4$ | $e_3$ | $e_2$ | **Accept** | | | |
-| **2** | $e_3$ | $r_2$ | $S_7$ | $e_3$ | $r_2$ | $r_2$ | | | |
-| **3** | $e_3$ | $r_4$ | $r_4$ | $e_3$ | $r_4$ | $r_4$ | | | |
-| **4** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_1$ | 8 | 2 | 3 |
-| **5** | $e_3$ | $r_6$ | $r_6$ | $e_3$ | $r_6$ | $r_6$ | | | |
-| **6** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_2$ | | 9 | 3 |
-| **7** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_2$ | | | 10 |
-| **8** | $e_3$ | $S_6$ | $e_4$ | $e_3$ | $S_{11}$ | $e_5$ | | | |
-| **9** | $e_3$ | $r_1$ | $S_7$ | $e_3$ | $r_1$ | $r_1$ | | | |
-| **10** | $e_3$ | $r_3$ | $r_3$ | $e_3$ | $r_3$ | $r_3$ | | | |
-| **11** | $e_3$ | $r_5$ | $r_5$ | $e_3$ | $r_5$ | $r_5$ | | | |
-
-#### Detailed Specification of the Five Error Procedures
-
 ```c
 /* Procedure e1: Expecting an operand (id or '('), but found an operator ('+', '*', or '$') */
 void e1() {
@@ -523,16 +440,6 @@ void e5() {
     emit_diagnostic("Error: Missing right parenthesis before end of input.");
 }
 ```
-
-### 4.4 Panic-Mode Recovery in LR Parsing
-When phrase-level routines cannot resolve an error, the LR parser triggers **Panic-Mode Recovery**:
-1. **Unwind the Stack:** Scan down the parser stack from top to bottom until finding a state $s$ that has a valid non-empty GOTO entry on a major non-terminal $A$ (such as `Statement`, `Expression`, or `Block`).
-2. **Discard Tokens:** Scan forward in the input buffer, discarding tokens until finding a token $a$ belonging to $\text{FOLLOW}(A)$ (such as `;` or `}`).
-3. **Resume Parsing:** Push state $\text{GOTO}[s, A]$ onto the stack and resume normal shift-reduce parsing.
-
-### 4.5 Parser Generators: The Yacc / Bison `error` Token
-In production compiler generators like Yacc and Bison, error recovery is automated using a special pseudotoken called `error`:
-
 ```yacc
 statement : ID '=' expression ';'
           | error ';' 
@@ -542,34 +449,6 @@ statement : ID '=' expression ';'
           }
           ;
 ```
-
-#### How Yacc Implements Recovery:
-1. When a syntax error occurs, Yacc pops states from its stack until it finds a state that can shift the special `error` token.
-2. It shifts `error` onto the stack as if it were a valid terminal.
-3. It then discards incoming tokens until finding a token that can legally follow `error` in that production (here, `;`).
-4. Once shifted, normal parsing resumes, and the macro `yyerrok` tells the parser that recovery is complete.
-
-### 4.6 Worked Trace: Handling `id + * id $` with LR Error Routine $e_1$
-Let us trace how the SLR parser handles the invalid input `id + * id $`:
-1. **State 0:** Lookahead `id`. Table: $S_5$. Shift `id`, push state 5. Stack: `[0, 5]`.
-2. **State 5:** Lookahead `+`. Table: $r_6$ ($F \to \mathbf{id}$). Pop 1 state, GOTO on $F$ from State 0 is 3. Stack: `[0, 3]`.
-3. **State 3:** Lookahead `+`. Table: $r_4$ ($T \to F$). Pop 1 state, GOTO on $T$ from State 0 is 2. Stack: `[0, 2]`.
-4. **State 2:** Lookahead `+`. Table: $r_2$ ($E \to T$). Pop 1 state, GOTO on $E$ from State 0 is 1. Stack: `[0, 1]`.
-5. **State 1:** Lookahead `+`. Table: $S_6$. Shift `+`, push state 6. Stack: `[0, 1, 6]`.
-6. **State 6:** Lookahead `*`. Table entry: **$e_1$**!
-   - State 6 expects an operand (`id` or `(`), but sees `*`.
-   - Routine $e_1$ triggers: pushes State 5 (pretending an `id` was present) and issues: *"Missing operand"*. Stack becomes `[0, 1, 6, 5]`.
-7. **State 5:** Lookahead `*`. Table: $r_6$ ($F \to \mathbf{id}$). Pop 1 state, GOTO on $F$ from State 6 is 3. Stack: `[0, 1, 6, 3]`.
-8. The parser continues smoothly without crashing!
-
-### 4.7 Examiner Traps & Misconceptions
-- ⚠️ **Examiner Trap 1 (State 8 at EOF):** What happens if a C program has an unclosed parenthesis like `if (x > 0 $`? The LR parser will reach State 8. The entry for `$` in State 8 is $e_5$. Routine $e_5$ pushes State 11 (the accept branch for `)`), allowing the parser to close the parenthesis and report the error cleanly.
-- ⚠️ **Examiner Trap 2 (LR Viable-Prefix vs Reductions before Error):** Does an LR parser always halt *before* making any wrong reduction? An LR parser will never shift an illegal token, but **it may make one or more valid reductions** before encountering the state where no action is possible. This is because reductions represent subtrees that were legitimately correct based on preceding tokens.
-
----
-
-## 5. Syntax-Directed Translation (SDT) & Syntax-Directed Definitions (SDD)
-
 ```mermaid
 ---
 config:
@@ -600,6 +479,127 @@ flowchart LR
     classDef control fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#5B21B6;
     classDef neutral fill:#F8FAFC,stroke:#64748B,stroke-width:1.5px,color:#0F172A;
 ```
+
+The stack starts with `$` and $E$.
+
+| Step | Stack Contents | Remaining Input | Parser Action & Diagnostic |
+|:---|:---|:---|:---|
+| **(1)** | `\$ E` | `) id * + id \$` | Error! `)` is an unexpected symbol (or not in $\text{FIRST}(E)$). **Skip token `)`.** |
+| **(2)** | `\$ E` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(E)$. Expand $E \to T E'$. Output: $E \to T E'$. |
+| **(3)** | `\$ E' T` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
+| **(4)** | `\$ E' T' F` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
+| **(5)** | `\$ E' T' id` | `id * + id \$` | Terminal match! Pop $\mathbf{id}$, advance input. |
+| **(6)** | `\$ E' T'` | `* + id \$` | $* \in \text{FIRST}(T')$. Expand $T' \to * F T'$. Output: $T' \to * F T'$. |
+| **(7)** | `\$ E' T' F *` | `* + id \$` | Terminal match! Pop $*$, advance input. |
+| **(8)** | `\$ E' T' F` | `+ id \$` | Error! Lookahead is `+`. Table entry $M[F, +] = \mathbf{synch}$! **Pop $F$ from stack.** |
+| **(9)** | `\$ E' T'` | `+ id \$` | $F$ popped. Lookahead `+` is in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
+| **(10)** | `\$ E'` | `+ id \$` | $+ \in \text{FIRST}(E')$. Expand $E' \to + T E'$. Output: $E' \to + T E'$. |
+| **(11)** | `\$ E' T +` | `+ id \$` | Terminal match! Pop $+$, advance input. |
+| **(12)** | `\$ E' T` | `id \$` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
+| **(13)** | `\$ E' T' F` | `id \$` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
+| **(14)** | `\$ E' T' id` | `id \$` | Terminal match! Pop $\mathbf{id}$, advance input. |
+| **(15)** | `\$ E' T'` | `\$` | \$ in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
+| **(16)** | `\$ E'` | `\$` | \$ in $\text{FOLLOW}(E')$. Expand $E' \to \epsilon$. |
+| **(17)** | `\$` | `\$` | **Acceptance!** Both stack and input empty. Parse completes successfully. |
+
+> 📐 **Verification Check:** Notice that despite two major syntax errors (an initial unmatched `)` and an illegal operator sequence `* +`), the parser recovered completely and produced a valid sub-parse for the trailing `+ id`, verifying the precision of the synchronizing heuristics!
+
+### 3.6 Phrase-Level Recovery & Error Productions in LL(1)
+- **Phrase-Level Recovery (Inserting Missing Tokens):** If two identifiers appear with no operator (`id id`), the predictive parsing table for row $T'$, column $\mathbf{id}$ can be filled with `insert *`. The driver emits a warning, inserts `*` into the input stream, and retries the production $T' \to * F T'$.
+- **Error Productions:** Alternatively, we augment the grammar with the error production $T' \to F T'$. When the parser encounters `id` where an operator was expected, it triggers $T' \to F T'$, parsing the second identifier directly while issuing a diagnostic: *"Missing operator between identifiers"*.
+
+### 3.7 Examiner Traps & Misconceptions
+- ⚠️ **Examiner Trap 1 (Synch vs Blank Actions):** Students routinely flip these two actions during exams:
+  - Blank entry $\implies$ **SKIP INPUT TOKEN** (do not pop stack).
+  - Synch entry $\implies$ **POP STACK SYMBOL** (do not skip input).
+  Flipping them causes the parser to dump the entire stack on the first blank entry!
+- ⚠️ **Examiner Trap 2 (What if FOLLOW contains \$?):** If $M[A, \$] = \text{synch}$ and the parser encounters EOF, it pops $A$. If $A$ was the root start symbol $E$, the stack becomes empty and parsing terminates.
+
+---
+
+## 4. Error Recovery in LR Parsing: Phrase-Level Routines & Panic Mode
+
+
+### 4.1 The Cruise Control Interlock Analogy
+Imagine the automatic braking system in a modern automobile:
+- The system operates via a finite-state controller that tracks speed, distance, and gear selection.
+- If the transmission receives an illegal signal (e.g. attempting to engage Reverse while traveling forward at 70 mph), the controller does not shut down the engine or lock the steering wheel.
+- Instead, a dedicated error circuit engages: it ignores the reverse shift command (**phrase-level routine $e_2$**), flashes a dashboard warning (*"Shift rejected"*), and maintains current drive speed.
+- If multiple severe sensor faults occur simultaneously, the car falls back to **Limp Home Mode (Panic Mode)**, disabling cruise control and safely pulling onto the shoulder.
+
+LR parsers apply this exact philosophy: rather than crashing, each blank cell in the parsing table is populated with a custom error procedure that makes the most plausible local correction.
+
+### 4.2 Architectural Rationale: The Viable-Prefix Property
+Why are LR parsers the premier choice for production compilers?
+- **The Viable-Prefix Invariant:** An LR parser is mathematically guaranteed to detect a syntax error **at the very first token that cannot form a valid prefix of any continuation of the program**. It will never shift an invalid token onto the stack.
+- **Table Density Advantage:** In an LR parsing table, the majority of cells in the `Action` table are empty! Instead of leaving them unmapped, compiler designers replace empty cells with pointers to specific error handling functions: $`e_1, e_2, e_3, e_4, e_5`$.
+
+### 4.3 Formal Mechanics: The Canonical SLR Table with Error Routines
+Consider the canonical grammar for arithmetic expressions:
+1. $E \to E + T$
+2. $E \to T$
+3. $T \to T * F$
+4. $T \to F$
+5. $F \to ( E )$
+6. $F \to \mathbf{id}$
+
+The SLR parser consists of 12 states ($0 \dots 11$). Below is the complete parsing table from Prof. Samit Biswas's notes with integrated error procedures:
+
+| State | $\mathbf{id}$ | $+$ | $*$ | $($ | $)$ | `$` | $E$ | $T$ | $F$ |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **0** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_1$ | 1 | 2 | 3 |
+| **1** | $e_3$ | $S_6$ | $e_4$ | $e_3$ | $e_2$ | **Accept** | | | |
+| **2** | $e_3$ | $r_2$ | $S_7$ | $e_3$ | $r_2$ | $r_2$ | | | |
+| **3** | $e_3$ | $r_4$ | $r_4$ | $e_3$ | $r_4$ | $r_4$ | | | |
+| **4** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_1$ | 8 | 2 | 3 |
+| **5** | $e_3$ | $r_6$ | $r_6$ | $e_3$ | $r_6$ | $r_6$ | | | |
+| **6** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_2$ | | 9 | 3 |
+| **7** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_2$ | | | 10 |
+| **8** | $e_3$ | $S_6$ | $e_4$ | $e_3$ | $S_{11}$ | $e_5$ | | | |
+| **9** | $e_3$ | $r_1$ | $S_7$ | $e_3$ | $r_1$ | $r_1$ | | | |
+| **10** | $e_3$ | $r_3$ | $r_3$ | $e_3$ | $r_3$ | $r_3$ | | | |
+| **11** | $e_3$ | $r_5$ | $r_5$ | $e_3$ | $r_5$ | $r_5$ | | | |
+
+#### Detailed Specification of the Five Error Procedures
+
+
+### 4.4 Panic-Mode Recovery in LR Parsing
+When phrase-level routines cannot resolve an error, the LR parser triggers **Panic-Mode Recovery**:
+1. **Unwind the Stack:** Scan down the parser stack from top to bottom until finding a state $s$ that has a valid non-empty GOTO entry on a major non-terminal $A$ (such as `Statement`, `Expression`, or `Block`).
+2. **Discard Tokens:** Scan forward in the input buffer, discarding tokens until finding a token $a$ belonging to $\text{FOLLOW}(A)$ (such as `;` or `}`).
+3. **Resume Parsing:** Push state $\text{GOTO}[s, A]$ onto the stack and resume normal shift-reduce parsing.
+
+### 4.5 Parser Generators: The Yacc / Bison `error` Token
+In production compiler generators like Yacc and Bison, error recovery is automated using a special pseudotoken called `error`:
+
+
+#### How Yacc Implements Recovery:
+1. When a syntax error occurs, Yacc pops states from its stack until it finds a state that can shift the special `error` token.
+2. It shifts `error` onto the stack as if it were a valid terminal.
+3. It then discards incoming tokens until finding a token that can legally follow `error` in that production (here, `;`).
+4. Once shifted, normal parsing resumes, and the macro `yyerrok` tells the parser that recovery is complete.
+
+### 4.6 Worked Trace: Handling `id + * id $` with LR Error Routine $e_1$
+Let us trace how the SLR parser handles the invalid input `id + * id $`:
+1. **State 0:** Lookahead `id`. Table: $S_5$. Shift `id`, push state 5. Stack: `[0, 5]`.
+2. **State 5:** Lookahead `+`. Table: $r_6$ ($F \to \mathbf{id}$). Pop 1 state, GOTO on $F$ from State 0 is 3. Stack: `[0, 3]`.
+3. **State 3:** Lookahead `+`. Table: $r_4$ ($T \to F$). Pop 1 state, GOTO on $T$ from State 0 is 2. Stack: `[0, 2]`.
+4. **State 2:** Lookahead `+`. Table: $r_2$ ($E \to T$). Pop 1 state, GOTO on $E$ from State 0 is 1. Stack: `[0, 1]`.
+5. **State 1:** Lookahead `+`. Table: $S_6$. Shift `+`, push state 6. Stack: `[0, 1, 6]`.
+6. **State 6:** Lookahead `*`. Table entry: **$e_1$**!
+   - State 6 expects an operand (`id` or `(`), but sees `*`.
+   - Routine $e_1$ triggers: pushes State 5 (pretending an `id` was present) and issues: *"Missing operand"*. Stack becomes `[0, 1, 6, 5]`.
+7. **State 5:** Lookahead `*`. Table: $r_6$ ($F \to \mathbf{id}$). Pop 1 state, GOTO on $F$ from State 6 is 3. Stack: `[0, 1, 6, 3]`.
+8. The parser continues smoothly without crashing!
+
+### 4.7 Examiner Traps & Misconceptions
+- ⚠️ **Examiner Trap 1 (State 8 at EOF):** What happens if a C program has an unclosed parenthesis like `if (x > 0 $`? The LR parser will reach State 8. The entry for `$` in State 8 is $e_5$. Routine $e_5$ pushes State 11 (the accept branch for `)`), allowing the parser to close the parenthesis and report the error cleanly.
+- ⚠️ **Examiner Trap 2 (LR Viable-Prefix vs Reductions before Error):** Does an LR parser always halt *before* making any wrong reduction? An LR parser will never shift an illegal token, but **it may make one or more valid reductions** before encountering the state where no action is possible. This is because reductions represent subtrees that were legitimately correct based on preceding tokens.
+
+---
+
+## 5. Syntax-Directed Translation (SDT) & Syntax-Directed Definitions (SDD)
+
 
 ### 5.1 The Construction Blueprint Analogy
 Imagine an architect drawing blueprints for a multi-story building:
@@ -736,7 +736,7 @@ flowchart LR
   - The CFO receives the summed expenses and writes a single company check (**root node**).
   - *Information flows strictly from the bottom up.*
 - **Inherited Attributes are like a Corporate Departmental Budget:**
-  - The Board of Directors allocates a $\$1{,}000{,}000$ budget to the Engineering VP (**root node**).
+  - The Board of Directors allocates a \$1,000,000 budget to the Engineering VP (**root node**).
   - The VP splits that budget and hands $\$400{,}000$ down to the Backend Lead and $\$300{,}000$ to the Frontend Lead (**parent passing values to children**).
   - The Backend Lead coordinates with the Database Administrator to share infrastructure quotas (**sideways information flow between left-to-right siblings**).
   - *Information flows top-down from parents and sideways from left siblings.*
@@ -768,10 +768,10 @@ Consider the grammar for programming language type declarations:
 
 $$
 \begin{aligned}
-D &\to T \; L && \{ L.\text{in} = T.\text{type} \} \\
-T &\to \mathbf{int} && \{ T.\text{type} = \text{integer} \} \\
-T &\to \mathbf{real} && \{ T.\text{type} = \text{real} \} \\
-L &\to L_1 , \mathbf{id} && \{ L_1.\text{in} = L.\text{in}; \quad \text{addtype}(\mathbf{id}.\text{entry}, L.\text{in}) \} \\
+D &\to T \; L && \{ L.\text{in} = T.\text{type} \} \\\\
+T &\to \mathbf{int} && \{ T.\text{type} = \text{integer} \} \\\\
+T &\to \mathbf{real} && \{ T.\text{type} = \text{real} \} \\\\
+L &\to L_1 , \mathbf{id} && \{ L_1.\text{in} = L.\text{in}; \quad \text{addtype}(\mathbf{id}.\text{entry}, L.\text{in}) \} \\\\
 L &\to \mathbf{id} && \{ \text{addtype}(\mathbf{id}.\text{entry}, L.\text{in}) \}
 \end{aligned}
 $$
