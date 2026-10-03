@@ -167,7 +167,9 @@ Suppose a program calls `printf("Total: %d", score)`.
 2. The assembler cannot resolve `printf` (it belongs to `libc.a`). It places address `0x00000000` in the instruction and writes an entry into the Relocation Table:
    `{ offset: 0x0042, symbol: "printf", type: R_X86_64_PLT32 }`.
 3. The linker inspects `libc.a`, finds `printf` at library offset `0x1A40`, calculates the combined segment base address (e.g., `0x400000`), and computes the relative 32-bit jump offset:
-   $$\text{Offset} = \text{Target Address} - (\text{PC} + 4) = 0x401A40 - 0x400046 = 0x0019FA$$
+
+$$\text{Offset} = \text{Target Address} - (\text{PC} + 4) = 0x401A40 - 0x400046 = 0x0019FA$$
+
 4. The linker patches byte offset `0x0042` with `0x0019FA`.
 
 > 📐 **Audit Check:** If the linker fails to find `printf` in any provided object or library file, compilation stops at the linking stage with the infamous `undefined reference to 'printf'` error, proving that lexical, syntax, and semantic checks all passed successfully!
@@ -296,7 +298,9 @@ $$\text{position} = \text{initial} + \text{rate} * 60$$
      - `initial` $\to$ Entry 2 (`id2`)
      - `rate` $\to$ Entry 3 (`id3`)
    - Emits Token Stream:
-     $$\langle \mathbf{id}, 1 \rangle \quad \langle \mathbf{assign\_op}, = \rangle \quad \langle \mathbf{id}, 2 \rangle \quad \langle \mathbf{add\_op}, + \rangle \quad \langle \mathbf{id}, 3 \rangle \quad \langle \mathbf{mult\_op}, * \rangle \quad \langle \mathbf{number}, 60 \rangle$$
+
+$$\langle \mathbf{id}, 1 \rangle \quad \langle \mathbf{assign\_op}, = \rangle \quad \langle \mathbf{id}, 2 \rangle \quad \langle \mathbf{add\_op}, + \rangle \quad \langle \mathbf{id}, 3 \rangle \quad \langle \mathbf{mult\_op}, * \rangle \quad \langle \mathbf{number}, 60 \rangle$$
+
      Shorthand notation used on slides: `id1 = id2 + id3 * 60`.
 
 2. **Phase 2: Syntax Analysis (Parsing):**
@@ -312,10 +316,14 @@ $$\text{position} = \text{initial} + \text{rate} * 60$$
 4. **Phase 4: Intermediate Code Generation (ICG):**
    - Inputs: Type-checked syntax tree.
    - Actions: Emits linear Three-Address Code (TAC), where every instruction has at most one operator and three memory/register references:
-     $$t_1 = \text{inttoreal}(60)$$
-     $$t_2 = \text{id}_3 * t_1$$
-     $$t_3 = \text{id}_2 + t_2$$
-     $$\text{id}_1 = t_3$$
+
+$$t_1 = \text{inttoreal}(60)$$
+
+$$t_2 = \text{id}_3 * t_1$$
+
+$$t_3 = \text{id}_2 + t_2$$
+
+$$\text{id}_1 = t_3$$
 
 5. **Phase 5: Code Optimization:**
    - Inputs: Unoptimized TAC.
@@ -323,8 +331,9 @@ $$\text{position} = \text{initial} + \text{rate} * 60$$
      - **Constant Folding:** Evaluates `inttoreal(60)` at compile-time to literal float `60.0`, eliminating runtime conversion instructions.
      - **Copy Propagation & Dead Code Elimination:** Inlines $t_3$ directly into $\text{id}_1$, saving one temporary variable.
    - Output:
-     $$t_1 = \text{id}_3 * 60.0$$
-     $$\text{id}_1 = \text{id}_2 + t_1$$
+
+$$\begin{aligned} t_1 &= \text{id}_3 * 60.0 \\ \text{id}_1 &= \text{id}_2 + t_1 \end{aligned}$$
+
 
 6. **Phase 6: Target Code Generation:**
    - Inputs: Optimized TAC + target CPU architecture specification.
@@ -451,7 +460,7 @@ flowchart LR
 The parser and lexical analyzer operate in a **producer-consumer pull architecture**:
 1. The parser calls `getNextToken()`.
 2. The scanner scans forward from `lexemeBegin` using the `forward` pointer.
-3. When a token pattern is matched, the scanner constructs the token tuple $`\langle \text{token\_name}, \text{attribute\_value} \rangle`$ and returns control to the parser.
+3. When a token pattern is matched, the scanner constructs the token tuple $\langle \text{token\_name}, \text{attribute\_value} \rangle$ and returns control to the parser.
 4. If an identifier is found, it is entered into the Symbol Table.
 
 #### The Input Buffering Bottleneck:
@@ -573,6 +582,7 @@ If you accidentally write `"fi (x == 0)"`, your eye immediately flags that `"fi"
 Why must tokens carry attribute values?
 A keyword like `while` is unique: there is only one `while` loop. Hence, the token name `WHILE` is completely sufficient for the parser.
 However, there are billions of possible identifiers (`score`, `initial`, `total`) and numbers (`42`, `3.14159`). The parser only cares about grammar rules (e.g., `id + id`), but the code generator must know *which* identifier and *what* numerical value was written. Therefore, multi-instance tokens must be emitted as a **2-tuple**:
+
 $$\langle \text{Token Name}, \text{Attribute Value} \rangle$$
 
 ### 4.3 Formal Token Specifications & Error Recovery Strategies
@@ -754,16 +764,24 @@ A regular expression $r$ over alphabet $\Sigma$ denotes a language $L(r)$ define
 
 ##### Inductive Step:
 If $r_1$ and $r_2$ are regular expressions denoting languages $L(r_1)$ and $L(r_2)$:
-1. **Union (Alternation):** $`r_1 + r_2`$ (or $`r_1 \mid r_2`$) is a regular expression denoting:
-   $$L(r_1 + r_2) = L(r_1) \cup L(r_2)$$
-2. **Concatenation:** $`r_1 \cdot r_2`$ (or $`r_1 r_2`$) is a regular expression denoting:
-   $$L(r_1 \cdot r_2) = L(r_1) L(r_2) = \{xy \mid x \in L(r_1), y \in L(r_2)\}$$
+1. **Union (Alternation):** $r_1 + r_2$ (or $r_1 \mid r_2$) is a regular expression denoting:
+
+$$L(r_1 + r_2) = L(r_1) \cup L(r_2)$$
+
+2. **Concatenation:** $r_1 \cdot r_2$ (or $r_1 r_2$) is a regular expression denoting:
+
+$$L(r_1 \cdot r_2) = L(r_1) L(r_2) = \{xy \mid x \in L(r_1), y \in L(r_2)\}$$
+
 3. **Kleene Closure (Star):** $r_1^*$ is a regular expression denoting:
-   $$L(r_1^*) = (L(r_1))^* = \bigcup_{i=0}^{\infty} L(r_1)^i \quad \text{where } L^0 = \{\epsilon\}$$
+
+$$L(r_1^*) = (L(r_1))^* = \bigcup_{i=0}^{\infty} L(r_1)^i \quad \text{where } L^0 = \{\epsilon\}$$
+
 4. **Parenthesization:** $(r_1)$ is a regular expression denoting $L(r_1)$.
 
 #### Operator Precedence:
+
 $$\text{Highest} \longrightarrow \text{Kleene Star } (*) \quad > \quad \text{Concatenation } (\cdot) \quad > \quad \text{Union } (+) \longrightarrow \text{Lowest}$$
+
 Example: $a + b \cdot c^*$ is parsed strictly as $(a) + (b \cdot (c^*))$.
 
 #### 3. Algebraic Laws of Regular Expressions:
@@ -777,8 +795,8 @@ Example: $a + b \cdot c^*$ is parsed strictly as $(a) + (b \cdot (c^*))$.
 | **Identity for Union** | $r + \emptyset = \emptyset + r = r$ | $\emptyset$ contributes zero strings |
 | **Identity for Concatenation** | $r\epsilon = \epsilon r = r$ | $\epsilon$ contributes empty string |
 | **Annihilator for Concatenation** | $r\emptyset = \emptyset r = \emptyset$ | Concatenating with nothing yields nothing |
-| **Idempotency of Star** | $`(r^*)^* = r^*`$ | Repeating repetitions adds no new strings |
-| **Star Decompositions** | $`\epsilon + r r^* = r^*`$ and $`(r + s)^* = (r^* s^*)^*`$ | Fundamental closure identities |
+| **Idempotency of Star** | $(r^*)^* = r^*$ | Repeating repetitions adds no new strings |
+| **Star Decompositions** | $\epsilon + r r^* = r^*$ and $(r + s)^* = (r^* s^*)^*$ | Fundamental closure identities |
 
 ### 5.4 Extended Regular Expression Shorthands & Equivalences
 
@@ -797,14 +815,16 @@ Example: $a + b \cdot c^*$ is parsed strictly as $(a) + (b \cdot (c^*))$.
 
 #### Audit Example 1: Language of $(a + b)a^*$ (Slide 14/36)
 Let us expand $L((a + b)a^*)$:
+
 $$L((a + b)a^*) = L(a + b) L(a^*) = (L(a) \cup L(b)) L(a^*) = (\{a\} \cup \{b\}) \{\epsilon, a, aa, aaa, \dots\}$$
+
 $$\{a, b\} \{\epsilon, a, aa, aaa, \dots\} = \{a, aa, aaa, aaaa, \dots\} \cup \{b, ba, baa, baaa, \dots\}$$
 
 > ✏️ **Slide / Source Typo Audit (Slide 14/36):**
 > On Slide 14, the notes print:
 > `L((a + b).a*) = {a, aa, aaa, ..., b, bb, bbb, ...}`
 > - **Slide Exam Reproduction Track:** The slide mistakenly writes $b, bb, bbb, \dots$.
-> - **True Mathematical Ground-Truth Track:** $(a + b)a^*$ can NEVER produce $bb$ or $bbb$! Any string starting with $b$ must be followed exclusively by powers of $a$: $\{b, ba, baa, baaa, \dots\}$. To produce $\{b, bb, bbb\}$, the expression would have to be $(a+b)b^*$ or $`a^* + b^*`$.
+> - **True Mathematical Ground-Truth Track:** $(a + b)a^*$ can NEVER produce $bb$ or $bbb$! Any string starting with $b$ must be followed exclusively by powers of $a$: $\{b, ba, baa, baaa, \dots\}$. To produce $\{b, bb, bbb\}$, the expression would have to be $(a+b)b^*$ or $a^* + b^*$.
 
 #### Audit Example 2: Strings Without Consecutive Zeros (Slide 14 vs Slide 15)
 - In Slide 14/36: The slide prints $r = (1 + 01)^*(0 + \lambda)$.
@@ -815,8 +835,7 @@ $$\{a, b\} \{\epsilon, a, aa, aaa, \dots\} = \{a, aa, aaa, aaaa, \dots\} \cup \{
 > $L = \{\text{all strings without two consecutive 0}\}$
 > The slide writes: $r_1 = (0 + 01)^*(0 + \lambda)$.
 > - **Mathematical Refutation:** Notice that $(0 + 01)^*$ contains $0$ as a choice. Taking $0$ twice yields $0 \cdot 0 = 00$, which contains two consecutive zeros! Thus $r_1$ fails the language definition.
-> - **Correct Form:** As verified on Slide 14, the correct expression is:
->   $$r_1 = (1 + 01)^*(0 + \lambda)$$
+> - **Correct Form:** As verified on Slide 14, the correct expression is $r_1 = (1 + 01)^*(0 + \lambda)$.  
 >   Here, every $0$ is immediately locked to a trailing $1$ (via $01$), and at most one isolated $0$ may appear at the very end of the string (via $0 + \lambda$). This mathematically guarantees zero occurrences of `00`.
 
 ### 5.7 Examiner Traps & Common Pitfalls
@@ -824,7 +843,7 @@ $$\{a, b\} \{\epsilon, a, aa, aaa, \dots\} = \{a, aa, aaa, aaaa, \dots\} \cup \{
   - $\emptyset$ denotes the empty language containing **zero strings**: $|\emptyset| = 0$.
   - $\{\epsilon\}$ denotes a language containing **one string** (the empty string): $|\{\epsilon\}| = 1$.
   - Concatenation: $L \cdot \emptyset = \emptyset$, but $L \cdot \{\epsilon\} = L$.
-- ⚠️ **Examiner Trap 2 ($`(r + s)^* \neq r^* + s^*`$):** Students frequently confuse union inside the star with the sum of stars. $(a + b)^*$ generates *all* strings of $a$'s and $b$'s in any order (`"abaabb"`). In contrast, $`a^* + b^*`$ can only generate all $a$'s (`"aaaa"`) OR all $b$'s (`"bbbb"`), but never mixed strings like `"ab"`.
+- ⚠️ **Examiner Trap 2 ($(r + s)^* \neq r^* + s^*$):** Students frequently confuse union inside the star with the sum of stars. $(a + b)^*$ generates *all* strings of $a$'s and $b$'s in any order (`"abaabb"`). In contrast, $a^* + b^*$ can only generate all $a$'s (`"aaaa"`) OR all $b$'s (`"bbbb"`), but never mixed strings like `"ab"`.
 
 ---
 
@@ -863,19 +882,25 @@ Computers cannot physically clone hardware, so compilers translate human-friendl
 Why define both DFA and NFA if computers can only execute DFAs?
 - **Ease of Construction:** It is trivial to convert a human-written regular expression into an $\epsilon$-NFA using Thompson's inductive construction ($O(N)$ size).
 - **Execution Efficiency:** An NFA requires tracking sets of states, which is slow in software. A DFA has exactly one state transition per character:
-  $$s_{\text{next}} = \delta(s_{\text{current}}, c)$$
+
+$$s_{\text{next}} = \delta(s_{\text{current}}, c)$$
+
   This compiles into a single memory array lookup: `state = transition_table[state][c]`, running in blistering $O(1)$ time per character.
 
 ### 6.3 Formal 5-Tuple Definitions: DFA, NFA, and $\epsilon$-NFA
 
 #### 1. Deterministic Finite Automaton (DFA):
 A DFA is a 5-tuple:
+
 $$M = (Q, \Sigma, \delta, q_0, F)$$
+
 Where:
 1. $Q$: A finite, non-empty set of states.
 2. $\Sigma$: A finite set of input alphabet symbols.
 3. $\delta$: The transition function, formally defined as a **total function**:
-   $$\delta: Q \times \Sigma \longrightarrow Q$$
+
+$$\delta: Q \times \Sigma \longrightarrow Q$$
+
    *(For every state $q \in Q$ and symbol $a \in \Sigma$, there is exactly one next state).*
 4. $q_0$: The initial start state ($q_0 \in Q$).
 5. $F$: The set of final or accepting states ($F \subseteq Q$).
@@ -884,26 +909,36 @@ Where:
 To formalize reading an entire string $w \in \Sigma^*$, we define $\hat{\delta}: Q \times \Sigma^* \to Q$ by induction:
 - **Basis:** $\hat{\delta}(q, \epsilon) = q$ (reading nothing leaves the machine in state $q$).
 - **Induction:** For any string $w = xa$ (where $x \in \Sigma^*$ and $a \in \Sigma$):
-  $$\hat{\delta}(q, xa) = \delta(\hat{\delta}(q, x), a)$$
+
+$$\hat{\delta}(q, xa) = \delta(\hat{\delta}(q, x), a)$$
 
 #### Language Accepted by a DFA:
+
 $$L(M) = \{w \in \Sigma^* \mid \hat{\delta}(q_0, w) \in F\}$$
 
 #### 2. Nondeterministic Finite Automaton (NFA):
 An NFA is a 5-tuple:
+
 $$M = (Q, \Sigma, \delta, q_0, F)$$
+
 Where the transition function maps to the **power set** $2^Q$:
+
 $$\delta: Q \times \Sigma \longrightarrow 2^Q$$
-*(For a given state and input, the machine may transition to a set of states $`\{q_1, q_2, \dots\}`$, or to $\emptyset$).*
+
+*(For a given state and input, the machine may transition to a set of states $\{q_1, q_2, \dots\}$, or to $\emptyset$).*
 
 #### 3. NFA with $\epsilon$-transitions ($\epsilon$-NFA):
 An $\epsilon$-NFA allows transitions on the empty string:
+
 $$\delta: Q \times (\Sigma \cup \{\epsilon\}) \longrightarrow 2^Q$$
 
 #### The $\epsilon\text{-CLOSURE}$ Operator:
 For any state $s \in Q$, $\epsilon\text{-CLOSURE}(s)$ is the set of all states reachable from $s$ along paths consisting exclusively of zero or more $\epsilon$-transitions:
+
 $$\epsilon\text{-CLOSURE}(s) = \{s\} \cup \bigcup_{p \in \delta(s, \epsilon)} \epsilon\text{-CLOSURE}(p)$$
+
 For a subset of states $T \subseteq Q$:
+
 $$\epsilon\text{-CLOSURE}(T) = \bigcup_{t \in T} \epsilon\text{-CLOSURE}(t)$$
 
 ### 6.4 Comparative Analysis: DFA vs. NFA vs. $\epsilon$-NFA
@@ -924,7 +959,7 @@ $$\epsilon\text{-CLOSURE}(T) = \bigcup_{t \in T} \epsilon\text{-CLOSURE}(t)$$
 Let us examine the exact DFA presented on Slide 18/36:
 Language $L = \{\text{"abba"}\}$.
 Alphabet $\Sigma = \{a, b\}$.
-States $`Q = \{q_0, q_1, q_2, q_3, q_4, q_5\}`$.
+States $Q = \{q_0, q_1, q_2, q_3, q_4, q_5\}$.
 Start state $= q_0$, Final state $F = \{q_4\}$, Trap state $= q_5$.
 
 #### Audited Transition Table:
@@ -939,13 +974,18 @@ Start state $= q_0$, Final state $F = \{q_4\}$, Trap state $= q_5$.
 
 #### Mathematical Trace on Sample Strings:
 1. Trace for valid string $w_1 = \text{"abba"}$:
-   $$\hat{\delta}(q_0, \text{"a"}) = q_1 \xrightarrow{\text{'b'}} \hat{\delta}(q_1, \text{"b"}) = q_2 \xrightarrow{\text{'b'}} \hat{\delta}(q_2, \text{"b"}) = q_3 \xrightarrow{\text{'a'}} \hat{\delta}(q_3, \text{"a"}) = q_4 \in F \quad \implies \mathbf{ACCEPTED}$$
-2. Trace for invalid string $w_2 = \text{"abbb"}$:
-   $$\hat{\delta}(q_0, \text{"a"}) = q_1 \xrightarrow{\text{'b'}} q_2 \xrightarrow{\text{'b'}} q_3 \xrightarrow{\text{'b'}} q_5 \notin F \quad \implies \mathbf{REJECTED}$$
-3. Trace for prefix string $w_3 = \text{"abb"}$:
-   $$\hat{\delta}(q_0, \text{"abb"}) = q_3 \notin F \quad \implies \mathbf{REJECTED}$$
 
-> 📐 **Audit Check:** Notice that state $q_5$ is a **sink (dead) state**: $`\delta(q_5, a) = q_5`$ and $`\delta(q_5, b) = q_5`$. Once the automaton transitions into $q_5$, it can never escape. This guarantees that any string that does not start with `"abba"` or continues after `"abba"` is rejected.
+$$\hat{\delta}(q_0, \text{"a"}) = q_1 \xrightarrow{\text{'b'}} \hat{\delta}(q_1, \text{"b"}) = q_2 \xrightarrow{\text{'b'}} \hat{\delta}(q_2, \text{"b"}) = q_3 \xrightarrow{\text{'a'}} \hat{\delta}(q_3, \text{"a"}) = q_4 \in F \quad \implies \mathbf{ACCEPTED}$$
+
+2. Trace for invalid string $w_2 = \text{"abbb"}$:
+
+$$\hat{\delta}(q_0, \text{"a"}) = q_1 \xrightarrow{\text{'b'}} q_2 \xrightarrow{\text{'b'}} q_3 \xrightarrow{\text{'b'}} q_5 \notin F \quad \implies \mathbf{REJECTED}$$
+
+3. Trace for prefix string $w_3 = \text{"abb"}$:
+
+$$\hat{\delta}(q_0, \text{"abb"}) = q_3 \notin F \quad \implies \mathbf{REJECTED}$$
+
+> 📐 **Audit Check:** Notice that state $q_5$ is a **sink (dead) state**: $\delta(q_5, a) = q_5$ and $\delta(q_5, b) = q_5$. Once the automaton transitions into $q_5$, it can never escape. This guarantees that any string that does not start with `"abba"` or continues after `"abba"` is rejected.
 
 ### 6.7 Examiner Traps & Common Pitfalls
 - ⚠️ **Examiner Trap 1 (DFA Totality Requirement):** In formal automata theory, the transition function $\delta$ of a DFA must be a **total function**. That means *every* state must have an outgoing transition for *every* symbol in $\Sigma$. If your drawing omits the `'b'` transition from $q_0$, it is technically an incomplete transition graph; the missing transition implicitly goes to an unwritten dead state $q_5$.
@@ -1010,8 +1050,8 @@ Builds an $\epsilon$-NFA inductively from regular expression $r$:
 ##### Structural Assembly Rules:
 1. **Base Case $\epsilon$:** Start state $i \xrightarrow{\epsilon} f$ (accept).
 2. **Base Case $a \in \Sigma$:** Start state $i \xrightarrow{a} f$ (accept).
-3. **Concatenation $`r_1 \cdot r_2`$:** Merge accept state of $NFA(r_1)$ directly with start state of $NFA(r_2)$.
-4. **Union $`r_1 \mid r_2`$:** Create a new start state $i$ with $\epsilon$-transitions to the start states of $NFA(r_1)$ and $NFA(r_2)$. Create a new accept state $f$ with $\epsilon$-transitions from the accept states of $NFA(r_1)$ and $NFA(r_2)$ into $f$.
+3. **Concatenation $r_1 \cdot r_2$:** Merge accept state of $NFA(r_1)$ directly with start state of $NFA(r_2)$.
+4. **Union $r_1 \mid r_2$:** Create a new start state $i$ with $\epsilon$-transitions to the start states of $NFA(r_1)$ and $NFA(r_2)$. Create a new accept state $f$ with $\epsilon$-transitions from the accept states of $NFA(r_1)$ and $NFA(r_2)$ into $f$.
 5. **Kleene Star $r_1^*$:** Create new start state $i$ and new accept state $f$.
    - Add $\epsilon$-transition from $i$ to start of $NFA(r_1)$.
    - Add $\epsilon$-transition from accept of $NFA(r_1)$ to $f$.
@@ -1021,14 +1061,15 @@ Builds an $\epsilon$-NFA inductively from regular expression $r$:
 ---
 
 #### Algorithm 2: The Subset Construction (NFA / $\epsilon$-NFA $\to$ DFA)
-- **Input:** An $\epsilon$-NFA $`N = (Q_N, \Sigma, \delta_N, s_0, F_N)`$.
-- **Output:** A DFA $`D = (Q_D, \Sigma, \delta_D, S_0, F_D)`$ where each DFA state is a subset of $Q_N$.
+- **Input:** An $\epsilon$-NFA $N = (Q_N, \Sigma, \delta_N, s_0, F_N)$.
+- **Output:** A DFA $D = (Q_D, \Sigma, \delta_D, S_0, F_D)$ where each DFA state is a subset of $Q_N$.
 
 ##### Mathematical Operations:
 1. $\epsilon\text{-CLOSURE}(s)$: Set of NFA states reachable from state $s$ on $\epsilon$-transitions.
 2. $\epsilon\text{-CLOSURE}(T)$: $\bigcup_{t \in T} \epsilon\text{-CLOSURE}(t)$.
 3. $\text{MOVE}(T, a)$: Set of NFA states reachable from any state in $T$ on input symbol $a$:
-   $$\text{MOVE}(T, a) = \bigcup_{t \in T} \delta_N(t, a)$$
+
+$$\text{MOVE}(T, a) = \bigcup_{t \in T} \delta_N(t, a)$$
 
 ##### Step-by-Step Procedure:
 ```python
@@ -1056,14 +1097,18 @@ Finds the unique minimal-state DFA by partitioning states into groups of **indis
 
 ##### Procedure:
 1. **Initial Partition:** Divide states into two groups:
-   $$P_0 = \{F, \; Q \setminus F\}$$
+
+$$P_0 = \{F, \; Q \setminus F\}$$
+
    *(Group 1: Accepting states; Group 2: Non-accepting states).*
 2. **Refinement Loop:**
    For each group $G \in P$, check if $G$ can be split:
    For every symbol $a \in \Sigma$, if states $p, q \in G$ transition to different groups in partition $P$:
-   $$\delta(p, a) \in G_1 \quad \text{and} \quad \delta(q, a) \in G_2 \quad (G_1 \neq G_2)$$
+
+$$\delta(p, a) \in G_1 \quad \text{and} \quad \delta(q, a) \in G_2 \quad (G_1 \neq G_2)$$
+
    Then split $G$ into sub-groups containing states that transition to the same target groups.
-3. **Termination:** Repeat Step 2 until $`P_{k+1} = P_k`$ (no further splits possible).
+3. **Termination:** Repeat Step 2 until $P_{k+1} = P_k$ (no further splits possible).
 4. **Reconstruction:** Choose one representative state from each final group to form the minimal DFA.
 
 ### 7.4 Comparative Complexity & Invariants of the Automata Algorithms
@@ -1156,7 +1201,9 @@ A **Lexical Analyzer Generator (LEX / Flex)** is like a 3D printer: you feed it 
   Why not create separate transition diagrams for every single keyword (`if`, `while`, `else`, `return`)?
   If C has 40 keywords, building 40 separate DFAs would require hundreds of states, and the scanner would have to test each word sequentially.
   **The Elegant Solution:** Treat all keywords as matching the general **Identifier pattern**:
-  $$\text{letter} (\text{letter} \mid \text{digit})^*$$
+
+$$\text{letter} (\text{letter} \mid \text{digit})^*$$
+
   The scanner runs a single transition diagram (States 9 $\to$ 10 $\to$ 11). Upon reaching state 11, it performs a single $O(1)$ hash table lookup in the **Symbol Table**. If the lexeme is present with the `KEYWORD` flag, emit the keyword token; otherwise emit `id`!
   This collapses 40 automata into a single 3-state transition diagram.
 
@@ -1369,4 +1416,3 @@ Let us audit the Number Transition Diagrams from Slides 28–30:
 ---
 
 > Continues into: [Syntax Analysis & Parsing Algorithms Guide](file:///c:/PROJECTS/Learnmat/academics/compiler/syntax_analysis_visual_guide.md)
-

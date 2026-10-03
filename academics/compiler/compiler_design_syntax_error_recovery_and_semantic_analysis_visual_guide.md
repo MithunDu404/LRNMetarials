@@ -5,7 +5,7 @@
 >
 > 🔵 Primary / Input · 🟠 Intermediate / Weight · 🟢 Target / Minima · 🟣 Control / Loss · 🔴 Error / Residual
 
-**The story in one line:** Syntactic error detection in linear parsers $\to$ Systematic recovery heuristics (Panic Mode, Phrase-Level, Error Productions, Global Correction) $\to$ Predictive LL(1) table synchronization via FIRST & FOLLOW $\to$ LR parsing phrase-level error routines ($`e_1 \dots e_5`$) $\to$ Semantic Analysis via Syntax-Directed Definitions (SDDs) & Translation Schemes (SDTs) $\to$ Attribute classification (Synthesized vs. Inherited) & Dependency Graph topological evaluation $\to$ Abstract Syntax Trees (ASTs) & Expression DAGs with Common Subexpression Elimination $\to$ Bottom-up S-attributed LR evaluation via parallel value stacks $\to$ Static type systems, type expressions, and comprehensive Type Checkers.
+**The story in one line:** Syntactic error detection in linear parsers $\to$ Systematic recovery heuristics (Panic Mode, Phrase-Level, Error Productions, Global Correction) $\to$ Predictive LL(1) table synchronization via FIRST & FOLLOW $\to$ LR parsing phrase-level error routines ($e_1 \dots e_5$) $\to$ Semantic Analysis via Syntax-Directed Definitions (SDDs) & Translation Schemes (SDTs) $\to$ Attribute classification (Synthesized vs. Inherited) & Dependency Graph topological evaluation $\to$ Abstract Syntax Trees (ASTs) & Expression DAGs with Common Subexpression Elimination $\to$ Bottom-up S-attributed LR evaluation via parallel value stacks $\to$ Static type systems, type expressions, and comprehensive Type Checkers.
 
 ---
 
@@ -108,7 +108,9 @@ $$\underbrace{\text{Panic Mode}}_{\text{Skip to Synch Token}} \quad\longrightarr
 
 4. **Global Correction:**
    - **Mechanism:** Given an illegal input program $x$, the compiler mathematically searches for a valid program $y$ in the language $L(G)$ that minimizes the Levenshtein transformation cost (edit distance):
-     $$\text{dist}(x, y) = \min \sum_{i} \text{cost}(\text{edit}_i)$$
+
+$$\text{dist}(x, y) = \min \sum_{i} \text{cost}(\text{edit}_i)$$
+
    - **Properties:** While theoretically optimal, finding a global least-cost correction is computationally prohibitive (requiring dynamic programming or exhaustive search with cubic $O(N^3)$ or exponential time). No modern production compiler implements full global correction.
 
 ### 1.4 Decision Table: "Why This, Not That" in Error Recovery
@@ -123,8 +125,7 @@ $$\underbrace{\text{Panic Mode}}_{\text{Skip to Synch Token}} \quad\longrightarr
 ### 1.5 Systems & Operational Footprint
 - **Execution Overhead:** Panic-mode scanning operates in $O(K)$ time, where $K$ is the number of discarded tokens. Phrase-level recovery executes in $O(1)$ table lookup time.
 - **Memory Footprint:** Synchronizing sets require 1 bit per grammar symbol in lookup tables. Error productions increase the number of states in an LR automaton by $10\%$ to $25\%$.
-- **Termination Guarantee Invariant:**
-  $$\Delta \text{Input Pointer} + \Delta \text{Stack Depth} < 0$$
+- **Termination Guarantee Invariant:** $\Delta \text{Input Pointer} + \Delta \text{Stack Depth} < 0$.
   Every error recovery action must either advance the input pointer across at least one token OR reduce the stack depth. Any recovery procedure that modifies the stack or input without satisfying this strict inequality risks an infinite loop.
 
 ### 1.6 Worked Trace: Cascading Syntax Errors in Action
@@ -204,14 +205,18 @@ All production parsers share two foundational properties:
 - They operate in **deterministic linear time $O(N)$**.
 
 #### Top-Down Parsing (Root to Leaves)
+
 $$\text{Start Symbol } S \Longrightarrow \alpha_1 \Longrightarrow \alpha_2 \Longrightarrow \dots \Longrightarrow w \quad (\text{Leftmost Derivation})$$
+
 - Starts at the grammar's start symbol (the root of the parse tree).
 - Attempts to predict which production rule to apply to expand the leftmost non-terminal so that its leaves match the incoming token stream.
 - **Representative Parsers:** Recursive Descent, LL(1) table-driven predictive parsers.
 - **Structural Limitation:** Cannot handle **Left Recursion** ($A \to A \alpha$). A top-down parser attempting to expand $A$ will endlessly invoke $A$ without consuming any input, crashing the call stack.
 
 #### Bottom-Up Parsing (Leaves to Root)
+
 $$w = \gamma_n \Longleftarrow \gamma_{n-1} \Longleftarrow \dots \Longleftarrow \gamma_1 \Longleftarrow S \quad (\text{Rightmost Derivation in Reverse})$$
+
 - Starts at the terminal tokens of the source program (the leaves of the parse tree).
 - Repeatedly identifies a substring matching the right-hand side of a production (the **handle**) and reduces it to the corresponding non-terminal until reaching the start symbol $S$.
 - **Representative Parsers:** Shift-Reduce, Operator Precedence, LR(0), SLR(1), LALR(1) (Yacc/Bison), Canonical LR(1).
@@ -231,20 +236,24 @@ $$w = \gamma_n \Longleftarrow \gamma_{n-1} \Longleftarrow \dots \Longleftarrow \
 - **Left Recursion vs Memory:** In top-down parsers, left recursion forces an infinite stack push. In bottom-up LR parsers, left-recursive rules ($E \to E + T$) allow the parser to reduce immediately after shifting $T$, keeping the LR stack shallow and bounded!
 
 ### 2.6 Worked Trace: CYK Dynamic Programming Mechanics
-To appreciate why universal parsers are $O(N^3)$, consider testing whether string $`w = a_1 a_2 a_3`$ belongs to a grammar in Chomsky Normal Form:
+To appreciate why universal parsers are $O(N^3)$, consider testing whether string $w = a_1 a_2 a_3$ belongs to a grammar in Chomsky Normal Form:
 
 $$A \to B C \quad \text{or} \quad A \to a$$
 
-1. **Table Definition:** Construct a triangular matrix $V$, where $V[i, j]$ contains all non-terminals deriving the substring $`a_i \dots a_{i+j-1}`$ of length $j$.
+1. **Table Definition:** Construct a triangular matrix $V$, where $V[i, j]$ contains all non-terminals deriving the substring $a_i \dots a_{i+j-1}$ of length $j$.
 2. **Base Case (Length 1):** For $j = 1$, check single terminals: $V[i, 1] = \{ A \mid A \to a_i \in P \}$.
 3. **Recursive Step (Length $j \ge 2$):** For each split point $k \in \{1 \dots j-1\}$:
-   $$V[i, j] = \bigcup_{k=1}^{j-1} \{ A \mid A \to B C \in P \text{ where } B \in V[i, k] \text{ and } C \in V[i+k, j-k] \}$$
+
+$$V[i, j] = \bigcup_{k=1}^{j-1} \{ A \mid A \to B C \in P \text{ where } B \in V[i, k] \text{ and } C \in V[i+k, j-k] \}$$
+
 4. **Complexity Proof:**
    - Outer loop over substring lengths: $j = 1 \dots N$ ($O(N)$)
    - Inner loop over starting indices: $i = 1 \dots N - j + 1$ ($O(N)$)
    - Innermost loop over split points: $k = 1 \dots j - 1$ ($O(N)$)
    - Total operations:
-     $$\sum_{j=1}^{N} \sum_{i=1}^{N-j+1} (j - 1) = \frac{N^3 - N}{6} \approx O(N^3)$$
+
+$$\sum_{j=1}^{N} \sum_{i=1}^{N-j+1} (j - 1) = \frac{N^3 - N}{6} \approx O(N^3)$$
+
    This cubic overhead proves why production compilers universally adopt linear $O(N)$ scanners.
 
 ### 2.7 Examiner Traps & Common Pitfalls
@@ -299,7 +308,7 @@ Imagine riding a passenger train that follows a strict schedule:
 In LL(1) predictive parsing, non-terminals on the stack represent obligations that must be fulfilled. When an input token cannot fulfill that obligation, the synchronizing set allows the parser to clear the obligation and realign with the stream.
 
 ### 3.2 Architectural Rationale: How Errors are Detected in LL(1)
-An LL(1) parser maintains a stack of grammar symbols (terminals and non-terminals) with `$` at the bottom, and reads an input token stream ending with `$`. At each step, the parser examines the Top of Stack (**TOS**) and the current lookahead token $a$:
+An LL(1) parser maintains a stack of grammar symbols (terminals and non-terminals) with `$ at the bottom, and reads an input token stream ending with $`. At each step, the parser examines the Top of Stack (**TOS**) and the current lookahead token $a$:
 
 $$\text{TOS} \quad \text{vs.} \quad \text{Lookahead } a$$
 
@@ -333,11 +342,11 @@ Independently computing the FIRST and FOLLOW sets:
 - $\text{FIRST}(E') = \{ +, \epsilon \}$
 - $\text{FIRST}(E) = \text{FIRST}(T) = \{ (, \mathbf{id} \}$
 
-- $`\text{FOLLOW}(E) = \{ ), \$ \}`$
-- $`\text{FOLLOW}(E\') = \text{FOLLOW}(E) = \{ ), \$ \}`$
-- $`\text{FOLLOW}(T) = (\text{FIRST}(E\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(E\') = \{ +, ), \$ \}`$
-- $`\text{FOLLOW}(T\') = \text{FOLLOW}(T) = \{ +, ), \$ \}`$
-- $`\text{FOLLOW}(F) = (\text{FIRST}(T\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T\') = \{ *, +, ), \$ \}`$
+- $\text{FOLLOW}(E) = \{ ), \mathdollar \}$
+- $\text{FOLLOW}(E\') = \text{FOLLOW}(E) = \{ ), \mathdollar \}$
+- $\text{FOLLOW}(T) = (\text{FIRST}(E\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(E\') = \{ +, ), \mathdollar \}$
+- $\text{FOLLOW}(T\') = \text{FOLLOW}(T) = \{ +, ), \mathdollar \}$
+- $\text{FOLLOW}(F) = (\text{FIRST}(T\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T\') = \{ *, +, ), \mathdollar \}$
 
 #### The Audited Predictive Parsing Table with Synchronizing Tokens
 
@@ -368,8 +377,10 @@ When the predictive parser driver executes:
 Let us trace the complete execution of the predictive parser on the erroneous input string:
 
 $$
-w = \; ) \; \mathbf{id} \; * \; + \; \mathbf{id} \; \$
+w = \; ) \; \mathbf{id} \; * \; + \; \mathbf{id} \; \mathdollar
+
 $$
+
 ```mermaid
 ---
 config:
@@ -480,27 +491,27 @@ flowchart LR
     classDef neutral fill:#F8FAFC,stroke:#64748B,stroke-width:1.5px,color:#0F172A;
 ```
 
-The stack starts with `$` and $E$.
+The stack starts with $\mathdollar$ and $E$.
 
 | Step | Stack Contents | Remaining Input | Parser Action & Diagnostic |
 |:---|:---|:---|:---|
-| **(1)** | `\$ E` | `) id * + id \$` | Error! `)` is an unexpected symbol (or not in $\text{FIRST}(E)$). **Skip token `)`.** |
-| **(2)** | `\$ E` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(E)$. Expand $E \to T E'$. Output: $E \to T E'$. |
-| **(3)** | `\$ E' T` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
-| **(4)** | `\$ E' T' F` | `id * + id \$` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
-| **(5)** | `\$ E' T' id` | `id * + id \$` | Terminal match! Pop $\mathbf{id}$, advance input. |
-| **(6)** | `\$ E' T'` | `* + id \$` | $* \in \text{FIRST}(T')$. Expand $T' \to * F T'$. Output: $T' \to * F T'$. |
-| **(7)** | `\$ E' T' F *` | `* + id \$` | Terminal match! Pop $*$, advance input. |
-| **(8)** | `\$ E' T' F` | `+ id \$` | Error! Lookahead is `+`. Table entry $M[F, +] = \mathbf{synch}$! **Pop $F$ from stack.** |
-| **(9)** | `\$ E' T'` | `+ id \$` | $F$ popped. Lookahead `+` is in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
-| **(10)** | `\$ E'` | `+ id \$` | $+ \in \text{FIRST}(E')$. Expand $E' \to + T E'$. Output: $E' \to + T E'$. |
-| **(11)** | `\$ E' T +` | `+ id \$` | Terminal match! Pop $+$, advance input. |
-| **(12)** | `\$ E' T` | `id \$` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
-| **(13)** | `\$ E' T' F` | `id \$` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
-| **(14)** | `\$ E' T' id` | `id \$` | Terminal match! Pop $\mathbf{id}$, advance input. |
-| **(15)** | `\$ E' T'` | `\$` | \$ in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
-| **(16)** | `\$ E'` | `\$` | \$ in $\text{FOLLOW}(E')$. Expand $E' \to \epsilon$. |
-| **(17)** | `\$` | `\$` | **Acceptance!** Both stack and input empty. Parse completes successfully. |
+| **(1)** | $\mathdollar E$ | $) \mathbf{id} * + \mathbf{id} \mathdollar$ | Error! `)` is an unexpected symbol (or not in $\text{FIRST}(E)$). **Skip token `)`.** |
+| **(2)** | $\mathdollar E$ | $\mathbf{id} * + \mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(E)$. Expand $E \to T E'$. Output: $E \to T E'$. |
+| **(3)** | $\mathdollar E' T$ | $\mathbf{id} * + \mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
+| **(4)** | $\mathdollar E' T' F$ | $\mathbf{id} * + \mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
+| **(5)** | $\mathdollar E' T' \mathbf{id}$ | $\mathbf{id} * + \mathbf{id} \mathdollar$ | Terminal match! Pop $\mathbf{id}$, advance input. |
+| **(6)** | $\mathdollar E' T'$ | $* + \mathbf{id} \mathdollar$ | $* \in \text{FIRST}(T')$. Expand $T' \to * F T'$. Output: $T' \to * F T'$. |
+| **(7)** | $\mathdollar E' T' F *$ | $* + \mathbf{id} \mathdollar$ | Terminal match! Pop $*$, advance input. |
+| **(8)** | $\mathdollar E' T' F$ | $+ \mathbf{id} \mathdollar$ | Error! Lookahead is `+`. Table entry $M[F, +] = \mathbf{synch}$! **Pop $F$ from stack.** |
+| **(9)** | $\mathdollar E' T'$ | $+ \mathbf{id} \mathdollar$ | $F$ popped. Lookahead `+` is in $\text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
+| **(10)** | $\mathdollar E'$ | $+ \mathbf{id} \mathdollar$ | $+ \in \text{FIRST}(E')$. Expand $E' \to + T E'$. Output: $E' \to + T E'$. |
+| **(11)** | $\mathdollar E' T +$ | $+ \mathbf{id} \mathdollar$ | Terminal match! Pop $+$, advance input. |
+| **(12)** | $\mathdollar E' T$ | $\mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
+| **(13)** | $\mathdollar E' T' F$ | $\mathbf{id} \mathdollar$ | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
+| **(14)** | $\mathdollar E' T' \mathbf{id}$ | $\mathbf{id} \mathdollar$ | Terminal match! Pop $\mathbf{id}$, advance input. |
+| **(15)** | $\mathdollar E' T'$ | $\mathdollar$ | $\mathdollar \in \text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
+| **(16)** | $\mathdollar E'$ | $\mathdollar$ | $\mathdollar \in \text{FOLLOW}(E')$. Expand $E' \to \epsilon$. |
+| **(17)** | $\mathdollar$ | $\mathdollar$ | **Acceptance!** Both stack and input empty. Parse completes successfully. |
 
 > 📐 **Verification Check:** Notice that despite two major syntax errors (an initial unmatched `)` and an illegal operator sequence `* +`), the parser recovered completely and produced a valid sub-parse for the trailing `+ id`, verifying the precision of the synchronizing heuristics!
 
@@ -532,7 +543,7 @@ LR parsers apply this exact philosophy: rather than crashing, each blank cell in
 ### 4.2 Architectural Rationale: The Viable-Prefix Property
 Why are LR parsers the premier choice for production compilers?
 - **The Viable-Prefix Invariant:** An LR parser is mathematically guaranteed to detect a syntax error **at the very first token that cannot form a valid prefix of any continuation of the program**. It will never shift an invalid token onto the stack.
-- **Table Density Advantage:** In an LR parsing table, the majority of cells in the `Action` table are empty! Instead of leaving them unmapped, compiler designers replace empty cells with pointers to specific error handling functions: $`e_1, e_2, e_3, e_4, e_5`$.
+- **Table Density Advantage:** In an LR parsing table, the majority of cells in the `Action` table are empty! Instead of leaving them unmapped, compiler designers replace empty cells with pointers to specific error handling functions: $e_1, e_2, e_3, e_4, e_5$.
 
 ### 4.3 Formal Mechanics: The Canonical SLR Table with Error Routines
 Consider the canonical grammar for arithmetic expressions:
@@ -545,7 +556,7 @@ Consider the canonical grammar for arithmetic expressions:
 
 The SLR parser consists of 12 states ($0 \dots 11$). Below is the complete parsing table from Prof. Samit Biswas's notes with integrated error procedures:
 
-| State | $\mathbf{id}$ | $+$ | $*$ | $($ | $)$ | `$` | $E$ | $T$ | $F$ |
+| State | $\mathbf{id}$ | $+$ | $*$ | $($ | $)$ | $\mathdollar$ | $E$ | $T$ | $F$ |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **0** | $S_5$ | $e_1$ | $e_1$ | $S_4$ | $e_2$ | $e_1$ | 1 | 2 | 3 |
 | **1** | $e_3$ | $S_6$ | $e_4$ | $e_3$ | $e_2$ | **Accept** | | | |
@@ -593,7 +604,7 @@ Let us trace how the SLR parser handles the invalid input `id + * id $`:
 8. The parser continues smoothly without crashing!
 
 ### 4.7 Examiner Traps & Misconceptions
-- ⚠️ **Examiner Trap 1 (State 8 at EOF):** What happens if a C program has an unclosed parenthesis like `if (x > 0 $`? The LR parser will reach State 8. The entry for `$` in State 8 is $e_5$. Routine $e_5$ pushes State 11 (the accept branch for `)`), allowing the parser to close the parenthesis and report the error cleanly.
+- ⚠️ **Examiner Trap 1 (State 8 at EOF):** What happens if a C program has an unclosed parenthesis like `if (x > 0 $? The LR parser will reach State 8. The entry for $` in State 8 is $e_5$. Routine $e_5$ pushes State 11 (the accept branch for `)`), allowing the parser to close the parenthesis and report the error cleanly.
 - ⚠️ **Examiner Trap 2 (LR Viable-Prefix vs Reductions before Error):** Does an LR parser always halt *before* making any wrong reduction? An LR parser will never shift an illegal token, but **it may make one or more valid reductions** before encountering the state where no action is possible. This is because reductions represent subtrees that were legitimately correct based on preceding tokens.
 
 ---
@@ -623,8 +634,8 @@ In an SDD, each grammar symbol $X$ is associated with a set of attributes, and e
 $$b = f(c_1, c_2, \dots, c_k)$$
 
 Where $f$ is a mathematical function, and:
-- Either $b$ is a **Synthesized Attribute** of the left-hand non-terminal $A$, and $`c_1 \dots c_k`$ are attributes of grammar symbols on the right-hand side $\alpha$.
-- Or $b$ is an **Inherited Attribute** of one of the grammar symbols on the right-hand side $\alpha$, and $`c_1 \dots c_k`$ are attributes of the parent $A$ or other symbols in $\alpha$.
+- Either $b$ is a **Synthesized Attribute** of the left-hand non-terminal $A$, and $c_1 \dots c_k$ are attributes of grammar symbols on the right-hand side $\alpha$.
+- Or $b$ is an **Inherited Attribute** of one of the grammar symbols on the right-hand side $\alpha$, and $c_1 \dots c_k$ are attributes of the parent $A$ or other symbols in $\alpha$.
 
 ```
                  PARSER TREE NODE: A
@@ -757,11 +768,11 @@ $$\text{All SDDs} \quad\supset\quad \underbrace{\text{L-Attributed SDDs}}_{\text
 - **Evaluation Guarantee:** Can be evaluated naturally during bottom-up (LR) parsing or during a single post-order traversal of the parse tree.
 
 #### L-Attributed Definitions
-- **Definition:** An SDD is **L-attributed** (where 'L' stands for Left-to-right) if each inherited attribute of symbol $X_j$ in a production $`A \to X_1 X_2 \dots X_n`$ depends ONLY on:
+- **Definition:** An SDD is **L-attributed** (where 'L' stands for Left-to-right) if each inherited attribute of symbol $X_j$ in a production $A \to X_1 X_2 \dots X_n$ depends ONLY on:
   1. The **inherited attributes of the parent non-terminal $A$**.
-  2. The **attributes (synthesized or inherited) of symbols $`X_1, X_2, \dots, X_{j-1}`$ situated strictly to the LEFT of $X_j$**.
+  2. The **attributes (synthesized or inherited) of symbols $X_1, X_2, \dots, X_{j-1}$ situated strictly to the LEFT of $X_j$**.
   3. The **attributes of $X_j$ itself**, provided no cyclic dependency is created.
-- **Critical Restriction:** An inherited attribute of $X_j$ **CANNOT depend on attributes of symbols situated to its RIGHT** ($`X_{j+1} \dots X_n`$), nor can it depend on synthesized attributes of the parent $A$.
+- **Critical Restriction:** An inherited attribute of $X_j$ **CANNOT depend on attributes of symbols situated to its RIGHT** ($X_{j+1} \dots X_n$), nor can it depend on synthesized attributes of the parent $A$.
 
 ### 6.4 Worked Example: Variable Declarations SDD (Inherited Attributes)
 Consider the grammar for programming language type declarations:
@@ -781,14 +792,14 @@ $$
    - Synthesizes $T.\text{type} = \text{real}$.
 2. Production $D \to T L$ executes semantic rule:
    - Assigns inherited attribute $L.\text{in} = T.\text{type} = \text{real}$.
-3. First $L$ node expands $`L \to L_1, \mathbf{id}_3`$:
+3. First $L$ node expands $L \to L_1, \mathbf{id}_3$:
    - Passes inherited type down: $L_1.\text{in} = L.\text{in} = \text{real}$.
    - Invokes side effect: $\text{addtype}(\mathbf{id}_3.\text{entry}, \text{real})$.
-4. Second $L_1$ node expands $`L_1 \to L_2, \mathbf{id}_2`$:
-   - Passes inherited type down: $`L_2.\text{in} = L_1.\text{in} = \text{real}`$.
+4. Second $L_1$ node expands $L_1 \to L_2, \mathbf{id}_2$:
+   - Passes inherited type down: $L_2.\text{in} = L_1.\text{in} = \text{real}$.
    - Invokes side effect: $\text{addtype}(\mathbf{id}_2.\text{entry}, \text{real})$.
-5. Leaf $L_2$ reduces via $`L_2 \to \mathbf{id}_1`$:
-   - Invokes side effect: $`\text{addtype}(\mathbf{id}_1.\text{entry}, L_2.\text{in} = \text{real})`$.
+5. Leaf $L_2$ reduces via $L_2 \to \mathbf{id}_1$:
+   - Invokes side effect: $\text{addtype}(\mathbf{id}_1.\text{entry}, L_2.\text{in} = \text{real})$.
 6. **Result in Symbol Table:** All three identifiers `id1`, `id2`, and `id3` are successfully recorded as having type `real`!
 
 ### 6.5 Decision Table: Synthesized vs. Inherited Attributes
@@ -796,14 +807,14 @@ $$
 | Dimension | Synthesized Attributes | Inherited Attributes |
 |:---|:---|:---|
 | **Direction of Flow** | Upward (Children $\to$ Parent) | Downward (Parent $\to$ Child) and Sideways (Left Sibling $\to$ Right Sibling) |
-| **Production Form** | $`A.s = f(X_1.a, X_2.b, \dots, X_n.c)`$ | $`X_j.i = f(A.a, X_1.b, \dots, X_{j-1}.c)`$ |
+| **Production Form** | $A.s = f(X_1.a, X_2.b, \dots, X_n.c)$ | $X_j.i = f(A.a, X_1.b, \dots, X_{j-1}.c)$ |
 | **Typical Use Cases** | Expression evaluation, arithmetic values, type synthesis, AST generation | Symbol table type assignment, scope tracking, code nesting depth |
 | **Compatible Parsers** | Bottom-Up (LR) and Top-Down (LL) natively | Top-Down (LL) natively; Bottom-Up (LR) requires stack offset tricks |
 | **Terminal Nodes** | Yes (lexical values from scanner) | **Never** (terminals cannot have inherited attributes) |
 
 ### 6.6 Examiner Traps & Misconceptions
 - ⚠️ **Examiner Trap 1 (Is Every S-Attributed Grammar L-Attributed?):** **YES.** By definition, an S-attributed grammar has zero inherited attributes, meaning it trivially satisfies all constraints of L-attributed definitions. However, the reverse is NOT true.
-- ⚠️ **Examiner Trap 2 (Right-to-Left Dependencies):** If a semantic rule writes $`X_1.i = f(X_2.s)`$, is it L-attributed? **NO.** $X_1$ is attempting to inherit a value from $X_2$, which sits to its right! This would require an impossible lookahead in a single-pass left-to-right compiler.
+- ⚠️ **Examiner Trap 2 (Right-to-Left Dependencies):** If a semantic rule writes $X_1.i = f(X_2.s)$, is it L-attributed? **NO.** $X_1$ is attempting to inherit a value from $X_2$, which sits to its right! This would require an impossible lookahead in a single-pass left-to-right compiler.
 
 ---
 
@@ -881,13 +892,13 @@ In a complex language with dozens of synthesized and inherited attributes, the o
 Given a parse tree and an SDD:
 1. **Node Construction:** For every node $n$ in the parse tree and for every attribute $a$ associated with the grammar symbol at $n$, construct a dedicated vertex in the dependency graph denoted $n.a$.
 2. **Edge Construction:** For each node $n$ in the parse tree:
-   - For each semantic rule $`b = f(c_1, c_2, \dots, c_k)`$ associated with the production used at $n$:
+   - For each semantic rule $b = f(c_1, c_2, \dots, c_k)$ associated with the production used at $n$:
    - For $i = 1 \dots k$, construct a directed edge from the node for $c_i$ to the node for $b$ ($c_i \longrightarrow b$).
 3. **Handling Side Effects:** If a semantic rule consists of a procedure call (such as `print(E.val)` or `addtype(id.entry, L.in)`), introduce a **dummy synthesized attribute** $b_{\text{dummy}}$ at that node, and draw directed edges from all input parameters to $b_{\text{dummy}}$.
 
 #### Topological Sort & Evaluation Sequencing
-A **Topological Sort** of a directed acyclic graph is an ordering of its vertices $`v_1, v_2, \dots, v_m`$ such that every directed edge $`(v_i, v_j)`$ satisfies $i < j$.
-- If the dependency graph contains any directed cycle ($`v_1 \to v_2 \to \dots \to v_1`$), **no topological sort exists!** The SDD is declared mathematically ill-formed or cyclic.
+A **Topological Sort** of a directed acyclic graph is an ordering of its vertices $v_1, v_2, \dots, v_m$ such that every directed edge $(v_i, v_j)$ satisfies $i < j$.
+- If the dependency graph contains any directed cycle ($v_1 \to v_2 \to \dots \to v_1$), **no topological sort exists!** The SDD is declared mathematically ill-formed or cyclic.
 - Cycle detection is performed in linear time $O(V + E)$ using Depth-First Search (Tarjan's strongly connected components algorithm).
 
 ### 7.4 The Three Evaluation Methodologies
@@ -922,7 +933,7 @@ Examining the right half of the dependency graph above, the topological sort gen
 3. `Node 3`: Evaluate $T.\text{val} = F.\text{val} = 3$.
 4. `Node 4`: Evaluate $\mathbf{digit}.\text{lexval} = 5$ (from Scanner).
 5. `Node 5`: Evaluate $F.\text{val} = \mathbf{digit}.\text{lexval} = 5$.
-6. `Node 6`: Evaluate $`T.\text{val} = T_1.\text{val} * F.\text{val} = 3 * 5 = 15`$.
+6. `Node 6`: Evaluate $T.\text{val} = T_1.\text{val} * F.\text{val} = 3 * 5 = 15$.
 7. `Node 7`: Evaluate $E.\text{val} = T.\text{val} = 15$.
 8. `Node 8`: Evaluate $\mathbf{digit}.\text{lexval} = 4$ (from Scanner).
 9. `Node 9`: Evaluate $F.\text{val} = \mathbf{digit}.\text{lexval} = 4$.
@@ -1010,7 +1021,9 @@ Why don't compilers pass the parse tree directly to the code generator?
 1. **Bloat Elimination:** In the grammar $E \to E + T \mid T$, parsing `3` creates four chained nodes ($E \to T \to F \to \mathbf{digit}$). In an AST, all four redundant single-child nodes collapse into a single leaf node `3`.
 2. **Punctuation Discarding:** Parentheses in $(a + b)$ exist solely to guide the parser's order of derivation. Once the tree structure encodes that addition happens first, the literal parenthesis tokens are completely useless and discarded.
 3. **Common Subexpression Elimination (CSE):** In the expression:
-   $$a + a * (b - c) + (b - c) * d$$
+
+$$a + a * (b - c) + (b - c) * d$$
+
    The subexpression $(b - c)$ is computed twice, and variable $a$ is loaded twice. An AST creates duplicate nodes for both. A **DAG** identifies identical subtrees and merges them into shared pointers, saving CPU registers and memory!
 
 ### 8.3 Formal Mechanics: Node Constructors & SDD for Syntax Trees
@@ -1047,10 +1060,10 @@ How does a compiler construct a DAG instead of a tree? It uses the **Value-Numbe
 - **If not found:** It creates the new node, enters it into the hash table, and returns its pointer.
 
 #### Mathematical Audit of Node Sharing (from the AST vs. DAG Diagram):
-For the expression $`a + a * (b - c) + (b - c) * d`$:
+For the expression $a + a * (b - c) + (b - c) * d$:
 - **Standard AST Node Count:**
   - Leaves: $a, a, b, c, b, c, d$ ($7$ leaves)
-  - Operators: $`-, *, +, -, *, +`$ ($6$ operators)
+  - Operators: $-, *, +, -, *, +$ ($6$ operators)
   - **Total AST Nodes = 13 nodes**
 - **Optimized DAG Node Count:**
   - Leaves: Single shared $a$, $b$, $c$, $d$ ($4$ leaves)
@@ -1126,7 +1139,7 @@ Why evaluate attributes during LR parsing rather than building a tree?
 
 ### 9.3 Formal Mechanics: Parallel Stack Pointer Arithmetic
 An LR parser maintains:
-- `state[]`: The standard array of LR parser states ($`s_0, s_1, \dots`$).
+- `state[]`: The standard array of LR parser states ($s_0, s_1, \dots$).
 - `val[]`: A parallel array storing synthesized attribute values.
 - `top`: An integer pointer to the current top of stack.
 
@@ -1135,12 +1148,18 @@ When the parser reduces by production:
 
 $$A \to X_1 X_2 \dots X_k$$
 
-1. The right-hand side has length $k$. Therefore, the attributes for symbols $`X_1 \dots X_k`$ are located at:
-   $$\text{val}[\text{top} - k + 1], \quad \text{val}[\text{top} - k + 2], \quad \dots, \quad \text{val}[\text{top}]$$
+1. The right-hand side has length $k$. Therefore, the attributes for symbols $X_1 \dots X_k$ are located at:
+
+$$\text{val}[\text{top} - k + 1], \quad \text{val}[\text{top} - k + 2], \quad \dots, \quad \text{val}[\text{top}]$$
+
 2. The new top of stack pointer after popping $k$ items and pushing $A$ is:
-   $$\text{ntop} = \text{top} - k + 1$$
+
+$$\text{ntop} = \text{top} - k + 1$$
+
 3. The synthesized attribute $A.\text{val}$ is stored directly into:
-   $$\text{val}[\text{ntop}] = f(\text{val}[\text{top} - k + 1], \dots, \text{val}[\text{top}])$$
+
+$$\text{val}[\text{ntop}] = f(\text{val}[\text{top} - k + 1], \dots, \text{val}[\text{top}])$$
+
 4. The pointer `top` is updated to `ntop`.
 
 #### Calculator Code Implementation:
@@ -1189,7 +1208,7 @@ switch (production_number) {
 | **(12)** | `n` | `[0, 1, 6, 3]` | `[$, E, +, F]` | `[-, 15, -, 4]` | Reduce $T \to F$ ($k=1$). `val[top] = 4` |
 | **(13)** | `n` | `[0, 1, 6, 9]` | `[$, E, +, T]` | `[-, 15, -, 4]` | Reduce $E \to E + T$ ($k=3$). $\text{ntop}=\text{top}-2$. $\text{val}[\text{ntop}]=15 + 4 = 19$ |
 | **(14)** | `n` | `[0, 1]` | `[$, E]` | `[-, 19]` | Shift `n`, push state. `val = -` |
-| **(15)** | `\$` | `[0, 1, s_n]` | `[$, E, n]` | `[-, 19, -]` | Reduce $L \to E n$. **Execute `print(19)`!** |
+| **(15)** | `$` | `[0, 1, s_n]` | `[$, E, n]` | `[-, 19, -]` | Reduce $L \to E n$. **Execute `print(19)`!** |
 
 ### 9.5 Bottom-Up Evaluation of Inherited Attributes
 Evaluating inherited attributes in a bottom-up parser is challenging because an inherited attribute must be computed **before** its non-terminal is recognized!
@@ -1200,7 +1219,9 @@ Two core techniques solve this:
    - Example: In $D \to T L$, when $L$ is being reduced, $T$ is guaranteed to reside exactly one slot below $L$'s children on the stack: $\text{val}[\text{top} - k]$.
 2. **Marker Non-Terminals ($M \to \epsilon$):**
    - Insert an empty non-terminal $M$ before the symbol requiring the inherited attribute:
-     $$D \to T \; M \; L, \qquad M \to \epsilon \quad \{ M.\text{val} = \text{val}[\text{top}] \}$$
+
+$$D \to T \; M \; L, \qquad M \to \epsilon \quad \{ M.\text{val} = \text{val}[\text{top}] \}$$
+
    - When the parser reduces $M \to \epsilon$, its semantic action fires, capturing $T$'s type and pushing it onto the stack right before $L$ begins parsing!
    - *Risk:* Introducing $\epsilon$-productions can turn an SLR(1) grammar into a non-LR grammar by causing **shift/reduce or reduce/reduce conflicts**.
 
@@ -1262,9 +1283,9 @@ The type of any programming construct is formally denoted by a **Type Expression
 - **Type Constructors:** Operators applied to type expressions to build composite structures:
   1. **Arrays:** If $T$ is a type expression and $I$ is an index range (e.g. $1 \dots 10$), then $\text{array}(I, T)$ denotes the type of an array with elements of type $T$.
      - *Example:* `var A: array[1..10] of integer` $\implies \text{array}(1 \dots 10, \text{integer})$.
-  2. **Cartesian Products:** If $T_1$ and $T_2$ are type expressions, their product $`T_1 \times T_2`$ denotes the type of a pair or parameter tuple.
+  2. **Cartesian Products:** If $T_1$ and $T_2$ are type expressions, their product $T_1 \times T_2$ denotes the type of a pair or parameter tuple.
   3. **Records:** Formed from tuples of field names and field types:
-     - $`\text{record}((f_1 \times T_1) \times (f_2 \times T_2) \dots)`$
+     - $\text{record}((f_1 \times T_1) \times (f_2 \times T_2) \dots)$
   4. **Pointers:** If $T$ is a type expression, $\text{pointer}(T)$ denotes the type of a pointer to an object of type $T$.
      - *Example:* `var p: ^row` $\implies \text{pointer}(\text{row})$.
   5. **Functions:** A function mapping domain type $D$ to range type $R$ is denoted by the type expression $D \to R$.
@@ -1280,25 +1301,25 @@ A Type Checker is implemented as an SDD that evaluates the synthesized attribute
 | $E \to \mathbf{literal}$ | $E.\text{type} = \text{char}$ |
 | $E \to \mathbf{num}$ | $E.\text{type} = \text{integer}$ |
 | $E \to \mathbf{id}$ | $E.\text{type} = \text{lookup}(\mathbf{id}.\text{entry})$ |
-| $`E \to E_1 \bmod E_2`$ | $`E.\text{type} = (\text{if } E_1.\text{type} == \text{integer} \land E_2.\text{type} == \text{integer} \text{ then } \text{integer} \text{ else } \mathbf{type\_error})`$ |
-| $`E \to E_1 [ E_2 ]`$ | $`E.\text{type} = (\text{if } E_2.\text{type} == \text{integer} \land E_1.\text{type} == \text{array}(s, t) \text{ then } t \text{ else } \mathbf{type\_error})`$ |
-| $E \to E_1 \uparrow$ | $`E.\text{type} = (\text{if } E_1.\text{type} == \text{pointer}(t) \text{ then } t \text{ else } \mathbf{type\_error})`$ |
+| $E \to E_1 \bmod E_2$ | $E.\text{type} = (\text{if } E_1.\text{type} == \text{integer} \land E_2.\text{type} == \text{integer} \text{ then } \text{integer} \text{ else } \mathbf{type\_error})$ |
+| $E \to E_1 [ E_2 ]$ | $E.\text{type} = (\text{if } E_2.\text{type} == \text{integer} \land E_1.\text{type} == \text{array}(s, t) \text{ then } t \text{ else } \mathbf{type\_error})$ |
+| $E \to E_1 \uparrow$ | $E.\text{type} = (\text{if } E_1.\text{type} == \text{pointer}(t) \text{ then } t \text{ else } \mathbf{type\_error})$ |
 
 #### 2. Type Checking of Statements
 
 | Production Rule | Associated Type Checking Semantic Rules |
 |:---|:---|
 | $S \to \mathbf{id} = E$ | $S.\text{type} = (\text{if } \mathbf{id}.\text{type} == E.\text{type} \text{ then } \text{void} \text{ else } \mathbf{type\_error})$ |
-| $S \to \mathbf{if} \; E \; \mathbf{then} \; S_1$ | $`S.\text{type} = (\text{if } E.\text{type} == \text{boolean} \text{ then } S_1.\text{type} \text{ else } \mathbf{type\_error})`$ |
-| $S \to \mathbf{while} \; E \; \mathbf{do} \; S_1$ | $`S.\text{type} = (\text{if } E.\text{type} == \text{boolean} \text{ then } S_1.\text{type} \text{ else } \mathbf{type\_error})`$ |
-| $`S \to S_1 ; S_2`$ | $`S.\text{type} = (\text{if } S_1.\text{type} == \text{void} \land S_2.\text{type} == \text{void} \text{ then } \text{void} \text{ else } \mathbf{type\_error})`$ |
+| $S \to \mathbf{if} \; E \; \mathbf{then} \; S_1$ | $S.\text{type} = (\text{if } E.\text{type} == \text{boolean} \text{ then } S_1.\text{type} \text{ else } \mathbf{type\_error})$ |
+| $S \to \mathbf{while} \; E \; \mathbf{do} \; S_1$ | $S.\text{type} = (\text{if } E.\text{type} == \text{boolean} \text{ then } S_1.\text{type} \text{ else } \mathbf{type\_error})$ |
+| $S \to S_1 ; S_2$ | $S.\text{type} = (\text{if } S_1.\text{type} == \text{void} \land S_2.\text{type} == \text{void} \text{ then } \text{void} \text{ else } \mathbf{type\_error})$ |
 
 #### 3. Type Checking of Functions & Applications
 
 | Production Rule | Associated Type Checking Semantic Rules |
 |:---|:---|
-| $`T \to T_1 \to T_2`$ | $`T.\text{type} = T_1.\text{type} \to T_2.\text{type}`$ |
-| $`E \to E_1 ( E_2 )`$ | $`E.\text{type} = (\text{if } E_1.\text{type} == (s \to t) \land E_2.\text{type} == s \text{ then } t \text{ else } \mathbf{type\_error})`$ |
+| $T \to T_1 \to T_2$ | $T.\text{type} = T_1.\text{type} \to T_2.\text{type}$ |
+| $E \to E_1 ( E_2 )$ | $E.\text{type} = (\text{if } E_1.\text{type} == (s \to t) \land E_2.\text{type} == s \text{ then } t \text{ else } \mathbf{type\_error})$ |
 
 ### 10.5 Static vs. Dynamic Type Checking & Type Equivalence
 
@@ -1352,14 +1373,14 @@ Given Symbol Table:
 | **SLR Error Procedures** | $e_1$: Push state 5 (missing operand) $\cdot$ $e_2$: Discard `)` (unmatched right paren) $\cdot$ $e_3$: Push state 6 (missing `+`) $\cdot$ $e_4$: Push state 6, discard `*` (`*` instead of `+`) $\cdot$ $e_5$: Push state 11 (missing `)` before EOF). |
 | **Yacc Error Recovery** | Augment grammar with `stmt : error ';'`. When an error occurs, pops stack to state shifting `error`, skips input to `;`. |
 | **SDD vs. SDT** | **SDD:** Declarative (WHAT to compute); evaluation order derived from Dependency Graph. **SDT:** Procedural (WHEN to execute); actions `{ ... }` embedded in production. |
-| **Synthesized Attribute** | $`A.s = f(X_1.c, \dots, X_k.c)`$ where $`A \to X_1 \dots X_k`$. Information flows **bottom-up from children**. Terminals have synthesized lexvals. |
-| **Inherited Attribute** | $`X_j.i = f(A.p, X_1.c, \dots, X_{j-1}.c)`$. Information flows **top-down from parent or sideways from left siblings**. Terminals NEVER inherit. |
+| **Synthesized Attribute** | $A.s = f(X_1.c, \dots, X_k.c)$ where $A \to X_1 \dots X_k$. Information flows **bottom-up from children**. Terminals have synthesized lexvals. |
+| **Inherited Attribute** | $X_j.i = f(A.p, X_1.c, \dots, X_{j-1}.c)$. Information flows **top-down from parent or sideways from left siblings**. Terminals NEVER inherit. |
 | **S-Attributed Definition** | SDD using **only synthesized attributes**. Can be evaluated on-the-fly during bottom-up (LR) parsing without building a tree. |
 | **L-Attributed Definition** | Every inherited attribute of $X_j$ depends ONLY on parent's inherited attributes OR attributes of symbols situated **to the left of $X_j$**. |
 | **Dependency Graph Condition** | A valid evaluation order exists if and only if the dependency graph is a **Directed Acyclic Graph (DAG)**. Evaluated via Topological Sort. |
 | **AST vs. DAG Node Counts** | AST preserves full expression trees. DAG uses **Value-Numbering** (hash-consing) to share identical subtrees, eliminating common subexpressions. |
-| **LR Stack Attribute Pointers** | For production $`A \to X_1 \dots X_k`$ of length $k$: $\text{ntop} = \text{top} - k + 1$. Synthesized value stored at $\text{val}[\text{ntop}] = f(\text{val}[\text{top}-k+1], \dots, \text{val}[\text{top}])$. |
-| **Type Expression Grammar** | Basic types: $\text{boolean}, \text{char}, \text{integer}, \text{real}, \text{void}, \text{type\_error}$. Constructors: $\text{array}(I, T)$, $`T_1 \times T_2`$, $\text{pointer}(T)$, $D \to R$. |
+| **LR Stack Attribute Pointers** | For production $A \to X_1 \dots X_k$ of length $k$: $\text{ntop} = \text{top} - k + 1$. Synthesized value stored at $\text{val}[\text{ntop}] = f(\text{val}[\text{top}-k+1], \dots, \text{val}[\text{top}])$. |
+| **Type Expression Grammar** | Basic types: $\text{boolean}, \text{char}, \text{integer}, \text{real}, \text{void}, \text{type\_error}$. Constructors: $\text{array}(I, T)$, $T_1 \times T_2$, $\text{pointer}(T)$, $D \to R$. |
 | **Type Equivalence** | **Structural Equivalence:** Types are identical if internal structures match. **Name Equivalence:** Types are identical only if declared with the same name. |
 
 ---

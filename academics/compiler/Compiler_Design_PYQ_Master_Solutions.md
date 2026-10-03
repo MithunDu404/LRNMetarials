@@ -247,8 +247,7 @@ Producing assembly code instead of direct binary machine code provides three maj
 
 During lexical analysis, the compiler turns raw characters into tokens using three concepts:
 
-1. **Token:** An abstract category treated as a single building block by the parser. It is represented as a pair:
-   $$\langle \text{tokenName}, \text{attributeValue} \rangle$$
+1. **Token:** An abstract category treated as a single building block by the parser. It is represented as a pair: $\langle \text{tokenName}, \text{attributeValue} \rangle$.
 2. **Pattern:** The rule (usually a Regular Expression) that characters must follow to form a valid token.
 3. **Lexeme:** The actual sequence of characters in the source code that matches the pattern.
 
@@ -295,7 +294,7 @@ During lexical analysis, the compiler turns raw characters into tokens using thr
 ##### 2. How Finite Automata Recognize Tokens
 The compiler converts these regular expressions into a Deterministic Finite Automaton (DFA):
 1. It reads input characters one by one.
-2. It transitions between states: $`\delta(s_i, c) = s_{i+1}`$.
+2. It transitions between states: $\delta(s_i, c) = s_{i+1}$.
 3. When it reaches an accepting state and no longer matches any further characters (**Maximal Munch / Longest Match Rule**), it packages the matched lexeme into a token and returns to the start state.
 
 ```mermaid
@@ -341,6 +340,7 @@ This grammar generates expressions in **Postfix Notation** (Reverse Polish Notat
 
 ##### i. Leftmost Derivation (LMD)
 At each step, replace the leftmost $S$:
+
 $$
 \begin{aligned}
 S &\Rightarrow SS* \\\\
@@ -353,6 +353,7 @@ $$
 
 ##### ii. Rightmost Derivation (RMD)
 At each step, replace the rightmost $S$:
+
 $$
 \begin{aligned}
 S &\Rightarrow SS* \\\\
@@ -399,7 +400,7 @@ flowchart TD
     classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
 ```
 
-Reading leaves from left to right yields: $`a \cdot a \cdot + \cdot a \cdot * = aa+a*`$.
+Reading leaves from left to right yields: $a \cdot a \cdot + \cdot a \cdot * = aa+a*$.
 
 ##### iv. Ambiguity Analysis and Proof
 > [!IMPORTANT] Ambiguity Status
@@ -435,6 +436,7 @@ Reading leaves from left to right yields: $`a \cdot a \cdot + \cdot a \cdot * = 
 The rule is $A \to A(a) \mid A(ab) \mid Bc$.  
 Here, $\alpha_1 = a$, $\alpha_2 = ab$, and $\beta = Bc$.  
 Using the standard formula $A \to \beta A', \; A' \to \alpha A' \mid \epsilon$:
+
 $$
 \begin{aligned}
 A &\to Bc \, A' \\\\
@@ -446,6 +448,7 @@ $$
 The rule is $B \to B(Aa) \mid d$.  
 Here, $\alpha = Aa$ and $\beta = d$.  
 Using the standard formula $B \to \beta B', \; B' \to \alpha B' \mid \epsilon$:
+
 $$
 \begin{aligned}
 B &\to d \, B' \\\\
@@ -454,6 +457,7 @@ B' &\to Aa \, B' \mid \epsilon
 $$
 
 ##### Final Grammar Free of Left Recursion:
+
 $$
 \begin{aligned}
 A &\to Bc \, A' \\\\
@@ -477,38 +481,47 @@ $$
 - $\text{FIRST}(B') = \text{FIRST}(Aa B') \cup \{\epsilon\} = \text{FIRST}(A) \cup \{\epsilon\} = \{d, \epsilon\}$
 
 ##### 2. Compute FOLLOW Sets
-Start symbol is $`A \implies \$ \in \text{FOLLOW}(A)`$.
+Start symbol is $A \implies \mathdollar \in \text{FOLLOW}(A)$.
 - From $B' \to Aa B'$: after $A$ comes $a \implies a \in \text{FOLLOW}(A)$.  
   Thus:
-  $$\text{FOLLOW}(A) = \{\$, a\}$$
-- From $A \to Bc A'$: $`\text{FOLLOW}(A') = \text{FOLLOW}(A) = \{\$, a\}`$.
+
+$$\text{FOLLOW}(A) = \{\mathdollar, a\}$$
+
+- From $A \to Bc A'$: $\text{FOLLOW}(A') = \text{FOLLOW}(A) = \{\mathdollar, a\}$.
 - From $A \to Bc A'$: after $B$ comes $c \implies c \in \text{FOLLOW}(B)$.  
   Thus:
-  $$\text{FOLLOW}(B) = \{c\}$$
+
+$$\text{FOLLOW}(B) = \{c\}$$
+
 - From $B \to d B'$: $\text{FOLLOW}(B') = \text{FOLLOW}(B) = \{c\}$.
 
 ##### Summary Table of FIRST and FOLLOW
 
 | Non-Terminal ($X$) | $\text{FIRST}(X)$ | $\text{FOLLOW}(X)$ |
 | :---: | :---: | :---: |
-| $A$ | $`\{d\}`$ | $`\{\$, a\}`$ |
-| $A'$ | $`\{a, \epsilon\}`$ | $`\{\$, a\}`$ |
-| $B$ | $`\{d\}`$ | $\{c\}$ |
-| $B'$ | $`\{d, \epsilon\}`$ | $\{c\}$ |
+| $A$ | $\{d\}$ | $\{\mathdollar, a\}$ |
+| $A'$ | $\{a, \epsilon\}$ | $\{\mathdollar, a\}$ |
+| $B$ | $\{d\}$ | $\{c\}$ |
+| $B'$ | $\{d, \epsilon\}$ | $\{c\}$ |
 
 ##### 3. Check if the Grammar is LL(1)
 > [!CAUTION] LL(1) Conflict Proof
 > For a grammar to be LL(1), alternate choices for the same non-terminal must have disjoint FIRST sets:
+>
 > $$\text{FIRST}(\alpha) \cap \text{FIRST}(\beta) = \emptyset$$
 
 Look at the two rules for $A'$:
+
 $$A' \to a A' \quad \text{and} \quad A' \to ab A'$$
+
 - $\text{FIRST}(a A') = \{a\}$
 - $\text{FIRST}(ab A') = \{a\}$
 - $\text{FIRST}(a A') \cap \text{FIRST}(ab A') = \{a\} \neq \emptyset$.
 
 In the parsing table, entry $M[A', a]$ gets **two rules**:
+
 $$M[A', a] = \{A' \to a A', \; A' \to ab A'\}$$
+
 Because of this collision, the parser cannot decide which rule to use.  
 **Therefore, the grammar is NOT LL(1).**
 
@@ -516,14 +529,14 @@ Because of this collision, the parser cannot decide which rule to use.
 
 | Step | Stack | Remaining Input | Action Taken / Rule Applied |
 | :---: | :--- | :--- | :--- |
-| 1 | `\$ A` | `dcab \$` | Expand $A \to Bc A'$ |
-| 2 | `\$ A' c B` | `dcab \$` | Expand $B \to d B'$ |
-| 3 | `\$ A' c B' d` | `dcab \$` | Match terminal $d$ |
-| 4 | `\$ A' c B'` | `cab \$` | Expand $B' \to \epsilon$ (since $c \in \text{FOLLOW}(B')$) |
-| 5 | `\$ A' c` | `cab \$` | Match terminal $c$ |
-| 6 | `\$ A'` | `ab \$` | **CONFLICT AT $M[A', a]$:** Cannot choose between $A' \to a A'$ and $A' \to ab A'$. |
+| 1 | `$ A` | `dcab $` | Expand $A \to Bc A'$ |
+| 2 | `$ A' c B` | `dcab $` | Expand $B \to d B'$ |
+| 3 | `$ A' c B' d` | `dcab $` | Match terminal $d$ |
+| 4 | `$ A' c B'` | `cab $` | Expand $B' \to \epsilon$ (since $c \in \text{FOLLOW}(B')$) |
+| 5 | `$ A' c` | `cab $` | Match terminal $c$ |
+| 6 | `$ A'` | `ab $` | **CONFLICT AT $M[A', a]$:** Cannot choose between $A' \to a A'$ and $A' \to ab A'$. |
 
-*(If we pick $A' \to ab A'$, the stack becomes `\$ A' b a`. It matches $a$, then $b$, and finally expands $A' \to \epsilon$ to accept).*
+*(If we pick $A' \to ab A'$, the stack becomes `$ A' b a`. It matches $a$, then $b$, and finally expands $A' \to \epsilon$ to accept).*
 
 ---
 
@@ -583,12 +596,16 @@ A conflict occurs when the parser does not know what move to make next:
 1. **Shift/Reduce (S/R) Conflict:**  
    The parser cannot decide whether to shift the next input token onto the stack or reduce the symbols currently on top of the stack using a grammar rule.  
    *Classic Example (Dangling-Else):*
-   $$S \to \text{if } E \text{ then } S \mid \text{if } E \text{ then } S \text{ else } S$$
+
+$$S \to \text{if } E \text{ then } S \mid \text{if } E \text{ then } S \text{ else } S$$
+
    On encountering `else`, the parser does not know whether to shift `else` (binding to the inner `if`) or reduce the first `if` statement.
 2. **Reduce/Reduce (R/R) Conflict:**  
    The symbols on top of the stack match the right-hand sides of two different grammar rules, and the parser cannot decide which reduction to choose.  
    *Classic Example:*
-   $$A \to id \quad \text{and} \quad B \to id$$
+
+$$A \to id \quad \text{and} \quad B \to id$$
+
    When $id$ is on top of the stack, the parser cannot decide whether to reduce to $A$ or to $B$.
 
 ---
@@ -602,7 +619,9 @@ A conflict occurs when the parser does not know what move to make next:
 
 ##### 1. Definition of Handle and Handle Pruning
 - **Handle:** A substring in a sentential form that matches the right-hand side of a production rule, and replacing it with the non-terminal leads back to the start symbol via the rightmost derivation in reverse:
-  $$S \Rightarrow_{\text{rm}}^{\ast} \alpha A w \Rightarrow_{\text{rm}} \alpha \beta w$$
+
+$$S \Rightarrow_{\text{rm}}^{\ast} \alpha A w \Rightarrow_{\text{rm}} \alpha \beta w$$
+
   Here, rule $A \to \beta$ at position $\beta$ is the handle.
 - **Handle Pruning:** The process of repeatedly finding the handle in the current string and replacing ("pruning") it with its left-hand non-terminal until only the start symbol $S$ remains.
 
@@ -640,6 +659,7 @@ A conflict occurs when the parser does not know what move to make next:
 
 #### Step 1: Augment Grammar and Compute FOLLOW Sets
 Add start rule $S' \to S$:
+
 $$
 \begin{aligned}
 (0) &\; S' \to S \\\\
@@ -652,56 +672,57 @@ $$
 $$
 
 **FOLLOW Set Computation:**
-- $`S' \to S \implies \$ \in \text{FOLLOW}(S)`$.
-- From $S' \to S$ and $S \to R$: $`\text{FOLLOW}(S) = \{\$ \}`$.
-- From $S \to R$: $`\text{FOLLOW}(S) \subseteq \text{FOLLOW}(R) \implies \$ \in \text{FOLLOW}(R)`$.
+- $S' \to S \implies \mathdollar \in \text{FOLLOW}(S)$.
+- From $S' \to S$ and $S \to R$: $\text{FOLLOW}(S) = \{\mathdollar \}$.
+- From $S \to R$: $\text{FOLLOW}(S) \subseteq \text{FOLLOW}(R) \implies \mathdollar \in \text{FOLLOW}(R)$.
 - From $S \to L = R$: after $L$ comes $=$, so $= \in \text{FOLLOW}(L)$.
 - From $L \to *R$: $\text{FOLLOW}(L) \subseteq \text{FOLLOW}(R) \implies = \in \text{FOLLOW}(R)$.
 - From $R \to L$: $\text{FOLLOW}(R) \subseteq \text{FOLLOW}(L)$.
 
 Thus:
-- $`\text{FOLLOW}(S) = \{\$ \}`$
-- $`\text{FOLLOW}(L) = \{=, \$ \}`$
-- $`\mathbf{FOLLOW}(R) = \{=, \$ \}`$
+- $\text{FOLLOW}(S) = \{\mathdollar \}$
+- $\text{FOLLOW}(L) = \{=, \mathdollar \}$
+- $\mathbf{FOLLOW}(R) = \{=, \mathdollar \}$
 
 #### Step 2: Build $LR(0)$ Item Sets
-- **State $I_0 = \text{CLOSURE}(\{S' \to \cdot S\})$:**
-  $$
-  \begin{aligned}
-  S' &\to \cdot S \\\\
-  S &\to \cdot L = R \\\\
-  S &\to \cdot R \\\\
-  L &\to \cdot *R \\\\
-  L &\to \cdot id \\\\
-  R &\to \cdot L
-  \end{aligned}
-  $$
-- **Transitions from $I_0$:**
-  - $`\text{GOTO}(I_0, S) = I_1 = \{S' \to S \cdot\}`$
-  - **$`\mathbf{GOTO}(I_0, L) = I_2`$:**
-    $$
-    \begin{aligned}
-    S &\to L \cdot = R \\\\
-    R &\to L \cdot
-    \end{aligned}
-    $$
-  - $`\text{GOTO}(I_0, R) = I_3 = \{S \to R \cdot\}`$
-  - $`\text{GOTO}(I_0, *) = I_4 = \text{CLOSURE}(\{L \to * \cdot R\})`$
-  - $`\text{GOTO}(I_0, id) = I_5 = \{L \to id \cdot\}`$
+
+**State $I_0 = \text{CLOSURE}(\{S' \to \cdot S\})$:**
+
+$$
+\begin{aligned}
+S' &\to \cdot S \\\\
+S &\to \cdot L = R \\\\
+S &\to \cdot R \\\\
+L &\to \cdot *R \\\\
+L &\to \cdot id \\\\
+R &\to \cdot L
+\end{aligned}
+$$
+
+**Transitions from $I_0$:**
+- $\text{GOTO}(I_0, S) = I_1 = \{S' \to S \cdot\}$
+- **$\mathbf{GOTO}(I_0, L) = I_2 = \{S \to L \cdot = R, \; R \to L \cdot\}$**
+- $\text{GOTO}(I_0, R) = I_3 = \{S \to R \cdot\}$
+- $\text{GOTO}(I_0, *) = I_4 = \text{CLOSURE}(\{L \to * \cdot R\})$
+- $\text{GOTO}(I_0, id) = I_5 = \{L \to id \cdot\}$
 
 #### Step 3: Conflict in State $I_2$
 Look closely at State $I_2$:
+
 $$I_2 = \{S \to L \cdot = R, \quad R \to L \cdot\}$$
+
 Under SLR(1) parsing rules:
-1. **Shift Action:** Because $S \to L \cdot = R$ has a dot before $=$, the parser wants to shift on lookahead terminal `$=$`:
-   $$\text{ACTION}[2, =] = \text{Shift } 6$$
+1. **Shift Action:** Because $S \to L \cdot = R$ has a dot before $=$, the parser wants to shift on lookahead terminal `'='`: $\text{ACTION}[2, =] = \text{Shift } 6$.
 2. **Reduce Action:** Because $R \to L \cdot$ is a complete rule (Rule 5), the parser wants to reduce for all symbols in $\text{FOLLOW}(R)$.  
-   Since $`\mathbf{FOLLOW}(R) = \{=, \$ \}`$, the symbol `$=$` is in $\text{FOLLOW}(R)$:
-   $$\text{ACTION}[2, =] = \text{Reduce by Rule 5 } (R \to L)$$
+   Since $\mathbf{FOLLOW}(R) = \{=, \mathdollar \}$, the symbol `'='` is in $\text{FOLLOW}(R)$:
+
+$$\text{ACTION}[2, =] = \text{Reduce by Rule 5 } (R \to L)$$
 
 > [!CAUTION] Definitive SLR(1) Verdict
-> State $I_2$ has **both** a Shift and a Reduce on lookahead `$=$`:
+> State $I_2$ has **both** a Shift and a Reduce on lookahead `'='`:
+>
 > $$\text{ACTION}[2, =] = \{\text{Shift } 6, \; \text{Reduce } 5\}$$
+>
 > This is a fatal **Shift/Reduce Conflict**.  
 > **Therefore, the grammar is NOT SLR(1).**
 
@@ -784,13 +805,9 @@ A grammar is ambiguous if any string can produce two different parse trees. Even
    - $R$ represents an **r-value** (a value that can be read: any $l$-value can become an $r$-value via $R \to L$).
    - A statement can either be an assignment ($S \to L = R$) or a standalone expression ($S \to R$).
 2. **Every String Has Only One Derivation:**
-   - For `id = id`:
-     $$S \Rightarrow L = R \Rightarrow id = R \Rightarrow id = L \Rightarrow id = id$$
-     There is no other way to generate this string because the `=` sign can only come from $S \to L = R$.
-   - For `*id = id`:
-     $$S \Rightarrow L = R \Rightarrow *R = R \Rightarrow *L = R \Rightarrow *id = id$$
-   - For `id`:
-     $$S \Rightarrow R \Rightarrow L \Rightarrow id$$
+   - For `id = id`: $S \Rightarrow L = R \Rightarrow id = R \Rightarrow id = L \Rightarrow id = id$. There is no other way to generate this string because the `=` sign can only come from $S \to L = R$.
+   - For `*id = id`: $S \Rightarrow L = R \Rightarrow *R = R \Rightarrow *L = R \Rightarrow *id = id$.
+   - For `id`: $S \Rightarrow R \Rightarrow L \Rightarrow id$.
 3. **Conclusion:**  
    Because every valid string has exactly one parse tree, the grammar is **unambiguous**. (It is an LR(1) grammar; the SLR(1) conflict is merely a limitation of the SLR method).
 
@@ -811,7 +828,7 @@ A Recursive Descent parser is a top-down parser written using code functions:
 1. **Left Recursion Causes Infinite Loops:**  
    If a rule has left recursion ($A \to A\alpha$), the function `A()` immediately calls `A()` again before consuming any input, causing a stack overflow crash.
 2. **Backtracking Overhead:**  
-   If two choices start with the same prefix ($`A \to \alpha \beta_1 \mid \alpha \beta_2`$), picking the wrong choice forces the parser to rewind the input and undo function calls, leading to very slow exponential running time.
+   If two choices start with the same prefix ($A \to \alpha \beta_1 \mid \alpha \beta_2$), picking the wrong choice forces the parser to rewind the input and undo function calls, leading to very slow exponential running time.
 3. **Grammar Must Be Rewritten:**  
    To make it fast and deterministic ($O(N)$), the grammar must be manually transformed to eliminate all left recursion and common prefixes (left factoring).
 4. **Hard to Locate Errors:**  
@@ -900,12 +917,12 @@ flowchart LR
   - $\text{FIRST}(S) = \{a, d, e, f, g\}$
 
 ##### 2. FOLLOW Sets
-- Start symbol $`S \implies \$ \in \text{FOLLOW}(S)`$.
+- Start symbol $S \implies \mathdollar \in \text{FOLLOW}(S)$.
 - After solving mutual dependencies for $A$ and $B$:
   - $\text{FOLLOW}(A) = \{d, e, f, g\}$
   - $\text{FOLLOW}(B) = \{d, e, f, g\}$
 - For $D$:
-  - $`\text{FOLLOW}(D) = \{\$, d, e, f, g\}`$
+  - $\text{FOLLOW}(D) = \{\mathdollar, d, e, f, g\}$
 
 ---
 
@@ -922,7 +939,7 @@ flowchart LR
 
 ##### Predictive Parsing Table $M[X, Y]$
 
-| Non-Terminal | $a$ | $d$ | $e$ | $f$ | $g$ | `$` |
+| Non-Terminal | $a$ | $d$ | $e$ | $f$ | $g$ | $\mathdollar$ |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **$S$** | $S \to ABD$ | $S \to ABD$ | $S \to ABD$ | $S \to ABD$ | $S \to ABD$ | *error* |
 | **$A$** | $A \to a$ | $A \to \epsilon$ | **$A \to DB$**<br>**$A \to \epsilon$** | **$A \to DB$**<br>**$A \to \epsilon$** | $A \to \epsilon$ | *error* |
@@ -938,22 +955,22 @@ Derivation: $S \Rightarrow ABD \Rightarrow aBD \Rightarrow a\epsilon D \Rightarr
 
 | Step | Stack | Input | Action |
 | :---: | :--- | :--- | :--- |
-| 1 | `\$ S` | `a e \$` | Expand $S \to ABD$ |
-| 2 | `\$ D B A` | `a e \$` | Expand $A \to a$ |
-| 3 | `\$ D B a` | `a e \$` | Match $a$ |
-| 4 | `\$ D B` | `e \$` | Expand $B \to \epsilon$ |
-| 5 | `\$ D` | `e \$` | Expand $D \to e$ |
-| 6 | `\$ e` | `e \$` | Match $e$ |
-| 7 | `\$` | `\$` | **ACCEPT (Valid String)** |
+| 1 | `$ S` | `a e $` | Expand $S \to ABD$ |
+| 2 | `$ D B A` | `a e $` | Expand $A \to a$ |
+| 3 | `$ D B a` | `a e $` | Match $a$ |
+| 4 | `$ D B` | `e $` | Expand $B \to \epsilon$ |
+| 5 | `$ D` | `e $` | Expand $D \to e$ |
+| 6 | `$ e` | `e $` | Match $e$ |
+| 7 | `$` | `$` | **ACCEPT (Valid String)** |
 
 ##### 2. Invalid String Simulation: $w_2 = a a$
 
 | Step | Stack | Input | Action |
 | :---: | :--- | :--- | :--- |
-| 1 | `\$ S` | `a a \$` | Expand $S \to ABD$ |
-| 2 | `\$ D B A` | `a a \$` | Expand $A \to a$ |
-| 3 | `\$ D B a` | `a a \$` | Match $a$ |
-| 4 | `\$ D B` | `a \$` | **ERROR:** $M[B, a]$ is blank. Parser rejects $aa$. |
+| 1 | `$ S` | `a a $` | Expand $S \to ABD$ |
+| 2 | `$ D B A` | `a a $` | Expand $A \to a$ |
+| 3 | `$ D B a` | `a a $` | Match $a$ |
+| 4 | `$ D B` | `a $` | **ERROR:** $M[B, a]$ is blank. Parser rejects $aa$. |
 
 ---
 
@@ -967,9 +984,8 @@ Derivation: $S \Rightarrow ABD \Rightarrow aBD \Rightarrow a\epsilon D \Rightarr
 ![Shift-Reduce Parser Architecture](images/fig03_shift_reduce_parser_architecture.png)
 
 ##### Operational Components
-1. **Input Buffer:** Holds the input string followed by the endmarker `\$`.
-2. **Pushdown Stack:** Stores grammar symbols and parser states:
-   $$S_0 \, X_1 \, S_1 \, X_2 \, S_2 \dots X_m \, S_m$$
+1. **Input Buffer:** Holds the input string followed by the endmarker $\mathdollar$.
+2. **Pushdown Stack:** Stores grammar symbols and parser states: $S_0 \, X_1 \, S_1 \, X_2 \, S_2 \dots X_m \, S_m$.
 3. **Parsing Table:** Contains two tables:
    - $\text{ACTION}[S_m, a]$: Tells the parser whether to Shift, Reduce, Accept, or Error.
    - $\text{GOTO}[S_m, A]$: Tells which state to transition to after a non-terminal reduction.
@@ -998,45 +1014,49 @@ Derivation: $S \Rightarrow ABD \Rightarrow aBD \Rightarrow a\epsilon D \Rightarr
 **Direct Reference:** [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#4.3 Formal Mechanics: The Canonical SLR Table with Error Routines|Note 2 §4.3]]
 
 ##### 1. Augmented Grammar with Lookaheads
+
 $$
 \begin{aligned}
-(0) &\; S' \to S, \; \$ \\\\
-(1) &\; S \to CC, \; \$ \\\\
-(2) &\; C \to cC, \; c/d/\$ \\\\
-(3) &\; C \to d, \; c/d/\$ \\\\
-(4) &\; C \to \epsilon, \; c/d/\$
+(0) &\; S' \to S, \; \mathdollar \\\\
+(1) &\; S \to CC, \; \mathdollar \\\\
+(2) &\; C \to cC, \; c/d/\mathdollar \\\\
+(3) &\; C \to d, \; c/d/\mathdollar \\\\
+(4) &\; C \to \epsilon, \; c/d/\mathdollar
 \end{aligned}
 $$
 
 ##### 2. Canonical Collection of $LR(1)$ Items
-- **State $`I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \$ ]\})`$:**
-  $$
-  \begin{aligned}
-  S' &\to \cdot S, \; \$ \\\\
-  S &\to \cdot CC, \; \$ \\\\
-  C &\to \cdot cC, \; c/d/\$ \quad (\text{since } \text{FIRST}(C\$) = \{c, d, \$\}) \\\\
-  C &\to \cdot d, \; c/d/\$ \\\\
-  C &\to \cdot, \; c/d/\$
-  \end{aligned}
-  $$
-- **Transitions from $I_0$:**
-  - $`\text{GOTO}(I_0, S) = I_1 = \{[S' \to S \cdot, \$]\}`$ $\implies$ ACCEPT on `$`
-  - $`\text{GOTO}(I_0, C) = I_2 = \{[S \to C \cdot C, \$], [C \to \cdot cC, \$], [C \to \cdot d, \$], [C \to \cdot, \$]\}`$
-  - $`\text{GOTO}(I_0, c) = I_3 = \{[C \to c \cdot C, c/d/\$], [C \to \cdot cC, c/d/\$], [C \to \cdot d, c/d/\$], [C \to \cdot, c/d/\$]\}`$
-  - $`\text{GOTO}(I_0, d) = I_4 = \{[C \to d \cdot, c/d/\$]\}`$
 
-- **Transitions from $I_2$:**
-  - $`\text{GOTO}(I_2, C) = I_5 = \{[S \to CC \cdot, \$]\}`$
-  - $`\text{GOTO}(I_2, c) = I_6 = \{[C \to c \cdot C, \$], [C \to \cdot cC, \$], [C \to \cdot d, \$], [C \to \cdot, \$]\}`$
-  - $`\text{GOTO}(I_2, d) = I_7 = \{[C \to d \cdot, \$]\}`$
+**State $I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \mathdollar]\})$:**
 
-- **Transitions from $I_3$ & $I_6$:**
-  - $`\text{GOTO}(I_3, C) = I_8 = \{[C \to cC \cdot, c/d/\$]\}`$
-  - $`\text{GOTO}(I_6, C) = I_9 = \{[C \to cC \cdot, \$]\}`$
+$$
+\begin{aligned}
+S' &\to \cdot S, \; \mathdollar \\\\
+S &\to \cdot CC, \; \mathdollar \\\\
+C &\to \cdot cC, \; c/d/\mathdollar \quad (\text{since } \text{FIRST}(C\mathdollar) = \{c, d, \mathdollar\}) \\\\
+C &\to \cdot d, \; c/d/\mathdollar \\\\
+C &\to \cdot, \; c/d/\mathdollar
+\end{aligned}
+$$
+
+**Transitions from $I_0$:**
+- $\text{GOTO}(I_0, S) = I_1 = \{[S' \to S \cdot, \mathdollar]\} \implies \text{ACCEPT on } \mathdollar$
+- $\text{GOTO}(I_0, C) = I_2 = \{[S \to C \cdot C, \mathdollar], [C \to \cdot cC, \mathdollar], [C \to \cdot d, \mathdollar], [C \to \cdot, \mathdollar]\}$
+- $\text{GOTO}(I_0, c) = I_3 = \{[C \to c \cdot C, c/d/\mathdollar], [C \to \cdot cC, c/d/\mathdollar], [C \to \cdot d, c/d/\mathdollar], [C \to \cdot, c/d/\mathdollar]\}$
+- $\text{GOTO}(I_0, d) = I_4 = \{[C \to d \cdot, c/d/\mathdollar]\}$
+
+**Transitions from $I_2$:**
+- $\text{GOTO}(I_2, C) = I_5 = \{[S \to CC \cdot, \mathdollar]\}$
+- $\text{GOTO}(I_2, c) = I_6 = \{[C \to c \cdot C, \mathdollar], [C \to \cdot cC, \mathdollar], [C \to \cdot d, \mathdollar], [C \to \cdot, \mathdollar]\}$
+- $\text{GOTO}(I_2, d) = I_7 = \{[C \to d \cdot, \mathdollar]\}$
+
+**Transitions from $I_3$ & $I_6$:**
+- $\text{GOTO}(I_3, C) = I_8 = \{[C \to cC \cdot, c/d/\mathdollar]\}$
+- $\text{GOTO}(I_6, C) = I_9 = \{[C \to cC \cdot, \mathdollar]\}$
 
 ##### 3. The Complete CLR(1) Parsing Table
 
-| State | ACTION: $c$ | ACTION: $d$ | ACTION: `$` | GOTO: $S$ | GOTO: $C$ |
+| State | ACTION: $c$ | ACTION: $d$ | ACTION: $\mathdollar$ | GOTO: $S$ | GOTO: $C$ |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | **0** | $s_3$ / $r_4$ | $s_4$ / $r_4$ | $r_4$ | 1 | 2 |
 | **1** | | | **acc** | | |
@@ -1107,9 +1127,7 @@ flowchart LR
     classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
 ```
 
-1. **Hash Function:** Converts a variable name string $`s = c_0 c_1 \dots c_{k-1}`$ into a bucket index:
-   $$h(s) = \left( \sum_{i=0}^{k-1} c_i \cdot p^i \right) \pmod M$$
-   where $p$ is a prime number (like 31) and $M$ is the size of the table.
+1. **Hash Function:** Converts a variable name string $s = c_0 c_1 \dots c_{k-1}$ into a bucket index $h(s) = \left( \sum_{i=0}^{k-1} c_i \cdot p^i \right) \pmod M$, where $p$ is a prime number (like 31) and $M$ is the size of the table.
 2. **Handling Collisions:** Multiple identifiers that produce the same hash index are linked together in a list (**Separate Chaining**).
 3. **Handling Scopes:** A **Stack of Hash Tables** is used. Entering a function pushes a new local hash table; leaving the function pops it off.
 
@@ -1125,53 +1143,69 @@ A type checker makes sure operations are performed on compatible data types. It 
 
 #### 1. Checking Expressions
 Computes the resulting type of an expression:
-- **Identifier Lookup:**
-  $$E \to id \quad \implies \quad E.type = \text{lookup}(id)$$
-- **Constants:**
-  $$E \to \text{intConst} \implies E.type = \mathbf{integer}, \quad E \to \text{floatConst} \implies E.type = \mathbf{real}$$
-- **Arithmetic ($+$):**
-  $$
-  E \to E_1 + E_2 \quad \implies \quad E.type = \begin{cases} 
-  \mathbf{integer} & \text{if } E_1.type = \mathbf{integer} \land E_2.type = \mathbf{integer} \\\\
-  \mathbf{real} & \text{if } E_1.type = \mathbf{real} \land E_2.type = \mathbf{real} \\\\
-  \mathbf{typeError} & \text{otherwise}
-  \end{cases}
-  $$
-- **Comparison ($<$):**
-  $$
-  E \to E_1 < E_2 \quad \implies \quad E.type = \begin{cases}
-  \mathbf{boolean} & \text{if both are numeric} \\\\
-  \mathbf{typeError} & \text{otherwise}
-  \end{cases}
-  $$
+
+**Identifier Lookup:**
+
+$$E \to id \quad \implies \quad E.type = \text{lookup}(id)$$
+
+**Constants:**
+
+$$E \to \text{intConst} \implies E.type = \mathbf{integer}, \quad E \to \text{floatConst} \implies E.type = \mathbf{real}$$
+
+**Arithmetic ($+$):**
+
+$$
+E \to E_1 + E_2 \quad \implies \quad E.type = \begin{cases} 
+\mathbf{integer} & \text{if } E_1.type = \mathbf{integer} \land E_2.type = \mathbf{integer} \\\\
+\mathbf{real} & \text{if } E_1.type = \mathbf{real} \land E_2.type = \mathbf{real} \\\\
+\mathbf{typeError} & \text{otherwise}
+\end{cases}
+$$
+
+**Comparison ($<$):**
+
+$$
+E \to E_1 < E_2 \quad \implies \quad E.type = \begin{cases}
+\mathbf{boolean} & \text{if both are numeric} \\\\
+\mathbf{typeError} & \text{otherwise}
+\end{cases}
+$$
 
 #### 2. Checking Statements
 Statements do not produce values; they return $\mathbf{void}$ if correct, or $\mathbf{typeError}$ if invalid:
-- **Assignment:**
-  $$
-  S \to id = E; \quad \implies \quad S.type = \begin{cases}
-  \mathbf{void} & \text{if } \text{lookup}(id) = E.type \\\\
-  \mathbf{typeError} & \text{otherwise}
-  \end{cases}
-  $$
-- **If Statement:**
-  $$
-  S \to \text{if } (E) \; S_1 \quad \implies \quad S.type = \begin{cases}
-  \mathbf{void} & \text{if } E.type = \mathbf{boolean} \land S_1.type = \mathbf{void} \\\\
-  \mathbf{typeError} & \text{otherwise}
-  \end{cases}
-  $$
+
+**Assignment:**
+
+$$
+S \to id = E; \quad \implies \quad S.type = \begin{cases}
+\mathbf{void} & \text{if } \text{lookup}(id) = E.type \\\\
+\mathbf{typeError} & \text{otherwise}
+\end{cases}
+$$
+
+**If Statement:**
+
+$$
+S \to \text{if } (E) \; S_1 \quad \implies \quad S.type = \begin{cases}
+\mathbf{void} & \text{if } E.type = \mathbf{boolean} \land S_1.type = \mathbf{void} \\\\
+\mathbf{typeError} & \text{otherwise}
+\end{cases}
+$$
 
 #### 3. Checking Functions & Function Calls
-- **Function Definition:**
-  $$F \to \text{id}(x : T_1) : T_2 \; \{ S \} \quad \implies \quad F.type = (T_1 \to T_2) \quad \text{if } S.type = \mathbf{void}$$
-- **Function Call:**
-  $$
-  E \to E_1(E_2) \quad \implies \quad E.type = \begin{cases}
-  t & \text{if } E_1.type = (s \to t) \land E_2.type = s \\\\
-  \mathbf{typeError} & \text{otherwise}
-  \end{cases}
-  $$
+
+**Function Definition:**
+
+$$F \to \text{id}(x : T_1) : T_2 \; \{ S \} \quad \implies \quad F.type = (T_1 \to T_2) \quad \text{if } S.type = \mathbf{void}$$
+
+**Function Call:**
+
+$$
+E \to E_1(E_2) \quad \implies \quad E.type = \begin{cases}
+t & \text{if } E_1.type = (s \to t) \land E_2.type = s \\\\
+\mathbf{typeError} & \text{otherwise}
+\end{cases}
+$$
 
 ---
 
@@ -1259,7 +1293,7 @@ To recover without crashing or getting stuck in an infinite loop:
    - If the current token $a \in \text{SYNC}(A)$: The parser **pops $A$ from the stack**, prints a diagnostic message, and continues parsing.
 
 ##### 2. Example
-Consider expression grammar $E \to T E'$ with $`\text{FOLLOW}(E) = \{\$, )\}`$.  
+Consider expression grammar $E \to T E'$ with $\text{FOLLOW}(E) = \{\mathdollar, )\}$.  
 If an invalid token `)` appears unexpectedly when $E$ is on top of the stack:
 - Since `)` $\in \text{SYNC}(E)$, the parser pops $E$, reports "Missing expression before closing parenthesis", and continues with the rest of the code.
 
@@ -1284,20 +1318,18 @@ If an invalid token `)` appears unexpectedly when $E$ is on top of the stack:
 
 Use the standard formula $X \to X\alpha \mid \beta \implies X \to \beta X', \; X' \to \alpha X' \mid \epsilon$:
 
-1. **For $E \to E + T \mid T$:**
-   $$\alpha = + T, \quad \beta = T$$
-   $$E \to T E'$$
-   $$E' \to + T E' \mid \epsilon$$
-2. **For $T \to TF \mid F$:**
-   $$\alpha = F, \quad \beta = F$$
-   $$T \to F T'$$
-   $$T' \to F T' \mid \epsilon$$
-3. **For $F \to F* \mid a \mid b$:**
-   $$\alpha = *, \quad \beta_1 = a, \beta_2 = b$$
-   $$F \to a F' \mid b F'$$
-   $$F' \to * F' \mid \epsilon$$
+1. **For $E \to E + T \mid T$:**  
+   Here $\alpha = + T$ and $\beta = T$.  
+   $E \to T E'$ and $E' \to + T E' \mid \epsilon$.
+2. **For $T \to TF \mid F$:**  
+   Here $\alpha = F$ and $\beta = F$.  
+   $T \to F T'$ and $T' \to F T' \mid \epsilon$.
+3. **For $F \to F* \mid a \mid b$:**  
+   Here $\alpha = *$ and $\beta_1 = a, \beta_2 = b$.  
+   $F \to a F' \mid b F'$ and $F' \to * F' \mid \epsilon$.
 
 ##### Final Non-Left-Recursive Grammar:
+
 $$
 \begin{aligned}
 E &\to T E' \\\\
@@ -1325,25 +1357,25 @@ $$
 - $\text{FIRST}(E) = \text{FIRST}(T) = \{a, b\}$
 
 ##### 2. FOLLOW Sets
-- Start symbol $`E \implies \$ \in \text{FOLLOW}(E)`$.
-- From $E \to T E'$: $`\text{FOLLOW}(E') = \text{FOLLOW}(E) = \{\$ \}`$.
+- Start symbol $E \implies \mathdollar \in \text{FOLLOW}(E)$.
+- From $E \to T E'$: $\text{FOLLOW}(E') = \text{FOLLOW}(E) = \{\mathdollar \}$.
 - From $E \to T E'$ and $E' \to + T E'$:  
-  $`\text{FOLLOW}(T) = \text{FIRST}(E') \cup \text{FOLLOW}(E) = \{+, \$ \}`$.
-- From $T \to F T'$: $`\text{FOLLOW}(T') = \text{FOLLOW}(T) = \{+, \$ \}`$.
+  $\text{FOLLOW}(T) = \text{FIRST}(E') \cup \text{FOLLOW}(E) = \{+, \mathdollar \}$.
+- From $T \to F T'$: $\text{FOLLOW}(T') = \text{FOLLOW}(T) = \{+, \mathdollar \}$.
 - From $T \to F T'$ and $T' \to F T'$:  
-  $`\text{FOLLOW}(F) = (\text{FIRST}(T') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T') = \{a, b, +, \$ \}`$.
-- From $F \to a F' \mid b F'$: $`\text{FOLLOW}(F') = \text{FOLLOW}(F) = \{a, b, +, \$ \}`$.
+  $\text{FOLLOW}(F) = (\text{FIRST}(T') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T') = \{a, b, +, \mathdollar \}$.
+- From $F \to a F' \mid b F'$: $\text{FOLLOW}(F') = \text{FOLLOW}(F) = \{a, b, +, \mathdollar \}$.
 
 ##### FIRST & FOLLOW Summary Table
 
 | Non-Terminal | FIRST Set | FOLLOW Set |
 | :---: | :---: | :---: |
-| **$E$** | $`\{a, b\}`$ | $`\{\$ \}`$ |
-| **$E'$** | $`\{+, \epsilon\}`$ | $`\{\$ \}`$ |
-| **$T$** | $`\{a, b\}`$ | $`\{+, \$ \}`$ |
-| **$T'$** | $`\{a, b, \epsilon\}`$ | $`\{+, \$ \}`$ |
-| **$F$** | $`\{a, b\}`$ | $`\{a, b, +, \$ \}`$ |
-| **$F'$** | $`\{*, \epsilon\}`$ | $`\{a, b, +, \$ \}`$ |
+| **$E$** | $\{a, b\}$ | $\{\mathdollar \}$ |
+| **$E'$** | $\{+, \epsilon\}$ | $\{\mathdollar \}$ |
+| **$T$** | $\{a, b\}$ | $\{+, \mathdollar \}$ |
+| **$T'$** | $\{a, b, \epsilon\}$ | $\{+, \mathdollar \}$ |
+| **$F$** | $\{a, b\}$ | $\{a, b, +, \mathdollar \}$ |
+| **$F'$** | $\{*, \epsilon\}$ | $\{a, b, +, \mathdollar \}$ |
 
 ##### 3. LL(1) Table Check
 > [!TIP] LL(1) Grammatical Status
@@ -1353,7 +1385,7 @@ $$
 
 ##### LL(1) Parsing Table $M[X, Y]$
 
-| Non-Terminal | $a$ | $b$ | $+$ | $*$ | `$` |
+| Non-Terminal | $a$ | $b$ | $+$ | $*$ | $\mathdollar$ |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | **$E$** | $E \to T E'$ | $E \to T E'$ | | | |
 | **$E'$** | | | $E' \to + T E'$ | | $E' \to \epsilon$ |
@@ -1362,32 +1394,32 @@ $$
 | **$F$** | $F \to a F'$ | $F \to b F'$ | | | |
 | **$F'$** | $F' \to \epsilon$ | $F' \to \epsilon$ | $F' \to \epsilon$ | $F' \to * F'$ | $F' \to \epsilon$ |
 
-##### 4. Parsing Trace for Input `a + a + a $`
+##### 4. Parsing Trace for Input $a + a + a \mathdollar$
 
 | Step | Stack | Remaining Input | Action / Rule Applied |
 | :---: | :--- | :--- | :--- |
-| 1 | `\$ E` | `a + a + a \$` | $E \to T E'$ |
-| 2 | `\$ E' T` | `a + a + a \$` | $T \to F T'$ |
-| 3 | `\$ E' T' F` | `a + a + a \$` | $F \to a F'$ |
-| 4 | `\$ E' T' F' a` | `a + a + a \$` | Match $a$ |
-| 5 | `\$ E' T' F'` | `+ a + a \$` | $F' \to \epsilon$ |
-| 6 | `\$ E' T'` | `+ a + a \$` | $T' \to \epsilon$ |
-| 7 | `\$ E'` | `+ a + a \$` | $E' \to + T E'$ |
-| 8 | `\$ E' T +` | `+ a + a \$` | Match $+$ |
-| 9 | `\$ E' T` | `a + a \$` | $T \to F T'$ |
-| 10 | `\$ E' T' F` | `a + a \$` | $F \to a F'$ |
-| 11 | `\$ E' T' F' a` | `a + a \$` | Match $a$ |
-| 12 | `\$ E' T' F'` | `+ a \$` | $F' \to \epsilon$ |
-| 13 | `\$ E' T'` | `+ a \$` | $T' \to \epsilon$ |
-| 14 | `\$ E'` | `+ a \$` | $E' \to + T E'$ |
-| 15 | `\$ E' T +` | `+ a \$` | Match $+$ |
-| 16 | `\$ E' T` | `a \$` | $T \to F T'$ |
-| 17 | `\$ E' T' F` | `a \$` | $F \to a F'$ |
-| 18 | `\$ E' T' F' a` | `a \$` | Match $a$ |
-| 19 | `\$ E' T' F'` | `\$` | $F' \to \epsilon$ |
-| 20 | `\$ E' T'` | `\$` | $T' \to \epsilon$ |
-| 21 | `\$ E'` | `\$` | $E' \to \epsilon$ |
-| 22 | `\$` | `\$` | **ACCEPT (String is Valid)** |
+| 1 | $\mathdollar E$ | $a + a + a \mathdollar$ | $E \to T E'$ |
+| 2 | $\mathdollar E' T$ | $a + a + a \mathdollar$ | $T \to F T'$ |
+| 3 | $\mathdollar E' T' F$ | $a + a + a \mathdollar$ | $F \to a F'$ |
+| 4 | $\mathdollar E' T' F' a$ | $a + a + a \mathdollar$ | Match $a$ |
+| 5 | $\mathdollar E' T' F'$ | $+ a + a \mathdollar$ | $F' \to \epsilon$ |
+| 6 | $\mathdollar E' T'$ | $+ a + a \mathdollar$ | $T' \to \epsilon$ |
+| 7 | $\mathdollar E'$ | $+ a + a \mathdollar$ | $E' \to + T E'$ |
+| 8 | $\mathdollar E' T +$ | $+ a + a \mathdollar$ | Match $+$ |
+| 9 | $\mathdollar E' T$ | $a + a \mathdollar$ | $T \to F T'$ |
+| 10 | $\mathdollar E' T' F$ | $a + a \mathdollar$ | $F \to a F'$ |
+| 11 | $\mathdollar E' T' F' a$ | $a + a \mathdollar$ | Match $a$ |
+| 12 | $\mathdollar E' T' F'$ | $+ a \mathdollar$ | $F' \to \epsilon$ |
+| 13 | $\mathdollar E' T'$ | $+ a \mathdollar$ | $T' \to \epsilon$ |
+| 14 | $\mathdollar E'$ | $+ a \mathdollar$ | $E' \to + T E'$ |
+| 15 | $\mathdollar E' T +$ | $+ a \mathdollar$ | Match $+$ |
+| 16 | $\mathdollar E' T$ | $a \mathdollar$ | $T \to F T'$ |
+| 17 | $\mathdollar E' T' F$ | $a \mathdollar$ | $F \to a F'$ |
+| 18 | $\mathdollar E' T' F' a$ | $a \mathdollar$ | Match $a$ |
+| 19 | $\mathdollar E' T' F'$ | $\mathdollar$ | $F' \to \epsilon$ |
+| 20 | $\mathdollar E' T'$ | $\mathdollar$ | $T' \to \epsilon$ |
+| 21 | $\mathdollar E'$ | $\mathdollar$ | $E' \to \epsilon$ |
+| 22 | $\mathdollar$ | $\mathdollar$ | **ACCEPT (String is Valid)** |
 
 ---
 
@@ -1420,24 +1452,25 @@ An **LALR(1)** (Lookahead LR) parser is created from a CLR(1) parser by **mergin
 
 ##### 2. LALR(1) Construction Trace
 Augmented grammar:
+
 $$
 \begin{aligned}
-(0) &\quad S' \to S, &&[\$] \\\\
-(1) &\quad S \to CC, &&[\$] \\\\
-(2) &\quad C \to cC, &&[c/d/\$] \\\\
-(3) &\quad C \to c, &&[c/d/\$] \\\\
-(4) &\quad C \to d, &&[c/d/\$]
+(0) &\quad S' \to S, &&[\mathdollar] \\\\
+(1) &\quad S \to CC, &&[\mathdollar] \\\\
+(2) &\quad C \to cC, &&[c/d/\mathdollar] \\\\
+(3) &\quad C \to c, &&[c/d/\mathdollar] \\\\
+(4) &\quad C \to d, &&[c/d/\mathdollar]
 \end{aligned}
 $$
 
 When we build the full CLR(1) states, several pairs of states have identical core items:
-- Merging state 3 and state 6 gives combined state $I_{36}$ with lookahead $`\{c, d, \$ \}`$.
-- Merging state 4 and state 7 gives combined state $I_{47}$ with lookahead $`\{c, d, \$ \}`$.
-- Merging state 8 and state 9 gives combined state $I_{89}$ with lookahead $`\{c, d, \$ \}`$.
+- Merging state 3 and state 6 gives combined state $I_{36}$ with lookahead $\{c, d, \mathdollar \}$.
+- Merging state 4 and state 7 gives combined state $I_{47}$ with lookahead $\{c, d, \mathdollar \}$.
+- Merging state 8 and state 9 gives combined state $I_{89}$ with lookahead $\{c, d, \mathdollar \}$.
 
 ##### LALR(1) Parsing Table
 
-| State | $c$ | $d$ | `$` | $S$ | $C$ |
+| State | $c$ | $d$ | $\mathdollar$ | $S$ | $C$ |
 | :---: | :---: | :---: | :---: | :---: | :---: |
 | **0** | $s_{36}$ | $s_{47}$ | | 1 | 2 |
 | **1** | | | **acc** | | |
@@ -1495,7 +1528,9 @@ We track the parity of $(a, b)$:
 - $q_3 = (\text{odd}, \text{odd})$.
 
 Eliminating states from this 4-state DFA gives the clean regular expression:
+
 $$\mathbf{r} = \left( aa \mid bb \mid (ab \mid ba)(aa \mid bb)^{\ast}(ab \mid ba) \right)^{\ast}$$
+
 
 ##### 3. Intuitive Explanation
 - $aa$ adds two $a$'s (keeps both even).
@@ -1586,14 +1621,17 @@ Lexical analysis is the first phase of a compiler that converts raw source chara
 **Direct Reference:** [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#2.3 Formal Mechanics: Top-Down vs. Bottom-Up Scanners|Note 2 §2.3]]
 
 ##### General Algorithm to Eliminate Left Recursion
-1. Arrange all non-terminals in order: $`A_1, A_2, \dots, A_n`$.
+1. Arrange all non-terminals in order: $A_1, A_2, \dots, A_n$.
 2. For each $i$ from 1 to $n$:
-   - Replace any production $`A_i \to A_j \gamma`$ (where $j < i$) with the expansions of $A_j$.
+   - Replace any production $A_i \to A_j \gamma$ (where $j < i$) with the expansions of $A_j$.
    - Eliminate immediate left recursion:
-     $$A_i \to A_i \alpha_1 \mid \dots \mid A_i \alpha_m \mid \beta_1 \mid \dots \mid \beta_k$$
+
+$$A_i \to A_i \alpha_1 \mid \dots \mid A_i \alpha_m \mid \beta_1 \mid \dots \mid \beta_k$$
+
      is rewritten as:
-     $$A_i \to \beta_1 A_i' \mid \dots \mid \beta_k A_i'$$
-     $$A_i' \to \alpha_1 A_i' \mid \dots \mid \alpha_m A_i' \mid \epsilon$$
+
+$$\begin{aligned} A_i &\to \beta_1 A_i' \mid \dots \mid \beta_k A_i' \\ A_i' &\to \alpha_1 A_i' \mid \dots \mid \alpha_m A_i' \mid \epsilon \end{aligned}$$
+
 
 *(For the step-by-step elimination on this grammar, refer to [2024 Mid Q3(a)](#question-3-canonical-expression-left-recursion-ll1-parsing-2-6-8-marks)).*
 
@@ -1604,32 +1642,32 @@ Lexical analysis is the first phase of a compiler that converts raw source chara
 
 *(FIRST, FOLLOW, and LL(1) table are identical to [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion-ll1-parsing-2-6-8-marks)).*
 
-##### Complete Parsing Trace for `a + b + a $`
+##### Complete Parsing Trace for $a + b + a \mathdollar$
 
 | Step | Stack | Remaining Input | Action / Rule Applied |
 | :---: | :--- | :--- | :--- |
-| 1 | `\$ E` | `a + b + a \$` | $E \to T E'$ |
-| 2 | `\$ E' T` | `a + b + a \$` | $T \to F T'$ |
-| 3 | `\$ E' T' F` | `a + b + a \$` | $F \to a F'$ |
-| 4 | `\$ E' T' F' a` | `a + b + a \$` | Match $a$ |
-| 5 | `\$ E' T' F'` | `+ b + a \$` | $F' \to \epsilon$ |
-| 6 | `\$ E' T'` | `+ b + a \$` | $T' \to \epsilon$ |
-| 7 | `\$ E'` | `+ b + a \$` | $E' \to + T E'$ |
-| 8 | `\$ E' T +` | `+ b + a \$` | Match $+$ |
-| 9 | `\$ E' T` | `b + a \$` | $T \to F T'$ |
-| 10 | `\$ E' T' F` | `b + a \$` | $F \to b F'$ |
-| 11 | `\$ E' T' F' b` | `b + a \$` | Match $b$ |
-| 12 | `\$ E' T' F'` | `+ a \$` | $F' \to \epsilon$ |
-| 13 | `\$ E' T'` | `+ a \$` | $T' \to \epsilon$ |
-| 14 | `\$ E'` | `+ a \$` | $E' \to + T E'$ |
-| 15 | `\$ E' T +` | `+ a \$` | Match $+$ |
-| 16 | `\$ E' T` | `a \$` | $T \to F T'$ |
-| 17 | `\$ E' T' F` | `a \$` | $F \to a F'$ |
-| 18 | `\$ E' T' F' a` | `a \$` | Match $a$ |
-| 19 | `\$ E' T' F'` | `\$` | $F' \to \epsilon$ |
-| 20 | `\$ E' T'` | `\$` | $T' \to \epsilon$ |
-| 21 | `\$ E'` | `\$` | $E' \to \epsilon$ |
-| 22 | `\$` | `\$` | **ACCEPT (Successfully Parsed)** |
+| 1 | $\mathdollar E$ | $a + b + a \mathdollar$ | $E \to T E'$ |
+| 2 | $\mathdollar E' T$ | $a + b + a \mathdollar$ | $T \to F T'$ |
+| 3 | $\mathdollar E' T' F$ | $a + b + a \mathdollar$ | $F \to a F'$ |
+| 4 | $\mathdollar E' T' F' a$ | $a + b + a \mathdollar$ | Match $a$ |
+| 5 | $\mathdollar E' T' F'$ | $+ b + a \mathdollar$ | $F' \to \epsilon$ |
+| 6 | $\mathdollar E' T'$ | $+ b + a \mathdollar$ | $T' \to \epsilon$ |
+| 7 | $\mathdollar E'$ | $+ b + a \mathdollar$ | $E' \to + T E'$ |
+| 8 | $\mathdollar E' T +$ | $+ b + a \mathdollar$ | Match $+$ |
+| 9 | $\mathdollar E' T$ | $b + a \mathdollar$ | $T \to F T'$ |
+| 10 | $\mathdollar E' T' F$ | $b + a \mathdollar$ | $F \to b F'$ |
+| 11 | $\mathdollar E' T' F' b$ | $b + a \mathdollar$ | Match $b$ |
+| 12 | $\mathdollar E' T' F'$ | $+ a \mathdollar$ | $F' \to \epsilon$ |
+| 13 | $\mathdollar E' T'$ | $+ a \mathdollar$ | $T' \to \epsilon$ |
+| 14 | $\mathdollar E'$ | $+ a \mathdollar$ | $E' \to + T E'$ |
+| 15 | $\mathdollar E' T +$ | $+ a \mathdollar$ | Match $+$ |
+| 16 | $\mathdollar E' T$ | $a \mathdollar$ | $T \to F T'$ |
+| 17 | $\mathdollar E' T' F$ | $a \mathdollar$ | $F \to a F'$ |
+| 18 | $\mathdollar E' T' F' a$ | $a \mathdollar$ | Match $a$ |
+| 19 | $\mathdollar E' T' F'$ | $\mathdollar$ | $F' \to \epsilon$ |
+| 20 | $\mathdollar E' T'$ | $\mathdollar$ | $T' \to \epsilon$ |
+| 21 | $\mathdollar E'$ | $\mathdollar$ | $E' \to \epsilon$ |
+| 22 | $\mathdollar$ | $\mathdollar$ | **ACCEPT (Successfully Parsed)** |
 
 ---
 
@@ -1714,11 +1752,11 @@ In Syntax-Directed Translation (SDT), semantic rules compute attributes for node
 
 | Grammar Production | Semantic Rules |
 | :--- | :--- |
-| $`S \to \text{if } (B) \; S_1 \; \text{else } S_2`$ | $B.\text{true} = \text{newlabel}()$ <br> $B.\text{false} = \text{newlabel}()$ <br> $S.\text{next} = \text{newlabel}()$ <br> $S_1.\text{next} = S.\text{next}$ <br> $S_2.\text{next} = S.\text{next}$ <br> $`S.\text{code} = B.\text{code} \parallel \text{gen}(B.\text{true} \text{ ':'}) \parallel S_1.\text{code} \parallel \text{gen}(\text{'goto '} S.\text{next}) \parallel \text{gen}(B.\text{false} \text{ ':'}) \parallel S_2.\text{code} \parallel \text{gen}(S.\text{next} \text{ ':'})`$ |
-| $`B \to E_1 > E_2`$ | $`B.\text{code} = \text{gen}(\text{'if '} E_1.\text{addr} \text{ '>' } E_2.\text{addr} \text{ ' goto '} B.\text{true}) \parallel \text{gen}(\text{'goto '} B.\text{false})`$ |
+| $S \to \text{if } (B) \; S_1 \; \text{else } S_2$ | $B.\text{true} = \text{newlabel}()$ <br> $B.\text{false} = \text{newlabel}()$ <br> $S.\text{next} = \text{newlabel}()$ <br> $S_1.\text{next} = S.\text{next}$ <br> $S_2.\text{next} = S.\text{next}$ <br> $S.\text{code} = B.\text{code} \parallel \text{gen}(B.\text{true} \text{ ':'}) \parallel S_1.\text{code} \parallel \text{gen}(\text{'goto '} S.\text{next}) \parallel \text{gen}(B.\text{false} \text{ ':'}) \parallel S_2.\text{code} \parallel \text{gen}(S.\text{next} \text{ ':'})$ |
+| $B \to E_1 > E_2$ | $B.\text{code} = \text{gen}(\text{'if '} E_1.\text{addr} \text{ '>' } E_2.\text{addr} \text{ ' goto '} B.\text{true}) \parallel \text{gen}(\text{'goto '} B.\text{false})$ |
 | $S \to id = E;$ | $S.\text{code} = E.\text{code} \parallel \text{gen}(id.\text{entry} \text{ ':=' } E.\text{addr})$ |
-| $`E \to E_1 + E_2`$ | $E.\text{addr} = \text{newtemp}()$ <br> $`E.\text{code} = \text{gen}(E.\text{addr} \text{ ':=' } E_1.\text{addr} \text{ '+' } E_2.\text{addr})`$ |
-| $`E \to E_1 - E_2`$ | $E.\text{addr} = \text{newtemp}()$ <br> $`E.\text{code} = \text{gen}(E.\text{addr} \text{ ':=' } E_1.\text{addr} \text{ '-' } E_2.\text{addr})`$ |
+| $E \to E_1 + E_2$ | $E.\text{addr} = \text{newtemp}()$ <br> $E.\text{code} = \text{gen}(E.\text{addr} \text{ ':=' } E_1.\text{addr} \text{ '+' } E_2.\text{addr})$ |
+| $E \to E_1 - E_2$ | $E.\text{addr} = \text{newtemp}()$ <br> $E.\text{code} = \text{gen}(E.\text{addr} \text{ ':=' } E_1.\text{addr} \text{ '-' } E_2.\text{addr})$ |
 
 ##### 2. Generated Three-Address Code (3AC)
 
@@ -1859,6 +1897,7 @@ Statement 3 ($t_3 := 4 * i$) calculates the exact same expression as statement 1
 **Direct Reference:** [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#4.2 Architectural Rationale: The Viable-Prefix Property|Note 2 §4.2]], [[compiler_design_syntax_error_recovery_and_semantic_analysis_visual_guide#4.3 Formal Mechanics: The Canonical SLR Table with Error Routines|Note 2 §4.3]]
 
 #### Step 1: Augment the Grammar and Compute FOLLOW Sets
+
 $$
 \begin{aligned}
 (0) &\; E' \to E \\\\
@@ -1869,36 +1908,37 @@ $$
 $$
 
 FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion-ll1-parsing-2-6-8-marks)):
-- $`\text{FOLLOW}(E) = \{+, \$ \}`$
-- $`\text{FOLLOW}(T) = \{a, b, +, \$ \}`$
-- $`\text{FOLLOW}(F) = \{a, b, *, +, \$ \}`$
+- $\text{FOLLOW}(E) = \{+, \mathdollar \}$
+- $\text{FOLLOW}(T) = \{a, b, +, \mathdollar \}$
+- $\text{FOLLOW}(F) = \{a, b, *, +, \mathdollar \}$
 
 #### Step 2: Build $LR(0)$ Item Sets
-- **$I_0 = \text{CLOSURE}(\{E' \to \cdot E\})$:**
-  $$E' \to \cdot E, \; E \to \cdot E + T, \; E \to \cdot T, \; T \to \cdot TF, \; T \to \cdot F, \; F \to \cdot F*, \; F \to \cdot a, \; F \to \cdot b$$
+
+**State $I_0 = \text{CLOSURE}(\{E' \to \cdot E\})$:**
+
+$$E' \to \cdot E, \; E \to \cdot E + T, \; E \to \cdot T, \; T \to \cdot TF, \; T \to \cdot F, \; F \to \cdot F*, \; F \to \cdot a, \; F \to \cdot b$$
+
 - **Transitions from $I_0$:**
-  - $`\text{GOTO}(I_0, E) = I_1 = \{E' \to E \cdot, \; E \to E \cdot + T\}`$
-  - $`\text{GOTO}(I_0, T) = I_2 = \{E \to T \cdot, \; T \to T \cdot F, \; F \to \cdot F*, \; F \to \cdot a, \; F \to \cdot b\}`$
-  - $`\text{GOTO}(I_0, F) = I_3 = \{T \to F \cdot, \; F \to F \cdot *\}`$
-  - $`\text{GOTO}(I_0, a) = I_4 = \{F \to a \cdot\}`$
-  - $`\text{GOTO}(I_0, b) = I_5 = \{F \to b \cdot\}`$
+  - $\text{GOTO}(I_0, E) = I_1 = \{E' \to E \cdot, \; E \to E \cdot + T\}$
+  - $\text{GOTO}(I_0, T) = I_2 = \{E \to T \cdot, \; T \to T \cdot F, \; F \to \cdot F*, \; F \to \cdot a, \; F \to \cdot b\}$
+  - $\text{GOTO}(I_0, F) = I_3 = \{T \to F \cdot, \; F \to F \cdot *\}$
+  - $\text{GOTO}(I_0, a) = I_4 = \{F \to a \cdot\}$
+  - $\text{GOTO}(I_0, b) = I_5 = \{F \to b \cdot\}$
 - **Transitions from $I_1$ and $I_2$:**
-  - $`\text{GOTO}(I_1, +) = I_6 = \{E \to E + \cdot T, \dots\}`$
-  - $`\text{GOTO}(I_2, F) = I_7 = \{T \to TF \cdot, \; F \to F \cdot *\}`$
-  - $`\text{GOTO}(I_3, *) = I_8 = \{F \to F * \cdot\}`$
+  - $\text{GOTO}(I_1, +) = I_6 = \{E \to E + \cdot T, \dots\}$
+  - $\text{GOTO}(I_2, F) = I_7 = \{T \to TF \cdot, \; F \to F \cdot *\}$
+  - $\text{GOTO}(I_3, *) = I_8 = \{F \to F * \cdot\}$
 
 #### Step 3: Conflict Checks in States $I_3$ and $I_7$
 1. **In State $I_3 = \{T \to F \cdot, \; F \to F \cdot *\}$:**
-   - Reduction item $T \to F \cdot$ reduces for lookaheads in $`\text{FOLLOW}(T) = \{a, b, +, \$ \}`$.
+   - Reduction item $T \to F \cdot$ reduces for lookaheads in $\text{FOLLOW}(T) = \{a, b, +, \mathdollar \}$.
    - Shift item $F \to F \cdot *$ shifts on lookahead `$*$`.
-   - Intersection:
-     $$\text{FOLLOW}(T) \cap \{*\} = \emptyset$$
+   - Intersection: $\text{FOLLOW}(T) \cap \{*\} = \emptyset$
    - Because the shift symbol and the reduce symbols never overlap, **there is NO conflict in $I_3$**.
 2. **In State $I_7 = \{T \to TF \cdot, \; F \to F \cdot *\}$:**
-   - Reduction item $T \to TF \cdot$ reduces for lookaheads in $`\text{FOLLOW}(T) = \{a, b, +, \$ \}`$.
+   - Reduction item $T \to TF \cdot$ reduces for lookaheads in $\text{FOLLOW}(T) = \{a, b, +, \mathdollar \}$.
    - Shift item $F \to F \cdot *$ shifts on `$*$`.
-   - Intersection:
-     $$\text{FOLLOW}(T) \cap \{*\} = \emptyset$$
+   - Intersection: $\text{FOLLOW}(T) \cap \{*\} = \emptyset$
    - **There is NO conflict in $I_7$**.
 
 > [!TIP] SLR(1) Grammar Status
@@ -1941,10 +1981,13 @@ FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursi
 
 ##### 1. Definition and Mechanics
 Left factoring is a grammar transformation that pulls out shared prefixes from multiple choices of a non-terminal:
+
 $$A \to \alpha \beta_1 \mid \alpha \beta_2 \mid \dots \mid \alpha \beta_n \mid \gamma$$
+
 We factor out $\alpha$ and introduce a new non-terminal $A'$:
-$$A \to \alpha A' \mid \gamma$$
-$$A' \to \beta_1 \mid \beta_2 \mid \dots \mid \beta_n$$
+
+$$\begin{aligned} A &\to \alpha A' \mid \gamma \\ A' &\to \beta_1 \mid \beta_2 \mid \dots \mid \beta_n \end{aligned}$$
+
 
 ##### 2. Why It Is Needed
 If two rules start with the same symbol $\alpha$, a top-down parser cannot decide which rule to expand by looking only at the next token. Left factoring postpones the decision until enough tokens are read to know the right choice.
@@ -1996,16 +2039,16 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 - $\text{FIRST}(S) = \text{FIRST}(ACB) \cup \text{FIRST}(CbB) \cup \text{FIRST}(Ba) = \{a, b, d, g, h, \epsilon\}$
 
 ##### 2. FOLLOW Sets
-- Start symbol $`S \implies \$ \in \text{FOLLOW}(S)`$.
-- From $S \to ACB$: after $A$ comes $`CB \implies \text{FOLLOW}(A) = \text{FIRST}(CB) = \{g, h, \$ \}`$.
+- Start symbol $S \implies \mathdollar \in \text{FOLLOW}(S)$.
+- From $S \to ACB$: after $A$ comes $CB \implies \text{FOLLOW}(A) = \text{FIRST}(CB) = \{g, h, \mathdollar \}$.
 - For $\text{FOLLOW}(B)$:
   - From $S \to Ba$: followed by $a \implies a \in \text{FOLLOW}(B)$.
-  - From $S \to ACB \mid CbB$: at end $`\implies \$ \in \text{FOLLOW}(B)`$.
-  - Thus: $`\text{FOLLOW}(B) = \{a, h, \$ \}`$.
+  - From $S \to ACB \mid CbB$: at end $\implies \mathdollar \in \text{FOLLOW}(B)$.
+  - Thus: $\text{FOLLOW}(B) = \{a, h, \mathdollar \}$.
 - For $\text{FOLLOW}(C)$:
   - From $S \to CbB$: followed by $b \implies b \in \text{FOLLOW}(C)$.
-  - From $S \to ACB$: followed by $B \implies g \in \text{FOLLOW}(C)$ and $`\$ \in \text{FOLLOW}(C)`$.
-  - Thus: $`\text{FOLLOW}(C) = \{b, g, h, \$ \}`$.
+  - From $S \to ACB$: followed by $B \implies g \in \text{FOLLOW}(C)$ and $\mathdollar \in \text{FOLLOW}(C)$.
+  - Thus: $\text{FOLLOW}(C) = \{b, g, h, \mathdollar \}$.
 
 ##### 3. LL(1) Determinism Check
 > [!CAUTION] Non-LL(1) Proof
@@ -2015,7 +2058,9 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 > - $S \to Ba \implies \text{FIRST}(Ba) = \{g, a\}$
 > 
 > Notice the intersections:
+>
 > $$\text{FIRST}(ACB) \cap \text{FIRST}(Ba) = \{g\} \neq \emptyset$$
+>
 > $$\text{FIRST}(ACB) \cap \text{FIRST}(CbB) = \{h\} \neq \emptyset$$
 > 
 > In the table:
@@ -2025,16 +2070,16 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 > **Conclusion:** These multi-rule collisions prove **the grammar is NOT LL(1)**.
 
 ##### 4. Parsing Walkthrough for Input `ghhg$`
-1. Stack: `\$ S`, Input: `ghhg \$`
+1. Stack: `$ S`, Input: `ghhg $`
 2. Next token is $g$. Entry $M[S, g]$ has a conflict between $S \to ACB$ and $S \to Ba$.
 3. If the parser selects $S \to ACB$:
-   - Stack becomes `\$ B C A`.
-   - $A$ on $g$ expands via $A \to BC$, giving stack `\$ B C C B`.
+   - Stack becomes `$ B C A`.
+   - $A$ on $g$ expands via $A \to BC$, giving stack `$ B C C B`.
    - $B$ expands to $g$, matching terminal $g$.
    - Next token is $h$. Stack top is $C$. $C \to h$ matches $h$.
    - Next token is $h$. Stack top is $C$. $C \to h$ matches second $h$.
    - Next token is $g$. Stack top is $B$. $B \to g$ matches final $g$.
-   - Input reaches `\$`, successfully accepting through backtracking.
+   - Input reaches `$`, successfully accepting through backtracking.
 
 ---
 
@@ -2087,19 +2132,18 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 - **Buffer Pairs & Sentinels:** Placing `EOF` at the end of buffer halves reduces bounds checking to only 1 check per character.
 
 ### 2. Grammar Transformations
-- **Immediate Left Recursion Elimination:**
-  $$A \to A\alpha \mid \beta \implies A \to \beta A', \quad A' \to \alpha A' \mid \epsilon$$
-- **Left Factoring:**
-  $$A \to \alpha \beta_1 \mid \alpha \beta_2 \implies A \to \alpha A', \quad A' \to \beta_1 \mid \beta_2$$
+- **Immediate Left Recursion Elimination:**  
+  $A \to A\alpha \mid \beta \implies A \to \beta A', \quad A' \to \alpha A' \mid \epsilon$
+- **Left Factoring:**  
+  $A \to \alpha \beta_1 \mid \alpha \beta_2 \implies A \to \alpha A', \quad A' \to \beta_1 \mid \beta_2$
 
 ### 3. Parsing Table Conditions
-- **LL(1) Condition:** A grammar is LL(1) iff for all $A \to \alpha \mid \beta$:
-  $$\text{FIRST}(\alpha) \cap \text{FIRST}(\beta) = \emptyset$$
-  $$\text{if } \epsilon \in \text{FIRST}(\alpha) \implies \text{FIRST}(\beta) \cap \text{FOLLOW}(A) = \emptyset$$
+- **LL(1) Condition:** A grammar is LL(1) iff for all $A \to \alpha \mid \beta$:  
+  $\text{FIRST}(\alpha) \cap \text{FIRST}(\beta) = \emptyset$, and if $\epsilon \in \text{FIRST}(\alpha) \implies \text{FIRST}(\beta) \cap \text{FOLLOW}(A) = \emptyset$.
 - **SLR(1) Parsing Table Rules:**
   - Shift on terminal $a$: if $[A \to \alpha \cdot a \beta] \in I_i$, set $\text{ACTION}[i, a] = \text{shift } j$.
   - Reduce on FOLLOW: if $[A \to \alpha \cdot] \in I_i$, set $\text{ACTION}[i, a] = \text{reduce } A \to \alpha$ for all $a \in \mathbf{FOLLOW}(A)$.
-  - Accept on endmarker: if $[S' \to S \cdot] \in I_i$, set $`\text{ACTION}[i, \$ ] = \mathbf{accept}`$.
+  - Accept on endmarker: if $[S' \to S \cdot] \in I_i$, set $\text{ACTION}[i, \mathdollar ] = \mathbf{accept}$.
 
 ---
 
