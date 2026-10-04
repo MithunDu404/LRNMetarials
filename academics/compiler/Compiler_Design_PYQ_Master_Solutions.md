@@ -481,13 +481,11 @@ $$
 - $\text{FIRST}(B') = \text{FIRST}(Aa B') \cup \{\epsilon\} = \text{FIRST}(A) \cup \{\epsilon\} = \{d, \epsilon\}$
 
 ##### 2. Compute FOLLOW Sets
-Start symbol is $A \implies \$ \in \text{FOLLOW}(A)$.
+Start symbol is $A \implies$ `$` $\in \text{FOLLOW}(A)$.
 - From $B' \to Aa B'$: after $A$ comes $a \implies a \in \text{FOLLOW}(A)$.  
-  Thus:
+  Thus: $\text{FOLLOW}(A) =$ `{$, a}`.
 
-$$\text{FOLLOW}(A) = \{\$, a\}$$
-
-- From $A \to Bc A'$: $\text{FOLLOW}(A') = \text{FOLLOW}(A) = \{\$, a\}$.
+- From $A \to Bc A'$: $\text{FOLLOW}(A') = \text{FOLLOW}(A) =$ `{$, a}`.
 - From $A \to Bc A'$: after $B$ comes $c \implies c \in \text{FOLLOW}(B)$.  
   Thus:
 
@@ -499,8 +497,8 @@ $$\text{FOLLOW}(B) = \{c\}$$
 
 | Non-Terminal ($X$) | $\text{FIRST}(X)$ | $\text{FOLLOW}(X)$ |
 | :---: | :---: | :---: |
-| $A$ | $\{d\}$ | $\{\$, a\}$ |
-| $A'$ | $\{a, \epsilon\}$ | $\{\$, a\}$ |
+| $A$ | $\{d\}$ | `{$, a}` |
+| $A'$ | $\{a, \epsilon\}$ | `{$, a}` |
 | $B$ | $\{d\}$ | $\{c\}$ |
 | $B'$ | $\{d, \epsilon\}$ | $\{c\}$ |
 
@@ -672,17 +670,17 @@ $$
 $$
 
 **FOLLOW Set Computation:**
-- $S' \to S \implies \$ \in \text{FOLLOW}(S)$.
-- From $S' \to S$ and $S \to R$: $\text{FOLLOW}(S) = \{\$ \}$.
-- From $S \to R$: $\text{FOLLOW}(S) \subseteq \text{FOLLOW}(R) \implies \$ \in \text{FOLLOW}(R)$.
+- $S' \to S \implies$ `$` $\in \text{FOLLOW}(S)$.
+- From $S' \to S$ and $S \to R$: $\text{FOLLOW}(S) =$ `{$}`.
+- From $S \to R$: $\text{FOLLOW}(S) \subseteq \text{FOLLOW}(R) \implies$ `$` $\in \text{FOLLOW}(R)$.
 - From $S \to L = R$: after $L$ comes $=$, so $= \in \text{FOLLOW}(L)$.
 - From $L \to *R$: $\text{FOLLOW}(L) \subseteq \text{FOLLOW}(R) \implies = \in \text{FOLLOW}(R)$.
 - From $R \to L$: $\text{FOLLOW}(R) \subseteq \text{FOLLOW}(L)$.
 
 Thus:
-- $\text{FOLLOW}(S) = \{\$ \}$
-- $\text{FOLLOW}(L) = \{=, \$ \}$
-- $\mathbf{FOLLOW}(R) = \{=, \$ \}$
+- $\text{FOLLOW}(S) =$ `{$}`
+- $\text{FOLLOW}(L) =$ `{=, $}`
+- $\mathbf{FOLLOW}(R) =$ `{=, $}`
 
 #### Step 2: Build $LR(0)$ Item Sets
 
@@ -714,7 +712,7 @@ $$I_2 = \{S \to L \cdot = R, \quad R \to L \cdot\}$$
 Under SLR(1) parsing rules:
 1. **Shift Action:** Because $S \to L \cdot = R$ has a dot before $=$, the parser wants to shift on lookahead terminal `'='`: $\text{ACTION}[2, =] = \text{Shift } 6$.
 2. **Reduce Action:** Because $R \to L \cdot$ is a complete rule (Rule 5), the parser wants to reduce for all symbols in $\text{FOLLOW}(R)$.  
-   Since $\mathbf{FOLLOW}(R) = \{=, \$ \}$, the symbol `'='` is in $\text{FOLLOW}(R)$:
+   Since $\mathbf{FOLLOW}(R) =$ `{=, $}`, the symbol `'='` is in $\text{FOLLOW}(R)$:
 
 $$\text{ACTION}[2, =] = \text{Reduce by Rule 5 } (R \to L)$$
 
@@ -917,12 +915,12 @@ flowchart LR
   - $\text{FIRST}(S) = \{a, d, e, f, g\}$
 
 ##### 2. FOLLOW Sets
-- Start symbol $S \implies \$ \in \text{FOLLOW}(S)$.
+- Start symbol $S \implies$ `$` $\in \text{FOLLOW}(S)$.
 - After solving mutual dependencies for $A$ and $B$:
   - $\text{FOLLOW}(A) = \{d, e, f, g\}$
   - $\text{FOLLOW}(B) = \{d, e, f, g\}$
 - For $D$:
-  - $\text{FOLLOW}(D) = \{\$, d, e, f, g\}$
+  - $\text{FOLLOW}(D) =$ `{$, d, e, f, g}`
 
 ---
 
@@ -1015,44 +1013,41 @@ Derivation: $S \Rightarrow ABD \Rightarrow aBD \Rightarrow a\epsilon D \Rightarr
 
 ##### 1. Augmented Grammar with Lookaheads
 
-$$
-\begin{aligned}
-(0) &\; S' \to S, \; \$ \\\\
-(1) &\; S \to CC, \; \$ \\\\
-(2) &\; C \to cC, \; c/d/\$ \\\\
-(3) &\; C \to d, \; c/d/\$ \\\\
-(4) &\; C \to \epsilon, \; c/d/\$
-\end{aligned}
-$$
+```text
+(0)  S' -> S,     $
+(1)  S  -> CC,    $
+(2)  C  -> cC,    c / d / $
+(3)  C  -> d,     c / d / $
+(4)  C  -> eps,   c / d / $
+```
 
 ##### 2. Canonical Collection of $LR(1)$ Items
 
-**State $I_0 = \text{CLOSURE}(\{[S' \to \cdot S, \$]\})$:**
+**State $I_0$ Items:**
+Closure of kernel item `[S' -> . S, $]`:
 
-$$
-\begin{aligned}
-S' &\to \cdot S, \; \$ \\\\
-S &\to \cdot CC, \; \$ \\\\
-C &\to \cdot cC, \; c/d/\$ \quad (\text{since } \text{FIRST}(C\$) = \{c, d, \$\}) \\\\
-C &\to \cdot d, \; c/d/\$ \\\\
-C &\to \cdot, \; c/d/\$
-\end{aligned}
-$$
+```text
+[S' -> . S,   $]
+[S  -> . CC,  $]
+[C  -> . cC,  c / d / $]   (since FIRST(C$) = {c, d, $})
+[C  -> . d,   c / d / $]
+[C  -> .,     c / d / $]
+```
 
 **Transitions from $I_0$:**
-- $\text{GOTO}(I_0, S) = I_1 = \{[S' \to S \cdot, \$]\} \implies$ ACCEPT on `$`
-- $\text{GOTO}(I_0, C) = I_2 = \{[S \to C \cdot C, \$], [C \to \cdot cC, \$], [C \to \cdot d, \$], [C \to \cdot, \$]\}$
-- $\text{GOTO}(I_0, c) = I_3 = \{[C \to c \cdot C, c/d/\$], [C \to \cdot cC, c/d/\$], [C \to \cdot d, c/d/\$], [C \to \cdot, c/d/\$]\}$
-- $\text{GOTO}(I_0, d) = I_4 = \{[C \to d \cdot, c/d/\$]\}$
+- `GOTO(I_0, S) = I_1` = `{[S' -> S ., $]}` $\implies$ **ACCEPT** on `$`
+- `GOTO(I_0, C) = I_2` = `{[S -> C . C, $], [C -> . cC, $], [C -> . d, $], [C -> ., $]}`
+- `GOTO(I_0, c) = I_3` = `{[C -> c . C, c/d/$], [C -> . cC, c/d/$], [C -> . d, c/d/$], [C -> ., c/d/$]}`
+- `GOTO(I_0, d) = I_4` = `{[C -> d ., c/d/$]}`
 
 **Transitions from $I_2$:**
-- $\text{GOTO}(I_2, C) = I_5 = \{[S \to CC \cdot, \$]\}$
-- $\text{GOTO}(I_2, c) = I_6 = \{[C \to c \cdot C, \$], [C \to \cdot cC, \$], [C \to \cdot d, \$], [C \to \cdot, \$]\}$
-- $\text{GOTO}(I_2, d) = I_7 = \{[C \to d \cdot, \$]\}$
+- `GOTO(I_2, C) = I_5` = `{[S -> CC ., $]}`
+- `GOTO(I_2, c) = I_6` = `{[C -> c . C, $], [C -> . cC, $], [C -> . d, $], [C -> ., $]}`
+- `GOTO(I_2, d) = I_7` = `{[C -> d ., $]}`
 
 **Transitions from $I_3$ & $I_6$:**
-- $\text{GOTO}(I_3, C) = I_8 = \{[C \to cC \cdot, c/d/\$]\}$
-- $\text{GOTO}(I_6, C) = I_9 = \{[C \to cC \cdot, \$]\}$
+- `GOTO(I_3, C) = I_8` = `{[C -> cC ., c/d/$]}`
+- `GOTO(I_6, C) = I_9` = `{[C -> cC ., $]}`
 
 ##### 3. The Complete CLR(1) Parsing Table
 
@@ -1293,7 +1288,7 @@ To recover without crashing or getting stuck in an infinite loop:
    - If the current token $a \in \text{SYNC}(A)$: The parser **pops $A$ from the stack**, prints a diagnostic message, and continues parsing.
 
 ##### 2. Example
-Consider expression grammar $E \to T E'$ with $\text{FOLLOW}(E) = \{\$, )\}$.  
+Consider expression grammar $E \to T E'$ with $\text{FOLLOW}(E) =$ `{$, )}`.  
 If an invalid token `)` appears unexpectedly when $E$ is on top of the stack:
 - Since `)` $\in \text{SYNC}(E)$, the parser pops $E$, reports "Missing expression before closing parenthesis", and continues with the rest of the code.
 
@@ -1357,25 +1352,25 @@ $$
 - $\text{FIRST}(E) = \text{FIRST}(T) = \{a, b\}$
 
 ##### 2. FOLLOW Sets
-- Start symbol $E \implies \$ \in \text{FOLLOW}(E)$.
-- From $E \to T E'$: $\text{FOLLOW}(E') = \text{FOLLOW}(E) = \{\$ \}$.
+- Start symbol $E \implies$ `$` $\in \text{FOLLOW}(E)$.
+- From $E \to T E'$: $\text{FOLLOW}(E') = \text{FOLLOW}(E) =$ `{$}`.
 - From $E \to T E'$ and $E' \to + T E'$:  
-  $\text{FOLLOW}(T) = \text{FIRST}(E') \cup \text{FOLLOW}(E) = \{+, \$ \}$.
-- From $T \to F T'$: $\text{FOLLOW}(T') = \text{FOLLOW}(T) = \{+, \$ \}$.
+  $\text{FOLLOW}(T) = \text{FIRST}(E') \cup \text{FOLLOW}(E) =$ `{+, $}`.
+- From $T \to F T'$: $\text{FOLLOW}(T') = \text{FOLLOW}(T) =$ `{+, $}`.
 - From $T \to F T'$ and $T' \to F T'$:  
-  $\text{FOLLOW}(F) = (\text{FIRST}(T') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T') = \{a, b, +, \$ \}$.
-- From $F \to a F' \mid b F'$: $\text{FOLLOW}(F') = \text{FOLLOW}(F) = \{a, b, +, \$ \}$.
+  $\text{FOLLOW}(F) = (\text{FIRST}(T') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T') =$ `{a, b, +, $}`.
+- From $F \to a F' \mid b F'$: $\text{FOLLOW}(F') = \text{FOLLOW}(F) =$ `{a, b, +, $}`.
 
 ##### FIRST & FOLLOW Summary Table
 
 | Non-Terminal | FIRST Set | FOLLOW Set |
 | :---: | :---: | :---: |
-| **$E$** | $\{a, b\}$ | $\{\$ \}$ |
-| **$E'$** | $\{+, \epsilon\}$ | $\{\$ \}$ |
-| **$T$** | $\{a, b\}$ | $\{+, \$ \}$ |
-| **$T'$** | $\{a, b, \epsilon\}$ | $\{+, \$ \}$ |
-| **$F$** | $\{a, b\}$ | $\{a, b, +, \$ \}$ |
-| **$F'$** | $\{*, \epsilon\}$ | $\{a, b, +, \$ \}$ |
+| **$E$** | $\{a, b\}$ | `{$}` |
+| **$E'$** | $\{+, \epsilon\}$ | `{$}` |
+| **$T$** | $\{a, b\}$ | `{+, $}` |
+| **$T'$** | $\{a, b, \epsilon\}$ | `{+, $}` |
+| **$F$** | $\{a, b\}$ | `{a, b, +, $}` |
+| **$F'$** | $\{*, \epsilon\}$ | `{a, b, +, $}` |
 
 ##### 3. LL(1) Table Check
 > [!TIP] LL(1) Grammatical Status
@@ -1453,20 +1448,18 @@ An **LALR(1)** (Lookahead LR) parser is created from a CLR(1) parser by **mergin
 ##### 2. LALR(1) Construction Trace
 Augmented grammar:
 
-$$
-\begin{aligned}
-(0) &\quad S' \to S, &&[\$] \\\\
-(1) &\quad S \to CC, &&[\$] \\\\
-(2) &\quad C \to cC, &&[c/d/\$] \\\\
-(3) &\quad C \to c, &&[c/d/\$] \\\\
-(4) &\quad C \to d, &&[c/d/\$]
-\end{aligned}
-$$
+```text
+(0)  S' -> S,     [$]
+(1)  S  -> CC,    [$]
+(2)  C  -> cC,    [c/d/$]
+(3)  C  -> c,     [c/d/$]
+(4)  C  -> d,     [c/d/$]
+```
 
 When we build the full CLR(1) states, several pairs of states have identical core items:
-- Merging state 3 and state 6 gives combined state $I_{36}$ with lookahead $\{c, d, \$ \}$.
-- Merging state 4 and state 7 gives combined state $I_{47}$ with lookahead $\{c, d, \$ \}$.
-- Merging state 8 and state 9 gives combined state $I_{89}$ with lookahead $\{c, d, \$ \}$.
+- Merging state 3 and state 6 gives combined state $I_{36}$ with lookahead `{c, d, $}`.
+- Merging state 4 and state 7 gives combined state $I_{47}$ with lookahead `{c, d, $}`.
+- Merging state 8 and state 9 gives combined state $I_{89}$ with lookahead `{c, d, $}`.
 
 ##### LALR(1) Parsing Table
 
@@ -1908,9 +1901,9 @@ $$
 $$
 
 FOLLOW sets (from [2024 Mid Q3(b)](#question-3-canonical-expression-left-recursion-ll1-parsing-2-6-8-marks)):
-- $\text{FOLLOW}(E) = \{+, \$ \}$
-- $\text{FOLLOW}(T) = \{a, b, +, \$ \}$
-- $\text{FOLLOW}(F) = \{a, b, *, +, \$ \}$
+- $\text{FOLLOW}(E) =$ `{+, $}`
+- $\text{FOLLOW}(T) =$ `{a, b, +, $}`
+- $\text{FOLLOW}(F) =$ `{a, b, *, +, $}`
 
 #### Step 2: Build $LR(0)$ Item Sets
 
@@ -1931,12 +1924,12 @@ $$E' \to \cdot E, \; E \to \cdot E + T, \; E \to \cdot T, \; T \to \cdot TF, \; 
 
 #### Step 3: Conflict Checks in States $I_3$ and $I_7$
 1. **In State $I_3 = \{T \to F \cdot, \; F \to F \cdot *\}$:**
-   - Reduction item $T \to F \cdot$ reduces for lookaheads in $\text{FOLLOW}(T) = \{a, b, +, \$ \}$.
+   - Reduction item $T \to F \cdot$ reduces for lookaheads in $\text{FOLLOW}(T) =$ `{a, b, +, $}`.
    - Shift item $F \to F \cdot *$ shifts on lookahead `$*$`.
    - Intersection: $\text{FOLLOW}(T) \cap \{*\} = \emptyset$
    - Because the shift symbol and the reduce symbols never overlap, **there is NO conflict in $I_3$**.
 2. **In State $I_7 = \{T \to TF \cdot, \; F \to F \cdot *\}$:**
-   - Reduction item $T \to TF \cdot$ reduces for lookaheads in $\text{FOLLOW}(T) = \{a, b, +, \$ \}$.
+   - Reduction item $T \to TF \cdot$ reduces for lookaheads in $\text{FOLLOW}(T) =$ `{a, b, +, $}`.
    - Shift item $F \to F \cdot *$ shifts on `$*$`.
    - Intersection: $\text{FOLLOW}(T) \cap \{*\} = \emptyset$
    - **There is NO conflict in $I_7$**.
@@ -2039,16 +2032,16 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 - $\text{FIRST}(S) = \text{FIRST}(ACB) \cup \text{FIRST}(CbB) \cup \text{FIRST}(Ba) = \{a, b, d, g, h, \epsilon\}$
 
 ##### 2. FOLLOW Sets
-- Start symbol $S \implies \$ \in \text{FOLLOW}(S)$.
-- From $S \to ACB$: after $A$ comes $CB \implies \text{FOLLOW}(A) = \text{FIRST}(CB) = \{g, h, \$ \}$.
+- Start symbol $S \implies$ `$` $\in \text{FOLLOW}(S)$.
+- From $S \to ACB$: after $A$ comes $CB \implies \text{FOLLOW}(A) = \text{FIRST}(CB) =$ `{g, h, $}`.
 - For $\text{FOLLOW}(B)$:
   - From $S \to Ba$: followed by $a \implies a \in \text{FOLLOW}(B)$.
-  - From $S \to ACB \mid CbB$: at end $\implies \$ \in \text{FOLLOW}(B)$.
-  - Thus: $\text{FOLLOW}(B) = \{a, h, \$ \}$.
+  - From $S \to ACB \mid CbB$: at end $\implies$ `$` $\in \text{FOLLOW}(B)$.
+  - Thus: $\text{FOLLOW}(B) =$ `{a, h, $}`.
 - For $\text{FOLLOW}(C)$:
   - From $S \to CbB$: followed by $b \implies b \in \text{FOLLOW}(C)$.
-  - From $S \to ACB$: followed by $B \implies g \in \text{FOLLOW}(C)$ and $\$ \in \text{FOLLOW}(C)$.
-  - Thus: $\text{FOLLOW}(C) = \{b, g, h, \$ \}$.
+  - From $S \to ACB$: followed by $B \implies g \in \text{FOLLOW}(C)$ and `$` $\in \text{FOLLOW}(C)$.
+  - Thus: $\text{FOLLOW}(C) =$ `{b, g, h, $}`.
 
 ##### 3. LL(1) Determinism Check
 > [!CAUTION] Non-LL(1) Proof
@@ -2143,7 +2136,7 @@ If two rules start with the same symbol $\alpha$, a top-down parser cannot decid
 - **SLR(1) Parsing Table Rules:**
   - Shift on terminal $a$: if $[A \to \alpha \cdot a \beta] \in I_i$, set $\text{ACTION}[i, a] = \text{shift } j$.
   - Reduce on FOLLOW: if $[A \to \alpha \cdot] \in I_i$, set $\text{ACTION}[i, a] = \text{reduce } A \to \alpha$ for all $a \in \mathbf{FOLLOW}(A)$.
-  - Accept on endmarker: if $[S' \to S \cdot] \in I_i$, set $\text{ACTION}[i, \$ ] = \mathbf{accept}$.
+  - Accept on endmarker: if $[S' \to S \cdot] \in I_i$, set `ACTION[i, $] = accept`.
 
 ---
 

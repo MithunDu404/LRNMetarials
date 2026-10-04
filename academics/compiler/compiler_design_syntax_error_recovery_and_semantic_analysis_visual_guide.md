@@ -342,11 +342,11 @@ Independently computing the FIRST and FOLLOW sets:
 - $\text{FIRST}(E') = \{ +, \epsilon \}$
 - $\text{FIRST}(E) = \text{FIRST}(T) = \{ (, \mathbf{id} \}$
 
-- $\text{FOLLOW}(E) = \{ ), \$ \}$
-- $\text{FOLLOW}(E\') = \text{FOLLOW}(E) = \{ ), \$ \}$
-- $\text{FOLLOW}(T) = (\text{FIRST}(E\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(E\') = \{ +, ), \$ \}$
-- $\text{FOLLOW}(T\') = \text{FOLLOW}(T) = \{ +, ), \$ \}$
-- $\text{FOLLOW}(F) = (\text{FIRST}(T\') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T\') = \{ *, +, ), \$ \}$
+- $\text{FOLLOW}(E) =$ `{ ), $ }`
+- $\text{FOLLOW}(E') = \text{FOLLOW}(E) =$ `{ ), $ }`
+- $\text{FOLLOW}(T) = (\text{FIRST}(E') \setminus \{\epsilon\}) \cup \text{FOLLOW}(E') =$ `{ +, ), $ }`
+- $\text{FOLLOW}(T') = \text{FOLLOW}(T) =$ `{ +, ), $ }`
+- $\text{FOLLOW}(F) = (\text{FIRST}(T') \setminus \{\epsilon\}) \cup \text{FOLLOW}(T') =$ `{ *, +, ), $ }`
 
 #### The Audited Predictive Parsing Table with Synchronizing Tokens
 
@@ -377,7 +377,7 @@ When the predictive parser driver executes:
 Let us trace the complete execution of the predictive parser on the erroneous input string:
 
 $$
-w = \; ) \; \mathbf{id} \; * \; + \; \mathbf{id} \; \$
+`w = ) id * + id $`
 
 $$
 
@@ -509,8 +509,8 @@ The stack starts with `$` and $E$.
 | **(12)** | `$ E' T` | `\mathbf{id} $` | $\mathbf{id} \in \text{FIRST}(T)$. Expand $T \to F T'$. Output: $T \to F T'$. |
 | **(13)** | `$ E' T' F` | `\mathbf{id} $` | $\mathbf{id} \in \text{FIRST}(F)$. Expand $F \to \mathbf{id}$. Output: $F \to \mathbf{id}$. |
 | **(14)** | `$ E' T' \mathbf{id}` | `\mathbf{id} $` | Terminal match! Pop $\mathbf{id}$, advance input. |
-| **(15)** | `$ E' T'` | `$` | $\$ \in \text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
-| **(16)** | `$ E'` | `$` | $\$ \in \text{FOLLOW}(E')$. Expand $E' \to \epsilon$. |
+| **(15)** | `$ E' T'` | `$` | `$` $\in \text{FOLLOW}(T')$. Expand $T' \to \epsilon$. |
+| **(16)** | `$ E'` | `$` | `$` $\in \text{FOLLOW}(E')$. Expand $E' \to \epsilon$. |
 | **(17)** | `$` | `$` | **Acceptance!** Both stack and input empty. Parse completes successfully. |
 
 > 📐 **Verification Check:** Notice that despite two major syntax errors (an initial unmatched `)` and an illegal operator sequence `* +`), the parser recovered completely and produced a valid sub-parse for the trailing `+ id`, verifying the precision of the synchronizing heuristics!
@@ -524,7 +524,7 @@ The stack starts with `$` and $E$.
   - Blank entry $\implies$ **SKIP INPUT TOKEN** (do not pop stack).
   - Synch entry $\implies$ **POP STACK SYMBOL** (do not skip input).
   Flipping them causes the parser to dump the entire stack on the first blank entry!
-- ⚠️ **Examiner Trap 2 (What if FOLLOW contains \$?):** If $M[A, \$] = \text{synch}$ and the parser encounters EOF, it pops $A$. If $A$ was the root start symbol $E$, the stack becomes empty and parsing terminates.
+- ⚠️ **Examiner Trap 2 (What if FOLLOW contains `$`?):** If `M[A, $] = synch` and the parser encounters EOF, it pops $A$. If $A$ was the root start symbol $E$, the stack becomes empty and parsing terminates.
 
 ---
 
