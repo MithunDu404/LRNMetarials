@@ -45,56 +45,56 @@ Analysis of examination recurrence across 2023, 2024, and 2025 for topics covere
 
 | Exam Session | Q# | Concept / Question Statement | Marks | Status in Guide | Authorized Reference Link | Visual Anchor |
 |:---|:---:|:---|:---:|:---:|:---|:---|
-| **2025 Mid** | Q1 | 6 MCQs (Regression, Activations, Predictive Modeling, Supervised/Unsupervised, PCA) | 6M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#2-the-taxonomy-of-learning-supervised-unsupervised-semi-supervised-and-rl|Foundations §2]] | — |
-| **2025 Mid** | Q2(a) | Differentiate between Linear Regression and Logistic Regression | 2M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#15-linear-regression-vs-logistic-regression-the-complete-comparison|Foundations §15]] | — |
-| **2025 Mid** | Q2(b) | Performance evaluation of Logistic Regression (Log-Loss, Confusion Matrix, ROC-AUC) | 3M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#10-training-logistic-regression-log-loss--gradient-descent|Foundations §10]] | — |
-| **2025 Mid** | Q2(c) | Role of Regularization in Logistic Regression (Overfitting, Multicollinearity, L1/L2) | 3M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter|Foundations §11]] | — |
-| **2025 Mid** | Q3(a) | Neural structures for AND, OR, and XOR gates | 3M | **Fully Answered** | [[neural_networks_visual_guide#3-logic-gates-with-one-neuron|Neural Networks §3 & §6]] | `pyq_fig01` |
-| **2025 Mid** | Q3(b) | Comparison of Sigmoid, Tanh, and ReLU (Range, Gradients, Pros/Cons) | 3M | **Fully Answered** | [[activation_crossentropy_backprop_visual_guide#6-tanh-function|Activations §6]] | `pyq_fig02` |
-| **2025 Mid** | Q3(c) | Vanishing gradient problem & how ReLU / Leaky ReLU overcome it | 2M | **Fully Answered** | [[neural_networks_visual_guide#11-problems-minima-saddles-vanishing-and-exploding-gradients|Neural Networks §11]] | — |
-| **2025 Mid** | Q4(a) | Why Cross-Entropy is preferred over SSE in deep neural networks | 3M | **Fully Answered** | [[activation_crossentropy_backprop_visual_guide#7-why-squared-error-learns-slowly|Activations §7 & §8]] | Derivative Cancellation Proof |
-| **2025 Mid** | Q4(b) | Compare Stochastic GD, Batch GD, and Mini-Batch GD with examples | 3M | **Fully Answered** | [[neural_networks_visual_guide#10-learning-rate-batches-and-epochs|Neural Networks §10]] | 10k Images Example |
-| **2025 Mid** | Q4(c) | Working principle and advantages of Batch Normalization | 2M | **Fully Answered** | [[neural_networks_visual_guide#11-problems-minima-saddles-vanishing-and-exploding-gradients|Neural Networks §11]] | — |
-| **2025 End** | Q1(a) | Supervised vs Unsupervised Learning | 2M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#2-the-taxonomy-of-learning-supervised-unsupervised-semi-supervised-and-rl|Foundations §2]] | — |
-| **2025 End** | Q1(b) | What is underfitting? Causes and symptoms | 2M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter|Foundations §11]] | — |
-| **2025 End** | Q1(c) | Classification vs Regression | 2M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#2-the-taxonomy-of-learning-supervised-unsupervised-semi-supervised-and-rl|Foundations §2.1]] | — |
-| **2025 End** | Q1(d) | What is a confusion matrix? 2x2 layout & significance | 2M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#15-linear-regression-vs-logistic-regression-the-complete-comparison|Foundations §15]] | — |
-| **2025 End** | Q1(e) | What is a hyperparameter? vs Model parameters | 2M | **Fully Answered** | [[neural_networks_visual_guide#10-learning-rate-batches-and-epochs|Neural Networks §10]] | — |
-| **2025 End** | Q2(a) | Bias, Variance, and the Bias-Variance Tradeoff | 3M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter|Foundations §11]] | Error Decomposition |
-| **2025 End** | Q2(b) | L1 Lasso vs L2 Ridge: Formulations & effects on weights | 4M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter|Foundations §11]] | Sparsity vs Shrinkage |
-| **2025 End** | Q3(a) | Mathematical expressions, derivatives & comparison of ReLU, Sigmoid, Tanh | 6M | **Fully Answered** | [[activation_crossentropy_backprop_visual_guide#4-sigmoid-function|Activations §4–6]] | `pyq_fig02` |
-| **2025 End** | Q3(b) | Softmax activation function: Formulation, properties & cross-entropy gradient | 4M | **Fully Answered** | [[activation_crossentropy_backprop_visual_guide#9-multi-class-cross-entropy-and-softmax|Activations §9]] | — |
-| **2025 End** | Q4(a) | DNN Architecture, Forward Pass & Backpropagation Algorithm | 6M | **Fully Answered** | [[neural_networks_visual_guide#12-backpropagation-derivation|Neural Networks §12]] | `pyq_fig03` |
-| **2024 Mid** | Q1(a) | Ordinary Least Squares (OLS) Derivation for Simple Linear Regression | 4M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#4-simple-linear-regression-slr--the-least-squares-derivation|Foundations §4]] | Calculus Proof |
-| **2024 Mid** | Q2(c) | L1 & L2 Regularization in Logistic Regression | 4M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter|Foundations §11]] | Weight Decay Update |
-| **2024 Mid** | Q3(a) | Biological vs Artificial Neuron Correspondence | 2M | **Fully Answered** | [[neural_networks_visual_guide#1-from-brain-to-artificial-neuron|Neural Networks §1]] | Anatomy Table |
-| **2024 Mid** | Q3(b) | XOR Neural Network Architecture & Non-linear Mapping | 3M | **Fully Answered** | [[neural_networks_visual_guide#6-xor-needs-a-hidden-layer|Neural Networks §6]] | `pyq_fig01` |
-| **2024 Mid** | Q3(c) | Perceptron Learning Algorithm & Novikoff Convergence Proof | 5M | **Fully Answered** | [[neural_networks_visual_guide#4-perceptron-learning-algorithm|Neural Networks §4 & §5]] | `pyq_fig04` |
-| **2024 Final** | Q1(a) | Matrix Form of Multiple Linear Regression & Normal Equations Derivation | 5.5M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#6-multiple-linear-regression-mlr--normal-equations-in-matrix-form|Foundations §6]] | `pyq_fig05` |
-| **2024 Final** | Q2(a) | Backpropagation Output Layer Weight Update Derivation (SSE & Sigmoid) | 7M | **Fully Answered** | [[neural_networks_visual_guide#12-backpropagation-derivation|Neural Networks §12]] | `pyq_fig03` |
-| **2024 Final** | Q2(b) | Cross-Entropy vs Quadratic Loss in Backpropagation Learning | 5.5M | **Fully Answered** | [[activation_crossentropy_backprop_visual_guide#7-why-squared-error-learns-slowly|Activations §7 & §8]] | Learning Stall Proof |
-| **2024 Final** | Q3(a) | Vanishing & Exploding Gradients: Mechanisms, symptoms & solutions | 6.5M | **Fully Answered** | [[neural_networks_visual_guide#11-problems-minima-saddles-vanishing-and-exploding-gradients|Neural Networks §11]] | `pyq_fig02` |
-| **2024 Final** | Q3(b) | ReLU Properties, Limitations (Dying ReLU) & Leaky ReLU Solution | 6M | **Fully Answered** | [[activation_crossentropy_backprop_visual_guide#5-relu-leaky-relu-and-sparse-gradients|Activations §5]] | — |
-| **2024 Final** | Q4(b) | Batch Size, Batching Strategies (BGD vs SGD vs Mini-Batch) & Epoch Formula | 7M | **Fully Answered** | [[neural_networks_visual_guide#10-learning-rate-batches-and-epochs|Neural Networks §10]] | ImageNet Example |
-| **2023 Mid** | Q1(a) | Gradient Descent Derivation for Polynomial Hypothesis $h_\theta(x)$ | 7M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#4-simple-linear-regression-slr--the-least-squares-derivation|Foundations §4]] | Update Form Proof |
-| **2023 Mid** | Q3(a) | Why Linear Regression fails for classification & Why MSE fails for Logistic | 5M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#8-why-linear-regression-fails-for-classification|Foundations §8 & §10]] | Outlier Distortion |
-| **2023 Mid** | Q3(b) | Multiclass Classification: One-vs-All vs One-vs-One ($c$ vs $c(c-1)/2$) | 5M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#12-multiclass-classification-one-vs-rest-vs-multinomial-softmax|Foundations §12]] | Comparison Table |
-| **2023 Mid** | Q4(a) | Single Neuron Forward Pass Numerical ($z = 0.45 \implies y = 0.6106$) | 3M | **Fully Answered** | [[neural_networks_visual_guide#1-from-brain-to-artificial-neuron|Neural Networks §1]] | Python Audited |
-| **2023 Mid** | Q4(b) | Log-Likelihood Derivation for Biased Coin Toss (MLE $p = k/N$) | 7M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#10-training-logistic-regression-log-loss--gradient-descent|Foundations §10.2]] | Calculus Proof |
-| **2023 End** | Q1(a) | Why Linear Regression fails for classification & Why MSE fails for Logistic | 3M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#8-why-linear-regression-fails-for-classification|Foundations §8]] | — |
-| **2023 End** | Q1(b) | One-vs-All vs One-vs-One Multiclass Classification | 3M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#12-multiclass-classification-one-vs-rest-vs-multinomial-softmax|Foundations §12]] | — |
-| **2023 End** | Q1(c) | Confusion Matrix Numerical (Precision, Recall, TPR, F1 from 5 instances) | 4M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#15-linear-regression-vs-logistic-regression-the-complete-comparison|Foundations §15]] | Python Audited |
-| **2023 End** | Q2(c) | Failure of Linear Regression & MSE for Classification | 2M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#8-why-linear-regression-fails-for-classification|Foundations §8]] | Mark-Adaptive Brief |
-| **2023 End** | Q2(d) | Differences between Feedforward (FNN) and Recurrent Networks (RNN) | 2M | **Fully Answered** | [[neural_networks_visual_guide#7-multilayer-feed-forward-networks|Neural Networks §7]] | DAG vs Loops Table |
-| **2023 End** | Q3(a) | Significance of ReLU Activation in Deep Networks / CNNs | 4M | **Fully Answered** | [[activation_crossentropy_backprop_visual_guide#5-relu-leaky-relu-and-sparse-gradients|Activations §5]] | 4 Core Reasons |
-| **2023 End** | Q4(a) | Single Neuron Forward Pass Numerical ($z = 0.45 \implies y = 0.6106$) | 3M | **Fully Answered** | [[neural_networks_visual_guide#1-from-brain-to-artificial-neuron|Neural Networks §1]] | Python Audited |
-| **2023 End** | Q4(b) | Biased Coin Toss Log-Likelihood & Online SGD Derivation | 3M | **Fully Answered** | [[ml_foundations_regression_classification_visual_guide#10-training-logistic-regression-log-loss--gradient-descent|Foundations §10.2]] | Calculus Proof |
+| **2025 Mid** | Q1 | 6 MCQs (Regression, Activations, Predictive Modeling, Supervised/Unsupervised, PCA) | 6M | **Fully Answered** | [Foundations §2](ml_foundations_regression_classification_visual_guide.md#2-the-taxonomy-of-learning-supervised-unsupervised-semi-supervised-and-rl) | — |
+| **2025 Mid** | Q2(a) | Differentiate between Linear Regression and Logistic Regression | 2M | **Fully Answered** | [Foundations §15](ml_foundations_regression_classification_visual_guide.md#15-linear-regression-vs-logistic-regression-the-complete-comparison) | — |
+| **2025 Mid** | Q2(b) | Performance evaluation of Logistic Regression (Log-Loss, Confusion Matrix, ROC-AUC) | 3M | **Fully Answered** | [Foundations §10](ml_foundations_regression_classification_visual_guide.md#10-training-logistic-regression-log-loss--gradient-descent) | — |
+| **2025 Mid** | Q2(c) | Role of Regularization in Logistic Regression (Overfitting, Multicollinearity, L1/L2) | 3M | **Fully Answered** | [Foundations §11](ml_foundations_regression_classification_visual_guide.md#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter) | — |
+| **2025 Mid** | Q3(a) | Neural structures for AND, OR, and XOR gates | 3M | **Fully Answered** | [Neural Networks §3 & §6](neural_networks_visual_guide.md#3-logic-gates-with-one-neuron) | `pyq_fig01` |
+| **2025 Mid** | Q3(b) | Comparison of Sigmoid, Tanh, and ReLU (Range, Gradients, Pros/Cons) | 3M | **Fully Answered** | [Activations §6](activation_crossentropy_backprop_visual_guide.md#6-tanh-function) | `pyq_fig02` |
+| **2025 Mid** | Q3(c) | Vanishing gradient problem & how ReLU / Leaky ReLU overcome it | 2M | **Fully Answered** | [Neural Networks §11](neural_networks_visual_guide.md#11-problems-minima-saddles-vanishing-and-exploding-gradients) | — |
+| **2025 Mid** | Q4(a) | Why Cross-Entropy is preferred over SSE in deep neural networks | 3M | **Fully Answered** | [Activations §7 & §8](activation_crossentropy_backprop_visual_guide.md#7-why-squared-error-learns-slowly) | Derivative Cancellation Proof |
+| **2025 Mid** | Q4(b) | Compare Stochastic GD, Batch GD, and Mini-Batch GD with examples | 3M | **Fully Answered** | [Neural Networks §10](neural_networks_visual_guide.md#10-learning-rate-batches-and-epochs) | 10k Images Example |
+| **2025 Mid** | Q4(c) | Working principle and advantages of Batch Normalization | 2M | **Fully Answered** | [Neural Networks §11](neural_networks_visual_guide.md#11-problems-minima-saddles-vanishing-and-exploding-gradients) | — |
+| **2025 End** | Q1(a) | Supervised vs Unsupervised Learning | 2M | **Fully Answered** | [Foundations §2](ml_foundations_regression_classification_visual_guide.md#2-the-taxonomy-of-learning-supervised-unsupervised-semi-supervised-and-rl) | — |
+| **2025 End** | Q1(b) | What is underfitting? Causes and symptoms | 2M | **Fully Answered** | [Foundations §11](ml_foundations_regression_classification_visual_guide.md#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter) | — |
+| **2025 End** | Q1(c) | Classification vs Regression | 2M | **Fully Answered** | [Foundations §2.1](ml_foundations_regression_classification_visual_guide.md#2-the-taxonomy-of-learning-supervised-unsupervised-semi-supervised-and-rl) | — |
+| **2025 End** | Q1(d) | What is a confusion matrix? 2x2 layout & significance | 2M | **Fully Answered** | [Foundations §15](ml_foundations_regression_classification_visual_guide.md#15-linear-regression-vs-logistic-regression-the-complete-comparison) | — |
+| **2025 End** | Q1(e) | What is a hyperparameter? vs Model parameters | 2M | **Fully Answered** | [Neural Networks §10](neural_networks_visual_guide.md#10-learning-rate-batches-and-epochs) | — |
+| **2025 End** | Q2(a) | Bias, Variance, and the Bias-Variance Tradeoff | 3M | **Fully Answered** | [Foundations §11](ml_foundations_regression_classification_visual_guide.md#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter) | Error Decomposition |
+| **2025 End** | Q2(b) | L1 Lasso vs L2 Ridge: Formulations & effects on weights | 4M | **Fully Answered** | [Foundations §11](ml_foundations_regression_classification_visual_guide.md#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter) | Sparsity vs Shrinkage |
+| **2025 End** | Q3(a) | Mathematical expressions, derivatives & comparison of ReLU, Sigmoid, Tanh | 6M | **Fully Answered** | [Activations §4–6](activation_crossentropy_backprop_visual_guide.md#4-sigmoid-function) | `pyq_fig02` |
+| **2025 End** | Q3(b) | Softmax activation function: Formulation, properties & cross-entropy gradient | 4M | **Fully Answered** | [Activations §9](activation_crossentropy_backprop_visual_guide.md#9-multi-class-cross-entropy-and-softmax) | — |
+| **2025 End** | Q4(a) | DNN Architecture, Forward Pass & Backpropagation Algorithm | 6M | **Fully Answered** | [Neural Networks §12](neural_networks_visual_guide.md#12-backpropagation-derivation) | `pyq_fig03` |
+| **2024 Mid** | Q1(a) | Ordinary Least Squares (OLS) Derivation for Simple Linear Regression | 4M | **Fully Answered** | [Foundations §4](ml_foundations_regression_classification_visual_guide.md#4-simple-linear-regression-slr--the-least-squares-derivation) | Calculus Proof |
+| **2024 Mid** | Q2(c) | L1 & L2 Regularization in Logistic Regression | 4M | **Fully Answered** | [Foundations §11](ml_foundations_regression_classification_visual_guide.md#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter) | Weight Decay Update |
+| **2024 Mid** | Q3(a) | Biological vs Artificial Neuron Correspondence | 2M | **Fully Answered** | [Neural Networks §1](neural_networks_visual_guide.md#1-from-brain-to-artificial-neuron) | Anatomy Table |
+| **2024 Mid** | Q3(b) | XOR Neural Network Architecture & Non-linear Mapping | 3M | **Fully Answered** | [Neural Networks §6](neural_networks_visual_guide.md#6-xor-needs-a-hidden-layer) | `pyq_fig01` |
+| **2024 Mid** | Q3(c) | Perceptron Learning Algorithm & Novikoff Convergence Proof | 5M | **Fully Answered** | [Neural Networks §4 & §5](neural_networks_visual_guide.md#4-perceptron-learning-algorithm) | `pyq_fig04` |
+| **2024 Final** | Q1(a) | Matrix Form of Multiple Linear Regression & Normal Equations Derivation | 5.5M | **Fully Answered** | [Foundations §6](ml_foundations_regression_classification_visual_guide.md#6-multiple-linear-regression-mlr--normal-equations-in-matrix-form) | `pyq_fig05` |
+| **2024 Final** | Q2(a) | Backpropagation Output Layer Weight Update Derivation (SSE & Sigmoid) | 7M | **Fully Answered** | [Neural Networks §12](neural_networks_visual_guide.md#12-backpropagation-derivation) | `pyq_fig03` |
+| **2024 Final** | Q2(b) | Cross-Entropy vs Quadratic Loss in Backpropagation Learning | 5.5M | **Fully Answered** | [Activations §7 & §8](activation_crossentropy_backprop_visual_guide.md#7-why-squared-error-learns-slowly) | Learning Stall Proof |
+| **2024 Final** | Q3(a) | Vanishing & Exploding Gradients: Mechanisms, symptoms & solutions | 6.5M | **Fully Answered** | [Neural Networks §11](neural_networks_visual_guide.md#11-problems-minima-saddles-vanishing-and-exploding-gradients) | `pyq_fig02` |
+| **2024 Final** | Q3(b) | ReLU Properties, Limitations (Dying ReLU) & Leaky ReLU Solution | 6M | **Fully Answered** | [Activations §5](activation_crossentropy_backprop_visual_guide.md#5-relu-leaky-relu-and-sparse-gradients) | — |
+| **2024 Final** | Q4(b) | Batch Size, Batching Strategies (BGD vs SGD vs Mini-Batch) & Epoch Formula | 7M | **Fully Answered** | [Neural Networks §10](neural_networks_visual_guide.md#10-learning-rate-batches-and-epochs) | ImageNet Example |
+| **2023 Mid** | Q1(a) | Gradient Descent Derivation for Polynomial Hypothesis $h_\theta(x)$ | 7M | **Fully Answered** | [Foundations §4](ml_foundations_regression_classification_visual_guide.md#4-simple-linear-regression-slr--the-least-squares-derivation) | Update Form Proof |
+| **2023 Mid** | Q3(a) | Why Linear Regression fails for classification & Why MSE fails for Logistic | 5M | **Fully Answered** | [Foundations §8 & §10](ml_foundations_regression_classification_visual_guide.md#8-why-linear-regression-fails-for-classification) | Outlier Distortion |
+| **2023 Mid** | Q3(b) | Multiclass Classification: One-vs-All vs One-vs-One ($c$ vs $c(c-1)/2$) | 5M | **Fully Answered** | [Foundations §12](ml_foundations_regression_classification_visual_guide.md#12-multiclass-classification-one-vs-rest-vs-multinomial-softmax) | Comparison Table |
+| **2023 Mid** | Q4(a) | Single Neuron Forward Pass Numerical ($z = 0.45 \implies y = 0.6106$) | 3M | **Fully Answered** | [Neural Networks §1](neural_networks_visual_guide.md#1-from-brain-to-artificial-neuron) | Python Audited |
+| **2023 Mid** | Q4(b) | Log-Likelihood Derivation for Biased Coin Toss (MLE $p = k/N$) | 7M | **Fully Answered** | [Foundations §10.2](ml_foundations_regression_classification_visual_guide.md#10-training-logistic-regression-log-loss--gradient-descent) | Calculus Proof |
+| **2023 End** | Q1(a) | Why Linear Regression fails for classification & Why MSE fails for Logistic | 3M | **Fully Answered** | [Foundations §8](ml_foundations_regression_classification_visual_guide.md#8-why-linear-regression-fails-for-classification) | — |
+| **2023 End** | Q1(b) | One-vs-All vs One-vs-One Multiclass Classification | 3M | **Fully Answered** | [Foundations §12](ml_foundations_regression_classification_visual_guide.md#12-multiclass-classification-one-vs-rest-vs-multinomial-softmax) | — |
+| **2023 End** | Q1(c) | Confusion Matrix Numerical (Precision, Recall, TPR, F1 from 5 instances) | 4M | **Fully Answered** | [Foundations §15](ml_foundations_regression_classification_visual_guide.md#15-linear-regression-vs-logistic-regression-the-complete-comparison) | Python Audited |
+| **2023 End** | Q2(c) | Failure of Linear Regression & MSE for Classification | 2M | **Fully Answered** | [Foundations §8](ml_foundations_regression_classification_visual_guide.md#8-why-linear-regression-fails-for-classification) | Mark-Adaptive Brief |
+| **2023 End** | Q2(d) | Differences between Feedforward (FNN) and Recurrent Networks (RNN) | 2M | **Fully Answered** | [Neural Networks §7](neural_networks_visual_guide.md#7-multilayer-feed-forward-networks) | DAG vs Loops Table |
+| **2023 End** | Q3(a) | Significance of ReLU Activation in Deep Networks / CNNs | 4M | **Fully Answered** | [Activations §5](activation_crossentropy_backprop_visual_guide.md#5-relu-leaky-relu-and-sparse-gradients) | 4 Core Reasons |
+| **2023 End** | Q4(a) | Single Neuron Forward Pass Numerical ($z = 0.45 \implies y = 0.6106$) | 3M | **Fully Answered** | [Neural Networks §1](neural_networks_visual_guide.md#1-from-brain-to-artificial-neuron) | Python Audited |
+| **2023 End** | Q4(b) | Biased Coin Toss Log-Likelihood & Online SGD Derivation | 3M | **Fully Answered** | [Foundations §10.2](ml_foundations_regression_classification_visual_guide.md#10-training-logistic-regression-log-loss--gradient-descent) | Calculus Proof |
 
 ---
 
 ## 2025 Mid-Semester Examination Solutions
 
-> [!tip] 🎯 Exam Hall Selection Advisory
+> [!TIP] 🎯 Exam Hall Selection Advisory
 > **Status:** Compulsory Paper — **Attempt All Questions**.  
 > **Total Marks:** 30 | **Time:** 2 Hours  
 > **Scoring Strategy:** All 4 questions are 100% grounded in authorized course materials. Allocate ~15 mins for Q1 (MCQs), ~30 mins for Q2 (Regression & LogReg), ~35 mins for Q3 (Activations & Logic Gates), and ~40 mins for Q4 (Losses & Optimizers).
@@ -166,7 +166,10 @@ Analysis of examination recurrence across 2023, 2024, and 2025 for topics covere
 
 - **Linear Regression:** Used to predict a **continuous numerical value** (e.g., house prices or tomorrow's temperature). It fits a straight line: $\hat{y} = \mathbf{w}^T \mathbf{x} + b$, and its output can be any number from $-\infty$ to $+\infty$.
 - **Logistic Regression:** Used for **binary classification** (e.g., Spam vs. Not Spam, Disease vs. Healthy). It predicts a **probability between 0 and 1** by passing the linear equation through an S-shaped sigmoid function:
-  $$\hat{p} = \sigma(\mathbf{w}^T \mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^T \mathbf{x} + b)}}$$
+
+  $$
+  \hat{p} = \sigma(\mathbf{w}^T \mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^T \mathbf{x} + b)}}
+  $$
 
 | Comparison Point | Linear Regression | Logistic Regression |
 |:---|:---|:---|
@@ -187,7 +190,11 @@ A logistic regression model outputs a probability $\hat{p} \in (0, 1)$. If the p
 
 1. **Log-Loss (Binary Cross-Entropy):**  
    Measures how close the predicted probabilities are to the actual 0 or 1 labels:
-   $$\mathcal{L}_{\text{BCE}} = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \ln \hat{p}^{(i)} + (1 - y^{(i)}) \ln (1 - \hat{p}^{(i)}) \right]$$
+
+   $$
+   \mathcal{L}_{\text{BCE}} = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \ln \hat{p}^{(i)} + (1 - y^{(i)}) \ln (1 - \hat{p}^{(i)}) \right]
+   $$
+
    - It heavily punishes a model that is **confident but wrong** (e.g., predicting $99\%$ probability for Class 1 when the true answer is 0).
 
 2. **Confusion Matrix Metrics (at threshold 0.5):**  
@@ -198,7 +205,10 @@ A logistic regression model outputs a probability $\hat{p} \in (0, 1)$. If the p
    - **Recall (Sensitivity):** $\frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}$  
      *(Out of all real cancer patients, how many did the model correctly catch?).*
    - **F1-Score:** The balanced harmonic mean of Precision and Recall:
-     $$\text{F}_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$$
+
+     $$
+     \text{F}_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+     $$
 
 3. **ROC-AUC (Threshold-Independent Metric):**  
    - Plots True Positive Rate vs. False Positive Rate across all possible cutoff thresholds.
@@ -213,7 +223,11 @@ A logistic regression model outputs a probability $\hat{p} \in (0, 1)$. If the p
 #### Model Answer in Simple English
 
 **Regularization** adds a penalty term to the loss function to prevent the model weights from becoming too large:
-$$J_{\text{reg}}(\mathbf{w}) = \text{Log-Loss} + \lambda \, \Omega(\mathbf{w})$$
+
+$$
+J_{\text{reg}}(\mathbf{w}) = \text{Log-Loss} + \lambda \, \Omega(\mathbf{w})
+$$
+
 where $\lambda$ controls how strongly we penalize large weights.
 
 It plays three vital roles:
@@ -237,7 +251,10 @@ It plays three vital roles:
 
 ##### 1. Single-Neuron Structures for AND and OR Gates
 Both AND and OR can be solved using **a single artificial neuron** because their truth tables are **linearly separable** (a single straight line can separate the 1s from the 0s on a 2D graph):
-$$y = \phi(w_1 x_1 + w_2 x_2 + b) \quad \text{where } \phi(z) = \begin{cases} 1 & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}$$
+
+$$
+y = \phi(w_1 x_1 + w_2 x_2 + b) \quad \text{where } \phi(z) = \begin{cases} 1 & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}
+$$
 
 - **(i) 2-Input AND Gate:**  
   Output is $1$ only when both $x_1=1$ and $x_2=1$.  
@@ -281,7 +298,7 @@ $$y = \phi(w_1 x_1 + w_2 x_2 + b) \quad \text{where } \phi(z) = \begin{cases} 1 
 | **First Derivative** | $\sigma'(z) = \sigma(z)(1 - \sigma(z))$ | $\tanh'(z) = 1 - \tanh^2(z)$ | $f'(z) = 1$ (for $z > 0$), $0$ (for $z < 0$) |
 | **Maximum Gradient** | **$0.25$** (at $z=0$) | **$1.0$** (at $z=0$) | **$1.0$** (for all positive $z$) |
 | **Centered at Zero?** | ❌ No (Outputs strictly positive) | ✅ Yes (Outputs centered at 0) | ❌ No (Outputs $\ge 0$) |
-| **Vanishing Gradient?** | **Very Severe:** Maximum gradient is only $0.25$. Multiplying across layers shrinks gradient to 0. | **Severe when $|z| > 2.5$**, but better near 0 than sigmoid. | **None for $z > 0$** (slope is always 1). |
+| **Vanishing Gradient?** | **Very Severe:** Maximum gradient is only $0.25$. Multiplying across layers shrinks gradient to 0. | **Severe when $\|z\| > 2.5$**, but better near 0 than sigmoid. | **None for $z > 0$** (slope is always 1). |
 | **Main Weakness** | Vanishing gradients; slow exponential math | Vanishing gradients at saturation ends | **Dying ReLU:** Neurons that get negative input can permanently die. |
 | **Where to Use** | Output layer for binary classification | Hidden layers in shallow networks or RNNs | **Default choice** for hidden layers in modern deep networks and CNNs |
 
@@ -317,16 +334,32 @@ When training neural networks with sigmoid output units, **Cross-Entropy is vast
 Let output be $a = \sigma(z) = \frac{1}{1 + e^{-z}}$, with derivative $\frac{\partial a}{\partial z} = a(1 - a)$, and true label $y \in \{0, 1\}$.
 
 - **Case 1: Sum of Squared Errors (SSE) — Learning Stalls:**  
-  $$\text{Loss} = \frac{1}{2}(y - a)^2 \implies \frac{\partial \text{Loss}}{\partial z} = -(y - a) \cdot a(1 - a)$$
+
+  $$
+  \text{Loss} = \frac{1}{2}(y - a)^2 \implies \frac{\partial \text{Loss}}{\partial z} = -(y - a) \cdot a(1 - a)
+  $$
+
   *The Failure:* Suppose the true label is $y = 1$, but the network is horribly wrong, outputting $a = 0.001$.  
   The error is huge ($(y - a) \approx 1$), but the gradient is:
-  $$\frac{\partial \text{Loss}}{\partial z} = -1 \times 0.001 \times 0.999 \approx \mathbf{-0.001 \approx 0}$$
+
+  $$
+  \frac{\partial \text{Loss}}{\partial z} = -1 \times 0.001 \times 0.999 \approx \mathbf{-0.001 \approx 0}
+  $$
+
   Even though the model made a giant mistake, the gradient is near zero! The network gets stuck and barely updates its weights.
 
 - **Case 2: Binary Cross-Entropy (BCE) — Fast, Proportional Learning:**  
-  $$\text{Loss} = -[y \ln a + (1 - y) \ln (1 - a)] \implies \frac{\partial \text{Loss}}{\partial a} = \frac{a - y}{a(1 - a)}$$
+
+  $$
+  \text{Loss} = -[y \ln a + (1 - y) \ln (1 - a)] \implies \frac{\partial \text{Loss}}{\partial a} = \frac{a - y}{a(1 - a)}
+  $$
+
   Now multiply by the sigmoid derivative $\frac{\partial a}{\partial z} = a(1 - a)$:
-  $$\frac{\partial \text{Loss}}{\partial z} = \frac{a - y}{a(1 - a)} \cdot a(1 - a) = \mathbf{a - y}$$
+
+  $$
+  \frac{\partial \text{Loss}}{\partial z} = \frac{a - y}{a(1 - a)} \cdot a(1 - a) = \mathbf{a - y}
+  $$
+
   *The Perfect Cancellation:* The term $a(1 - a)$ cancels out completely! The gradient is simply $(a - y)$, which is the raw error. If the error is large, the gradient is large and the model fixes itself immediately.
 
 ---
@@ -363,7 +396,11 @@ All three methods adjust network weights to reduce loss, but they differ in **ho
 1. **How It Works:**  
    - Batch Normalization (BN) is placed between a layer's linear sum ($z = Wx + b$) and its activation function.
    - For every mini-batch of data, it calculates the batch mean ($\mu$) and variance ($\sigma^2$), and standardizes the values so they have a mean of 0 and a variance of 1:
-     $$\hat{z}_i = \frac{z_i - \mu}{\sqrt{\sigma^2 + \epsilon}}$$
+
+     $$
+     \hat{z}_i = \frac{z_i - \mu}{\sqrt{\sigma^2 + \epsilon}}
+     $$
+
    - Then it applies two learned parameters ($\gamma$ to scale, $\beta$ to shift): $y_i = \gamma \hat{z}_i + \beta$.
 
 2. **Key Advantages:**  
@@ -374,14 +411,14 @@ All three methods adjust network weights to reduce loss, but they differ in **ho
 
 ## 2025 End-Semester Examination Solutions
 
-> [!tip] 🎯 Exam Hall Selection Advisory
+> [!TIP] 🎯 Exam Hall Selection Advisory
 > **Status:** Compulsory Q1 (10 Marks) + Attempt any FOUR from Q2–Q7 (10 Marks each).  
 > **Total Marks:** 50 | **Time:** 3 Hours  
 > **Reference-Grounded Strategy:**
-> 1. **Question 1 [10 Marks]:** Mandatory compulsory question. All 5 sub-parts (a–e) are 100% grounded in [[ml_foundations_regression_classification_visual_guide|Foundations Guide]].
-> 2. **Question 3 [10 Marks]:** **Highest-Yield Choice!** Covers activations: Q3(a) [6M] comparing ReLU, Sigmoid, Tanh + Q3(b) [4M] Softmax derivation. Fully grounded in [[activation_crossentropy_backprop_visual_guide|Activations Guide]] and [[neural_networks_visual_guide|Neural Networks Guide]].
+> 1. **Question 1 [10 Marks]:** Mandatory compulsory question. All 5 sub-parts (a–e) are 100% grounded in [Foundations Guide](ml_foundations_regression_classification_visual_guide.md).
+> 2. **Question 3 [10 Marks]:** **Highest-Yield Choice!** Covers activations: Q3(a) [6M] comparing ReLU, Sigmoid, Tanh + Q3(b) [4M] Softmax derivation. Fully grounded in [Activations Guide](activation_crossentropy_backprop_visual_guide.md) and [Neural Networks Guide](neural_networks_visual_guide.md).
 > 3. **Question 2 [Partially Grounded - 7 Marks]:** Q2(a) [3M] Bias-Variance Tradeoff + Q2(b) [4M] L1 Lasso vs L2 Ridge. *(Note: Q2(c) Early Stopping is placed in the [Final Uncovered Section](#unanswered--uncovered-questions-not-in-reference-notes)).*
-> 4. **Question 4 [Partially Grounded - 6 Marks]:** Q4(a) [6M] DNN Architecture, Forward Pass & Backpropagation. Fully grounded in [[neural_networks_visual_guide|Neural Networks Guide]]. *(Note: Q4(b) Sentence Semantics is placed in the [Final Uncovered Section](#unanswered--uncovered-questions-not-in-reference-notes)).*
+> 4. **Question 4 [Partially Grounded - 6 Marks]:** Q4(a) [6M] DNN Architecture, Forward Pass & Backpropagation. Fully grounded in [Neural Networks Guide](neural_networks_visual_guide.md). *(Note: Q4(b) Sentence Semantics is placed in the [Final Uncovered Section](#unanswered--uncovered-questions-not-in-reference-notes)).*
 > 5. **Questions 5, 6, 7:** Cover VGG16, Autoencoders, and RNN/GRU architectures. Outside the 3 reference guides and deferred to the [Final Uncovered Section](#unanswered--uncovered-questions-not-in-reference-notes).
 
 ---
@@ -492,7 +529,10 @@ A **Confusion Matrix** is a 2x2 table (for binary classification) that compares 
 
 ##### 2. The Bias-Variance Tradeoff
 Total test prediction error decomposes into three parts:
-$$\text{Total Test Error} = (\text{Bias})^2 + \text{Variance} + \text{Irreducible Noise} (\sigma^2)$$
+
+$$
+\text{Total Test Error} = (\text{Bias})^2 + \text{Variance} + \text{Irreducible Noise} (\sigma^2)
+$$
 
 - **The Tradeoff:**
   - If you make a model **simpler** (e.g., a straight line): Bias is **high**, but Variance is **low**.
@@ -508,13 +548,23 @@ $$\text{Total Test Error} = (\text{Bias})^2 + \text{Variance} + \text{Irreducibl
 ##### Model Answer in Simple English
 
 Regularization adds a penalty to the loss function to keep weights small:
-$$\text{Total Loss} = \text{Original Loss} + \lambda \times \text{Penalty}$$
+
+$$
+\text{Total Loss} = \text{Original Loss} + \lambda \times \text{Penalty}
+$$
 
 ##### 1. Mathematical Formulations
 - **$L_1$ Regularization (Lasso):** Penalizes the sum of **absolute values** of the weights:
-  $$\text{Penalty}_{L_1} = \sum_{j=1}^n |w_j| \implies \text{Loss} + \lambda \sum_{j=1}^n |w_j|$$
+
+  $$
+  \text{Penalty}_{L_1} = \sum_{j=1}^n |w_j| \implies \text{Loss} + \lambda \sum_{j=1}^n |w_j|
+  $$
+
 - **$L_2$ Regularization (Ridge / Weight Decay):** Penalizes the sum of **squared values** of the weights:
-  $$\text{Penalty}_{L_2} = \frac{1}{2}\sum_{j=1}^n w_j^2 \implies \text{Loss} + \frac{\lambda}{2} \sum_{j=1}^n w_j^2$$
+
+  $$
+  \text{Penalty}_{L_2} = \frac{1}{2}\sum_{j=1}^n w_j^2 \implies \text{Loss} + \frac{\lambda}{2} \sum_{j=1}^n w_j^2
+  $$
 
 ##### 2. Comparison of Effects on Model Weights
 
@@ -540,17 +590,29 @@ $$\text{Total Loss} = \text{Original Loss} + \lambda \times \text{Penalty}$$
 
 ##### 1. Formulas and Derivatives
 1. **Sigmoid Activation Function:**
-   $$\sigma(z) = \frac{1}{1 + e^{-z}}$$
+
+   $$
+   \sigma(z) = \frac{1}{1 + e^{-z}}
+   $$
+
    - **Derivative:** $\sigma'(z) = \sigma(z)(1 - \sigma(z))$.
    - **Maximum slope:** Only **$0.25$** (at $z = 0$). For values $|z| \ge 4$, the curve becomes flat and the slope drops to zero.
 
 2. **Tanh (Hyperbolic Tangent) Activation Function:**
-   $$\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}} = 2\sigma(2z) - 1$$
+
+   $$
+   \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}} = 2\sigma(2z) - 1
+   $$
+
    - **Derivative:** $\tanh'(z) = 1 - \tanh^2(z)$.
    - **Maximum slope:** **$1.0$** (at $z = 0$). For $|z| \ge 2.5$, the curve becomes flat and the slope drops to zero.
 
 3. **ReLU (Rectified Linear Unit) Activation Function:**
-   $$f(z) = \max(0, z) = \begin{cases} z & \text{if } z > 0 \\ 0 & \text{if } z \le 0 \end{cases}$$
+
+   $$
+   f(z) = \max(0, z) = \begin{cases} z & \text{if } z > 0 \\ 0 & \text{if } z \le 0 \end{cases}
+   $$
+
    - **Derivative:** $f'(z) = 1$ for all $z > 0$, and $0$ for $z < 0$.
 
 ##### 2. Comprehensive Comparison Table
@@ -560,7 +622,7 @@ $$\text{Total Loss} = \text{Original Loss} + \lambda \times \text{Penalty}$$
 | **Output Range** | $(0, 1)$ | $(-1, 1)$ | $[0, +\infty)$ |
 | **Centered at Zero?** | ❌ No (Outputs are always $> 0$) | ✅ Yes (Mean output is around 0) | ❌ No (Outputs are $\ge 0$) |
 | **Maximum Gradient** | **$0.25$** | **$1.0$** | **$1.0$** (constant for positive inputs) |
-| **Vanishing Gradient?** | **Very Severe:** Gradients shrink to zero in deep networks. | **Severe for large $|z|$**, but better near 0 than sigmoid. | **None for $z > 0$** (slope is always 1). |
+| **Vanishing Gradient?** | **Very Severe:** Gradients shrink to zero in deep networks. | **Severe for large $\|z\|$**, but better near 0 than sigmoid. | **None for $z > 0$** (slope is always 1). |
 | **Weakness** | Slow training, vanishing gradients | Vanishing gradients at outer edges | **Dying ReLU:** Can permanently shut down if inputs are negative. |
 | **Computing Cost** | Slow (needs exponential $e^{-z}$) | Slow (needs two exponentials) | **Fastest:** Simple check (`z > 0 ? z : 0`). |
 | **Where to Use** | Binary classification output layer | Hidden layers in shallow networks or RNNs | **Default standard** for hidden layers in modern deep networks |
@@ -577,18 +639,28 @@ $$\text{Total Loss} = \text{Original Loss} + \lambda \times \text{Penalty}$$
 When a neural network needs to classify inputs into $K$ different classes (e.g., identifying whether an image is a cat, dog, or bird), the final layer produces raw scores called logits: $\mathbf{z} = [z_1, z_2, \dots, z_K]$.  
 The **Softmax** function turns these raw numbers into a valid probability distribution:
 
-$$p_k = \text{Softmax}(\mathbf{z})_k = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}} \quad \text{for } k = 1, 2, \dots, K$$
+$$
+p_k = \text{Softmax}(\mathbf{z})_k = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}} \quad \text{for } k = 1, 2, \dots, K
+$$
 
 ##### 2. Working Principle & Key Properties
 1. **Valid Probabilities:**
    - Every output probability is strictly positive ($p_k > 0$) because $e^z > 0$.
    - All probabilities sum up to exactly $1.0$:
-     $$\sum_{k=1}^K p_k = \frac{\sum_{k=1}^K e^{z_k}}{\sum_{j=1}^K e^{z_j}} = 1.0$$
+
+     $$
+     \sum_{k=1}^K p_k = \frac{\sum_{k=1}^K e^{z_k}}{\sum_{j=1}^K e^{z_j}} = 1.0
+     $$
+
 2. **Smooth ("Soft") Maximum:**
    - Exponentiation emphasizes the largest score, making the most confident class stand out while keeping the function smooth and differentiable for gradient descent.
 3. **Clean Error Derivative with Cross-Entropy:**
    - When paired with Categorical Cross-Entropy loss ($\text{Loss} = -\sum y_k \ln p_k$), the derivative with respect to any logit $z_i$ simplifies to:
-     $$\frac{\partial \text{Loss}}{\partial z_i} = p_i - y_i$$
+
+     $$
+     \frac{\partial \text{Loss}}{\partial z_i} = p_i - y_i
+     $$
+
    - This means the gradient is simply the **predicted probability minus the true label (0 or 1)**!
 
 ##### 3. Typical Applications
@@ -614,33 +686,56 @@ A Deep Neural Network is organized into consecutive layers of interconnected art
 ##### 2. Forward Propagation (Making a Prediction)
 Data moves forward through the network, layer by layer:
 1. **Weighted Sum (Affine Step):** Each neuron multiplies its inputs by its weights and adds a bias:
-   $$\mathbf{z}^{[l]} = \mathbf{W}^{[l]} \mathbf{a}^{[l-1]} + \mathbf{b}^{[l]}$$
+
+   $$
+   \mathbf{z}^{[l]} = \mathbf{W}^{[l]} \mathbf{a}^{[l-1]} + \mathbf{b}^{[l]}
+   $$
+
 2. **Activation Step:** The sum is passed through a non-linear activation function (like ReLU or Sigmoid):
-   $$\mathbf{a}^{[l]} = \phi(\mathbf{z}^{[l]})$$
+
+   $$
+   \mathbf{a}^{[l]} = \phi(\mathbf{z}^{[l]})
+   $$
+
 3. **Loss Computation:** At the output layer, the prediction $\hat{\mathbf{y}} = \mathbf{a}^{[L]}$ is compared with the true target $\mathbf{y}$ using a loss function $\mathcal{L}(\hat{\mathbf{y}}, \mathbf{y})$ (such as Cross-Entropy).
 
 ##### 3. Backpropagation (Learning from Mistakes)
 Backpropagation uses the **chain rule of calculus** to pass error signals backward from the output layer to early layers, computing how much each weight contributed to the total error:
 
 1. **Step 1: Output Layer Error:** Calculate the error at the final layer:
-   $$\boldsymbol{\delta}^{[L]} = \frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot \phi'(\mathbf{z}^{[L]}) = \mathbf{a}^{[L]} - \mathbf{y}$$
+
+   $$
+   \boldsymbol{\delta}^{[L]} = \frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot \phi'(\mathbf{z}^{[L]}) = \mathbf{a}^{[L]} - \mathbf{y}
+   $$
+
 2. **Step 2: Propagate Error Backward:** Pass the error back through hidden layers:
-   $$\boldsymbol{\delta}^{[l]} = \left( (\mathbf{W}^{[l+1]})^T \boldsymbol{\delta}^{[l+1]} \right) \odot \phi'(\mathbf{z}^{[l]})$$
+
+   $$
+   \boldsymbol{\delta}^{[l]} = \left( (\mathbf{W}^{[l+1]})^T \boldsymbol{\delta}^{[l+1]} \right) \odot \phi'(\mathbf{z}^{[l]})
+   $$
+
 3. **Step 3: Calculate Weight Gradients:**
-   $$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}} = \boldsymbol{\delta}^{[l]} (\mathbf{a}^{[l-1]})^T, \quad \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}} = \boldsymbol{\delta}^{[l]}$$
+
+   $$
+   \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}} = \boldsymbol{\delta}^{[l]} (\mathbf{a}^{[l-1]})^T, \quad \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}} = \boldsymbol{\delta}^{[l]}
+   $$
+
 4. **Step 4: Update Weights (Gradient Descent):** Adjust weights in the direction that lowers loss:
-   $$\mathbf{W}^{[l]} := \mathbf{W}^{[l]} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}}, \quad \mathbf{b}^{[l]} := \mathbf{b}^{[l]} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}}$$
+
+   $$
+   \mathbf{W}^{[l]} := \mathbf{W}^{[l]} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}}, \quad \mathbf{b}^{[l]} := \mathbf{b}^{[l]} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}}
+   $$
 
 
 ## 2024 Mid-Semester Examination Solutions
 
-> [!tip] 🎯 Exam Hall Selection Advisory
+> [!TIP] 🎯 Exam Hall Selection Advisory
 > **Status:** Attempt All Questions (3 Questions $\times$ 10 Marks = 30 Marks).  
 > **Total Marks:** 30 | **Time:** 2 Hours  
 > **Reference-Grounded Coverage (18 Marks Total):**
-> - **Question 1(a) [4 Marks]:** Simple Linear Regression OLS derivation. (Grounded in [[ml_foundations_regression_classification_visual_guide#4-simple-linear-regression-slr--the-least-squares-derivation|Foundations Guide §4]]). *(Note: Q1(b,c) KNN [6M] are outside course guides and deferred to [Final Uncovered Section](#unanswered--uncovered-questions-not-in-reference-notes)).*
-> - **Question 2(c) [4 Marks]:** L1 & L2 Regularization in Logistic Regression. (Grounded in [[ml_foundations_regression_classification_visual_guide#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter|Foundations Guide §11]]). *(Note: Q2(a,b) Decision Trees & Naive Bayes [6M] deferred to [Final Uncovered Section](#unanswered--uncovered-questions-not-in-reference-notes)).*
-> - **Question 3 [10 Marks Complete!]:** Entire Question 3 is 100% grounded in [[neural_networks_visual_guide|Neural Networks Guide]]:
+> - **Question 1(a) [4 Marks]:** Simple Linear Regression OLS derivation. (Grounded in [Foundations Guide §4](ml_foundations_regression_classification_visual_guide.md#4-simple-linear-regression-slr--the-least-squares-derivation)). *(Note: Q1(b,c) KNN [6M] are outside course guides and deferred to [Final Uncovered Section](#unanswered--uncovered-questions-not-in-reference-notes)).*
+> - **Question 2(c) [4 Marks]:** L1 & L2 Regularization in Logistic Regression. (Grounded in [Foundations Guide §11](ml_foundations_regression_classification_visual_guide.md#11-regularization-l1-lasso-l2-ridge-and-the-c-parameter)). *(Note: Q2(a,b) Decision Trees & Naive Bayes [6M] deferred to [Final Uncovered Section](#unanswered--uncovered-questions-not-in-reference-notes)).*
+> - **Question 3 [10 Marks Complete!]:** Entire Question 3 is 100% grounded in [Neural Networks Guide](neural_networks_visual_guide.md):
 >   - Q3(a) [2M]: Biological vs Artificial Neuron mapping.
 >   - Q3(b) [3M]: XOR Gate neural network & non-linear mapping.
 >   - Q3(c) [5M]: Perceptron Learning Algorithm & Novikoff Convergence Proof.
@@ -655,33 +750,68 @@ Backpropagation uses the **chain rule of calculus** to pass error signals backwa
 
 ##### 1. Problem Formulation
 In Simple Linear Regression, we want to fit a straight line to $m$ data points $\{(x_i, y_i)\}_{i=1}^m$:
-$$\hat{y}_i = w_1 x_i + w_0$$
+
+$$
+\hat{y}_i = w_1 x_i + w_0
+$$
+
 where $w_1$ is the slope and $w_0$ is the y-intercept.  
 The **Least Squares Method** finds the values of $w_0$ and $w_1$ that minimize the sum of squared vertical gaps (residuals) between the true data points and the line:
-$$S(w_0, w_1) = \sum_{i=1}^m (y_i - \hat{y}_i)^2 = \sum_{i=1}^m (y_i - w_0 - w_1 x_i)^2$$
+
+$$
+S(w_0, w_1) = \sum_{i=1}^m (y_i - \hat{y}_i)^2 = \sum_{i=1}^m (y_i - w_0 - w_1 x_i)^2
+$$
 
 ##### 2. Calculus Derivation (Finding the Minimum)
 To find the minimum, take partial derivatives with respect to $w_0$ and $w_1$, and set them equal to zero:
 
 - **Step 1: Derivative with respect to intercept $w_0$:**
-  $$\frac{\partial S}{\partial w_0} = -2 \sum_{i=1}^m (y_i - w_0 - w_1 x_i) = 0$$
+
+  $$
+  \frac{\partial S}{\partial w_0} = -2 \sum_{i=1}^m (y_i - w_0 - w_1 x_i) = 0
+  $$
+
   Dividing by $-2$ and expanding the sum:
-  $$\sum_{i=1}^m y_i - m w_0 - w_1 \sum_{i=1}^m x_i = 0 \implies m w_0 = \sum_{i=1}^m y_i - w_1 \sum_{i=1}^m x_i$$
+
+  $$
+  \sum_{i=1}^m y_i - m w_0 - w_1 \sum_{i=1}^m x_i = 0 \implies m w_0 = \sum_{i=1}^m y_i - w_1 \sum_{i=1}^m x_i
+  $$
+
   Dividing both sides by the total number of points $m$ (where $\bar{x} = \frac{1}{m}\sum x_i$ and $\bar{y} = \frac{1}{m}\sum y_i$ are the sample means):
-  $$\mathbf{w_0 = \bar{y} - w_1 \bar{x}}$$
+
+  $$
+  w_0 = \bar{y} - w_1 \bar{x}
+  $$
+
   *(Key Takeaway: The regression line always passes through the exact center point $(\bar{x}, \bar{y})$ of the data).*
 
 - **Step 2: Derivative with respect to slope $w_1$:**
-  $$\frac{\partial S}{\partial w_1} = -2 \sum_{i=1}^m x_i (y_i - w_0 - w_1 x_i) = 0$$
+
+  $$
+  \frac{\partial S}{\partial w_1} = -2 \sum_{i=1}^m x_i (y_i - w_0 - w_1 x_i) = 0
+  $$
+
   Substitute $w_0 = \bar{y} - w_1 \bar{x}$ into this equation:
-  $$\sum_{i=1}^m x_i \Big( (y_i - \bar{y}) - w_1 (x_i - \bar{x}) \Big) = 0$$
-  $$\sum_{i=1}^m x_i (y_i - \bar{y}) = w_1 \sum_{i=1}^m x_i (x_i - \bar{x})$$
+
+  $$
+  \sum_{i=1}^m x_i \Big( (y_i - \bar{y}) - w_1 (x_i - \bar{x}) \Big) = 0
+  $$
+
+  $$
+  \sum_{i=1}^m x_i (y_i - \bar{y}) = w_1 \sum_{i=1}^m x_i (x_i - \bar{x})
+  $$
 
   Because $\sum \bar{x}(y_i - \bar{y}) = 0$ and $\sum \bar{x}(x_i - \bar{x}) = 0$, we can center both sides by subtracting $\bar{x}$:
-  $$\sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y}) = w_1 \sum_{i=1}^m (x_i - \bar{x})^2$$
+
+  $$
+  \sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y}) = w_1 \sum_{i=1}^m (x_i - \bar{x})^2
+  $$
 
   Solving explicitly for slope $w_1$:
-  $$\mathbf{w_1 = \frac{\sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^m (x_i - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)}}$$
+
+  $$
+  w_1 = \frac{\sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^m (x_i - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)}
+  $$
 
 ---
 
@@ -692,18 +822,29 @@ To find the minimum, take partial derivatives with respect to $w_0$ and $w_1$, a
 #### Model Answer in Simple English
 
 In logistic regression, if data is cleanly separable, the model weights grow dangerously large ($\|\mathbf{w}\| \to \infty$), which creates an overly steep decision boundary that fails on test data. Regularization adds a penalty to prevent weights from blowing up:
-$$\text{Total Loss} = \text{Log-Loss} + \lambda \, \Omega(\mathbf{w})$$
+
+$$
+\text{Total Loss} = \text{Log-Loss} + \lambda \, \Omega(\mathbf{w})
+$$
 
 ##### 1. $L_2$ Regularization (Ridge / Weight Decay)
 - **Penalty Formula:** $\Omega_{L_2}(\mathbf{w}) = \frac{1}{2}\sum_{j=1}^n w_j^2$.
 - **How It Works:** Under gradient descent, each weight update is multiplied by a shrinkage fraction $(1 - \eta \lambda) < 1$:
-  $$w_j := w_j(1 - \eta \lambda) - \eta \frac{\partial \text{Loss}_0}{\partial w_j}$$
+
+  $$
+  w_j := w_j(1 - \eta \lambda) - \eta \frac{\partial \text{Loss}_0}{\partial w_j}
+  $$
+
 - **Effect on Weights:** Smoothly pulls all weights closer to zero, keeping them small without making them exactly zero. It handles correlated features very well.
 
 ##### 2. $L_1$ Regularization (Lasso)
 - **Penalty Formula:** $\Omega_{L_1}(\mathbf{w}) = \sum_{j=1}^n |w_j|$.
 - **How It Works:** Because the absolute value function has a sharp point at zero, its derivative is a constant step:
-  $$w_j := w_j - \eta \lambda \, \text{sgn}(w_j) - \eta \frac{\partial \text{Loss}_0}{\partial w_j}$$
+
+  $$
+  w_j := w_j - \eta \lambda \, \text{sgn}(w_j) - \eta \frac{\partial \text{Loss}_0}{\partial w_j}
+  $$
+
 - **Effect on Weights (Feature Selection):** It applies a steady subtractive force that drives unimportant weights **completely to zero ($w_j = 0$)**. This eliminates useless features and gives a sparse, easy-to-understand model.
 
 ---
@@ -763,7 +904,11 @@ For binary classification where inputs are $\mathbf{x}_i \in \mathbb{R}^{d+1}$ a
 1. Start with weight vector $\mathbf{w}_0 = \mathbf{0}$.
 2. Look at each training point. If the perceptron predicts correctly ($y_i (\mathbf{w}^T \mathbf{x}_i) > 0$), do nothing.
 3. If it makes a mistake ($y_i (\mathbf{w}^T \mathbf{x}_i) \le 0$), update the weight vector:
-   $$\mathbf{w}_{k+1} = \mathbf{w}_k + y_i \mathbf{x}_i$$
+
+   $$
+   \mathbf{w}_{k+1} = \mathbf{w}_k + y_i \mathbf{x}_i
+   $$
+
 4. Repeat until all points are correctly classified.
 
 ##### 2. Novikoff Convergence Proof (Why it stops in finite steps)
@@ -775,21 +920,45 @@ For binary classification where inputs are $\mathbf{x}_i \in \mathbb{R}^{d+1}$ a
 **The Proof in 3 Clear Steps:**
 - **Step 1: Alignment with true weights grows fast:**  
   Each time a mistake occurs, we add $y_i \mathbf{x}_i$:
-  $$(\mathbf{w}^{\ast})^T \mathbf{w}_{k} = (\mathbf{w}^{\ast})^T (\mathbf{w}_{k-1} + y_i \mathbf{x}_i) = (\mathbf{w}^{\ast})^T \mathbf{w}_{k-1} + y_i (\mathbf{w}^{\ast})^T \mathbf{x}_i \ge (\mathbf{w}^{\ast})^T \mathbf{w}_{k-1} + \gamma$$
+
+  $$
+  (\mathbf{w}^{\ast})^T \mathbf{w}_{k} = (\mathbf{w}^{\ast})^T (\mathbf{w}_{k-1} + y_i \mathbf{x}_i) = (\mathbf{w}^{\ast})^T \mathbf{w}_{k-1} + y_i (\mathbf{w}^{\ast})^T \mathbf{x}_i \ge (\mathbf{w}^{\ast})^T \mathbf{w}_{k-1} + \gamma
+  $$
+
   After $k$ mistakes starting from $\mathbf{w}_0 = \mathbf{0}$:
-  $$(\mathbf{w}^{\ast})^T \mathbf{w}_k \ge k\gamma \implies \Big( (\mathbf{w}^{\ast})^T \mathbf{w}_k \Big)^2 \ge k^2 \gamma^2 \quad \text{--- (1)}$$
+
+  $$
+  (\mathbf{w}^{\ast})^T \mathbf{w}_k \ge k\gamma \implies \Big( (\mathbf{w}^{\ast})^T \mathbf{w}_k \Big)^2 \ge k^2 \gamma^2 \quad \text{--- (1)}
+  $$
 
 - **Step 2: Total length of weight vector cannot grow too fast:**  
-  $$\|\mathbf{w}_{k}\|^2 = \|\mathbf{w}_{k-1} + y_i \mathbf{x}_i\|^2 = \|\mathbf{w}_{k-1}\|^2 + 2 y_i \mathbf{w}_{k-1}^T \mathbf{x}_i + \|\mathbf{x}_i\|^2$$
+
+  $$
+  \|\mathbf{w}_{k}\|^2 = \|\mathbf{w}_{k-1} + y_i \mathbf{x}_i\|^2 = \|\mathbf{w}_{k-1}\|^2 + 2 y_i \mathbf{w}_{k-1}^T \mathbf{x}_i + \|\mathbf{x}_i\|^2
+  $$
+
   Since update $k$ happened on a mistake, $y_i \mathbf{w}_{k-1}^T \mathbf{x}_i \le 0$. And $\|\mathbf{x}_i\|^2 \le R^2$:
-  $$\|\mathbf{w}_k\|^2 \le \|\mathbf{w}_{k-1}\|^2 + R^2$$
+
+  $$
+  \|\mathbf{w}_k\|^2 \le \|\mathbf{w}_{k-1}\|^2 + R^2
+  $$
+
   After $k$ mistakes:
-  $$\|\mathbf{w}_k\|^2 \le k R^2 \quad \text{--- (2)}$$
+
+  $$
+  \|\mathbf{w}_k\|^2 \le k R^2 \quad \text{--- (2)}
+  $$
 
 - **Step 3: Combine using Cauchy-Schwarz Inequality:**  
   By definition, $((\mathbf{w}^{\ast})^T \mathbf{w}_k)^2 \le \|\mathbf{w}^{\ast}\|^2 \|\mathbf{w}_k\|^2 = 1 \times \|\mathbf{w}_k\|^2$. Combining (1) and (2):
-  $$k^2 \gamma^2 \le \|\mathbf{w}_k\|^2 \le k R^2$$
-  $$k^2 \gamma^2 \le k R^2 \implies \mathbf{k \le \left(\frac{R}{\gamma}\right)^2}$$
+
+  $$
+  k^2 \gamma^2 \le \|\mathbf{w}_k\|^2 \le k R^2
+  $$
+
+  $$
+  k^2 \gamma^2 \le k R^2 \implies k \le \left(\frac{R}{\gamma}\right)^2
+  $$
 
 **Conclusion:** The total number of mistakes $k$ cannot exceed $(R / \gamma)^2$. Therefore, the algorithm is mathematically guaranteed to finish in a finite number of steps! $\blacksquare$
 
@@ -797,7 +966,7 @@ For binary classification where inputs are $\mathbf{x}_i \in \mathbb{R}^{d+1}$ a
 
 ## 2024 Final-Semester Examination Solutions
 
-> [!tip] 🎯 Exam Hall Selection Advisory
+> [!TIP] 🎯 Exam Hall Selection Advisory
 > **Status:** Attempt any FOUR Questions ($12\frac{1}{2} \text{ Marks} \times 4 = 50 \text{ Marks}$).  
 > **Total Marks:** 50 | **Time:** 3 Hours  
 > **Optimal Reference-Grounded Strategy (37.5 Marks Grounded!):**
@@ -822,28 +991,51 @@ For binary classification where inputs are $\mathbf{x}_i \in \mathbb{R}^{d+1}$ a
 
 ##### 1. Matrix Form of Multiple Linear Regression
 When predicting a target $y$ from $n$ different features across $m$ data samples:
-$$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}$$
+
+$$
+\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}
+$$
+
 where:
 - $\mathbf{Y} \in \mathbb{R}^{m \times 1}$ is the column vector of actual values: $[y_1, y_2, \dots, y_m]^T$.
 - $\mathbf{X} \in \mathbb{R}^{m \times (n+1)}$ is the design matrix, with a first column of 1s to handle the intercept:
-  $$\mathbf{X} = \begin{bmatrix} 1 & x_{11} & x_{12} & \dots & x_{1n} \\ 1 & x_{21} & x_{22} & \dots & x_{2n} \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_{m1} & x_{m2} & \dots & x_{mn} \end{bmatrix}$$
+
+  $$
+  \mathbf{X} = \begin{bmatrix} 1 & x_{11} & x_{12} & \dots & x_{1n} \\ 1 & x_{21} & x_{22} & \dots & x_{2n} \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_{m1} & x_{m2} & \dots & x_{mn} \end{bmatrix}
+  $$
+
 - $\boldsymbol{\beta} \in \mathbb{R}^{(n+1) \times 1}$ is the vector of coefficients: $[\beta_0, \beta_1, \dots, \beta_n]^T$.
 - $\boldsymbol{\epsilon}$ is the random error vector.
 
 ##### 2. Estimating Coefficients (Normal Equations Derivation)
 The predicted values are $\hat{\mathbf{Y}} = \mathbf{X}\boldsymbol{\beta}$, and the residual error is $\mathbf{e} = \mathbf{Y} - \mathbf{X}\boldsymbol{\beta}$.  
 We want to minimize the sum of squared errors $S(\boldsymbol{\beta})$:
-$$S(\boldsymbol{\beta}) = \mathbf{e}^T \mathbf{e} = (\mathbf{Y} - \mathbf{X}\boldsymbol{\beta})^T (\mathbf{Y} - \mathbf{X}\boldsymbol{\beta})$$
+
+$$
+S(\boldsymbol{\beta}) = \mathbf{e}^T \mathbf{e} = (\mathbf{Y} - \mathbf{X}\boldsymbol{\beta})^T (\mathbf{Y} - \mathbf{X}\boldsymbol{\beta})
+$$
 
 Expanding the matrix multiplication:
-$$S(\boldsymbol{\beta}) = \mathbf{Y}^T \mathbf{Y} - 2\boldsymbol{\beta}^T \mathbf{X}^T \mathbf{Y} + \boldsymbol{\beta}^T (\mathbf{X}^T \mathbf{X}) \boldsymbol{\beta}$$
+
+$$
+S(\boldsymbol{\beta}) = \mathbf{Y}^T \mathbf{Y} - 2\boldsymbol{\beta}^T \mathbf{X}^T \mathbf{Y} + \boldsymbol{\beta}^T (\mathbf{X}^T \mathbf{X}) \boldsymbol{\beta}
+$$
 
 To find the minimum, take the matrix derivative with respect to $\boldsymbol{\beta}$ and set it to zero:
-$$\nabla_{\boldsymbol{\beta}} S(\boldsymbol{\beta}) = -2\mathbf{X}^T \mathbf{Y} + 2(\mathbf{X}^T \mathbf{X})\boldsymbol{\beta} = \mathbf{0}$$
-$$(\mathbf{X}^T \mathbf{X})\hat{\boldsymbol{\beta}} = \mathbf{X}^T \mathbf{Y} \quad \text{(The Normal Equations)}$$
+
+$$
+\nabla_{\boldsymbol{\beta}} S(\boldsymbol{\beta}) = -2\mathbf{X}^T \mathbf{Y} + 2(\mathbf{X}^T \mathbf{X})\boldsymbol{\beta} = \mathbf{0}
+$$
+
+$$
+(\mathbf{X}^T \mathbf{X})\hat{\boldsymbol{\beta}} = \mathbf{X}^T \mathbf{Y} \quad \text{(The Normal Equations)}
+$$
 
 Multiply both sides by the inverse $(\mathbf{X}^T \mathbf{X})^{-1}$:
-$$\mathbf{\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}}$$
+
+$$
+\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}
+$$
 
 ##### 3. Geometric Meaning (Orthogonal Projection)
 In simple words: The predicted vector $\hat{\mathbf{Y}}$ is the closest possible point in the feature space to the actual target vector $\mathbf{Y}$. The error vector $\mathbf{e} = \mathbf{Y} - \hat{\mathbf{Y}}$ is completely perpendicular (orthogonal) to every feature column in $\mathbf{X}$ ($\mathbf{X}^T \mathbf{e} = \mathbf{0}$).
@@ -869,29 +1061,58 @@ In simple words: The predicted vector $\hat{\mathbf{Y}}$ is the closest possible
 ##### 2. Step-by-Step Chain Rule Derivation
 We want to find how much the error $E$ changes when weight $\theta_{j, m, K}$ changes: $\frac{\partial E}{\partial \theta_{j, m, K}}$.  
 Using the chain rule:
-$$\frac{\partial E}{\partial \theta_{j, m, K}} = \frac{\partial E}{\partial O_{j, K}} \cdot \frac{\partial O_{j, K}}{\partial I_{j, K}} \cdot \frac{\partial I_{j, K}}{\partial \theta_{j, m, K}}$$
+
+$$
+\frac{\partial E}{\partial \theta_{j, m, K}} = \frac{\partial E}{\partial O_{j, K}} \cdot \frac{\partial O_{j, K}}{\partial I_{j, K}} \cdot \frac{\partial I_{j, K}}{\partial \theta_{j, m, K}}
+$$
 
 Let's evaluate the 3 pieces one by one:
 1. **Piece 1 (Error w.r.t Output):**  
-   $$\frac{\partial E}{\partial O_{j, K}} = -(y_j - O_{j, K})$$
+
+   $$
+   \frac{\partial E}{\partial O_{j, K}} = -(y_j - O_{j, K})
+   $$
+
 2. **Piece 2 (Output w.r.t Linear Sum - Sigmoid Derivative):**  
-   $$\frac{\partial O_{j, K}}{\partial I_{j, K}} = O_{j, K}(1 - O_{j, K})$$
+
+   $$
+   \frac{\partial O_{j, K}}{\partial I_{j, K}} = O_{j, K}(1 - O_{j, K})
+   $$
+
 3. **Piece 3 (Linear Sum w.r.t Weight):**  
-   $$\frac{\partial I_{j, K}}{\partial \theta_{j, m, K}} = O_{m, K-1}$$
+
+   $$
+   \frac{\partial I_{j, K}}{\partial \theta_{j, m, K}} = O_{m, K-1}
+   $$
 
 Now define the output error term $\delta_{j, K} \equiv -\frac{\partial E}{\partial I_{j, K}}$:
-$$\delta_{j, K} = (y_j - O_{j, K}) \cdot O_{j, K}(1 - O_{j, K})$$
+
+$$
+\delta_{j, K} = (y_j - O_{j, K}) \cdot O_{j, K}(1 - O_{j, K})
+$$
 
 Multiply by Piece 3 to get the full gradient:
-$$\frac{\partial E}{\partial \theta_{j, m, K}} = -\delta_{j, K} \cdot O_{m, K-1}$$
+
+$$
+\frac{\partial E}{\partial \theta_{j, m, K}} = -\delta_{j, K} \cdot O_{m, K-1}
+$$
 
 ##### 3. The Final Weight Update Rule
 Under gradient descent, adjust the weight in the opposite direction of the gradient:
-$$\theta_{j, m, K} := \theta_{j, m, K} - \eta \frac{\partial E}{\partial \theta_{j, m, K}}$$
-$$\mathbf{\theta_{j, m, K} := \theta_{j, m, K} + \eta \, (y_j - O_{j, K}) \, O_{j, K}(1 - O_{j, K}) \, O_{m, K-1}}$$
+
+$$
+\theta_{j, m, K} := \theta_{j, m, K} - \eta \frac{\partial E}{\partial \theta_{j, m, K}}
+$$
+
+$$
+\theta_{j, m, K} := \theta_{j, m, K} + \eta \, (y_j - O_{j, K}) \, O_{j, K}(1 - O_{j, K}) \, O_{m, K-1}
+$$
 
 For the bias $\theta_{j, 0, K}$ (where input $O_{0, K-1} = 1$):
-$$\mathbf{\theta_{j, 0, K} := \theta_{j, 0, K} + \eta \, (y_j - O_{j, K}) \, O_{j, K}(1 - O_{j, K})}$$
+
+$$
+\theta_{j, 0, K} := \theta_{j, 0, K} + \eta \, (y_j - O_{j, K}) \, O_{j, K}(1 - O_{j, K})
+$$
 
 ---
 
@@ -903,23 +1124,43 @@ $$\mathbf{\theta_{j, 0, K} := \theta_{j, 0, K} + \eta \, (y_j - O_{j, K}) \, O_{
 
 ##### 1. Definitions
 - **Binary Cross-Entropy Loss:**  
-  $$C_{\text{CE}} = -[y \ln a + (1 - y)\ln(1 - a)]$$
+
+  $$
+  C_{\text{CE}} = -[y \ln a + (1 - y)\ln(1 - a)]
+  $$
+
 - **Quadratic Loss (SSE):**  
-  $$C_{\text{quad}} = \frac{1}{2}(y - a)^2$$
+
+  $$
+  C_{\text{quad}} = \frac{1}{2}(y - a)^2
+  $$
+
   where $a = \sigma(z)$ is the sigmoid output and $y \in \{0, 1\}$ is the true label.
 
 ##### 2. Why Cross-Entropy is Far Better (The Learning Stall Problem)
 - **Under Quadratic Loss (Learning Freezes on Big Mistakes):**  
-  $$\frac{\partial C_{\text{quad}}}{\partial w} = -(y - a) \cdot a(1 - a) \cdot x$$
+
+  $$
+  \frac{\partial C_{\text{quad}}}{\partial w} = -(y - a) \cdot a(1 - a) \cdot x
+  $$
+
   Suppose the true label is $y = 1$, but the network is horribly wrong, outputting $a = 0.001$.  
   The error is huge ($y - a = 0.999$), but the gradient is:
-  $$\frac{\partial C_{\text{quad}}}{\partial w} \approx -0.999 \times 0.001 \times 0.999 \times x \approx \mathbf{-0.001 \cdot x \approx 0}$$
+
+  $$
+  \frac{\partial C_{\text{quad}}}{\partial w} \approx -0.999 \times 0.001 \times 0.999 \times x \approx \mathbf{-0.001 \cdot x \approx 0}
+  $$
+
   Even though the model made a giant error, the slope of the sigmoid is flat ($a(1-a) \approx 0$). The network practically stops updating its weights!
 
 - **Under Cross-Entropy Loss (Fast, Direct Learning):**  
   Differentiating cross-entropy gives $\frac{\partial C_{\text{CE}}}{\partial a} = \frac{a - y}{a(1 - a)}$.  
   When multiplied by the sigmoid slope $\frac{\partial a}{\partial z} = a(1 - a)$:
-  $$\frac{\partial C_{\text{CE}}}{\partial w} = \frac{a - y}{a(1 - a)} \cdot a(1 - a) \cdot x = \mathbf{(a - y) \cdot x}$$
+
+  $$
+  \frac{\partial C_{\text{CE}}}{\partial w} = \frac{a - y}{a(1 - a)} \cdot a(1 - a) \cdot x = \mathbf{(a - y) \cdot x}
+  $$
+
   **The Cancellation:** The flat sigmoid slope $a(1-a)$ cancels out completely! The weight update speed is directly proportional to the raw error $(a - y)$. When the error is large, the network learns fast; when the error is tiny, it settles smoothly.
 
 ---
@@ -957,7 +1198,11 @@ When training a deep neural network, gradients pass backward through layers via 
 #### Model Answer in Simple English
 
 ##### 1. ReLU Definition & Key Advantages
-$$\text{ReLU}(z) = \max(0, z) = \begin{cases} z & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}$$
+
+$$
+\text{ReLU}(z) = \max(0, z) = \begin{cases} z & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}
+$$
+
 - **Advantage 1: No Vanishing Gradients:** For positive inputs ($z > 0$), the slope is **always exactly 1.0**. Gradients can pass backward through 100+ layers without shrinking.
 - **Advantage 2: Representation Sparsity:** Any neuron with negative input outputs exactly $0$. In typical networks, 50% to 70% of neurons stay off for any given image, creating simple, sparse, and clean feature representations.
 - **Advantage 3: Extremely Fast Computation:** Evaluated with a simple conditional check (`z > 0 ? z : 0`), running up to $6\times$ faster on GPUs than slow exponential functions like Sigmoid or Tanh.
@@ -968,7 +1213,11 @@ $$\text{ReLU}(z) = \max(0, z) = \begin{cases} z & \text{if } z \ge 0 \\ 0 & \tex
 
 ##### 3. How Leaky ReLU Fixes the Dying ReLU Problem
 Leaky ReLU gives a small non-zero slope $\alpha$ (usually $\alpha = 0.01$) for negative inputs:
-$$\text{Leaky ReLU}(z) = \max(0.01z, z) = \begin{cases} z & \text{if } z > 0 \\ 0.01z & \text{if } z \le 0 \end{cases}$$
+
+$$
+\text{Leaky ReLU}(z) = \max(0.01z, z) = \begin{cases} z & \text{if } z > 0 \\ 0.01z & \text{if } z \le 0 \end{cases}
+$$
+
 - **The Rescue:** Because the slope is $0.01$ instead of $0$ for negative inputs, a small error signal always passes through. This allows gradient descent to adjust the weights and bring the neuron back to life over time!
 
 ---
@@ -993,7 +1242,10 @@ $$\text{Leaky ReLU}(z) = \max(0.01z, z) = \begin{cases} z & \text{if } z > 0 \\ 
 ##### 3. Relationship Between Batch Size and Epoch [1.5 Marks]
 - **Definition of an Epoch:** One complete pass through the entire training dataset of $m$ examples.
 - **Formula for Updates per Epoch:**
-  $$\text{Updates per Epoch} = \left\lceil \frac{m}{B} \right\rceil$$
+
+  $$
+  \text{Updates per Epoch} = \left\lceil \frac{m}{B} \right\rceil
+  $$
 
 ###### Examples across the Three Strategies ($m = 128,000$ Images):
 1. **Batch GD ($B = 128,000$):** $\frac{128,000}{128,000} = \mathbf{1\text{ weight update per epoch}}$. (100 epochs = 100 updates).
@@ -1003,7 +1255,7 @@ $$\text{Leaky ReLU}(z) = \max(0.01z, z) = \begin{cases} z & \text{if } z > 0 \\ 
 
 ## 2023 Mid-Semester Examination Solutions
 
-> [!tip] 🎯 Exam Hall Selection Advisory
+> [!TIP] 🎯 Exam Hall Selection Advisory
 > **Status:** Answer any THREE questions ($3 \text{ Questions} \times 10 \text{ Marks} = 30 \text{ Marks}$).  
 > **Total Marks:** 30 | **Time:** 2 Hours  
 > **Golden Reference-Grounded Strategy (27 Marks Grounded!):**
@@ -1021,7 +1273,9 @@ $$\text{Leaky ReLU}(z) = \max(0.01z, z) = \begin{cases} z & \text{if } z > 0 \\ 
 
 > 1. **(a)** Derive a gradient descent training algorithm that minimizes the sum of the squared error cost function, for the following hypothesis:
 >    
->    $$h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_1 x_1^2 + \theta_2 x_2 + \theta_2 x_2^2 + \dots + \theta_n x_n + \theta_n x_n^2$$
+>    $$
+>    h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_1 x_1^2 + \theta_2 x_2 + \theta_2 x_2^2 + \dots + \theta_n x_n + \theta_n x_n^2
+>    $$
 >    
 >    where $(x_1, x_2, \dots, x_n)$ represents an instance having $n$ features and $\theta_i, 0 \le i \le n$ represents the parameters to be learned. Assume that there are $m$ instances in the training set. Express the answer in the form $\theta_j := \theta_j + \dots$ for $1 \le j \le n$. **[7]**
 
@@ -1029,31 +1283,56 @@ $$\text{Leaky ReLU}(z) = \max(0.01z, z) = \begin{cases} z & \text{if } z > 0 \\ 
 
 ##### 1. Problem Setup
 We have $m$ training instances $\{(\mathbf{x}^{(i)}, y^{(i)})\}_{i=1}^m$. The given hypothesis binds the linear term $x_j$ and the quadratic term $x_j^2$ to the **same weight parameter $\theta_j$**:
-$$h_{\boldsymbol{\theta}}(\mathbf{x}) = \theta_0 + \sum_{j=1}^n \theta_j \left( x_j + x_j^2 \right)$$
+
+$$
+h_{\boldsymbol{\theta}}(\mathbf{x}) = \theta_0 + \sum_{j=1}^n \theta_j \left( x_j + x_j^2 \right)
+$$
 
 The Sum of Squared Errors (SSE) cost function across all $m$ examples is:
-$$J(\boldsymbol{\theta}) = \frac{1}{2} \sum_{i=1}^m \left( h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) - y^{(i)} \right)^2$$
+
+$$
+J(\boldsymbol{\theta}) = \frac{1}{2} \sum_{i=1}^m \left( h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) - y^{(i)} \right)^2
+$$
 
 ##### 2. Finding the Gradient
 Under gradient descent, we update each weight along the negative slope:
-$$\theta_j := \theta_j - \alpha \frac{\partial J(\boldsymbol{\theta})}{\partial \theta_j}$$
+
+$$
+\theta_j := \theta_j - \alpha \frac{\partial J(\boldsymbol{\theta})}{\partial \theta_j}
+$$
+
 where $\alpha$ is the learning rate.
 
 Using the chain rule to take the derivative of $J(\boldsymbol{\theta})$ with respect to $\theta_j$:
-$$\frac{\partial J(\boldsymbol{\theta})}{\partial \theta_j} = \sum_{i=1}^m \left( h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) - y^{(i)} \right) \cdot \frac{\partial h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)})}{\partial \theta_j}$$
+
+$$
+\frac{\partial J(\boldsymbol{\theta})}{\partial \theta_j} = \sum_{i=1}^m \left( h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) - y^{(i)} \right) \cdot \frac{\partial h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)})}{\partial \theta_j}
+$$
 
 Since $h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) = \dots + \theta_j(x_j^{(i)} + (x_j^{(i)})^2) + \dots$, the derivative of the hypothesis is:
-$$\frac{\partial h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)})}{\partial \theta_j} = x_j^{(i)} + (x_j^{(i)})^2$$
+
+$$
+\frac{\partial h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)})}{\partial \theta_j} = x_j^{(i)} + (x_j^{(i)})^2
+$$
 
 Substituting this back gives the gradient:
-$$\frac{\partial J(\boldsymbol{\theta})}{\partial \theta_j} = \sum_{i=1}^m \left( h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) - y^{(i)} \right) \left( x_j^{(i)} + (x_j^{(i)})^2 \right)$$
+
+$$
+\frac{\partial J(\boldsymbol{\theta})}{\partial \theta_j} = \sum_{i=1}^m \left( h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) - y^{(i)} \right) \left( x_j^{(i)} + (x_j^{(i)})^2 \right)
+$$
 
 ##### 3. Expressing in the Form $\theta_j := \theta_j + \dots$
 Now substitute this gradient into the update equation:
-$$\theta_j := \theta_j - \alpha \sum_{i=1}^m \left( h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) - y^{(i)} \right) \left( x_j^{(i)} + (x_j^{(i)})^2 \right)$$
+
+$$
+\theta_j := \theta_j - \alpha \sum_{i=1}^m \left( h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) - y^{(i)} \right) \left( x_j^{(i)} + (x_j^{(i)})^2 \right)
+$$
 
 Distribute the minus sign into the error term: $-(h_{\boldsymbol{\theta}} - y^{(i)}) = (y^{(i)} - h_{\boldsymbol{\theta}})$:
-$$\mathbf{\theta_j := \theta_j + \alpha \sum_{i=1}^m \left( y^{(i)} - h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) \right) \left( x_j^{(i)} + (x_j^{(i)})^2 \right)}$$
+
+$$
+\theta_j := \theta_j + \alpha \sum_{i=1}^m \left( y^{(i)} - h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}) \right) \left( x_j^{(i)} + (x_j^{(i)})^2 \right)
+$$
 
 *(And for the intercept $\theta_0$: $\theta_0 := \theta_0 + \alpha \sum_{i=1}^m (y^{(i)} - h_{\boldsymbol{\theta}}(\mathbf{x}^{(i)}))$).*
 
@@ -1075,7 +1354,11 @@ $$\mathbf{\theta_j := \theta_j + \alpha \sum_{i=1}^m \left( y^{(i)} - h_{\boldsy
 
 ##### 3. The Correct Cost Function Used Instead [1 Mark]
 We use **Binary Cross-Entropy (Log-Loss)**:
-$$\mathbf{J(\mathbf{w}) = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \ln \hat{y}^{(i)} + (1 - y^{(i)}) \ln(1 - \hat{y}^{(i)}) \right]}$$
+
+$$
+J(\mathbf{w}) = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \ln \hat{y}^{(i)} + (1 - y^{(i)}) \ln(1 - \hat{y}^{(i)}) \right]
+$$
+
 - It is strictly convex (a smooth bowl with only one global minimum), and its gradient is directly proportional to the raw error $(\hat{y} - y)$.
 
 ---
@@ -1113,15 +1396,34 @@ Binary logistic regression only separates 2 classes. To classify $c$ different c
 #### Model Answer in Simple English
 
 ##### Step 1: Compute Linear Combination ($z$)
-$$z = w_1 x_1 + w_2 x_2 + w_3 x_3 + b$$
-$$z = (0.2 \times 0.8) + (0.1 \times 0.6) + (-0.3 \times 0.4) + 0.35$$
-$$z = 0.16 + 0.06 - 0.12 + 0.35$$
-$$z = 0.22 - 0.12 + 0.35 = 0.10 + 0.35 = \mathbf{0.45}$$
+
+$$
+z = w_1 x_1 + w_2 x_2 + w_3 x_3 + b
+$$
+
+$$
+z = (0.2 \times 0.8) + (0.1 \times 0.6) + (-0.3 \times 0.4) + 0.35
+$$
+
+$$
+z = 0.16 + 0.06 - 0.12 + 0.35
+$$
+
+$$
+z = 0.22 - 0.12 + 0.35 = 0.10 + 0.35 = \mathbf{0.45}
+$$
 
 ##### Step 2: Pass through Sigmoid Activation
-$$y = \sigma(0.45) = \frac{1}{1 + e^{-0.45}}$$
+
+$$
+y = \sigma(0.45) = \frac{1}{1 + e^{-0.45}}
+$$
+
 Evaluating $e^{-0.45} \approx 0.6376$:
-$$y = \frac{1}{1 + 0.6376} = \frac{1}{1.6376} \approx \mathbf{0.6106 \quad (61.06\%)}$$
+
+$$
+y = \frac{1}{1 + 0.6376} = \frac{1}{1.6376} \approx \mathbf{0.6106 \quad (61.06\%)}
+$$
 
 ---
 
@@ -1133,27 +1435,53 @@ $$y = \frac{1}{1 + 0.6376} = \frac{1}{1.6376} \approx \mathbf{0.6106 \quad (61.0
 
 ##### 1. Probability Formula
 For a single toss $x_n \in \{0, 1\}$ with probability of Head $= p$:
-$$P(x_n \mid p) = p^{x_n} (1 - p)^{1 - x_n}$$
+
+$$
+P(x_n \mid p) = p^{x_n} (1 - p)^{1 - x_n}
+$$
+
 - If Head ($x_n = 1$): $p^1 (1 - p)^0 = p$.
 - If Tail ($x_n = 0$): $p^0 (1 - p)^1 = 1 - p$.
 
 Since the $N$ coin tosses are independent, the total probability (Likelihood) of the entire sequence is the product of all individual probabilities:
-$$L(p) = \prod_{n=1}^N p^{x_n} (1 - p)^{1 - x_n}$$
+
+$$
+L(p) = \prod_{n=1}^N p^{x_n} (1 - p)^{1 - x_n}
+$$
 
 ##### 2. Taking the Natural Log (Log-Likelihood)
 Multiplying numbers smaller than 1 leads to underflow in computers. Taking the natural logarithm ($\ln$) turns products into sums:
-$$\ell(p) = \ln L(p) = \sum_{n=1}^N \ln \left[ p^{x_n} (1 - p)^{1 - x_n} \right]$$
+
+$$
+\ell(p) = \ln L(p) = \sum_{n=1}^N \ln \left[ p^{x_n} (1 - p)^{1 - x_n} \right]
+$$
+
 Using log rules ($\ln(A \cdot B) = \ln A + \ln B$ and $\ln(A^B) = B \ln A$):
-$$\mathbf{\ell(p) = \sum_{n=1}^N \Big[ x_n \ln p + (1 - x_n) \ln (1 - p) \Big]}$$
+
+$$
+\ell(p) = \sum_{n=1}^N \Big[ x_n \ln p + (1 - x_n) \ln (1 - p) \Big]
+$$
 
 If we let $k = \sum x_n$ be the total number of Heads, then $(N - k)$ is the number of Tails:
-$$\mathbf{\ell(p) = k \ln p + (N - k) \ln(1 - p)}$$
+
+$$
+\ell(p) = k \ln p + (N - k) \ln(1 - p)
+$$
 
 ##### 3. Finding the Best Estimate ($p_{\text{MLE}}$)
 To find the probability $p$ that makes this outcome most likely, take the derivative and set it to zero:
-$$\frac{d \ell(p)}{dp} = \frac{k}{p} - \frac{N - k}{1 - p} = 0$$
-$$\frac{k}{p} = \frac{N - k}{1 - p} \implies k(1 - p) = p(N - k)$$
-$$k - kp = Np - kp \implies k = Np \implies \mathbf{p = \frac{k}{N}}$$
+
+$$
+\frac{d \ell(p)}{dp} = \frac{k}{p} - \frac{N - k}{1 - p} = 0
+$$
+
+$$
+\frac{k}{p} = \frac{N - k}{1 - p} \implies k(1 - p) = p(N - k)
+$$
+
+$$
+k - kp = Np - kp \implies k = Np \implies p = \frac{k}{N}
+$$
 
 *(Common sense result: The best estimate for the coin's bias is simply the fraction of Heads observed: $\frac{\text{Total Heads}}{\text{Total Tosses}}$!).*
 
@@ -1161,7 +1489,7 @@ $$k - kp = Np - kp \implies k = Np \implies \mathbf{p = \frac{k}{N}}$$
 
 ## 2023 End-Semester Examination Solutions
 
-> [!tip] 🎯 Exam Hall Selection Advisory
+> [!TIP] 🎯 Exam Hall Selection Advisory
 > **Status:** Answer any FIVE questions ($5 \text{ Questions} \times 10 \text{ Marks} = 50 \text{ Marks}$).  
 > **Total Marks:** 50 | **Time:** 3 Hours  
 > **Reference-Grounded Strategy (24 Marks Grounded):**
@@ -1194,7 +1522,10 @@ $$k - kp = Np - kp \implies k = Np \implies \mathbf{p = \frac{k}{N}}$$
    - Sigmoid combined with MSE creates a **bumpy, non-convex loss surface** with local minima traps. When errors are large, the slope of sigmoid is flat, causing learning to stall.
 3. **Cost Function Used Instead:**  
    **Binary Cross-Entropy (Log-Loss):**
-   $$\mathbf{J(\mathbf{w}) = -\frac{1}{m} \sum_{i=1}^m \Big[ y^{(i)}\ln \hat{y}^{(i)} + (1 - y^{(i)})\ln(1 - \hat{y}^{(i)}) \Big]}$$
+
+   $$
+   J(\mathbf{w}) = -\frac{1}{m} \sum_{i=1}^m \Big[ y^{(i)}\ln \hat{y}^{(i)} + (1 - y^{(i)})\ln(1 - \hat{y}^{(i)}) \Big]
+   $$
 
 ---
 
@@ -1207,7 +1538,7 @@ $$k - kp = Np - kp \implies k = Np \implies \mathbf{p = \frac{k}{N}}$$
 | Strategy | How It Works | Decision Rule | Classifiers Needed |
 |:---|:---|:---|:---:|
 | **(i) One-vs-All (OvA)** | Trains 1 classifier for each class against all other classes combined. | Pick the class with the highest probability score: $\hat{y} = \arg\max_k \hat{p}_k$. | $\mathbf{c}$ |
-| **(ii) One-vs-One (OvO)** | Trains 1 classifier for every pair of classes $(i, j)$ using only data from those 2 classes. | All pair models vote; the class with the most votes wins. | $\mathbf{\frac{c(c - 1)}{2}}$ |
+| **(ii) One-vs-One (OvO)** | Trains 1 classifier for every pair of classes $(i, j)$ using only data from those 2 classes. | All pair models vote; the class with the most votes wins. | $\frac{c(c - 1)}{2}$ |
 
 ---
 
@@ -1240,13 +1571,28 @@ $$k - kp = Np - kp \implies k = Np \implies \mathbf{p = \frac{k}{N}}$$
 
 ##### 3. Calculate Metrics
 - **(i) Precision:**
-  $$\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{2}{2 + 2} = \frac{2}{4} = \mathbf{0.50 \quad (50\%)}$$
+
+  $$
+  \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{2}{2 + 2} = \frac{2}{4} = \mathbf{0.50 \quad (50\%)}
+  $$
+
 - **(ii) Recall:**
-  $$\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{2}{2 + 0} = \frac{2}{2} = \mathbf{1.00 \quad (100\%)}$$
+
+  $$
+  \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{2}{2 + 0} = \frac{2}{2} = \mathbf{1.00 \quad (100\%)}
+  $$
+
 - **(iii) True Positive Rate ($\text{TPR}$):**
-  $$\text{TPR} \equiv \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{2}{2} = \mathbf{1.00 \quad (100\%)}$$
+
+  $$
+  \text{TPR} \equiv \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{2}{2} = \mathbf{1.00 \quad (100\%)}
+  $$
+
 - **(iv) F1 Score:**
-  $$\text{F}_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} = 2 \cdot \frac{0.50 \times 1.00}{0.50 + 1.00} = \frac{1.00}{1.50} = \mathbf{\frac{2}{3} \approx 0.6667 \quad (66.67\%)}$$
+
+  $$
+  \text{F}_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} = 2 \cdot \frac{0.50 \times 1.00}{0.50 + 1.00} = \frac{1.00}{1.50} = \frac{2}{3} \approx 0.6667 \quad (66.67\%)
+  $$
 
 ---
 
@@ -1296,10 +1642,20 @@ ReLU ($\max(0, z)$) revolutionized deep networks and CNNs for 4 major reasons:
 
 #### Model Answer in Simple English
 - **Step 1: Weighted Sum ($z$):**
-  $$z = (0.2 \times 0.8) + (0.1 \times 0.6) + (-0.3 \times 0.4) + 0.35$$
-  $$z = 0.16 + 0.06 - 0.12 + 0.35 = \mathbf{0.45}$$
+
+  $$
+  z = (0.2 \times 0.8) + (0.1 \times 0.6) + (-0.3 \times 0.4) + 0.35
+  $$
+
+  $$
+  z = 0.16 + 0.06 - 0.12 + 0.35 = \mathbf{0.45}
+  $$
+
 - **Step 2: Sigmoid Activation:**
-  $$y = \frac{1}{1 + e^{-0.45}} \approx \frac{1}{1 + 0.6376} = \frac{1}{1.6376} \approx \mathbf{0.6106 \quad (61.06\%)}$$
+
+  $$
+  y = \frac{1}{1 + e^{-0.45}} \approx \frac{1}{1 + 0.6376} = \frac{1}{1.6376} \approx \mathbf{0.6106 \quad (61.06\%)}
+  $$
 
 ---
 
@@ -1311,15 +1667,25 @@ ReLU ($\max(0, z)$) revolutionized deep networks and CNNs for 4 major reasons:
 
 ##### 1. Log-Likelihood Formula
 For $N$ independent coin tosses $x_n \in \{0, 1\}$ with $P(\text{Head}) = p$:
-$$\ell(p) = \sum_{n=1}^N \Big[ x_n \ln p + (1 - x_n) \ln(1 - p) \Big]$$
+
+$$
+\ell(p) = \sum_{n=1}^N \Big[ x_n \ln p + (1 - x_n) \ln(1 - p) \Big]
+$$
 
 ##### 2. Stochastic Gradient Descent (SGD) Update Rule
 In Stochastic Gradient Descent, we update our estimate of $p$ after observing **one single toss** $x_n$:
 The derivative on that single toss is:
-$$\frac{d \ell_n(p)}{dp} = \frac{x_n}{p} - \frac{1 - x_n}{1 - p} = \frac{x_n(1 - p) - p(1 - x_n)}{p(1 - p)} = \mathbf{\frac{x_n - p}{p(1 - p)}}$$
+
+$$
+\frac{d \ell_n(p)}{dp} = \frac{x_n}{p} - \frac{1 - x_n}{1 - p} = \frac{x_n(1 - p) - p(1 - x_n)}{p(1 - p)} = \frac{x_n - p}{p(1 - p)}
+$$
 
 Under gradient ascent (to maximize likelihood) with learning step $\alpha$:
-$$\mathbf{p := p + \alpha \cdot \frac{x_n - p}{p(1 - p)}}$$
+
+$$
+p := p + \alpha \cdot \frac{x_n - p}{p(1 - p)}
+$$
+
 - If we see a Head ($x_n = 1$), the fraction is positive, so $p$ increases.
 - If we see a Tail ($x_n = 0$), the fraction is negative, so $p$ decreases.
 
@@ -1330,7 +1696,7 @@ $$\mathbf{p := p + \alpha \cdot \frac{x_n - p}{p(1 - p)}}$$
 | Concept / Formula | Mathematical Expression | Exam-Hall Memory Tip |
 |:---|:---|:---|
 | **Simple Linear Regression** | $w_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)}$<br>$w_0 = \bar{y} - w_1 \bar{x}$ | Regression line always passes through the centroid $(\bar{x}, \bar{y})$. |
-| **Normal Equations (MLR)** | $\mathbf{\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}}$ | Direct analytical solution; residual vector is orthogonal to feature columns ($\mathbf{X}^T \mathbf{e} = \mathbf{0}$). |
+| **Normal Equations (MLR)** | $\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}$ | Direct analytical solution; residual vector is orthogonal to feature columns ($\mathbf{X}^T \mathbf{e} = \mathbf{0}$). |
 | **Logistic Hypothesis** | $\hat{p} = \sigma(\mathbf{w}^T \mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^T \mathbf{x} + b)}}$ | S-curve that compresses outputs between 0 and 1. |
 | **Binary Cross-Entropy** | $J(\mathbf{w}) = -\frac{1}{m}\sum [y\ln \hat{y} + (1-y)\ln(1-\hat{y})]$ | Convex loss function; heavily punishes confident wrong answers. |
 | **Softmax Function** | $p_k = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}$ | Converts raw scores into probabilities that sum up to 1.0. |
@@ -1340,7 +1706,7 @@ $$\mathbf{p := p + \alpha \cdot \frac{x_n - p}{p(1 - p)}}$$
 | **ReLU Derivative** | $f'(z) = 1$ for $z > 0$, $0$ for $z < 0$ | Constant slope of 1 prevents vanishing gradients in deep networks. |
 | **Novikoff Perceptron Bound**| $k \le \left(\frac{R}{\gamma}\right)^2$ | Guaranteed finite mistakes for linearly separable data with margin $\gamma$. |
 | **$L_2$ Ridge Penalty** | $\text{Loss} + \frac{\lambda}{2}\sum w_j^2$ | Multiplies weight by decay factor $(1 - \eta \lambda)$; keeps weights small. |
-| **$L_1$ Lasso Penalty** | $\text{Loss} + \lambda \sum |w_j|$ | Subtracts constant amount; forces unimportant weights to exactly zero (sparsity). |
+| **$L_1$ Lasso Penalty** | $\text{Loss} + \lambda \sum \|w_j\|$ | Subtracts constant amount; forces unimportant weights to exactly zero (sparsity). |
 | **Batch Normalization** | $\hat{z} = \frac{z - \mu}{\sqrt{\sigma^2 + \epsilon}}, \quad y = \gamma \hat{z} + \beta$ | Centers and scales layer inputs; speeds up training and allows higher learning rates. |
 | **Updates per Epoch** | $N_{\text{iter}} = \lceil m / B \rceil$ | Total samples $m$ divided by batch size $B$. |
 | **Precision & Recall** | $\text{Prec} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \quad \text{Rec} = \frac{\text{TP}}{\text{TP} + \text{FN}}$ | Precision measures accuracy of positive alarms; Recall measures coverage of real cases. |
@@ -1386,7 +1752,7 @@ Ten high-frequency questions favored by university external examiners, answered 
 
 ## Unanswered / Uncovered Questions (Not in Reference Notes)
 
-> [!important] Scope Enforcement Notice
+> [!IMPORTANT] Scope Enforcement Notice
 > In accordance with user directives, the solutions above strictly cover only those questions whose underlying theory is presented in the authorized course guides:
 > 1. `academics/ml/ml_foundations_regression_classification_visual_guide.md`
 > 2. `academics/ml/activation_crossentropy_backprop_visual_guide.md`
@@ -1399,29 +1765,29 @@ Ten high-frequency questions favored by university external examiners, answered 
 ### Uncovered Questions from 2025 Examinations
 
 #### 2025 End-Semester Examination
-> [!warning] Omitted: 2025 End Q2(c) — Early Stopping [3 Marks]
+> [!WARNING] Omitted: 2025 End Q2(c) — Early Stopping [3 Marks]
 > **Verbatim Question:**  
 > *"What is Early Stopping, and how does it act as a regularization method? [3]"*  
 > **Omission Rationale:** Early stopping as an implicit regularization technique on validation loss curves is not covered in the three authorized reference notes.
 
-> [!warning] Omitted: 2025 End Q4(b) — Sentence Semantic Representations [4 Marks]
+> [!WARNING] Omitted: 2025 End Q4(b) — Sentence Semantic Representations [4 Marks]
 > **Verbatim Question:**  
 > *"Describe, with an example, how a deep learning model can be used to capture the semantic representations of sentences. [4]"*  
 > **Omission Rationale:** Natural Language Processing (Word2Vec, sentence embeddings, transformer encoders) is not covered in the reference notes.
 
-> [!warning] Omitted: 2025 End Q5(a, b) — VGG16 Architecture & Transfer Learning [10 Marks]
+> [!WARNING] Omitted: 2025 End Q5(a, b) — VGG16 Architecture & Transfer Learning [10 Marks]
 > **Verbatim Question:**  
 > *"(a) Explain the architecture of the VGG16 model in detail with a neat diagram. Additionally, calculate the total number of parameters in both the first convolutional layer and the first pooling layer of the network. [6]"*  
 > *"(b) What is transfer learning and how can VGG16 be used for transfer learning? [4]"*  
 > **Omission Rationale:** VGG16 architecture specifications, convolutional parameter calculations, and transfer learning fine-tuning workflows are not covered in the reference notes.
 
-> [!warning] Omitted: 2025 End Q6(a, b) — Denoising & Conditional Variational Autoencoders [10 Marks]
+> [!WARNING] Omitted: 2025 End Q6(a, b) — Denoising & Conditional Variational Autoencoders [10 Marks]
 > **Verbatim Question:**  
 > *"(a) Discuss the different types of noise that can be used in a Denoising Autoencoder. Describe how a Denoising Autoencoder learns to reconstruct clean input from noisy data. [2 + 3 = 5]"*  
 > *"(b) Describe the architecture of a Conditional Variational Autoencoder (CVAE) with a neat diagram. What is the KL divergence term in CVAE, and what is its purpose? [3 + 2 = 5]"*  
 > **Omission Rationale:** Unsupervised generative models, denoising autoencoders, and CVAE KL-divergence formulations are outside the scope of the three reference notes.
 
-> [!warning] Omitted: 2025 End Q7(a, b) — Recurrent Neural Networks & GRU Architecture [10 Marks]
+> [!WARNING] Omitted: 2025 End Q7(a, b) — Recurrent Neural Networks & GRU Architecture [10 Marks]
 > **Verbatim Question:**  
 > *"(a) Explain the architecture and working principle of a Recurrent Neural Network (RNN), and discuss the challenges encountered by standard RNNs during training. [3 + 2 = 5]"*  
 > *"(b) Explain the architecture of a Gated Recurrent Unit (GRU) with the help of a diagram, and present the mathematical equations governing its operations, interpreting each term in detail. [5]"*  
@@ -1432,13 +1798,13 @@ Ten high-frequency questions favored by university external examiners, answered 
 ### Uncovered Questions from 2024 Examinations
 
 #### 2024 Mid-Semester Examination
-> [!warning] Omitted: 2024 Mid Q1(b, c) — K-Nearest Neighbors (KNN) [6 Marks]
+> [!WARNING] Omitted: 2024 Mid Q1(b, c) — K-Nearest Neighbors (KNN) [6 Marks]
 > **Verbatim Question:**  
 > *"(b) What is the K-Nearest Neighbors (KNN) algorithm, and how does it function in both classification and regression tasks? [3]"*  
 > *"(c) How is the parameter 'K' chosen in the KNN algorithm? What are the implications of choosing a small vs. a large 'K'? [3]"*  
 > **Omission Rationale:** Instance-based learning, non-parametric KNN classification/regression, and distance metrics are not covered in the reference notes.
 
-> [!warning] Omitted: 2024 Mid Q2(a, b) — Decision Tree Information Gain & Naive Bayes [6 Marks]
+> [!WARNING] Omitted: 2024 Mid Q2(a, b) — Decision Tree Information Gain & Naive Bayes [6 Marks]
 > **Verbatim Question:**  
 > *"(a) Consider the dataset given below and compute the following: [Given that, $\log_2 3 = 1.6$, $\log_2 5 = 2.3$, $\log_2 7 = 2.8$] [3]"*  
 > *"[Dataset with $O_1 \dots O_5$ on $F_1, F_2$ and Class label Y/N]"*  
@@ -1449,35 +1815,35 @@ Ten high-frequency questions favored by university external examiners, answered 
 > **Omission Rationale:** Shannon Entropy, Information Gain splitting algorithms (ID3/C4.5), and Naive Bayes conditional independence with Laplace smoothing are not present in the reference notes.
 
 #### 2024 Final-Semester Examination
-> [!warning] Omitted: 2024 Final Q1(b) — Support Vector Machine (SVM) Principle [7 Marks]
+> [!WARNING] Omitted: 2024 Final Q1(b) — Support Vector Machine (SVM) Principle [7 Marks]
 > **Verbatim Question:**  
 > *"Explain the Working Principle of a Support Vector Machine. [7]"*  
 > **Omission Rationale:** SVM maximum margin hyperplanes, Lagrangian duality, and support vectors are outside the reference notes.
 
-> [!warning] Omitted: 2024 Final Q4(a) — CNN Sparsity & Weight Sharing [5.5 Marks]
+> [!WARNING] Omitted: 2024 Final Q4(a) — CNN Sparsity & Weight Sharing [5.5 Marks]
 > **Verbatim Question:**  
 > *"Justify the properties of 'sparsity of connections' and 'weight sharing' in Convolutional Neural Networks (CNNs). Discuss the advantages of these properties in the context of CNN performance and efficiency. [3 + 2.5 = 5.5]"*  
 > **Omission Rationale:** Specialized spatial convolution filter mechanisms (receptive fields, weight sharing across 2D feature maps) are not developed in the three reference guides.
 
-> [!warning] Omitted: 2024 Final Q5(a, b) — CNN Feature Maps & Dropout/BN Overfitting [12.5 Marks]
+> [!WARNING] Omitted: 2024 Final Q5(a, b) — CNN Feature Maps & Dropout/BN Overfitting [12.5 Marks]
 > **Verbatim Question:**  
 > *"(a) Briefly discuss the usefulness of the Convolutional layer and the Pooling layer in a Convolutional Neural Network (CNN). Given an input image of size $W \times H \times D$... calculate the volume of the resulting convolved feature map. [4 + 2.5 = 6.5]"*  
 > *"(b) Explain how the regularization techniques of Dropout and Batch Normalization help in addressing the overfitting problem in deep neural networks. [6]"*  
 > **Omission Rationale:** 3D feature map dimension formula $\lfloor \frac{W - F + 2P}{S} \rfloor + 1$ and detailed inverted dropout Bernoulli scaling are outside the reference notes.
 
-> [!warning] Omitted: 2024 Final Q6(a, b) — AlexNet Architecture & Transfer Learning [12.5 Marks]
+> [!WARNING] Omitted: 2024 Final Q6(a, b) — AlexNet Architecture & Transfer Learning [12.5 Marks]
 > **Verbatim Question:**  
 > *"(a) Construct a high-level diagram of the AlexNet CNN architecture... calculate total weights and biases in the first conv layer and first pooling layer. [4 + 2.5 = 6.5]"*  
 > *"(b) Describe the key steps involved in developing a transfer learning model... [3 + 3 = 6]"*  
 > **Omission Rationale:** AlexNet architectural dimensions (11x11 filters, LRN layers) and transfer learning pipelines are not present in the reference notes.
 
-> [!warning] Omitted: 2024 Final Q7(a, b) — Stacked Autoencoder & Variational Autoencoder (VAE) [12.5 Marks]
+> [!WARNING] Omitted: 2024 Final Q7(a, b) — Stacked Autoencoder & Variational Autoencoder (VAE) [12.5 Marks]
 > **Verbatim Question:**  
 > *"(a) Explain the structure of a stacked autoencoder with a diagram and emphasize its key benefits. [4 + 2 = 6]"*  
 > *"(b) What is the primary purpose of a variational autoencoder (VAE), and how does it differ from a simple autoencoder? Explain the reparameterization trick and its significance in VAEs. [1.5 + 2 + 3 = 6.5]"*  
 > **Omission Rationale:** Stacked autoencoders, VAE latent distributions $\mathcal{N}(\mu, \sigma^2)$, and reparameterization trick $z = \mu + \sigma \odot \epsilon$ are outside the reference guides.
 
-> [!warning] Omitted: 2024 Final Q8(a, b) — CNN vs RNN & LSTM Backpropagation Through Time [12.5 Marks]
+> [!WARNING] Omitted: 2024 Final Q8(a, b) — CNN vs RNN & LSTM Backpropagation Through Time [12.5 Marks]
 > **Verbatim Question:**  
 > *"(a) Explain the main differences between CNN and RNN models. Describe the limitations of an RNN model. [3 + 2 = 5]"*  
 > *"(b) Describe the architecture of LSTM and explain how backpropagation through time is used to train LSTM models. [4 + 3.5 = 7.5]"*  
@@ -1488,19 +1854,19 @@ Ten high-frequency questions favored by university external examiners, answered 
 ### Uncovered Questions from 2023 Examinations
 
 #### 2023 Mid-Semester Examination
-> [!warning] Omitted: 2023 Mid Q1(b) — SVM Kernel & K-Fold Cross Validation [3 Marks]
+> [!WARNING] Omitted: 2023 Mid Q1(b) — SVM Kernel & K-Fold Cross Validation [3 Marks]
 > **Verbatim Question:**  
 > *"What is a kernel in SVM and why do we use kernels? What is K-fold cross validation? How does it affect bias and variance? [3]"*  
 > **Omission Rationale:** Mercer kernel trick and K-fold cross validation bias-variance mechanics are not covered in the reference notes.
 
-> [!warning] Omitted: 2023 Mid Q2(a, b, c) — SVM Margins & Quadratic Programming / KKT Numerical [10 Marks]
+> [!WARNING] Omitted: 2023 Mid Q2(a, b, c) — SVM Margins & Quadratic Programming / KKT Numerical [10 Marks]
 > **Verbatim Question:**  
 > *"(a) State the role of margin in SVM. [2]"*  
 > *"(b) Explain the difference between Hard Margin and Soft Margin for SVM. [3]"*  
 > *"(c) Consider a binary classification problem where the training data consists of 8 tuples... Find parameters $W$ and $b$ using quadratic programming and KKT constraints, and obtain Lagrange multipliers $\lambda_i$... [5]"*  
 > **Omission Rationale:** Karush-Kuhn-Tucker (KKT) dual stationarity conditions and quadratic programming solvers for SVMs are not in the reference notes.
 
-> [!warning] Omitted: 2023 Mid Q5(a, b, c) — RNN Parameter Calculation & LSTM Gating [10 Marks]
+> [!WARNING] Omitted: 2023 Mid Q5(a, b, c) — RNN Parameter Calculation & LSTM Gating [10 Marks]
 > **Verbatim Question:**  
 > *"(a) Consider a vanilla RNN cell of the form $h_t = \tanh(V \cdot h_{t-1} + W \cdot x_t + b)$. Given dimensions $x_t \in \mathbb{R}^3$ and $h_t \in \mathbb{R}^5$, what is the number of parameters in the RNN cell? [3]"*  
 > *"(b) Explain the main difficulties encountered while training RNNs, the ways to handle them, and the gating mechanisms in LSTM units. [3]"*  
@@ -1508,31 +1874,31 @@ Ten high-frequency questions favored by university external examiners, answered 
 > **Omission Rationale:** Recurrent weight tensor dimensions and LSTM cell mechanisms are outside the reference guides.
 
 #### 2023 End-Semester Examination
-> [!warning] Omitted: 2023 End Q2(a, b) — Decision Tree Greedy Construction & K-Fold CV [6 Marks]
+> [!WARNING] Omitted: 2023 End Q2(a, b) — Decision Tree Greedy Construction & K-Fold CV [6 Marks]
 > **Verbatim Question:**  
 > *"(a) Using the dataset below, build a decision tree that classifies $Y$ as T/F given the binary variables A, B, and C. Draw the tree that the greedy algorithm would learn with zero training error. [4]"*  
 > *"(b) What is K-fold cross validation? How does it affect bias and variance? [2]"*  
 > **Omission Rationale:** Greedy top-down decision tree induction and cross-validation variance properties are not covered in the reference notes.
 
-> [!warning] Omitted: 2023 End Q3(b, c) — Max-Unpooling & CNN vs ANN for Images [6 Marks]
+> [!WARNING] Omitted: 2023 End Q3(b, c) — Max-Unpooling & CNN vs ANN for Images [6 Marks]
 > **Verbatim Question:**  
 > *"(b) Explain Max-Unpooling operation for increasing the resolution of feature maps. [3]"*  
 > *"(c) Why do we prefer Convolutional Neural networks (CNN) over Artificial Neural networks (ANN) for image data as input? [3]"*  
 > **Omission Rationale:** Max-unpooling index caching and spatial 2D invariance of CNNs are outside the reference guides.
 
-> [!warning] Omitted: 2023 End Q4(c) — Cross-Validation vs Dedicated Test Set [4 Marks]
+> [!WARNING] Omitted: 2023 End Q4(c) — Cross-Validation vs Dedicated Test Set [4 Marks]
 > **Verbatim Question:**  
 > *"Two common ways to estimate the performance of a classifier are (i) n-fold cross validation... and (ii) measuring the performance on a test set... When will you use cross-validation and when will you use a test set? Justify your answer. [4]"*  
 > **Omission Rationale:** Empirical model evaluation methodologies (cross-validation vs holdout split tradeoffs) are not covered in the reference notes.
 
-> [!warning] Omitted: 2023 End Q5(a, b, c) — RNN Vanishing Gradients, LSTM vs GRU, Autoencoder Denoising [10 Marks]
+> [!WARNING] Omitted: 2023 End Q5(a, b, c) — RNN Vanishing Gradients, LSTM vs GRU, Autoencoder Denoising [10 Marks]
 > **Verbatim Question:**  
 > *"(a) What is vanishing/exploding gradient problem and how is it related to Recurrent Neural Network? [3]"*  
 > *"(b) Explain LSTM and GRU. How do they differ from each other? [3]"*  
 > *"(c) What is the objective of an Auto Encoder? How is an auto-encoder used in dimensionality reduction and image de-noising? [4]"*  
 > **Omission Rationale:** Specialized recurrent architectures (LSTM vs GRU comparison) and autoencoder denoising manifolds are outside the reference guides.
 
-> [!warning] Omitted: 2023 End Q6(a, b, c) — CNN Parameter Table, Sparse Autoencoders, VAE [10 Marks]
+> [!WARNING] Omitted: 2023 End Q6(a, b, c) — CNN Parameter Table, Sparse Autoencoders, VAE [10 Marks]
 > **Verbatim Question:**  
 > *"(a) A CNN has a database of images of size $100 \times 100 \times 3$... calculate the total number of parameters in each layer (Output, FC1, P2, C3, P1, C2, C1, Input). [3]"*  
 > *"(b) How do auto-encoders handle sparse data? Explain their function with sparse data. Are specialized auto-encoder architectures designed for sparse inputs? [4]"*  

@@ -95,7 +95,10 @@ Machine learning problems are divided into four main families depending on what 
 
 ### 1. Supervised Learning (Learning with a Teacher)
 In supervised learning, every single training sample consists of an input feature vector $\mathbf{x}$ paired with a known ground-truth answer $y$:
-$$\mathcal{D} = \{(\mathbf{x}_1, y_1), (\mathbf{x}_2, y_2), \dots, (\mathbf{x}_n, y_n)\}$$
+
+$$
+\mathcal{D} = \{(\mathbf{x}_1, y_1), (\mathbf{x}_2, y_2), \dots, (\mathbf{x}_n, y_n)\}
+$$
 
 **Classroom Analogy:** Think of a student doing homework exercises where the full answer key is printed at the back of the textbook. The student solves a problem, checks the answer, spots their mistake, and adjusts their approach.
 
@@ -105,7 +108,10 @@ Supervised learning splits into two fundamental branches based on what $y$ looks
 
 ### 2. Unsupervised Learning (Learning without a Teacher)
 In unsupervised learning, we give the algorithm raw input features $\mathbf{x}$ with **zero target labels $y$**:
-$$\mathcal{D} = \{\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n\}$$
+
+$$
+\mathcal{D} = \{\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_n\}
+$$
 
 There is no teacher, no grades, and no answer key. The algorithm must discover the natural structure and hidden groupings on its own.
 
@@ -129,7 +135,9 @@ Semi-supervised learning starts with a **small seed of labeled examples** $(X_L,
 ### 4. Reinforcement Learning (Learning by Interaction)
 Reinforcement Learning (RL) has neither an answer key nor static data. Instead, an autonomous **Agent** learns by trial-and-error interaction with a dynamic **Environment**:
 
-$$\text{State } s_t \xrightarrow{\text{Action } a_t \text{ from Policy } \pi} \text{Environment} \xrightarrow{\text{Feedback}} \text{New State } s_{t+1} + \text{Reward } r_{t+1}$$
+$$
+\text{State } s_t \xrightarrow{\text{Action } a_t \text{ from Policy } \pi} \text{Environment} \xrightarrow{\text{Feedback}} \text{New State } s_{t+1} + \text{Reward } r_{t+1}
+$$
 
 **Bicycle Analogy:** Think of how a child learns to ride a bicycle. Nobody explains the physics of angular momentum. The child hops on, pedals, wobbles, and falls over (negative reward / pain!). Their brain adjusts muscle commands. Next time, they balance smoothly and gain speed (positive reward!). Over repeated trials, they master balance.
 
@@ -166,7 +174,10 @@ When we plot each fish on a 2D graph with **Length on the X-axis** and **Lightne
 Even if a salmon and a sea bass have the exact same length (tied on the X-axis), their scale lightness separates them on the Y-axis. 
 
 Now, a simple straight line (a **linear decision boundary**) cleanly cuts between the two species:
-$$w_1 x_1 + w_2 x_2 + w_0 = 0$$
+
+$$
+w_1 x_1 + w_2 x_2 + w_0 = 0
+$$
 
 > **Key Takeaway:** If your classes overlap and cannot be separated in a single dimension, adding more relevant features lifts the data into higher-dimensional space where simple linear boundaries can cleanly separate them.
 
@@ -191,14 +202,20 @@ Consider the motivating dataset from Slide 1 of Lecture 2: A company records how
 
 ### The Mathematical Formulation
 The true underlying relationship in the real world is modeled as:
-$$y_i = a + c x_i + \epsilon_i, \qquad i = 1, 2, \dots, n$$
+
+$$
+y_i = a + c x_i + \epsilon_i, \qquad i = 1, 2, \dots, n
+$$
 
 - $a$: The **intercept** (the baseline sales you expect even if you spend Rs. 0 on advertising).
 - $c$: The **slope** (how many extra units of sales you gain for every 1 Rupee added to advertising).
 - $\epsilon_i$: The unobservable random **noise or error** (customer moods, bad weather, competing store sales).
 
 Our sample line that estimates this relationship is:
-$$\hat{y}_i = \hat{a} + \hat{c} x_i$$
+
+$$
+\hat{y}_i = \hat{a} + \hat{c} x_i
+$$
 
 Where $\hat{y}_i$ is the predicted sales, and $e_i = y_i - \hat{y}_i$ is the **residual** (the vertical gap between the actual point and our line).
 
@@ -211,56 +228,103 @@ How do we find the "best" line? We want the residuals $e_i$ to be as small as po
 3. Squaring $(y_i - \hat{y}_i)^2$ solves both: errors are always positive, big mistakes are penalized heavily, and the function forms a smooth parabolic bowl that calculus can easily minimize!
 
 We define the **Sum of Squared Residuals ($S$ or $SS_{Res}$)**:
-$$S(a, c) = \sum_{i=1}^n e_i^2 = \sum_{i=1}^n (y_i - \hat{y}_i)^2 = \sum_{i=1}^n (y_i - a - c x_i)^2$$
+
+$$
+S(a, c) = \sum_{i=1}^n e_i^2 = \sum_{i=1}^n (y_i - \hat{y}_i)^2 = \sum_{i=1}^n (y_i - a - c x_i)^2
+$$
 
 To find the values of $a$ and $c$ that minimize $S$, we take the partial derivatives and set them equal to zero:
-$$\frac{\partial S}{\partial a} = -2 \sum_{i=1}^n (y_i - a - c x_i) = 0 \implies \sum_{i=1}^n (y_i - \hat{a} - \hat{c} x_i) = 0 \quad \text{--- (Equation 1)}$$
 
-$$\frac{\partial S}{\partial c} = -2 \sum_{i=1}^n x_i (y_i - a - c x_i) = 0 \implies \sum_{i=1}^n x_i (y_i - \hat{a} - \hat{c} x_i) = 0 \quad \text{--- (Equation 2)}$$
+$$
+\frac{\partial S}{\partial a} = -2 \sum_{i=1}^n (y_i - a - c x_i) = 0 \implies \sum_{i=1}^n (y_i - \hat{a} - \hat{c} x_i) = 0 \quad \text{--- (Equation 1)}
+$$
+
+$$
+\frac{\partial S}{\partial c} = -2 \sum_{i=1}^n x_i (y_i - a - c x_i) = 0 \implies \sum_{i=1}^n x_i (y_i - \hat{a} - \hat{c} x_i) = 0 \quad \text{--- (Equation 2)}
+$$
 
 #### Step 1: Solving for Intercept $\hat{a}$
 From Equation 1, split the summation across all terms:
-$$\sum_{i=1}^n y_i - \sum_{i=1}^n \hat{a} - \hat{c}\sum_{i=1}^n x_i = 0$$
+
+$$
+\sum_{i=1}^n y_i - \sum_{i=1}^n \hat{a} - \hat{c}\sum_{i=1}^n x_i = 0
+$$
 
 Because adding the constant $\hat{a}$ to itself $n$ times equals $n\hat{a}$:
-$$\sum_{i=1}^n y_i - n\hat{a} - \hat{c}\sum_{i=1}^n x_i = 0 \implies n\hat{a} = \sum_{i=1}^n y_i - \hat{c}\sum_{i=1}^n x_i$$
+
+$$
+\sum_{i=1}^n y_i - n\hat{a} - \hat{c}\sum_{i=1}^n x_i = 0 \implies n\hat{a} = \sum_{i=1}^n y_i - \hat{c}\sum_{i=1}^n x_i
+$$
 
 Divide both sides by $n$:
-$$\hat{a} = \frac{\sum y_i}{n} - \hat{c}\frac{\sum x_i}{n}$$
 
-$$\boxed{\hat{a} = \bar{y} - \hat{c}\bar{x}} \quad \text{--- (Equation 3)}$$
+$$
+\hat{a} = \frac{\sum y_i}{n} - \hat{c}\frac{\sum x_i}{n}
+$$
+
+$$
+\boxed{\hat{a} = \bar{y} - \hat{c}\bar{x}} \quad \text{--- (Equation 3)}
+$$
 
 > **Physical Meaning:** Look closely at this equation: $\bar{y} = \hat{a} + \hat{c}\bar{x}$. This mathematically guarantees that **the regression line always passes directly through the center of gravity (centroid) of the data $(\bar{x}, \bar{y})$!**
 
 #### Step 2: Solving for Slope $\hat{c}$
 Now substitute our expression for $\hat{a}$ from Equation 3 back into Equation 2:
-$$\sum_{i=1}^n x_i \big[y_i - (\bar{y} - \hat{c}\bar{x}) - \hat{c}x_i\big] = 0$$
+
+$$
+\sum_{i=1}^n x_i \big[y_i - (\bar{y} - \hat{c}\bar{x}) - \hat{c}x_i\big] = 0
+$$
 
 Group the terms by $y$ deviations and $x$ deviations:
-$$\sum_{i=1}^n x_i (y_i - \bar{y}) - \hat{c}\sum_{i=1}^n x_i (x_i - \bar{x}) = 0$$
 
-$$\hat{c} = \frac{\sum_{i=1}^n x_i (y_i - \bar{y})}{\sum_{i=1}^n x_i (x_i - \bar{x})}$$
+$$
+\sum_{i=1}^n x_i (y_i - \bar{y}) - \hat{c}\sum_{i=1}^n x_i (x_i - \bar{x}) = 0
+$$
+
+$$
+\hat{c} = \frac{\sum_{i=1}^n x_i (y_i - \bar{y})}{\sum_{i=1}^n x_i (x_i - \bar{x})}
+$$
 
 Using standard algebraic covariance identities (since $\sum (x_i - \bar{x}) = 0$):
-$$\boxed{\hat{c} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} = \frac{n\sum x_i y_i - \sum x_i \sum y_i}{n\sum x_i^2 - (\sum x_i)^2}} \quad \text{--- (Equation 4)}$$
+
+$$
+\boxed{\hat{c} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} = \frac{n\sum x_i y_i - \sum x_i \sum y_i}{n\sum x_i^2 - (\sum x_i)^2}} \quad \text{--- (Equation 4)}
+$$
 
 ### Step-by-Step Calculation on Sir's Data
 Let's compute the slope and intercept for Sir's Sales Dataset ($n = 5$ observations):
 
 1. **Calculate the sums:**
-   $$\sum x_i = 1 + 2 + 3 + 4 + 5 = 15 \implies \bar{x} = \frac{15}{5} = 3.0$$
-   $$\sum y_i = 1 + 1 + 2 + 2 + 4 = 10 \implies \bar{y} = \frac{10}{5} = 2.0$$
-   $$\sum x_i^2 = 1^2 + 2^2 + 3^2 + 4^2 + 5^2 = 1 + 4 + 9 + 16 + 25 = 55$$
-   $$\sum x_i y_i = 1(1) + 2(1) + 3(2) + 4(2) + 5(4) = 1 + 2 + 6 + 8 + 20 = 37$$
+
+$$
+\begin{aligned}
+\sum x_i &= 1 + 2 + 3 + 4 + 5 = 15 \implies \bar{x} = \frac{15}{5} = 3.0 \\
+\sum y_i &= 1 + 1 + 2 + 2 + 4 = 10 \implies \bar{y} = \frac{10}{5} = 2.0 \\
+\sum x_i^2 &= 1^2 + 2^2 + 3^2 + 4^2 + 5^2 = 1 + 4 + 9 + 16 + 25 = 55 \\
+\sum x_i y_i &= 1(1) + 2(1) + 3(2) + 4(2) + 5(4) = 1 + 2 + 6 + 8 + 20 = 37
+\end{aligned}
+$$
+
 
 2. **Plug into the slope formula:**
-   $$\hat{c} = \frac{5(37) - (15)(10)}{5(55) - (15)^2} = \frac{185 - 150}{275 - 225} = \frac{35}{50} = \mathbf{0.70}$$
+
+$$
+\hat{c} = \frac{5(37) - (15)(10)}{5(55) - (15)^2} = \frac{185 - 150}{275 - 225} = \frac{35}{50} = \mathbf{0.70}
+$$
+
 
 3. **Plug into the intercept formula:**
-   $$\hat{a} = \bar{y} - \hat{c}\bar{x} = 2.0 - 0.70(3.0) = 2.0 - 2.10 = \mathbf{-0.10}$$
+
+$$
+\hat{a} = \bar{y} - \hat{c}\bar{x} = 2.0 - 0.70(3.0) = 2.0 - 2.10 = \mathbf{-0.10}
+$$
+
 
 Our fitted regression equation is:
-$$\hat{y} = -0.10 + 0.70 x$$
+
+$$
+\hat{y} = -0.10 + 0.70 x
+$$
 
 *Interpretation:* If you spend 0 advertising Rupees, you expect $-0.10$ sales (practically zero). For every 1 extra Rupee spent on advertising, you sell an additional $0.70$ units of product.
 
@@ -286,14 +350,29 @@ Let's calculate the predicted values $\hat{y}_i$ and residuals $e_i = y_i - \hat
 Finding the slope and intercept with Least Squares is purely algebraic curve-fitting. But if we want to run hypothesis tests (like p-values) or say our line is the "best possible estimate", the **Gauss-Markov Theorem** requires four fundamental assumptions about the random noise $\epsilon_i$:
 
 1. **Zero Mean Error:** On average, our model doesn't systematically over-predict or under-predict:
-   $$\mathbb{E}(\epsilon_i) = 0, \quad \forall i$$
+
+$$
+\mathbb{E}(\epsilon_i) = 0, \quad \forall i
+$$
+
 2. **Homoscedasticity (Constant Variance):** The scatter of noise is the same everywhere along the line:
-   $$\text{Var}(\epsilon_i) = \sigma^2 \quad (\text{a constant number})$$
+
+$$
+\text{Var}(\epsilon_i) = \sigma^2 \quad (\text{a constant number})
+$$
+
    *Contrast with heteroscedasticity:* If you predict income vs spending, wealthy people have wild variations in spending, while students have very tight budgets. That would violate homoscedasticity.
 3. **Independent (Uncorrelated) Errors:** One point being above the line gives zero clue whether the next point will be above or below:
-   $$\text{Cov}(\epsilon_i, \epsilon_j) = 0, \quad \forall i \ne j$$
+
+$$
+\text{Cov}(\epsilon_i, \epsilon_j) = 0, \quad \forall i \ne j
+$$
+
 4. **Normality:** The errors follow a symmetric bell curve:
-   $$\epsilon_i \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0, \sigma^2)$$
+
+$$
+\epsilon_i \overset{\text{i.i.d.}}{\sim} \mathcal{N}(0, \sigma^2)
+$$
 
 ### What This Means for the Response $Y$ (Fig 2, Right Panel)
 Because $y_i = a + c x_i + \epsilon_i$, where $x_i$ is a fixed number:
@@ -308,19 +387,27 @@ Because $y_i = a + c x_i + \epsilon_i$, where $x_i$ is a fixed number:
 ## 6. Multiple Linear Regression (MLR) & Normal Equations in Matrix Form
 
 In the real world, sales doesn't depend on advertising alone. It depends on advertising budget, store size, price discounts, and competitor locations. We need **Multiple Linear Regression (MLR)**:
-$$y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_{k-1} x_{i, k-1} + \epsilon_i, \qquad i = 1, \dots, n$$
+
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_{k-1} x_{i, k-1} + \epsilon_i, \qquad i = 1, \dots, n
+$$
 
 > ⚠️ **Classic Viva Trap Question:** Why is a model like $y = \beta_0 + \beta_1 x + \beta_2 x^2$ called a **Linear** regression model when $x^2$ is obviously a curve?  
 > **Defense:** In statistical mathematics, "linear" refers **strictly to linearity in the unknown parameters $\boldsymbol{\beta}$**, NOT linearity in the input features $x$. Because the derivatives $\frac{\partial y}{\partial \beta_j}$ do not depend on any $\beta$, the system of equations remains completely linear and solvable by matrix algebra!
 
 ### Matrix Formulation
 Writing 50 scalar equations for 50 data points takes pages of messy algebra. Matrices allow us to write the entire dataset in one clean line:
-$$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}$$
 
-$$\mathbf{Y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}_{n \times 1}, \quad
+$$
+\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}
+$$
+
+$$
+\mathbf{Y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}_{n \times 1}, \quad
 \mathbf{X} = \begin{bmatrix} 1 & x_{11} & x_{12} & \dots & x_{1, k-1} \\ 1 & x_{21} & x_{22} & \dots & x_{2, k-1} \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_{n1} & x_{n2} & \dots & x_{n, k-1} \end{bmatrix}_{n \times k}, \quad
 \boldsymbol{\beta} = \begin{bmatrix} \beta_0 \\ \beta_1 \\ \vdots \\ \beta_{k-1} \end{bmatrix}_{k \times 1}, \quad
-\boldsymbol{\epsilon} = \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{bmatrix}_{n \times 1}$$
+\boldsymbol{\epsilon} = \begin{bmatrix} \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{bmatrix}_{n \times 1}
+$$
 
 - $\mathbf{X}$ is the **Design Matrix** ($n$ rows for samples, $k$ columns for parameters).
 - **Why is column 0 filled with 1s?** Because the intercept $\beta_0$ needs to multiply by something! $\beta_0 \times 1 = \beta_0$.
@@ -328,29 +415,53 @@ $$\mathbf{Y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}_{n \tim
 ### Deriving the Normal Equations with Matrix Calculus
 The vector of residuals is $\mathbf{e} = \mathbf{Y} - \hat{\mathbf{Y}} = \mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}$.  
 The sum of squared residuals is the dot product of the residual vector with itself:
-$$SS_{Res} = \mathbf{e}^T \mathbf{e} = (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}})^T (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}})$$
+
+$$
+SS_{Res} = \mathbf{e}^T \mathbf{e} = (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}})^T (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}})
+$$
 
 Expanding the transpose $(A - B)^T = A^T - B^T$:
-$$SS_{Res} = (\mathbf{Y}^T - \hat{\boldsymbol{\beta}}^T \mathbf{X}^T)(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \mathbf{Y}^T \mathbf{Y} - \mathbf{Y}^T \mathbf{X}\hat{\boldsymbol{\beta}} - \hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{Y} + \hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{X}\hat{\boldsymbol{\beta}}$$
+
+$$
+SS_{Res} = (\mathbf{Y}^T - \hat{\boldsymbol{\beta}}^T \mathbf{X}^T)(\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \mathbf{Y}^T \mathbf{Y} - \mathbf{Y}^T \mathbf{X}\hat{\boldsymbol{\beta}} - \hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{Y} + \hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{X}\hat{\boldsymbol{\beta}}
+$$
 
 Notice that the term $\mathbf{Y}^T \mathbf{X}\hat{\boldsymbol{\beta}}$ is a $1 \times 1$ scalar (a single number). Because the transpose of a single number is itself:
-$$(\mathbf{Y}^T \mathbf{X}\hat{\boldsymbol{\beta}})^T = \hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{Y}$$
+
+$$
+(\mathbf{Y}^T \mathbf{X}\hat{\boldsymbol{\beta}})^T = \hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{Y}
+$$
 
 So the two middle terms combine:
-$$SS_{Res} = \mathbf{Y}^T \mathbf{Y} - 2\hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{Y} + \hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{X}\hat{\boldsymbol{\beta}}$$
+
+$$
+SS_{Res} = \mathbf{Y}^T \mathbf{Y} - 2\hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{Y} + \hat{\boldsymbol{\beta}}^T \mathbf{X}^T \mathbf{X}\hat{\boldsymbol{\beta}}
+$$
 
 To find the minimum, take the gradient with respect to $\hat{\boldsymbol{\beta}}$ and set it to zero:
-$$\frac{\partial SS_{Res}}{\partial \hat{\boldsymbol{\beta}}} = -2\mathbf{X}^T \mathbf{Y} + 2\mathbf{X}^T \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{0}$$
+
+$$
+\frac{\partial SS_{Res}}{\partial \hat{\boldsymbol{\beta}}} = -2\mathbf{X}^T \mathbf{Y} + 2\mathbf{X}^T \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{0}
+$$
 
 Divide by 2 to obtain the celebrated **Normal Equations**:
-$$\mathbf{X}^T \mathbf{X} \hat{\boldsymbol{\beta}} = \mathbf{X}^T \mathbf{Y}$$
+
+$$
+\mathbf{X}^T \mathbf{X} \hat{\boldsymbol{\beta}} = \mathbf{X}^T \mathbf{Y}
+$$
 
 Multiply both sides by the inverse matrix $(\mathbf{X}^T \mathbf{X})^{-1}$:
-$$\boxed{\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}}$$
+
+$$
+\boxed{\hat{\boldsymbol{\beta}} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}}
+$$
 
 ### The Geometric Meaning: Orthogonality of Residuals
 Rewriting the normal equations gives:
-$$\mathbf{X}^T (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \mathbf{X}^T \mathbf{e} = \mathbf{0}$$
+
+$$
+\mathbf{X}^T (\mathbf{Y} - \mathbf{X}\hat{\boldsymbol{\beta}}) = \mathbf{X}^T \mathbf{e} = \mathbf{0}
+$$
 
 This states that **the residual error vector $\mathbf{e}$ is perpendicular (orthogonal) to every single column of $\mathbf{X}$**:
 1. Because column 0 is all 1s: $\sum_{i=1}^n e_i \times 1 = \sum e_i = 0$ (Residuals sum to zero!).
@@ -363,9 +474,14 @@ This states that **the residual error vector $\mathbf{e}$ is perpendicular (orth
 ![ANOVA Sum of Squares Partitioning](reg_clf_guide_images/03_anova_ss_partitioning.png)
 
 Total variation in sales can be broken down into two parts: variation our regression line explained, and leftover random noise:
-$$\sum_{i=1}^n (y_i - \bar{y})^2 = \sum_{i=1}^n (\hat{y}_i - \bar{y})^2 + \sum_{i=1}^n (y_i - \hat{y}_i)^2$$
 
-$$\boxed{SS_T = SS_{Reg} + SS_{Res}}$$
+$$
+\sum_{i=1}^n (y_i - \bar{y})^2 = \sum_{i=1}^n (\hat{y}_i - \bar{y})^2 + \sum_{i=1}^n (y_i - \hat{y}_i)^2
+$$
+
+$$
+\boxed{SS_T = SS_{Reg} + SS_{Res}}
+$$
 
 - **Total Sum of Squares ($SS_T$):** How much the actual points spread out around the grand average $\bar{y}$.
 - **Regression Sum of Squares ($SS_{Reg}$):** How much variation our line successfully accounted for.
@@ -381,11 +497,17 @@ In statistics, every time we estimate a parameter from data, we consume 1 degree
 - **$DF(SS_{Reg}) = k - 1$:** The model has $k$ parameters, but the intercept $\beta_0$ accounts for the overall mean $\bar{y}$. So only $k-1$ parameters contribute to explaining spread around the mean.
 
 Notice how the degrees of freedom add up:
-$$DF(SS_T) = DF(SS_{Reg}) + DF(SS_{Res}) \implies (n - 1) = (k - 1) + (n - k)$$
+
+$$
+DF(SS_T) = DF(SS_{Reg}) + DF(SS_{Res}) \implies (n - 1) = (k - 1) + (n - k)
+$$
 
 ### Coefficient of Determination ($R^2$)
 $R^2$ is simply the fraction of the total variation pie that our line successfully explained:
-$$R^2 = \frac{SS_{Reg}}{SS_T} = 1 - \frac{SS_{Res}}{SS_T}$$
+
+$$
+R^2 = \frac{SS_{Reg}}{SS_T} = 1 - \frac{SS_{Res}}{SS_T}
+$$
 
 For Sir's Advertising vs Sales data:
 - $SS_T = (1-2)^2 + (1-2)^2 + (2-2)^2 + (2-2)^2 + (4-2)^2 = 1 + 1 + 0 + 0 + 4 = 6.00$
@@ -422,7 +544,10 @@ Logistic Regression fixes this by inserting a mathematical link function that sq
 
 ### The Sigmoid Function
 The standard logistic sigmoid function is defined as:
-$$\sigma(z) = \frac{1}{1 + e^{-z}} = \frac{e^z}{e^z + 1}$$
+
+$$
+\sigma(z) = \frac{1}{1 + e^{-z}} = \frac{e^z}{e^z + 1}
+$$
 
 **Key Properties:**
 - When $z = 0$, $\sigma(0) = \frac{1}{1+1} = \mathbf{0.5}$ (The natural decision boundary).
@@ -436,11 +561,17 @@ Where does the sigmoid formula actually come from? We build it in 3 intuitive st
 
 #### Step 1: Probability ($P$)
 Probability is trapped inside the closed interval:
-$$P \in [0, 1]$$
+
+$$
+P \in [0, 1]
+$$
 
 #### Step 2: Odds (Breaking the Ceiling)
 Odds is the ratio of how likely an event is to happen versus not happen:
-$$\text{Odds} = \frac{P}{1 - P} \in [0, \infty)$$
+
+$$
+\text{Odds} = \frac{P}{1 - P} \in [0, \infty)
+$$
 
 - If $P = 0.8$, $\text{Odds} = \frac{0.8}{0.2} = 4$ ("4 to 1 odds in favor").
 - If $P = 0.5$, $\text{Odds} = \frac{0.5}{0.5} = 1$ ("Even 1 to 1 odds").
@@ -450,7 +581,10 @@ Notice that Odds breaks the upper ceiling of 1.0, but it is still blocked at zer
 
 #### Step 3: Log-Odds / The Logit (Breaking the Floor)
 To allow negative numbers, we take the natural logarithm of the odds:
-$$\text{logit}(P) = \ln(\text{Odds}) = \ln\left(\frac{P}{1 - P}\right) \in (-\infty, +\infty)$$
+
+$$
+\text{logit}(P) = \ln(\text{Odds}) = \ln\left(\frac{P}{1 - P}\right) \in (-\infty, +\infty)
+$$
 
 | Probability $P$ | Odds $= \frac{P}{1-P}$ | Log-Odds $= \ln(\text{Odds})$ | Everyday Meaning |
 |:---:|:---:|:---:|:---|
@@ -466,15 +600,26 @@ Now notice something extraordinary:
 - The log-odds also ranges from $(-\infty, +\infty)$.
 
 Therefore, **Logistic Regression sets the log-odds equal to the linear equation:**
-$$\ln\left(\frac{P}{1 - P}\right) = \mathbf{w}^T \mathbf{x} + b$$
+
+$$
+\ln\left(\frac{P}{1 - P}\right) = \mathbf{w}^T \mathbf{x} + b
+$$
 
 Take the exponential of both sides:
-$$\frac{P}{1 - P} = e^{\mathbf{w}^T \mathbf{x} + b}$$
+
+$$
+\frac{P}{1 - P} = e^{\mathbf{w}^T \mathbf{x} + b}
+$$
 
 Solve for $P$:
-$$P = (1 - P) e^{\mathbf{w}^T \mathbf{x} + b} \implies P\big(1 + e^{\mathbf{w}^T \mathbf{x} + b}\big) = e^{\mathbf{w}^T \mathbf{x} + b}$$
 
-$$\boxed{P(Y=1 \mid \mathbf{x}) = \frac{e^{\mathbf{w}^T \mathbf{x} + b}}{1 + e^{\mathbf{w}^T \mathbf{x} + b}} = \frac{1}{1 + e^{-(\mathbf{w}^T \mathbf{x} + b)}} = \sigma(\mathbf{w}^T \mathbf{x} + b)}$$
+$$
+P = (1 - P) e^{\mathbf{w}^T \mathbf{x} + b} \implies P\big(1 + e^{\mathbf{w}^T \mathbf{x} + b}\big) = e^{\mathbf{w}^T \mathbf{x} + b}
+$$
+
+$$
+\boxed{P(Y=1 \mid \mathbf{x}) = \frac{e^{\mathbf{w}^T \mathbf{x} + b}}{1 + e^{\mathbf{w}^T \mathbf{x} + b}} = \frac{1}{1 + e^{-(\mathbf{w}^T \mathbf{x} + b)}} = \sigma(\mathbf{w}^T \mathbf{x} + b)}
+$$
 
 *The circle is complete:* Starting from intuitive odds, the sigmoid formula emerges naturally!
 
@@ -484,7 +629,10 @@ $$\boxed{P(Y=1 \mid \mathbf{x}) = \frac{e^{\mathbf{w}^T \mathbf{x} + b}}{1 + e^{
 
 ### Why Mean Squared Error (MSE) Fails for Logistic Regression
 What happens if we try to train logistic regression using simple squared error?
-$$J_{MSE}(\mathbf{w}) = \frac{1}{2m} \sum_{i=1}^m \big(\sigma(\mathbf{w}^T \mathbf{x}_i) - y_i\big)^2$$
+
+$$
+J_{MSE}(\mathbf{w}) = \frac{1}{2m} \sum_{i=1}^m \big(\sigma(\mathbf{w}^T \mathbf{x}_i) - y_i\big)^2
+$$
 
 ![Loss Surface Comparison: Non-Convex MSE vs Strictly Convex Log-Loss](reg_clf_guide_images/06_loss_surface_mse_vs_logloss.png)
 
@@ -494,13 +642,22 @@ As shown in the left panel of Fig 6, this creates a **non-convex error surface**
 To guarantee a strictly convex, bowl-shaped surface with a single global minimum, we derive our loss function using **Maximum Likelihood Estimation (MLE)**.
 
 For a single sample $(\mathbf{x}_i, y_i)$ with predicted probability $p_i = \sigma(\mathbf{w}^T \mathbf{x}_i + b)$:
-$$P(y_i \mid \mathbf{x}_i) = p_i^{y_i} (1 - p_i)^{1 - y_i}$$
+
+$$
+P(y_i \mid \mathbf{x}_i) = p_i^{y_i} (1 - p_i)^{1 - y_i}
+$$
 
 Taking the natural log turns products into easy sums:
-$$\ln P(y_i \mid \mathbf{x}_i) = y_i \ln(p_i) + (1 - y_i) \ln(1 - p_i)$$
+
+$$
+\ln P(y_i \mid \mathbf{x}_i) = y_i \ln(p_i) + (1 - y_i) \ln(1 - p_i)
+$$
 
 Because optimizers minimize cost, we negate the log-likelihood and average across all $m$ samples to get **Binary Cross-Entropy (Log-Loss)**:
-$$\boxed{J(\mathbf{w}, b) = -\frac{1}{m} \sum_{i=1}^m \Big[ y_i \ln(p_i) + (1 - y_i) \ln(1 - p_i) \Big]}$$
+
+$$
+\boxed{J(\mathbf{w}, b) = -\frac{1}{m} \sum_{i=1}^m \Big[ y_i \ln(p_i) + (1 - y_i) \ln(1 - p_i) \Big]}
+$$
 
 > **Why the negative sign? (Lecture 3 Slide 38):** Probabilities are decimals between 0 and 1, and the logarithm of any decimal is always negative ($\ln 0.5 = -0.693$). Without the negative sign, our cost would be negative! The minus sign flips the cost into a clean positive number.
 
@@ -510,7 +667,10 @@ $$\boxed{J(\mathbf{w}, b) = -\frac{1}{m} \sum_{i=1}^m \Big[ y_i \ln(p_i) + (1 - 
 
 ### Deriving the Gradient Descent Update Rule
 Using the calculus chain rule:
-$$\frac{\partial J}{\partial w_j} = \frac{\partial J}{\partial p} \cdot \frac{\partial p}{\partial z} \cdot \frac{\partial z}{\partial w_j}$$
+
+$$
+\frac{\partial J}{\partial w_j} = \frac{\partial J}{\partial p} \cdot \frac{\partial p}{\partial z} \cdot \frac{\partial z}{\partial w_j}
+$$
 
 Let's compute each component:
 1. $\frac{\partial J}{\partial p_i} = -\left(\frac{y_i}{p_i} - \frac{1 - y_i}{1 - p_i}\right) = \frac{p_i - y_i}{p_i (1 - p_i)}$
@@ -518,17 +678,29 @@ Let's compute each component:
 3. $\frac{\partial z_i}{\partial w_j} = x_{ij}$
 
 Now multiply them together:
-$$\frac{\partial J}{\partial w_j} = \frac{1}{m} \sum_{i=1}^m \frac{p_i - y_i}{\underbrace{p_i(1-p_i)}_{\text{denominator}}} \cdot \underbrace{p_i(1-p_i)}_{\text{numerator}} \cdot x_{ij}$$
+
+$$
+\frac{\partial J}{\partial w_j} = \frac{1}{m} \sum_{i=1}^m \frac{p_i - y_i}{\underbrace{p_i(1-p_i)}_{\text{denominator}}} \cdot \underbrace{p_i(1-p_i)}_{\text{numerator}} \cdot x_{ij}
+$$
 
 Notice the mathematical miracle: **The $p_i(1-p_i)$ terms cancel out completely!**
-$$\boxed{\frac{\partial J}{\partial w_j} = \frac{1}{m} \sum_{i=1}^m (p_i - y_i) x_{ij}}$$
-$$\boxed{\frac{\partial J}{\partial b} = \frac{1}{m} \sum_{i=1}^m (p_i - y_i)}$$
+
+$$
+\boxed{\frac{\partial J}{\partial w_j} = \frac{1}{m} \sum_{i=1}^m (p_i - y_i) x_{ij}}
+$$
+
+$$
+\boxed{\frac{\partial J}{\partial b} = \frac{1}{m} \sum_{i=1}^m (p_i - y_i)}
+$$
 
 > **Notice the elegance:** The gradient of logistic regression with cross-entropy has the exact same mathematical form as linear regression: $(\text{Prediction} - \text{Actual}) \times \text{Input}$!
 
 ### The Parameter Update Rule
 At every iteration, we nudge weights downhill against the gradient using learning rate $\alpha$:
-$$w_j \leftarrow w_j - \alpha \frac{\partial J}{\partial w_j}, \qquad b \leftarrow b - \alpha \frac{\partial J}{\partial b}$$
+
+$$
+w_j \leftarrow w_j - \alpha \frac{\partial J}{\partial w_j}, \qquad b \leftarrow b - \alpha \frac{\partial J}{\partial b}
+$$
 
 ---
 
@@ -540,14 +712,20 @@ If data can be separated perfectly, unregularized logistic regression tries to f
 
 ### 1. L1 Regularization (Lasso)
 Adds the sum of absolute values of weights to the cost:
-$$J_{L1}(\mathbf{w}) = J(\mathbf{w}) + \lambda \sum_{j=1}^d |w_j|$$
+
+$$
+J_{L1}(\mathbf{w}) = J(\mathbf{w}) + \lambda \sum_{j=1}^d |w_j|
+$$
 
 - **Geometry (Left Panel):** The constraint boundary is a sharp diamond with pointed corners sitting directly on the coordinate axes.
 - **Consequence:** When the smooth loss ellipses expand, they almost always touch the diamond at one of its sharp corners where $w_1 = 0$. This forces unhelpful feature weights to become **identically zero**, acting as **automatic feature selection (sparsity)**.
 
 ### 2. L2 Regularization (Ridge)
 Adds the sum of squared weights to the cost:
-$$J_{L2}(\mathbf{w}) = J(\mathbf{w}) + \frac{\lambda}{2} \sum_{j=1}^d w_j^2$$
+
+$$
+J_{L2}(\mathbf{w}) = J(\mathbf{w}) + \frac{\lambda}{2} \sum_{j=1}^d w_j^2
+$$
 
 - **Geometry (Right Panel):** The constraint boundary is a smooth circle.
 - **Consequence:** The loss contours touch the smooth circle off-axis. Weights are shrunk close to zero, but rarely become exactly zero. It retains all features while dampening variance.
@@ -576,18 +754,33 @@ When we have $K > 2$ classes (e.g. Apple, Banana, Orange), logistic regression e
 ### Strategy 2: Multinomial Logistic Regression (Softmax Regression)
 Instead of running separate models, Softmax models all $K$ classes simultaneously into a single probability distribution that is guaranteed to sum to 1.0 (100%):
 
-$$P(y = k \mid \mathbf{x}) = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}, \qquad z_k = \mathbf{w}_k^T \mathbf{x} + b_k$$
+$$
+P(y = k \mid \mathbf{x}) = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}, \qquad z_k = \mathbf{w}_k^T \mathbf{x} + b_k
+$$
 
 In matrix form across a batch:
-$$\mathbf{Z} = \mathbf{X}\mathbf{W} + \mathbf{b}$$
+
+$$
+\mathbf{Z} = \mathbf{X}\mathbf{W} + \mathbf{b}
+$$
+
 Where $\mathbf{W}$ is a $d \times K$ weight matrix (one column per class).
 
 **Categorical Cross-Entropy Loss:**
-$$\mathcal{L}(\mathbf{W}, \mathbf{b}) = -\frac{1}{m} \sum_{i=1}^m \sum_{k=1}^K y_{ik} \ln(p_{ik})$$
+
+$$
+\mathcal{L}(\mathbf{W}, \mathbf{b}) = -\frac{1}{m} \sum_{i=1}^m \sum_{k=1}^K y_{ik} \ln(p_{ik})
+$$
 
 **Matrix Gradient:**
-$$\boxed{\frac{\partial \mathcal{L}}{\partial \mathbf{W}} = \frac{1}{m} \mathbf{X}^T (\mathbf{P} - \mathbf{Y})}$$
-$$\boxed{\frac{\partial \mathcal{L}}{\partial \mathbf{b}} = \frac{1}{m} \sum_{i=1}^m (\mathbf{p}_i - \mathbf{y}_i)}$$
+
+$$
+\boxed{\frac{\partial \mathcal{L}}{\partial \mathbf{W}} = \frac{1}{m} \mathbf{X}^T (\mathbf{P} - \mathbf{Y})}
+$$
+
+$$
+\boxed{\frac{\partial \mathcal{L}}{\partial \mathbf{b}} = \frac{1}{m} \sum_{i=1}^m (\mathbf{p}_i - \mathbf{y}_i)}
+$$
 
 ---
 
@@ -610,9 +803,12 @@ Lecture 3 (Slides 60–73) presents a complete end-to-end numerical example clas
 
 ### Step 1: Pre-scaled Inputs & Initial Parameters
 To keep manual exam arithmetic simple, Slide 61 uses pre-standardized inputs and initial weights:
-$$\mathbf{X}_{\text{scaled}} = \begin{bmatrix} 1.2 & 1.1 \\ -0.2 & -0.3 \\ -1.0 & 0.5 \\ 0.3 & -1.1 \\ 1.5 & 1.5 \\ -0.8 & -0.3 \end{bmatrix}, \quad
+
+$$
+\mathbf{X}_{\text{scaled}} = \begin{bmatrix} 1.2 & 1.1 \\ -0.2 & -0.3 \\ -1.0 & 0.5 \\ 0.3 & -1.1 \\ 1.5 & 1.5 \\ -0.8 & -0.3 \end{bmatrix}, \quad
 \mathbf{W} = \begin{bmatrix} 0.1 & 0.2 & 0.3 \\ 0.4 & 0.5 & 0.6 \end{bmatrix}, \quad
-\mathbf{b} = \begin{bmatrix} 0.1 & 0.2 & 0.3 \end{bmatrix}$$
+\mathbf{b} = \begin{bmatrix} 0.1 & 0.2 & 0.3 \end{bmatrix}
+$$
 
 ### Step 2: Forward Pass & Mathematical Slide Typo Audit
 
@@ -694,7 +890,7 @@ Here is the quick-reference guide to the 6 solvers used in production:
 | **Sigmoid Function** | $\sigma(z) = \frac{1}{1 + e^{-z}}$, derivative $\sigma'(z) = \sigma(z)(1 - \sigma(z))$ |
 | **Binary Cross-Entropy** | $J(\mathbf{w}, b) = -\frac{1}{m} \sum [y \ln p + (1-y) \ln(1-p)]$ |
 | **Cross-Entropy Gradient** | $\frac{\partial J}{\partial w_j} = \frac{1}{m} \sum (p_i - y_i) x_{ij}$ (Sigmoid slope cancelled out!) |
-| **L1 vs L2 Regularization** | L1 = $\lambda \sum |w_j|$ (Sparse feature selection) · L2 = $\frac{\lambda}{2} \sum w_j^2$ (Smooth shrinkage) |
+| **L1 vs L2 Regularization** | L1 = $\lambda \sum \lvert w_j \rvert$ (Sparse feature selection) · L2 = $\frac{\lambda}{2} \sum w_j^2$ (Smooth shrinkage) |
 | **Multinomial Softmax** | $P(y = k) = \frac{e^{z_k}}{\sum_{j=1}^K e^{z_j}}$, matrix gradient $\frac{\partial \mathcal{L}}{\partial \mathbf{W}} = \frac{1}{m} \mathbf{X}^T (\mathbf{P} - \mathbf{Y})$ |
 
 ---

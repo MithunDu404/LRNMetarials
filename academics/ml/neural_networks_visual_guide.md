@@ -82,7 +82,7 @@ y = 1 \text{ if } \sum_i x_i \ge \theta, \text{ otherwise } 0
 An **inhibitory** input (drawn as a small open circle where it meets the neuron) acts as a **veto**: if it is 1 the output is 0 regardless of the sum. That single extra idea lets the weightless M-P unit compute gates that pure summation cannot:
 
 | Gate | Inputs | θ | Rule |
-|:---|:---|:-:|:---|
+|:---|:---|:---:|:---|
 | NOT | $x_1$ inhibitory | 0 | fires unless $x_1$ vetoes |
 | NOR | both inhibitory | 0 | fires only when nothing vetoes |
 | $x_1$ AND NOT $x_2$ | $x_1$ excitatory, $x_2$ inhibitory | 1 | $x_1$ must reach the threshold **and** $x_2$ must stay quiet |
@@ -233,7 +233,7 @@ while not converged:
 ## 6. XOR needs a hidden layer
 
 | $x_1$ | $x_2$ | OR = $h_1$ | NAND = $h_2$ | AND($h_1$, $h_2$) = XOR |
-|:-:|:-:|:-:|:-:|:-:|
+|:---:|:---:|:---:|:---:|:---:|
 | 0 | 0 | 0 | 1 | **0** |
 | 0 | 1 | 1 | 1 | **1** |
 | 1 | 0 | 1 | 1 | **1** |
