@@ -167,9 +167,9 @@ Analysis of examination recurrence across 2023, 2024, and 2025 for topics covere
 - **Linear Regression:** Used to predict a **continuous numerical value** (e.g., house prices or tomorrow's temperature). It fits a straight line: $\hat{y} = \mathbf{w}^T \mathbf{x} + b$, and its output can be any number from $-\infty$ to $+\infty$.
 - **Logistic Regression:** Used for **binary classification** (e.g., Spam vs. Not Spam, Disease vs. Healthy). It predicts a **probability between 0 and 1** by passing the linear equation through an S-shaped sigmoid function:
 
-  $$
-  \hat{p} = \sigma(\mathbf{w}^T \mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^T \mathbf{x} + b)}}
-  $$
+$$
+\hat{p} = \sigma(\mathbf{w}^T \mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^T \mathbf{x} + b)}}
+$$
 
 | Comparison Point | Linear Regression | Logistic Regression |
 |:---|:---|:---|
@@ -191,9 +191,9 @@ A logistic regression model outputs a probability $\hat{p} \in (0, 1)$. If the p
 1. **Log-Loss (Binary Cross-Entropy):**  
    Measures how close the predicted probabilities are to the actual 0 or 1 labels:
 
-   $$
-   \mathcal{L}_{\text{BCE}} = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \ln \hat{p}^{(i)} + (1 - y^{(i)}) \ln (1 - \hat{p}^{(i)}) \right]
-   $$
+$$
+\mathcal{L}_{\text{BCE}} = -\frac{1}{m} \sum_{i=1}^m \left[ y^{(i)} \ln \hat{p}^{(i)} + (1 - y^{(i)}) \ln (1 - \hat{p}^{(i)}) \right]
+$$
 
    - It heavily punishes a model that is **confident but wrong** (e.g., predicting $99\%$ probability for Class 1 when the true answer is 0).
 
@@ -206,9 +206,9 @@ A logistic regression model outputs a probability $\hat{p} \in (0, 1)$. If the p
      *(Out of all real cancer patients, how many did the model correctly catch?).*
    - **F1-Score:** The balanced harmonic mean of Precision and Recall:
 
-     $$
-     \text{F}_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
-     $$
+$$
+\text{F}_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+$$
 
 3. **ROC-AUC (Threshold-Independent Metric):**  
    - Plots True Positive Rate vs. False Positive Rate across all possible cutoff thresholds.
@@ -253,7 +253,10 @@ It plays three vital roles:
 Both AND and OR can be solved using **a single artificial neuron** because their truth tables are **linearly separable** (a single straight line can separate the 1s from the 0s on a 2D graph):
 
 $$
-y = \phi(w_1 x_1 + w_2 x_2 + b) \quad \text{where } \phi(z) = \begin{cases} 1 & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}
+y = \phi(w_1 x_1 + w_2 x_2 + b) \quad \text{where } \phi(z) = \begin{cases}
+1 & \text{if } z \ge 0 \\\\
+0 & \text{if } z < 0
+\end{cases}
 $$
 
 - **(i) 2-Input AND Gate:**  
@@ -298,7 +301,7 @@ $$
 | **First Derivative** | $\sigma'(z) = \sigma(z)(1 - \sigma(z))$ | $\tanh'(z) = 1 - \tanh^2(z)$ | $f'(z) = 1$ (for $z > 0$), $0$ (for $z < 0$) |
 | **Maximum Gradient** | **$0.25$** (at $z=0$) | **$1.0$** (at $z=0$) | **$1.0$** (for all positive $z$) |
 | **Centered at Zero?** | ❌ No (Outputs strictly positive) | ✅ Yes (Outputs centered at 0) | ❌ No (Outputs $\ge 0$) |
-| **Vanishing Gradient?** | **Very Severe:** Maximum gradient is only $0.25$. Multiplying across layers shrinks gradient to 0. | **Severe when $\|z\| > 2.5$**, but better near 0 than sigmoid. | **None for $z > 0$** (slope is always 1). |
+| **Vanishing Gradient?** | **Very Severe:** Maximum gradient is only $0.25$. Multiplying across layers shrinks gradient to 0. | **Severe when $\lvert z \rvert > 2.5$**, but better near 0 than sigmoid. | **None for $z > 0$** (slope is always 1). |
 | **Main Weakness** | Vanishing gradients; slow exponential math | Vanishing gradients at saturation ends | **Dying ReLU:** Neurons that get negative input can permanently die. |
 | **Where to Use** | Output layer for binary classification | Hidden layers in shallow networks or RNNs | **Default choice** for hidden layers in modern deep networks and CNNs |
 
@@ -317,8 +320,8 @@ $$
    - The weights in the earliest layers stop updating, and the network **stops learning**.
 
 2. **How ReLU and Leaky ReLU Fix It:**  
-   - **ReLU ($f(z) = \max(0, z)$):** For any positive input ($z > 0$), the slope is **always exactly 1.0**. Because the gradient is multiplied by 1, it flows backward through dozens of layers without shrinking or vanishing.
-   - **Leaky ReLU ($f(z) = \max(0.01z, z)$):** Gives a tiny slope ($0.01$) for negative inputs instead of flat zero. This keeps a small error signal flowing so neurons never become permanently "dead".
+   - **ReLU** ($f(z) = \max(0, z)$): For any positive input ($z > 0$), the slope is **always exactly 1.0**. Because the gradient is multiplied by 1, it flows backward through dozens of layers without shrinking or vanishing.
+   - **Leaky ReLU** ($f(z) = \max(0.01z, z)$): Gives a tiny slope ($0.01$) for negative inputs instead of flat zero. This keeps a small error signal flowing so neurons never become permanently "dead".
 
 ---
 
@@ -335,30 +338,30 @@ Let output be $a = \sigma(z) = \frac{1}{1 + e^{-z}}$, with derivative $\frac{\pa
 
 - **Case 1: Sum of Squared Errors (SSE) — Learning Stalls:**  
 
-  $$
-  \text{Loss} = \frac{1}{2}(y - a)^2 \implies \frac{\partial \text{Loss}}{\partial z} = -(y - a) \cdot a(1 - a)
-  $$
+$$
+\text{Loss} = \frac{1}{2}(y - a)^2 \implies \frac{\partial \text{Loss}}{\partial z} = -(y - a) \cdot a(1 - a)
+$$
 
   *The Failure:* Suppose the true label is $y = 1$, but the network is horribly wrong, outputting $a = 0.001$.  
   The error is huge ($(y - a) \approx 1$), but the gradient is:
 
-  $$
-  \frac{\partial \text{Loss}}{\partial z} = -1 \times 0.001 \times 0.999 \approx \mathbf{-0.001 \approx 0}
-  $$
+$$
+\frac{\partial \text{Loss}}{\partial z} = -1 \times 0.001 \times 0.999 \approx \mathbf{-0.001 \approx 0}
+$$
 
   Even though the model made a giant mistake, the gradient is near zero! The network gets stuck and barely updates its weights.
 
 - **Case 2: Binary Cross-Entropy (BCE) — Fast, Proportional Learning:**  
 
-  $$
-  \text{Loss} = -[y \ln a + (1 - y) \ln (1 - a)] \implies \frac{\partial \text{Loss}}{\partial a} = \frac{a - y}{a(1 - a)}
-  $$
+$$
+\text{Loss} = -[y \ln a + (1 - y) \ln (1 - a)] \implies \frac{\partial \text{Loss}}{\partial a} = \frac{a - y}{a(1 - a)}
+$$
 
   Now multiply by the sigmoid derivative $\frac{\partial a}{\partial z} = a(1 - a)$:
 
-  $$
-  \frac{\partial \text{Loss}}{\partial z} = \frac{a - y}{a(1 - a)} \cdot a(1 - a) = \mathbf{a - y}
-  $$
+$$
+\frac{\partial \text{Loss}}{\partial z} = \frac{a - y}{a(1 - a)} \cdot a(1 - a) = \mathbf{a - y}
+$$
 
   *The Perfect Cancellation:* The term $a(1 - a)$ cancels out completely! The gradient is simply $(a - y)$, which is the raw error. If the error is large, the gradient is large and the model fixes itself immediately.
 
@@ -383,7 +386,7 @@ All three methods adjust network weights to reduce loss, but they differ in **ho
 ##### Concrete Real-World Example (Dataset of $10,000$ Images):
 - **Batch GD:** Passes all $10,000$ images through the network to make **1 weight update** per epoch.
 - **SGD:** Passes $1$ image at a time, making **$10,000$ weight updates** per epoch.
-- **Mini-Batch GD ($B = 64$):** Splits $10,000$ images into batches of 64. It processes each batch in parallel on GPU, making **$157$ stable weight updates** per epoch. *(This is what industry actually uses!)*.
+- **Mini-Batch GD** ($B = 64$): Splits $10,000$ images into batches of 64. It processes each batch in parallel on GPU, making **$157$ stable weight updates** per epoch. *(This is what industry actually uses!)*.
 
 ---
 
@@ -397,9 +400,9 @@ All three methods adjust network weights to reduce loss, but they differ in **ho
    - Batch Normalization (BN) is placed between a layer's linear sum ($z = Wx + b$) and its activation function.
    - For every mini-batch of data, it calculates the batch mean ($\mu$) and variance ($\sigma^2$), and standardizes the values so they have a mean of 0 and a variance of 1:
 
-     $$
-     \hat{z}_i = \frac{z_i - \mu}{\sqrt{\sigma^2 + \epsilon}}
-     $$
+$$
+\hat{z}_i = \frac{z_i - \mu}{\sqrt{\sigma^2 + \epsilon}}
+$$
 
    - Then it applies two learned parameters ($\gamma$ to scale, $\beta$ to shift): $y_i = \gamma \hat{z}_i + \beta$.
 
@@ -503,8 +506,8 @@ A **Confusion Matrix** is a 2x2 table (for binary classification) that compares 
 
 - **Definition:** A **hyperparameter** is a setting or configuration chosen by the human engineer **before training begins**, which controls how the model learns. It is not learned automatically from the data.
 - **Difference from Model Parameters:**
-  - **Parameters ($\mathbf{w}, \mathbf{b}$):** Internal weights learned automatically by the model from the training data using gradient descent or formulas.
-  - **Hyperparameters ($\eta, \lambda, B, K$):** External knobs tuned by the engineer using a validation set.
+  - **Parameters** ($\mathbf{w}, \mathbf{b}$): Internal weights learned automatically by the model from the training data using gradient descent or formulas.
+  - **Hyperparameters** ($\eta, \lambda, B, K$): External knobs tuned by the engineer using a validation set.
 - **Common Examples:**
   1. Learning rate ($\eta$) in gradient descent.
   2. Regularization strength ($\lambda$ or $C$).
@@ -556,15 +559,15 @@ $$
 ##### 1. Mathematical Formulations
 - **$L_1$ Regularization (Lasso):** Penalizes the sum of **absolute values** of the weights:
 
-  $$
-  \text{Penalty}_{L_1} = \sum_{j=1}^n |w_j| \implies \text{Loss} + \lambda \sum_{j=1}^n |w_j|
-  $$
+$$
+\text{Penalty}_{L_1} = \sum_{j=1}^n |w_j| \implies \text{Loss} + \lambda \sum_{j=1}^n |w_j|
+$$
 
 - **$L_2$ Regularization (Ridge / Weight Decay):** Penalizes the sum of **squared values** of the weights:
 
-  $$
-  \text{Penalty}_{L_2} = \frac{1}{2}\sum_{j=1}^n w_j^2 \implies \text{Loss} + \frac{\lambda}{2} \sum_{j=1}^n w_j^2
-  $$
+$$
+\text{Penalty}_{L_2} = \frac{1}{2}\sum_{j=1}^n w_j^2 \implies \text{Loss} + \frac{\lambda}{2} \sum_{j=1}^n w_j^2
+$$
 
 ##### 2. Comparison of Effects on Model Weights
 
@@ -591,27 +594,30 @@ $$
 ##### 1. Formulas and Derivatives
 1. **Sigmoid Activation Function:**
 
-   $$
-   \sigma(z) = \frac{1}{1 + e^{-z}}
-   $$
+$$
+\sigma(z) = \frac{1}{1 + e^{-z}}
+$$
 
    - **Derivative:** $\sigma'(z) = \sigma(z)(1 - \sigma(z))$.
    - **Maximum slope:** Only **$0.25$** (at $z = 0$). For values $|z| \ge 4$, the curve becomes flat and the slope drops to zero.
 
 2. **Tanh (Hyperbolic Tangent) Activation Function:**
 
-   $$
-   \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}} = 2\sigma(2z) - 1
-   $$
+$$
+\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}} = 2\sigma(2z) - 1
+$$
 
    - **Derivative:** $\tanh'(z) = 1 - \tanh^2(z)$.
    - **Maximum slope:** **$1.0$** (at $z = 0$). For $|z| \ge 2.5$, the curve becomes flat and the slope drops to zero.
 
 3. **ReLU (Rectified Linear Unit) Activation Function:**
 
-   $$
-   f(z) = \max(0, z) = \begin{cases} z & \text{if } z > 0 \\ 0 & \text{if } z \le 0 \end{cases}
-   $$
+$$
+f(z) = \max(0, z) = \begin{cases}
+z & \text{if } z > 0 \\\\
+0 & \text{if } z \le 0
+\end{cases}
+$$
 
    - **Derivative:** $f'(z) = 1$ for all $z > 0$, and $0$ for $z < 0$.
 
@@ -622,7 +628,7 @@ $$
 | **Output Range** | $(0, 1)$ | $(-1, 1)$ | $[0, +\infty)$ |
 | **Centered at Zero?** | ❌ No (Outputs are always $> 0$) | ✅ Yes (Mean output is around 0) | ❌ No (Outputs are $\ge 0$) |
 | **Maximum Gradient** | **$0.25$** | **$1.0$** | **$1.0$** (constant for positive inputs) |
-| **Vanishing Gradient?** | **Very Severe:** Gradients shrink to zero in deep networks. | **Severe for large $\|z\|$**, but better near 0 than sigmoid. | **None for $z > 0$** (slope is always 1). |
+| **Vanishing Gradient?** | **Very Severe:** Gradients shrink to zero in deep networks. | **Severe for large $\lvert z \rvert$**, but better near 0 than sigmoid. | **None for $z > 0$** (slope is always 1). |
 | **Weakness** | Slow training, vanishing gradients | Vanishing gradients at outer edges | **Dying ReLU:** Can permanently shut down if inputs are negative. |
 | **Computing Cost** | Slow (needs exponential $e^{-z}$) | Slow (needs two exponentials) | **Fastest:** Simple check (`z > 0 ? z : 0`). |
 | **Where to Use** | Binary classification output layer | Hidden layers in shallow networks or RNNs | **Default standard** for hidden layers in modern deep networks |
@@ -648,18 +654,18 @@ $$
    - Every output probability is strictly positive ($p_k > 0$) because $e^z > 0$.
    - All probabilities sum up to exactly $1.0$:
 
-     $$
-     \sum_{k=1}^K p_k = \frac{\sum_{k=1}^K e^{z_k}}{\sum_{j=1}^K e^{z_j}} = 1.0
-     $$
+$$
+\sum_{k=1}^K p_k = \frac{\sum_{k=1}^K e^{z_k}}{\sum_{j=1}^K e^{z_j}} = 1.0
+$$
 
 2. **Smooth ("Soft") Maximum:**
    - Exponentiation emphasizes the largest score, making the most confident class stand out while keeping the function smooth and differentiable for gradient descent.
 3. **Clean Error Derivative with Cross-Entropy:**
    - When paired with Categorical Cross-Entropy loss ($\text{Loss} = -\sum y_k \ln p_k$), the derivative with respect to any logit $z_i$ simplifies to:
 
-     $$
-     \frac{\partial \text{Loss}}{\partial z_i} = p_i - y_i
-     $$
+$$
+\frac{\partial \text{Loss}}{\partial z_i} = p_i - y_i
+$$
 
    - This means the gradient is simply the **predicted probability minus the true label (0 or 1)**!
 
@@ -687,15 +693,15 @@ A Deep Neural Network is organized into consecutive layers of interconnected art
 Data moves forward through the network, layer by layer:
 1. **Weighted Sum (Affine Step):** Each neuron multiplies its inputs by its weights and adds a bias:
 
-   $$
-   \mathbf{z}^{[l]} = \mathbf{W}^{[l]} \mathbf{a}^{[l-1]} + \mathbf{b}^{[l]}
-   $$
+$$
+\mathbf{z}^{[l]} = \mathbf{W}^{[l]} \mathbf{a}^{[l-1]} + \mathbf{b}^{[l]}
+$$
 
 2. **Activation Step:** The sum is passed through a non-linear activation function (like ReLU or Sigmoid):
 
-   $$
-   \mathbf{a}^{[l]} = \phi(\mathbf{z}^{[l]})
-   $$
+$$
+\mathbf{a}^{[l]} = \phi(\mathbf{z}^{[l]})
+$$
 
 3. **Loss Computation:** At the output layer, the prediction $\hat{\mathbf{y}} = \mathbf{a}^{[L]}$ is compared with the true target $\mathbf{y}$ using a loss function $\mathcal{L}(\hat{\mathbf{y}}, \mathbf{y})$ (such as Cross-Entropy).
 
@@ -704,27 +710,27 @@ Backpropagation uses the **chain rule of calculus** to pass error signals backwa
 
 1. **Step 1: Output Layer Error:** Calculate the error at the final layer:
 
-   $$
-   \boldsymbol{\delta}^{[L]} = \frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot \phi'(\mathbf{z}^{[L]}) = \mathbf{a}^{[L]} - \mathbf{y}
-   $$
+$$
+\boldsymbol{\delta}^{[L]} = \frac{\partial \mathcal{L}}{\partial \mathbf{a}^{[L]}} \odot \phi'(\mathbf{z}^{[L]}) = \mathbf{a}^{[L]} - \mathbf{y}
+$$
 
 2. **Step 2: Propagate Error Backward:** Pass the error back through hidden layers:
 
-   $$
-   \boldsymbol{\delta}^{[l]} = \left( (\mathbf{W}^{[l+1]})^T \boldsymbol{\delta}^{[l+1]} \right) \odot \phi'(\mathbf{z}^{[l]})
-   $$
+$$
+\boldsymbol{\delta}^{[l]} = \left( (\mathbf{W}^{[l+1]})^T \boldsymbol{\delta}^{[l+1]} \right) \odot \phi'(\mathbf{z}^{[l]})
+$$
 
 3. **Step 3: Calculate Weight Gradients:**
 
-   $$
-   \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}} = \boldsymbol{\delta}^{[l]} (\mathbf{a}^{[l-1]})^T, \quad \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}} = \boldsymbol{\delta}^{[l]}
-   $$
+$$
+\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}} = \boldsymbol{\delta}^{[l]} (\mathbf{a}^{[l-1]})^T, \quad \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}} = \boldsymbol{\delta}^{[l]}
+$$
 
 4. **Step 4: Update Weights (Gradient Descent):** Adjust weights in the direction that lowers loss:
 
-   $$
-   \mathbf{W}^{[l]} := \mathbf{W}^{[l]} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}}, \quad \mathbf{b}^{[l]} := \mathbf{b}^{[l]} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}}
-   $$
+$$
+\mathbf{W}^{[l]} := \mathbf{W}^{[l]} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}}, \quad \mathbf{b}^{[l]} := \mathbf{b}^{[l]} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}}
+$$
 
 
 ## 2024 Mid-Semester Examination Solutions
@@ -767,51 +773,51 @@ To find the minimum, take partial derivatives with respect to $w_0$ and $w_1$, a
 
 - **Step 1: Derivative with respect to intercept $w_0$:**
 
-  $$
-  \frac{\partial S}{\partial w_0} = -2 \sum_{i=1}^m (y_i - w_0 - w_1 x_i) = 0
-  $$
+$$
+\frac{\partial S}{\partial w_0} = -2 \sum_{i=1}^m (y_i - w_0 - w_1 x_i) = 0
+$$
 
   Dividing by $-2$ and expanding the sum:
 
-  $$
-  \sum_{i=1}^m y_i - m w_0 - w_1 \sum_{i=1}^m x_i = 0 \implies m w_0 = \sum_{i=1}^m y_i - w_1 \sum_{i=1}^m x_i
-  $$
+$$
+\sum_{i=1}^m y_i - m w_0 - w_1 \sum_{i=1}^m x_i = 0 \implies m w_0 = \sum_{i=1}^m y_i - w_1 \sum_{i=1}^m x_i
+$$
 
   Dividing both sides by the total number of points $m$ (where $\bar{x} = \frac{1}{m}\sum x_i$ and $\bar{y} = \frac{1}{m}\sum y_i$ are the sample means):
 
-  $$
-  w_0 = \bar{y} - w_1 \bar{x}
-  $$
+$$
+w_0 = \bar{y} - w_1 \bar{x}
+$$
 
   *(Key Takeaway: The regression line always passes through the exact center point $(\bar{x}, \bar{y})$ of the data).*
 
 - **Step 2: Derivative with respect to slope $w_1$:**
 
-  $$
-  \frac{\partial S}{\partial w_1} = -2 \sum_{i=1}^m x_i (y_i - w_0 - w_1 x_i) = 0
-  $$
+$$
+\frac{\partial S}{\partial w_1} = -2 \sum_{i=1}^m x_i (y_i - w_0 - w_1 x_i) = 0
+$$
 
   Substitute $w_0 = \bar{y} - w_1 \bar{x}$ into this equation:
 
-  $$
-  \sum_{i=1}^m x_i \Big( (y_i - \bar{y}) - w_1 (x_i - \bar{x}) \Big) = 0
-  $$
+$$
+\sum_{i=1}^m x_i \Big( (y_i - \bar{y}) - w_1 (x_i - \bar{x}) \Big) = 0
+$$
 
-  $$
-  \sum_{i=1}^m x_i (y_i - \bar{y}) = w_1 \sum_{i=1}^m x_i (x_i - \bar{x})
-  $$
+$$
+\sum_{i=1}^m x_i (y_i - \bar{y}) = w_1 \sum_{i=1}^m x_i (x_i - \bar{x})
+$$
 
   Because $\sum \bar{x}(y_i - \bar{y}) = 0$ and $\sum \bar{x}(x_i - \bar{x}) = 0$, we can center both sides by subtracting $\bar{x}$:
 
-  $$
-  \sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y}) = w_1 \sum_{i=1}^m (x_i - \bar{x})^2
-  $$
+$$
+\sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y}) = w_1 \sum_{i=1}^m (x_i - \bar{x})^2
+$$
 
   Solving explicitly for slope $w_1$:
 
-  $$
-  w_1 = \frac{\sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^m (x_i - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)}
-  $$
+$$
+w_1 = \frac{\sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^m (x_i - \bar{x})^2} = \frac{\text{Cov}(x, y)}{\text{Var}(x)}
+$$
 
 ---
 
@@ -831,9 +837,9 @@ $$
 - **Penalty Formula:** $\Omega_{L_2}(\mathbf{w}) = \frac{1}{2}\sum_{j=1}^n w_j^2$.
 - **How It Works:** Under gradient descent, each weight update is multiplied by a shrinkage fraction $(1 - \eta \lambda) < 1$:
 
-  $$
-  w_j := w_j(1 - \eta \lambda) - \eta \frac{\partial \text{Loss}_0}{\partial w_j}
-  $$
+$$
+w_j := w_j(1 - \eta \lambda) - \eta \frac{\partial \text{Loss}_0}{\partial w_j}
+$$
 
 - **Effect on Weights:** Smoothly pulls all weights closer to zero, keeping them small without making them exactly zero. It handles correlated features very well.
 
@@ -841,9 +847,9 @@ $$
 - **Penalty Formula:** $\Omega_{L_1}(\mathbf{w}) = \sum_{j=1}^n |w_j|$.
 - **How It Works:** Because the absolute value function has a sharp point at zero, its derivative is a constant step:
 
-  $$
-  w_j := w_j - \eta \lambda \, \text{sgn}(w_j) - \eta \frac{\partial \text{Loss}_0}{\partial w_j}
-  $$
+$$
+w_j := w_j - \eta \lambda \, \text{sgn}(w_j) - \eta \frac{\partial \text{Loss}_0}{\partial w_j}
+$$
 
 - **Effect on Weights (Feature Selection):** It applies a steady subtractive force that drives unimportant weights **completely to zero ($w_j = 0$)**. This eliminates useless features and gives a sparse, easy-to-understand model.
 
@@ -905,9 +911,9 @@ For binary classification where inputs are $\mathbf{x}_i \in \mathbb{R}^{d+1}$ a
 2. Look at each training point. If the perceptron predicts correctly ($y_i (\mathbf{w}^T \mathbf{x}_i) > 0$), do nothing.
 3. If it makes a mistake ($y_i (\mathbf{w}^T \mathbf{x}_i) \le 0$), update the weight vector:
 
-   $$
-   \mathbf{w}_{k+1} = \mathbf{w}_k + y_i \mathbf{x}_i
-   $$
+$$
+\mathbf{w}_{k+1} = \mathbf{w}_k + y_i \mathbf{x}_i
+$$
 
 4. Repeat until all points are correctly classified.
 
@@ -921,44 +927,44 @@ For binary classification where inputs are $\mathbf{x}_i \in \mathbb{R}^{d+1}$ a
 - **Step 1: Alignment with true weights grows fast:**  
   Each time a mistake occurs, we add $y_i \mathbf{x}_i$:
 
-  $$
-  (\mathbf{w}^{\ast})^T \mathbf{w}_{k} = (\mathbf{w}^{\ast})^T (\mathbf{w}_{k-1} + y_i \mathbf{x}_i) = (\mathbf{w}^{\ast})^T \mathbf{w}_{k-1} + y_i (\mathbf{w}^{\ast})^T \mathbf{x}_i \ge (\mathbf{w}^{\ast})^T \mathbf{w}_{k-1} + \gamma
-  $$
+$$
+(\mathbf{w}^{\ast})^T \mathbf{w}_{k} = (\mathbf{w}^{\ast})^T (\mathbf{w}_{k-1} + y_i \mathbf{x}_i) = (\mathbf{w}^{\ast})^T \mathbf{w}_{k-1} + y_i (\mathbf{w}^{\ast})^T \mathbf{x}_i \ge (\mathbf{w}^{\ast})^T \mathbf{w}_{k-1} + \gamma
+$$
 
   After $k$ mistakes starting from $\mathbf{w}_0 = \mathbf{0}$:
 
-  $$
-  (\mathbf{w}^{\ast})^T \mathbf{w}_k \ge k\gamma \implies \Big( (\mathbf{w}^{\ast})^T \mathbf{w}_k \Big)^2 \ge k^2 \gamma^2 \quad \text{--- (1)}
-  $$
+$$
+(\mathbf{w}^{\ast})^T \mathbf{w}_k \ge k\gamma \implies \Big( (\mathbf{w}^{\ast})^T \mathbf{w}_k \Big)^2 \ge k^2 \gamma^2 \quad \text{--- (1)}
+$$
 
 - **Step 2: Total length of weight vector cannot grow too fast:**  
 
-  $$
-  \|\mathbf{w}_{k}\|^2 = \|\mathbf{w}_{k-1} + y_i \mathbf{x}_i\|^2 = \|\mathbf{w}_{k-1}\|^2 + 2 y_i \mathbf{w}_{k-1}^T \mathbf{x}_i + \|\mathbf{x}_i\|^2
-  $$
+$$
+\|\mathbf{w}_{k}\|^2 = \|\mathbf{w}_{k-1} + y_i \mathbf{x}_i\|^2 = \|\mathbf{w}_{k-1}\|^2 + 2 y_i \mathbf{w}_{k-1}^T \mathbf{x}_i + \|\mathbf{x}_i\|^2
+$$
 
   Since update $k$ happened on a mistake, $y_i \mathbf{w}_{k-1}^T \mathbf{x}_i \le 0$. And $\|\mathbf{x}_i\|^2 \le R^2$:
 
-  $$
-  \|\mathbf{w}_k\|^2 \le \|\mathbf{w}_{k-1}\|^2 + R^2
-  $$
+$$
+\|\mathbf{w}_k\|^2 \le \|\mathbf{w}_{k-1}\|^2 + R^2
+$$
 
   After $k$ mistakes:
 
-  $$
-  \|\mathbf{w}_k\|^2 \le k R^2 \quad \text{--- (2)}
-  $$
+$$
+\|\mathbf{w}_k\|^2 \le k R^2 \quad \text{--- (2)}
+$$
 
 - **Step 3: Combine using Cauchy-Schwarz Inequality:**  
   By definition, $((\mathbf{w}^{\ast})^T \mathbf{w}_k)^2 \le \|\mathbf{w}^{\ast}\|^2 \|\mathbf{w}_k\|^2 = 1 \times \|\mathbf{w}_k\|^2$. Combining (1) and (2):
 
-  $$
-  k^2 \gamma^2 \le \|\mathbf{w}_k\|^2 \le k R^2
-  $$
+$$
+k^2 \gamma^2 \le \|\mathbf{w}_k\|^2 \le k R^2
+$$
 
-  $$
-  k^2 \gamma^2 \le k R^2 \implies k \le \left(\frac{R}{\gamma}\right)^2
-  $$
+$$
+k^2 \gamma^2 \le k R^2 \implies k \le \left(\frac{R}{\gamma}\right)^2
+$$
 
 **Conclusion:** The total number of mistakes $k$ cannot exceed $(R / \gamma)^2$. Therefore, the algorithm is mathematically guaranteed to finish in a finite number of steps! $\blacksquare$
 
@@ -1000,9 +1006,12 @@ where:
 - $\mathbf{Y} \in \mathbb{R}^{m \times 1}$ is the column vector of actual values: $[y_1, y_2, \dots, y_m]^T$.
 - $\mathbf{X} \in \mathbb{R}^{m \times (n+1)}$ is the design matrix, with a first column of 1s to handle the intercept:
 
-  $$
-  \mathbf{X} = \begin{bmatrix} 1 & x_{11} & x_{12} & \dots & x_{1n} \\ 1 & x_{21} & x_{22} & \dots & x_{2n} \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ 1 & x_{m1} & x_{m2} & \dots & x_{mn} \end{bmatrix}
-  $$
+$$
+\mathbf{X} = \begin{bmatrix} 1 & x_{11} & x_{12} & \dots & x_{1n} \\\\
+1 & x_{21} & x_{22} & \dots & x_{2n} \\\\
+\vdots & \vdots & \vdots & \ddots & \vdots \\\\
+1 & x_{m1} & x_{m2} & \dots & x_{mn} \end{bmatrix}
+$$
 
 - $\boldsymbol{\beta} \in \mathbb{R}^{(n+1) \times 1}$ is the vector of coefficients: $[\beta_0, \beta_1, \dots, \beta_n]^T$.
 - $\boldsymbol{\epsilon}$ is the random error vector.
@@ -1069,21 +1078,21 @@ $$
 Let's evaluate the 3 pieces one by one:
 1. **Piece 1 (Error w.r.t Output):**  
 
-   $$
-   \frac{\partial E}{\partial O_{j, K}} = -(y_j - O_{j, K})
-   $$
+$$
+\frac{\partial E}{\partial O_{j, K}} = -(y_j - O_{j, K})
+$$
 
 2. **Piece 2 (Output w.r.t Linear Sum - Sigmoid Derivative):**  
 
-   $$
-   \frac{\partial O_{j, K}}{\partial I_{j, K}} = O_{j, K}(1 - O_{j, K})
-   $$
+$$
+\frac{\partial O_{j, K}}{\partial I_{j, K}} = O_{j, K}(1 - O_{j, K})
+$$
 
 3. **Piece 3 (Linear Sum w.r.t Weight):**  
 
-   $$
-   \frac{\partial I_{j, K}}{\partial \theta_{j, m, K}} = O_{m, K-1}
-   $$
+$$
+\frac{\partial I_{j, K}}{\partial \theta_{j, m, K}} = O_{m, K-1}
+$$
 
 Now define the output error term $\delta_{j, K} \equiv -\frac{\partial E}{\partial I_{j, K}}$:
 
@@ -1125,31 +1134,31 @@ $$
 ##### 1. Definitions
 - **Binary Cross-Entropy Loss:**  
 
-  $$
-  C_{\text{CE}} = -[y \ln a + (1 - y)\ln(1 - a)]
-  $$
+$$
+C_{\text{CE}} = -[y \ln a + (1 - y)\ln(1 - a)]
+$$
 
 - **Quadratic Loss (SSE):**  
 
-  $$
-  C_{\text{quad}} = \frac{1}{2}(y - a)^2
-  $$
+$$
+C_{\text{quad}} = \frac{1}{2}(y - a)^2
+$$
 
   where $a = \sigma(z)$ is the sigmoid output and $y \in \{0, 1\}$ is the true label.
 
 ##### 2. Why Cross-Entropy is Far Better (The Learning Stall Problem)
 - **Under Quadratic Loss (Learning Freezes on Big Mistakes):**  
 
-  $$
-  \frac{\partial C_{\text{quad}}}{\partial w} = -(y - a) \cdot a(1 - a) \cdot x
-  $$
+$$
+\frac{\partial C_{\text{quad}}}{\partial w} = -(y - a) \cdot a(1 - a) \cdot x
+$$
 
   Suppose the true label is $y = 1$, but the network is horribly wrong, outputting $a = 0.001$.  
   The error is huge ($y - a = 0.999$), but the gradient is:
 
-  $$
-  \frac{\partial C_{\text{quad}}}{\partial w} \approx -0.999 \times 0.001 \times 0.999 \times x \approx \mathbf{-0.001 \cdot x \approx 0}
-  $$
+$$
+\frac{\partial C_{\text{quad}}}{\partial w} \approx -0.999 \times 0.001 \times 0.999 \times x \approx \mathbf{-0.001 \cdot x \approx 0}
+$$
 
   Even though the model made a giant error, the slope of the sigmoid is flat ($a(1-a) \approx 0$). The network practically stops updating its weights!
 
@@ -1157,9 +1166,9 @@ $$
   Differentiating cross-entropy gives $\frac{\partial C_{\text{CE}}}{\partial a} = \frac{a - y}{a(1 - a)}$.  
   When multiplied by the sigmoid slope $\frac{\partial a}{\partial z} = a(1 - a)$:
 
-  $$
-  \frac{\partial C_{\text{CE}}}{\partial w} = \frac{a - y}{a(1 - a)} \cdot a(1 - a) \cdot x = \mathbf{(a - y) \cdot x}
-  $$
+$$
+\frac{\partial C_{\text{CE}}}{\partial w} = \frac{a - y}{a(1 - a)} \cdot a(1 - a) \cdot x = \mathbf{(a - y) \cdot x}
+$$
 
   **The Cancellation:** The flat sigmoid slope $a(1-a)$ cancels out completely! The weight update speed is directly proportional to the raw error $(a - y)$. When the error is large, the network learns fast; when the error is tiny, it settles smoothly.
 
@@ -1200,7 +1209,10 @@ When training a deep neural network, gradients pass backward through layers via 
 ##### 1. ReLU Definition & Key Advantages
 
 $$
-\text{ReLU}(z) = \max(0, z) = \begin{cases} z & \text{if } z \ge 0 \\ 0 & \text{if } z < 0 \end{cases}
+\text{ReLU}(z) = \max(0, z) = \begin{cases}
+z & \text{if } z \ge 0 \\\\
+0 & \text{if } z < 0
+\end{cases}
 $$
 
 - **Advantage 1: No Vanishing Gradients:** For positive inputs ($z > 0$), the slope is **always exactly 1.0**. Gradients can pass backward through 100+ layers without shrinking.
@@ -1215,7 +1227,10 @@ $$
 Leaky ReLU gives a small non-zero slope $\alpha$ (usually $\alpha = 0.01$) for negative inputs:
 
 $$
-\text{Leaky ReLU}(z) = \max(0.01z, z) = \begin{cases} z & \text{if } z > 0 \\ 0.01z & \text{if } z \le 0 \end{cases}
+\text{Leaky ReLU}(z) = \max(0.01z, z) = \begin{cases}
+z & \text{if } z > 0 \\\\
+0.01z & \text{if } z \le 0
+\end{cases}
 $$
 
 - **The Rescue:** Because the slope is $0.01$ instead of $0$ for negative inputs, a small error signal always passes through. This allows gradient descent to adjust the weights and bring the neuron back to life over time!
@@ -1243,14 +1258,14 @@ $$
 - **Definition of an Epoch:** One complete pass through the entire training dataset of $m$ examples.
 - **Formula for Updates per Epoch:**
 
-  $$
-  \text{Updates per Epoch} = \left\lceil \frac{m}{B} \right\rceil
-  $$
+$$
+\text{Updates per Epoch} = \left\lceil \frac{m}{B} \right\rceil
+$$
 
 ###### Examples across the Three Strategies ($m = 128,000$ Images):
-1. **Batch GD ($B = 128,000$):** $\frac{128,000}{128,000} = \mathbf{1\text{ weight update per epoch}}$. (100 epochs = 100 updates).
-2. **Stochastic GD ($B = 1$):** $\frac{128,000}{1} = \mathbf{128,000\text{ weight updates per epoch}}$.
-3. **Mini-Batch GD ($B = 64$):** $\frac{128,000}{64} = \mathbf{2,000\text{ weight updates per epoch}}$. If you train for 50 epochs, you perform $50 \times 2,000 = 100,000$ updates.
+1. **Batch GD** ($B = 128,000$): $\frac{128,000}{128,000} = \mathbf{1\text{ weight update per epoch}}$. (100 epochs = 100 updates).
+2. **Stochastic GD** ($B = 1$): $\frac{128,000}{1} = \mathbf{128,000\text{ weight updates per epoch}}$.
+3. **Mini-Batch GD** ($B = 64$): $\frac{128,000}{64} = \mathbf{2,000\text{ weight updates per epoch}}$. If you train for 50 epochs, you perform $50 \times 2,000 = 100,000$ updates.
 
 
 ## 2023 Mid-Semester Examination Solutions
@@ -1273,9 +1288,8 @@ $$
 
 > 1. **(a)** Derive a gradient descent training algorithm that minimizes the sum of the squared error cost function, for the following hypothesis:
 >    
->    $$
->    h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_1 x_1^2 + \theta_2 x_2 + \theta_2 x_2^2 + \dots + \theta_n x_n + \theta_n x_n^2
->    $$
+> $h_\theta(x) = \theta_0 + \theta_1 x_1 + \theta_1 x_1^2 + \theta_2 x_2 + \theta_2 x_2^2 + \dots + \theta_n x_n + \theta_n x_n^2$
+>
 >    
 >    where $(x_1, x_2, \dots, x_n)$ represents an instance having $n$ features and $\theta_i, 0 \le i \le n$ represents the parameters to be learned. Assume that there are $m$ instances in the training set. Express the answer in the form $\theta_j := \theta_j + \dots$ for $1 \le j \le n$. **[7]**
 
@@ -1523,9 +1537,9 @@ $$
 3. **Cost Function Used Instead:**  
    **Binary Cross-Entropy (Log-Loss):**
 
-   $$
-   J(\mathbf{w}) = -\frac{1}{m} \sum_{i=1}^m \Big[ y^{(i)}\ln \hat{y}^{(i)} + (1 - y^{(i)})\ln(1 - \hat{y}^{(i)}) \Big]
-   $$
+$$
+J(\mathbf{w}) = -\frac{1}{m} \sum_{i=1}^m \Big[ y^{(i)}\ln \hat{y}^{(i)} + (1 - y^{(i)})\ln(1 - \hat{y}^{(i)}) \Big]
+$$
 
 ---
 
@@ -1572,27 +1586,27 @@ $$
 ##### 3. Calculate Metrics
 - **(i) Precision:**
 
-  $$
-  \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{2}{2 + 2} = \frac{2}{4} = \mathbf{0.50 \quad (50\%)}
-  $$
+$$
+\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} = \frac{2}{2 + 2} = \frac{2}{4} = \mathbf{0.50 \quad (50\%)}
+$$
 
 - **(ii) Recall:**
 
-  $$
-  \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{2}{2 + 0} = \frac{2}{2} = \mathbf{1.00 \quad (100\%)}
-  $$
+$$
+\text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{2}{2 + 0} = \frac{2}{2} = \mathbf{1.00 \quad (100\%)}
+$$
 
-- **(iii) True Positive Rate ($\text{TPR}$):**
+- **(iii) True Positive Rate** ($\text{TPR}$):
 
-  $$
-  \text{TPR} \equiv \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{2}{2} = \mathbf{1.00 \quad (100\%)}
-  $$
+$$
+\text{TPR} \equiv \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} = \frac{2}{2} = \mathbf{1.00 \quad (100\%)}
+$$
 
 - **(iv) F1 Score:**
 
-  $$
-  \text{F}_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} = 2 \cdot \frac{0.50 \times 1.00}{0.50 + 1.00} = \frac{1.00}{1.50} = \frac{2}{3} \approx 0.6667 \quad (66.67\%)
-  $$
+$$
+\text{F}_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} = 2 \cdot \frac{0.50 \times 1.00}{0.50 + 1.00} = \frac{1.00}{1.50} = \frac{2}{3} \approx 0.6667 \quad (66.67\%)
+$$
 
 ---
 
@@ -1641,21 +1655,21 @@ ReLU ($\max(0, z)$) revolutionized deep networks and CNNs for 4 major reasons:
 > 4. **(a)** Calculate the output $y$ of a three-input neuron with bias. The input feature vector is $(x_1, x_2, x_3) = (0.8, 0.6, 0.4)$ and weight values are $[w_1, w_2, w_3, b] = [0.2, 0.1, -0.3, 0.35]$. Use binary Sigmoid function as activation function. **[3]**
 
 #### Model Answer in Simple English
-- **Step 1: Weighted Sum ($z$):**
+- **Step 1: Weighted Sum** ($z$):
 
-  $$
-  z = (0.2 \times 0.8) + (0.1 \times 0.6) + (-0.3 \times 0.4) + 0.35
-  $$
+$$
+z = (0.2 \times 0.8) + (0.1 \times 0.6) + (-0.3 \times 0.4) + 0.35
+$$
 
-  $$
-  z = 0.16 + 0.06 - 0.12 + 0.35 = \mathbf{0.45}
-  $$
+$$
+z = 0.16 + 0.06 - 0.12 + 0.35 = \mathbf{0.45}
+$$
 
 - **Step 2: Sigmoid Activation:**
 
-  $$
-  y = \frac{1}{1 + e^{-0.45}} \approx \frac{1}{1 + 0.6376} = \frac{1}{1.6376} \approx \mathbf{0.6106 \quad (61.06\%)}
-  $$
+$$
+y = \frac{1}{1 + e^{-0.45}} \approx \frac{1}{1 + 0.6376} = \frac{1}{1.6376} \approx \mathbf{0.6106 \quad (61.06\%)}
+$$
 
 ---
 
@@ -1706,7 +1720,7 @@ $$
 | **ReLU Derivative** | $f'(z) = 1$ for $z > 0$, $0$ for $z < 0$ | Constant slope of 1 prevents vanishing gradients in deep networks. |
 | **Novikoff Perceptron Bound**| $k \le \left(\frac{R}{\gamma}\right)^2$ | Guaranteed finite mistakes for linearly separable data with margin $\gamma$. |
 | **$L_2$ Ridge Penalty** | $\text{Loss} + \frac{\lambda}{2}\sum w_j^2$ | Multiplies weight by decay factor $(1 - \eta \lambda)$; keeps weights small. |
-| **$L_1$ Lasso Penalty** | $\text{Loss} + \lambda \sum \|w_j\|$ | Subtracts constant amount; forces unimportant weights to exactly zero (sparsity). |
+| **$L_1$ Lasso Penalty** | $\text{Loss} + \lambda \sum \lvert w_j \rvert$ | Subtracts constant amount; forces unimportant weights to exactly zero (sparsity). |
 | **Batch Normalization** | $\hat{z} = \frac{z - \mu}{\sqrt{\sigma^2 + \epsilon}}, \quad y = \gamma \hat{z} + \beta$ | Centers and scales layer inputs; speeds up training and allows higher learning rates. |
 | **Updates per Epoch** | $N_{\text{iter}} = \lceil m / B \rceil$ | Total samples $m$ divided by batch size $B$. |
 | **Precision & Recall** | $\text{Prec} = \frac{\text{TP}}{\text{TP} + \text{FP}}, \quad \text{Rec} = \frac{\text{TP}}{\text{TP} + \text{FN}}$ | Precision measures accuracy of positive alarms; Recall measures coverage of real cases. |
