@@ -30,7 +30,7 @@ Analysis of examination trends across 2023, 2024, and 2025 for topics covered in
 | **Cellular System Capacity Calculations** ($C = M \cdot S = M \cdot K \cdot N$) | ★★★★★ (100% in Midsems) | 2025 Mid (Q2c), 2023 Mid (Q3b) | 5M | **High-Yield Numerical Guaranteed** |
 | **Mobile-to-Mobile Call Setup Flow** (RCC, FCC, FVC, RVC, Paging, MSC) | ★★★★★ (100% in Midsems) | 2025 Mid (Q2a), 2023 Mid (Q2a) | 5M | **High-Yield Algorithm / Flow Guaranteed** |
 | **Cellular Voice vs. Control Channels** (FVC, RVC, FCC, RCC roles) | ★★★★☆ (80%) | 2025 Mid (Q2a), 2025 End (Q1c), 2023 Mid (Q2b) | 2M – 5M | **Guaranteed Core Question** |
-| **Cluster Size ($N$), Capacity & Co-Channel Interference Trade-Off** | ★★★★☆ (80%) | 2025 Mid (Q2b), 2024 Mid (Q2a, Q2b) | 5M | **High Probability Derivation / Theory** |
+| **Cluster Size** ($N$), **Capacity & Co-Channel Interference Trade-Off** | ★★★★☆ (80%) | 2025 Mid (Q2b), 2024 Mid (Q2a, Q2b) | 5M | **High Probability Derivation / Theory** |
 | **Erlang Trunking Theory & Traffic Calculations** ($A = \lambda h$, GOS, Erlang B) | ★★★★☆ (80%) | 2025 End (Q2a), 2024 End (Q2c), 2023 End (Q2a, Q2b) | 5M | **High-Yield Numerical Guaranteed** |
 | **CDMA Mathematics & Orthogonal Code Superposition** ($c_a \cdot c_b = 0$, DSSS) | ★★★★☆ (80%) | 2025 End (Q2b, Q2c, Q2d), 2024 End (Q2b, Q5a), 2023 Mid (Q1iii, Q1vii) | 5M – 10M | **High-Yield Derivation / Numerical** |
 | **Channel Assignment Strategies & Borrowing Constraints** | ★★★★☆ (80%) | 2025 Mid (Q3a), 2024 End (Q1a), 2023 Mid (Q3a) | 2.5M – 5M | **High Probability Theory** |
@@ -149,7 +149,11 @@ Radio capacity in a cellular network is enhanced by:
 
 **3. The Fundamental Capacity Formula:**
 Total network capacity $C$ across the whole coverage area is:
-$$C = M \cdot S = M \cdot K \cdot N$$
+
+$$
+C = M \cdot S = M \cdot K \cdot N
+$$
+
 Where:
 - $S$: Total number of radio channels given to the cellular system.
 - $N$: Cluster size (number of cells in a group sharing the total channels $S$ without reuse).
@@ -168,12 +172,12 @@ Where:
 *What is the range of frequency GSM uses in downlink?*
 
 **2. Direct Answer:**
-Primary GSM (GSM 900) operates in the **$935\text{--}960\,\text{MHz}$** frequency range for the **downlink (Forward Voice/Control Channel, Base Station to Mobile Station)**.
+Primary GSM (GSM 900) operates in the **935–960 MHz** frequency range for the **downlink (Forward Voice/Control Channel, Base Station to Mobile Station)**.
 
 **3. Key Technical Specifications:**
 - **Total Downlink Bandwidth:** $25\,\text{MHz}$ ($935\text{ to } 960\,\text{MHz}$).
 - **Uplink (Reverse Link) Band:** Paired with $890\text{--}915\,\text{MHz}$ ($25\,\text{MHz}$).
-- **Duplex Spacing:** A constant Frequency Division Duplexing (FDD) split of **$45\,\text{MHz}$** separates uplink and downlink channels.
+- **Duplex Spacing:** A constant Frequency Division Duplexing (FDD) split of **45 MHz** separates uplink and downlink channels.
 - **Channelization:** The $25\,\text{MHz}$ band is divided into 124 carrier channels, each having a bandwidth of $200\,\text{kHz}$.
 
 ---
@@ -193,7 +197,7 @@ Connecting a call between two mobile phones (Caller MS-A and Receiver MS-B) invo
 - **Serving Base Station 2 (BS-2)**
 - **Called Mobile (MS-B)**
 
-The process moves through three clear phases: **Uplink Request $\to$ Downlink Paging $\to$ Dedicated Voice Channels**.
+The process moves through three clear phases: **Uplink Request → Downlink Paging → Dedicated Voice Channels**.
 
 **3. Programmatic Architecture Diagram:**
 
@@ -201,19 +205,19 @@ The process moves through three clear phases: **Uplink Request $\to$ Downlink Pa
 
 **4. Step-by-Step Operational Procedure (Easy to Memorize):**
 
-1. **Call Origination Request (MS-A $\to$ BS-1):**  
+1. **Call Origination Request (MS-A → BS-1):**  
    The user enters the phone number on MS-A and presses "Call". MS-A sends a call request packet over the **Reverse Control Channel (RCC)** containing its identity (MIN/ESN) and the dialed number.
-2. **Relay to Central Switch (BS-1 $\to$ MSC):**  
+2. **Relay to Central Switch (BS-1 → MSC):**  
    Base Station 1 receives the signal and sends the request to the MSC over the wired high-speed backhaul connection.
 3. **Verification & Location Lookup (MSC):**  
    The MSC verifies if MS-A has an active balance/subscription. Then, the MSC checks its **HLR and VLR databases** to find the current location area of Receiver MS-B.
-4. **Paging Command (MSC $\to$ BS-2):**  
+4. **Paging Command (MSC → BS-2):**  
    The MSC sends a command to Base Station 2 (the tower covering the area where MS-B is currently located) to alert MS-B.
-5. **Paging Broadcast (BS-2 $\to$ MS-B):**  
+5. **Paging Broadcast (BS-2 → MS-B):**  
    Base Station 2 broadcasts a "Page" message containing MS-B's phone number (MIN) over its **Forward Control Channel (FCC)**.
-6. **Paging Acknowledgment (MS-B $\to$ BS-2):**  
+6. **Paging Acknowledgment (MS-B → BS-2):**  
    MS-B's phone, which continuously listens to the FCC, recognizes its own number and immediately replies with an Acknowledgment (ACK) over the **Reverse Control Channel (RCC)**.
-7. **ACK Forwarded (BS-2 $\to$ MSC):**  
+7. **ACK Forwarded (BS-2 → MSC):**  
    Base Station 2 informs the MSC that MS-B is reachable, online, and ready to receive the call.
 8. **Voice Channels Assigned (MSC):**  
    The MSC selects two free voice channel pairs:
@@ -239,38 +243,53 @@ The process moves through three clear phases: **Uplink Request $\to$ Downlink Pa
 *What is the impact of cluster size on capacity and interference in cellular mobile network?*
 
 **2. Direct Explanation (The Core Trade-off):**
-In cellular network design, **Cluster Size ($N$)** is the fundamental balancing knob between capacity and voice quality:
-- **Small Cluster Size ($N$):** Gives **maximum network capacity**, but results in **higher interference**.
-- **Large Cluster Size ($N$):** Gives **clean voice quality with almost zero interference**, but results in **lower network capacity**.
+In cellular network design, **Cluster Size** ($N$) is the fundamental balancing knob between capacity and voice quality:
+- **Small Cluster Size** ($N$): Gives **maximum network capacity**, but results in **higher interference**.
+- **Large Cluster Size** ($N$): Gives **clean voice quality with almost zero interference**, but results in **lower network capacity**.
 
 **3. The 3 Governing Mathematical Formulas:**
-1. **Channels per Cell:**  
-   $$K = \frac{S}{N}$$  
+
+1. **Channels per Cell:**
+
+$$
+K = \frac{S}{N}
+$$
+
    *(Smaller $N$ means more radio channels $K$ for every single tower).*
-2. **Co-Channel Distance Ratio ($Q$):**  
-   $$Q = \frac{D}{R} = \sqrt{3N}$$  
+
+2. **Co-Channel Distance Ratio** ($Q$):
+
+$$
+Q = \frac{D}{R} = \sqrt{3N}
+$$
+
    Where $D$ is the distance between towers using the same frequency, and $R$ is cell radius.
-3. **Signal-to-Interference Ratio ($S/I$):**  
-   $$\frac{S}{I} \approx \frac{1}{6} \left(\frac{D}{R}\right)^k = \frac{1}{6} (\sqrt{3N})^k$$  
+
+3. **Signal-to-Interference Ratio** ($S/I$):
+
+$$
+\frac{S}{I} \approx \frac{1}{6} \left(\frac{D}{R}\right)^k = \frac{1}{6} (\sqrt{3N})^k
+$$
+
    Where $6$ is the number of co-channel interferers in the first ring around a cell, and $k \approx 3\text{--}4$ is the path loss exponent.
 
 **4. Side-by-Side Comparison Table:**
 
 | Feature | Small Cluster (e.g., $N = 4$ or $N = 7$) | Large Cluster (e.g., $N = 12$) |
 |:---|:---|:---|
-| **Channels per Cell ($K = S/N$)** | **High** (More channels per tower) | **Low** (Fewer channels per tower) |
-| **Cluster Repeats in City ($M$)** | **Many times** (Clusters are compact) | **Fewer times** (Each cluster is spread out) |
-| **Total City Capacity ($C = M \cdot S$)** | **Very High** (Can handle huge crowds) | **Low** (Bottleneck during busy hours) |
-| **Distance Between Co-Channel Towers ($D$)** | **Short** (Towers with same frequency are close) | **Large** (Towers with same frequency are far apart) |
+| **Channels per Cell** ($K = S/N$) | **High** (More channels per tower) | **Low** (Fewer channels per tower) |
+| **Cluster Repeats in City** ($M$) | **Many times** (Clusters are compact) | **Fewer times** (Each cluster is spread out) |
+| **Total City Capacity** ($C = M \cdot S$) | **Very High** (Can handle huge crowds) | **Low** (Bottleneck during busy hours) |
+| **Distance Between Co-Channel Towers** ($D$) | **Short** (Towers with same frequency are close) | **Large** (Towers with same frequency are far apart) |
 | **Co-Channel Interference** | **Higher** (Nearby towers can cause static) | **Very Low** (Signals from other towers fade away) |
 | **Call Audio Quality** | Good enough if above threshold | Crystal clear |
 
 **5. Engineering Decision Rule:**
-An engineer always selects the **smallest possible cluster size $N$** that still satisfies the minimum required audio quality (for example, $S/I \ge 18\,\text{dB}$ for analog networks or $S/I \ge 15\,\text{dB}$ for GSM).
+An engineer always selects the smallest possible cluster size $N$ that still satisfies the minimum required audio quality (for example, $S/I \ge 18\,\text{dB}$ for analog networks or $S/I \ge 15\,\text{dB}$ for GSM).
 
 ---
 
-### Question 2(c): System Capacity Numerical ($2310\,	ext{km}^2$, $6\,	ext{km}^2$ Cell, $S=1596$, $N=7$)
+### Question 2(c): System Capacity Numerical ($2310\,\text{km}^2$, $6\,\text{km}^2$ Cell, $S=1596$, $N=7$)
 > **Exam Meta:** Marks: **[5M]** | Tier: **Tier 2 (SA)** — Numerical  
 > **Reference Section in Guide:** [📘 Section 6.1: Capacity Formulation & Formulas](file:///c:/PROJECTS/Learnmat/academics/mpc/Cellular_Networks_Guide.md#61-capacity-formulation--formulas)
 
@@ -278,7 +297,7 @@ An engineer always selects the **smallest possible cluster size $N$** that still
 *Consider a cellular system covers $2310\,\text{km}^2$ and each cell area is $6\,\text{km}^2$. The total allocated channels in the system are 1596. Calculate the system capacity for cluster size 7.*
 
 **2. Direct Answer First:**
-The total system capacity is **$\mathbf{87,780}$ simultaneous calls (channels)**.
+The total system capacity is **87,780 simultaneous calls (channels)**.
 
 **3. Given Parameters:**
 - Total service area: $A_{\text{total}} = 2310\,\text{km}^2$
@@ -288,22 +307,37 @@ The total system capacity is **$\mathbf{87,780}$ simultaneous calls (channels)**
 
 **4. Step-by-Step Calculation:**
 
-- **Step 1: Find Total Number of Cells ($N_{\text{cells}}$) in the System:**
-  $$N_{\text{cells}} = \frac{A_{\text{total}}}{A_{\text{cell}}} = \frac{2310}{6} = \mathbf{385\,\text{cells}}$$
+- **Step 1: Find Total Number of Cells** ($N_{\text{cells}}$) **in the System:**
 
-- **Step 2: Find How Many Times the Cluster Repeats ($M$):**
+$$
+N_{\text{cells}} = \frac{A_{\text{total}}}{A_{\text{cell}}} = \frac{2310}{6} = \mathbf{385\,\text{cells}}
+$$
+
+- **Step 2: Find How Many Times the Cluster Repeats** ($M$):  
   Since each cluster contains $N = 7$ cells:
-  $$M = \frac{N_{\text{cells}}}{N} = \frac{385}{7} = \mathbf{55\,\text{clusters}}$$
 
-- **Step 3: Find Channels Allocated to Each Cell ($K$):**
-  $$K = \frac{S}{N} = \frac{1596}{7} = \mathbf{228\,\text{channels per cell}}$$
+$$
+M = \frac{N_{\text{cells}}}{N} = \frac{385}{7} = \mathbf{55\,\text{clusters}}
+$$
 
-- **Step 4: Compute Total System Capacity ($C$):**
+- **Step 3: Find Channels Allocated to Each Cell** ($K$):
+
+$$
+K = \frac{S}{N} = \frac{1596}{7} = \mathbf{228\,\text{channels per cell}}
+$$
+
+- **Step 4: Compute Total System Capacity** ($C$):  
   Using the capacity formula:
-  $$C = M \cdot S = 55 \times 1596 = \mathbf{87,780\,\text{channels}}$$
+
+$$
+C = M \cdot S = 55 \times 1596 = \mathbf{87,780\,\text{channels}}
+$$
 
   *Double Check:*
-  $$C = N_{\text{cells}} \times K = 385 \times 228 = \mathbf{87,780\,\text{channels}}$$
+
+$$
+C = N_{\text{cells}} \times K = 385 \times 228 = \mathbf{87,780\,\text{channels}}
+$$
 
 **5. ⚠️ Exam Hall Fatal Trap:**
 > ⚠️ **Do Not Make This Mistake:** Many students divide $1596 / 385 \approx 4.14$ and conclude that capacity is 1596. This ignores **frequency reuse**! The 1596 channels are reused across 55 independent clusters, so the total capacity is $55 \times 1596 = 87,780$.
@@ -348,7 +382,7 @@ The total system capacity is **$\mathbf{87,780}$ simultaneous calls (channels)**
 | **Mechanism Name** | **Network-Controlled Handoff (NCHO)** | **Mobile-Assisted Handoff (MAHO)** |
 | **Who Measures Signal?** | **Base Station Towers:** Towers measure the signal strength sent from the mobile phone. | **The Mobile Handset:** The phone measures the signal strength of nearby towers during idle moments. |
 | **Who Makes the Decision?** | **Central MSC:** Central computer analyzes all tower reports and orders the handoff. | **Local BSC:** The Base Station Controller makes the decision locally from the phone's reports. |
-| **Handoff Speed** | **Slow ($5\text{ to } 10\,\text{seconds}$)** | **Very Fast (A few milliseconds)** |
+| **Handoff Speed** | **Slow** ($5\text{ to } 10\,\text{seconds}$) | **Very Fast (A few milliseconds)** |
 | **Load on Central Switch (MSC)** | **Extremely Heavy:** The MSC has to constantly track every single active call. | **Very Light:** The MSC is relieved; local tower controllers handle handoffs directly. |
 | **Cell Size Supported** | Large cells only ($> 5\,\text{km}$). | Small microcells ($500\,\text{m}$) in busy city streets. |
 
@@ -372,7 +406,7 @@ A **Paging Channel** is a dedicated downlink radio channel (part of the Forward 
 
 ---
 
-### Question 2(a): Erlang Definition & User Capacity Numerical ($C=20, 	ext{GOS}=0.5\%, A=11.10$)
+### Question 2(a): Erlang Definition & User Capacity Numerical ($C=20, \text{GOS}=0.5\%, A=11.10$)
 > **Exam Meta:** Marks: **[5M]** | Tier: **Tier 2 (SA)** — Numerical  
 > **Reference Section in Guide:** [📘 Section 13.2 & §13.3](file:///c:/PROJECTS/Learnmat/academics/mpc/Mobile_Computing_SDB_Learning_Guide.md#132-technical-mechanism--architecture)
 
@@ -381,7 +415,11 @@ A **Paging Channel** is a dedicated downlink radio channel (part of the Forward 
 
 **2. Direct Definition of Erlang:**
 An **Erlang** is a dimensionless unit of telecommunications traffic intensity. One Erlang represents the continuous, 100% occupancy of a single channel over a given observation period (e.g., one channel carrying traffic for 60 minutes in an hour equals 1 Erlang). Mathematically:
-$$A = \lambda \cdot h$$
+
+$$
+A = \lambda \cdot h
+$$
+
 where $\lambda$ is the mean call arrival rate and $h$ is the mean call holding time.
 
 **3. Given Parameters:**
@@ -392,9 +430,16 @@ where $\lambda$ is the mean call arrival rate and $h$ is the mean call holding t
 
 **4. Step-by-Step Calculation:**
 The total traffic intensity carried by a population of $n$ subscribers is:
-$$A = n \cdot A_{\text{pu}}$$
+
+$$
+A = n \cdot A_{\text{pu}}
+$$
+
 Solving for the number of supported subscribers $n$:
-$$n = \frac{A}{A_{\text{pu}}} = \frac{11.10\,\text{Erlangs}}{0.1\,\text{Erlangs/user}} = \mathbf{111\,\text{users}}$$
+
+$$
+n = \frac{A}{A_{\text{pu}}} = \frac{11.10\,\text{Erlangs}}{0.1\,\text{Erlangs/user}} = \mathbf{111\,\text{users}}
+$$
 
 **Conclusion:** The trunked system supports **111 users** with at most $0.5\%$ call blocking during the peak busy hour.
 
@@ -414,14 +459,24 @@ $$n = \frac{A}{A_{\text{pu}}} = \frac{11.10\,\text{Erlangs}}{0.1\,\text{Erlangs/
 
 - **Step 1: Map Binary Bits to Bipolar Sign-Levels:**  
   In CDMA spread-spectrum communication, binary bits are mapped to bipolar levels where logic `0` maps to $-1$ and logic `1` maps to $+1$:
-  $$\mathbf{c}_1 = (0, 1, 0, 1) \longrightarrow (-1, +1, -1, +1)$$
-  $$\mathbf{c}_2 = (0, 1, 1, 0) \longrightarrow (-1, +1, +1, -1)$$
+
+$$
+\begin{aligned}
+\mathbf{c}_1 &= (0, 1, 0, 1) \longrightarrow (-1, +1, -1, +1) \\
+\mathbf{c}_2 &= (0, 1, 1, 0) \longrightarrow (-1, +1, +1, -1)
+\end{aligned}
+$$
 
 - **Step 2: Compute Vector Dot Product (Inner Product):**  
   Two codes are orthogonal if and only if their cross-correlation (inner product) equals zero:
-  $$\mathbf{c}_1 \cdot \mathbf{c}_2 = \sum_{k=1}^4 c_{1,k} \cdot c_{2,k}$$
-  $$\mathbf{c}_1 \cdot \mathbf{c}_2 = [(-1) \times (-1)] + [(+1) \times (+1)] + [(-1) \times (+1)] + [(+1) \times (-1)]$$
-  $$\mathbf{c}_1 \cdot \mathbf{c}_2 = (+1) + (+1) + (-1) + (-1) = 2 - 2 = \mathbf{0}$$
+
+$$
+\begin{aligned}
+\mathbf{c}_1 \cdot \mathbf{c}_2 &= \sum_{k=1}^4 c_{1,k} \cdot c_{2,k} \\
+&= [(-1) \times (-1)] + [(+1) \times (+1)] + [(-1) \times (+1)] + [(+1) \times (-1)] \\
+&= (+1) + (+1) + (-1) + (-1) = 2 - 2 = \mathbf{0}
+\end{aligned}
+$$
 
 **Conclusion:** Because the inner product is exactly **0**, the cross-correlation between the two sequences is zero, proving that the codes are **mutually orthogonal**. In CDMA, this ensures zero multi-user interference at the base station receiver.
 
@@ -436,7 +491,10 @@ $$n = \frac{A}{A_{\text{pu}}} = \frac{11.10\,\text{Erlangs}}{0.1\,\text{Erlangs/
 
 **2. Direct Answer First:**
 The composite signal received at the base station antenna is:
-$$\mathbf{s}_{\text{rx}} = \mathbf{(-2, +2, 0, 0, 0, 0, +2, -2)}$$
+
+$$
+\mathbf{s}_{\text{rx}} = \mathbf{(-2, +2, 0, 0, 0, 0, +2, -2)}
+$$
 
 **3. Step-by-Step Mathematical Derivation:**
 
@@ -447,21 +505,32 @@ $$\mathbf{s}_{\text{rx}} = \mathbf{(-2, +2, 0, 0, 0, 0, +2, -2)}$$
 - **Step 1: Spread and Encode MS-A's Signal (DSSS Kronecker Product):**
   - First bit ($+1$): $(+1) \times (-1, +1, -1, +1) = (-1, +1, -1, +1)$
   - Second bit ($-1$): $(-1) \times (-1, +1, -1, +1) = (+1, -1, +1, -1)$
-  $$\mathbf{s}_A = (-1, +1, -1, +1, +1, -1, +1, -1)$$
+
+$$
+\mathbf{s}_A = (-1, +1, -1, +1, +1, -1, +1, -1)
+$$
 
 - **Step 2: Spread and Encode MS-B's Signal:**
   - First bit ($+1$): $(+1) \times (-1, +1, +1, -1) = (-1, +1, +1, -1)$
   - Second bit ($+1$): $(+1) \times (-1, +1, +1, -1) = (-1, +1, +1, -1)$
-  $$\mathbf{s}_B = (-1, +1, +1, -1, -1, +1, +1, -1)$$
+
+$$
+\mathbf{s}_B = (-1, +1, +1, -1, -1, +1, +1, -1)
+$$
 
 - **Step 3: Superposition in the Air Interface at the Base Station:**  
   Assuming equal received power levels from both MS units (enforced by power control):
-  $$\mathbf{s}_{\text{rx}} = \mathbf{s}_A + \mathbf{s}_B$$
-  $$\mathbf{s}_{\text{rx}} = \begin{bmatrix}
-  (-1 - 1), & (+1 + 1), & (-1 + 1), & (+1 - 1), \\
-  (+1 - 1), & (-1 + 1), & (+1 + 1), & (-1 - 1)
-  \end{bmatrix}$$
-  $$\mathbf{s}_{\text{rx}} = \mathbf{(-2, +2, 0, 0, 0, 0, +2, -2)}$$
+
+$$
+\begin{aligned}
+\mathbf{s}_{\text{rx}} &= \mathbf{s}_A + \mathbf{s}_B \\
+&= \begin{bmatrix}
+(-1 - 1), & (+1 + 1), & (-1 + 1), & (+1 - 1), \\
+(+1 - 1), & (-1 + 1), & (+1 + 1), & (-1 - 1)
+\end{bmatrix} \\
+&= \mathbf{(-2, +2, 0, 0, 0, 0, +2, -2)}
+\end{aligned}
+$$
 
 - **Verification Check (Despreading at BS for MS-A):**
   - Bit 1: $\mathbf{s}_{\text{rx}}[0:4] \cdot \mathbf{c}_A = (-2)(-1) + (2)(1) + (0)(-1) + (0)(1) = 2 + 2 = +4 > 0 \implies \mathbf{+1}$ ✓
@@ -544,14 +613,25 @@ To cover a map completely with zero gaps and zero overlap, geometry allows only 
 
 ![Cell Geometry Tessellation](images/fig_cell_geometry_tessellation.png)
 
-**4. Mathematical Proof of Area (For Same Maximum Radius $R$):**
+**4. Mathematical Proof of Area (For Same Maximum Radius** $R$):
 For an antenna with maximum reach radius $R$:
-1. **Equilateral Triangle ($n = 3$):**  
-   $$A_{\text{triangle}} = \frac{3\sqrt{3}}{4} R^2 \approx 1.299 R^2 \quad (50\% \text{ of Hexagon Area})$$
-2. **Square ($n = 4$):**  
-   $$A_{\text{square}} = 2 R^2 = 2.000 R^2 \quad (77\% \text{ of Hexagon Area})$$
-3. **Regular Hexagon ($n = 6$):**  
-   $$A_{\text{hexagon}} = \frac{3\sqrt{3}}{2} R^2 \approx 2.598 R^2 \quad (\mathbf{100\%} \text{ -- Largest Area})$$
+1. **Equilateral Triangle** ($n = 3$):
+
+$$
+A_{\text{triangle}} = \frac{3\sqrt{3}}{4} R^2 \approx 1.299 R^2 \quad (50\% \text{ of Hexagon Area})
+$$
+
+2. **Square** ($n = 4$):
+
+$$
+A_{\text{square}} = 2 R^2 = 2.000 R^2 \quad (77\% \text{ of Hexagon Area})
+$$
+
+3. **Regular Hexagon** ($n = 6$):
+
+$$
+A_{\text{hexagon}} = \frac{3\sqrt{3}}{2} R^2 \approx 2.598 R^2 \quad (\mathbf{100\%} \text{ -- Largest Area})
+$$
 
 **5. The Two Key Engineering Reasons:**
 1. **Cheapest to Build (Fewest Towers Needed):** The hexagon covers the largest land area for any given antenna range $R$. Therefore, a network operator needs the **minimum number of cell towers** to cover a city, saving equipment and rental costs.
@@ -588,34 +668,55 @@ For an antenna with maximum reach radius $R$:
 **1. Question Statement:**
 *What is frequency reuse ratio? Derive the relationship between frequency reuse ratio and signal-to-interference ($S/I$) ratio.*
 
-**2. Definition of Frequency Reuse Ratio ($Q$):**
+**2. Definition of Frequency Reuse Ratio** ($Q$):
 The **Frequency Reuse Ratio** ($Q$) is the ratio of the physical distance $D$ between the centers of two nearest cells that use the same frequency, to the radius of a cell $R$:
-$$Q = \frac{D}{R} = \sqrt{3N}$$
+
+$$
+Q = \frac{D}{R} = \sqrt{3N}
+$$
+
 Where $N$ is the cluster size ($N = i^2 + ij + j^2$).
 
-**3. Step-by-Step Derivation of $S/I$:**
+**3. Step-by-Step Derivation of** $S/I$:
 
-- **Step 1: Desired Signal Power ($S$):**  
+- **Step 1: Desired Signal Power** ($S$):  
   For a phone at the farthest edge of its cell (distance $R$ from its serving tower), the received signal power follows the standard path loss formula:
-  $$S = P_t \cdot c \cdot R^{-k}$$
+
+$$
+S = P_t \cdot c \cdot R^{-k}
+$$
+
   Where $P_t$ is transmitter power, $c$ is a constant, and $k$ is the path loss exponent ($k \approx 3\text{ to } 4$).
 
-- **Step 2: Total Interference Power ($I$):**  
-  In a regular hexagonal grid, every cell is surrounded by **$6$ first-tier co-channel cells** using the exact same frequency, located roughly at distance $D$:
-  $$I = \sum_{i=1}^6 I_i \approx 6 \cdot P_t \cdot c \cdot D^{-k}$$
+- **Step 2: Total Interference Power** ($I$):  
+  In a regular hexagonal grid, every cell is surrounded by **6 first-tier co-channel cells** using the exact same frequency, located roughly at distance $D$:
 
-- **Step 3: Form the Ratio ($S/I$):**  
-  $$\frac{S}{I} = \frac{P_t \cdot c \cdot R^{-k}}{6 \cdot P_t \cdot c \cdot D^{-k}} = \frac{1}{6} \left(\frac{D}{R}\right)^k$$
+$$
+I = \sum_{i=1}^6 I_i \approx 6 \cdot P_t \cdot c \cdot D^{-k}
+$$
 
-- **Step 4: Substitute $Q$ and $N$:**  
+- **Step 3: Form the Ratio** ($S/I$):
+
+$$
+\frac{S}{I} = \frac{P_t \cdot c \cdot R^{-k}}{6 \cdot P_t \cdot c \cdot D^{-k}} = \frac{1}{6} \left(\frac{D}{R}\right)^k
+$$
+
+- **Step 4: Substitute** $Q$ **and** $N$:  
   Since $Q = D / R$:
-  $$\mathbf{\frac{S}{I} = \frac{1}{6} Q^k}$$
+
+$$
+\mathbf{\frac{S}{I} = \frac{1}{6} Q^k}
+$$
+
   And since $Q = \sqrt{3N}$:
-  $$\mathbf{\frac{S}{I} = \frac{1}{6} (\sqrt{3N})^k = \frac{1}{6} (3N)^{k/2}}$$
+
+$$
+\mathbf{\frac{S}{I} = \frac{1}{6} (\sqrt{3N})^k = \frac{1}{6} (3N)^{k/2}}
+$$
 
 ---
 
-### Question 2(b): Compact Pattern Size $N$ for $S/I \ge 15	ext{ dB}$ with $k = 3$
+### Question 2(b): Compact Pattern Size $N$ for $S/I \ge 15\,\text{dB}$ with $k = 3$
 > **Exam Meta:** Marks: **[5M]** | Tier: **Tier 2 (SA)** — Numerical  
 > **Reference Section in Guide:** [📘 Section 5.3: Cluster Size Formula (N)](file:///c:/PROJECTS/Learnmat/academics/mpc/Cellular_Networks_Guide.md#53-cluster-size-formula-n) and [📘 Section 7.1, 7.2: Co-Channel Interference & Reuse Ratio](file:///c:/PROJECTS/Learnmat/academics/mpc/Cellular_Networks_Guide.md#7-co-channel-interference--co-channel-reuse-ratio-q)
 
@@ -623,20 +724,37 @@ Where $N$ is the cluster size ($N = i^2 + ij + j^2$).
 *Consider a GSM TDMA system that accepts $S/I \ge 15\,\text{dB}$. What should be the compact pattern size $N$ when path loss component $k = 3$?*
 
 **2. Direct Answer First:**
-The required compact pattern size (cluster size) is **$\mathbf{N = 12}$**.
+The required compact pattern size (cluster size) is $\mathbf{N = 12}$.
 
 **3. Step-by-Step Derivation:**
-- **Step 1: Convert $15\,\text{dB}$ into Linear Ratio:**
-  $$\frac{S}{I} \ge 10^{15/10} = 10^{1.5} \approx 31.62$$
-- **Step 2: Apply Formula with $k = 3$ and $6$ Interferers:**
-  $$\frac{S}{I} = \frac{1}{6} Q^3 \ge 31.62 \implies Q^3 \ge 6 \times 31.62 = 189.74$$
-- **Step 3: Solve for Reuse Ratio $Q$:**
-  $$Q \ge (189.74)^{1/3} \approx 5.75$$
-- **Step 4: Solve for Cluster Size $N$:**
-  $$3N \ge (5.75)^2 \approx 33.02 \implies N \ge \frac{33.02}{3} \approx 11.01$$
+
+- **Step 1: Convert** $15\,\text{dB}$ **into Linear Ratio:**
+
+$$
+\frac{S}{I} \ge 10^{15/10} = 10^{1.5} \approx 31.62
+$$
+
+- **Step 2: Apply Formula with** $k = 3$ **and 6 Interferers:**
+
+$$
+\frac{S}{I} = \frac{1}{6} Q^3 \ge 31.62 \implies Q^3 \ge 6 \times 31.62 = 189.74
+$$
+
+- **Step 3: Solve for Reuse Ratio** $Q$:
+
+$$
+Q \ge (189.74)^{1/3} \approx 5.75
+$$
+
+- **Step 4: Solve for Cluster Size** $N$:
+
+$$
+3N \ge (5.75)^2 \approx 33.02 \implies N \ge \frac{33.02}{3} \approx 11.01
+$$
+
 - **Step 5: Pick the Next Valid Hexagonal Cluster Size:**  
   Allowed values ($N = i^2 + ij + j^2$): $N \in \{1, 3, 4, 7, 9, 12, 13, 19, \dots\}$.  
-  The smallest valid cluster size satisfying $N \ge 11.01$ is **$N = 12$** ($i=2, j=2$).
+  The smallest valid cluster size satisfying $N \ge 11.01$ is $\mathbf{N = 12}$ ($i=2, j=2$).
 
 *(Note on textbook approximation: SDB notes on page 30 omit the factor of 6 inside the cube root, obtaining $Q \approx 3.13 \implies N \approx 3$; the rigorous derivation above demonstrates $N=12$).*
 
@@ -683,7 +801,10 @@ The **Umbrella Cell Approach** is an architectural layout where a large, high-po
 
 **2. Direct Definition:**
 **Grade of Service (GOS)** is a statistical measure of telecommunication network congestion during the peak busy hour, defined as the probability that an attempted call will be blocked or delayed ($P_b$). In a blocked-calls-cleared cellular system, it is calculated using the Erlang B formula:
-$$\text{GOS} = P_b = \frac{\frac{A^C}{C!}}{\sum_{k=0}^C \frac{A^k}{k!}}$$
+
+$$
+\text{GOS} = P_b = \frac{\frac{A^C}{C!}}{\sum_{k=0}^C \frac{A^k}{k!}}
+$$
 
 **3. Practical Usages:**
 1. **Network Dimensioning:** Telecommunications engineers use GOS specifications (typically $1\%$ or $0.5\%$ blocking) to calculate the exact number of radio channels ($C$) required to handle an expected busy-hour subscriber traffic load ($A$).
@@ -745,10 +866,18 @@ The **Visitor Location Register (VLR)** is a temporary local database collocated
 **2. Direct Answer First:**
 Orthogonality is a mathematical property between **two distinct codes** (or a code and its time-shifted version). To prove whether this 11-chip code is orthogonal:
 1. It must be tested against another code sequence $\mathbf{c}_2$ by evaluating their **inner product (cross-correlation)**:
-   $$\mathbf{c}_1 \cdot \mathbf{c}_2 = \sum_{i=1}^{11} c_{1,i} \cdot c_{2,i} = 0$$
+
+$$
+\mathbf{c}_1 \cdot \mathbf{c}_2 = \sum_{i=1}^{11} c_{1,i} \cdot c_{2,i} = 0
+$$
+
    If this summation equals exactly $0$, the codes are mutually orthogonal.
 2. If tested against itself (autocorrelation at zero lag $\tau = 0$), the inner product is:
-   $$\mathbf{c}_1 \cdot \mathbf{c}_1 = \sum_{i=1}^{11} (c_{1,i})^2 = 11 \ne 0$$
+
+$$
+\mathbf{c}_1 \cdot \mathbf{c}_1 = \sum_{i=1}^{11} (c_{1,i})^2 = 11 \ne 0
+$$
+
    (A code is never orthogonal to itself; it achieves peak autocorrelation at zero lag).
 
 **3. Identification of the Given Code:**
@@ -756,7 +885,7 @@ The given sequence $\mathbf{c} = (+1, -1, +1, +1, -1, +1, +1, +1, -1, -1, -1)$ i
 
 ---
 
-### Question 2(c): Erlang B User Capacity Numerical ($C=20, A=12.03 \implies 120	ext{ Users}$)
+### Question 2(c): Erlang B User Capacity Numerical ($C=20, A=12.03 \implies 120\,\text{Users}$)
 > **Exam Meta:** Marks: **[5M]** | Tier: **Tier 2 (SA)** — Numerical  
 > **Reference Section in Guide:** [📘 Section 13.3: Verified Calculations (Example 2.4)](file:///c:/PROJECTS/Learnmat/academics/mpc/Mobile_Computing_SDB_Learning_Guide.md#133-verified-calculations)
 
@@ -764,7 +893,7 @@ The given sequence $\mathbf{c} = (+1, -1, +1, +1, -1, +1, +1, +1, -1, -1, -1)$ i
 *Consider a network with 20 number of channels per cell and on an average each user makes 3 calls/hr. The average duration of a call is 2 minutes. The offered load from Erlang B Table is 12.03. What is the number of users supported in a cell with 1% blocking?*
 
 **2. Direct Answer First:**
-The number of users supported in the cell is **$\mathbf{120\,\text{users}}$**.
+The number of users supported in the cell is $\mathbf{120\,\text{users}}$.
 
 **3. Given Parameters:**
 - Channels per cell: $C = 20$
@@ -774,10 +903,17 @@ The number of users supported in the cell is **$\mathbf{120\,\text{users}}$**.
 - Offered load from Erlang B table: $A = 12.03\,\text{Erlangs}$
 
 **4. Step-by-Step Calculation:**
-- **Step 1: Compute Per-User Traffic Intensity ($A_{\text{pu}}$):**
-  $$A_{\text{pu}} = \lambda_{\text{user}} \times h = 3 \times \frac{2}{60} = 0.1\,\text{Erlangs}$$
-- **Step 2: Calculate Number of Supported Users ($n$):**
-  $$n = \frac{A}{A_{\text{pu}}} = \frac{12.03\,\text{Erlangs}}{0.1\,\text{Erlangs/user}} = \mathbf{120.3} \approx \mathbf{120\,\text{users}}$$
+- **Step 1: Compute Per-User Traffic Intensity** ($A_{\text{pu}}$):
+
+$$
+A_{\text{pu}} = \lambda_{\text{user}} \times h = 3 \times \frac{2}{60} = 0.1\,\text{Erlangs}
+$$
+
+- **Step 2: Calculate Number of Supported Users** ($n$):
+
+$$
+n = \frac{A}{A_{\text{pu}}} = \frac{12.03\,\text{Erlangs}}{0.1\,\text{Erlangs/user}} = \mathbf{120.3} \approx \mathbf{120\,\text{users}}
+$$
 
 **Conclusion:** The network cell can reliably support **120 subscribers** while maintaining a call blocking probability under $1\%$.
 
@@ -804,7 +940,11 @@ flowchart LR
 **3. Direct Sequence Spread Spectrum (DSSS) Mechanism:**
 - Low-rate data bits of duration $T_b$ (bit rate $R_b = 1/T_b$) are multiplied by a high-rate pseudo-random sequence of **chips** of duration $T_c \ll T_b$ (chip rate $R_c = 1/T_c$).
 - **Processing Gain (Spreading Factor):**
-  $$\text{PG} = \frac{T_b}{T_c} = \frac{R_c}{R_b} = \frac{W}{B}$$
+
+$$
+\text{PG} = \frac{T_b}{T_c} = \frac{R_c}{R_b} = \frac{W}{B}
+$$
+
   *Example:* Spreading a $1\,\text{MHz}$ data signal with an 11-chip code expands its transmitted bandwidth to $11\,\text{MHz}$, producing an $11\times$ ($10.4\,\text{dB}$) processing gain.
 
 **4. Spreading Codes in Cellular Systems:**
@@ -898,7 +1038,7 @@ flowchart LR
   (B) $(935\text{--}960)\,\text{MHz}$  
   (C) $(880\text{--}915)\,\text{MHz}$  
   (D) $(925\text{--}960)\,\text{MHz}$  
-- **Correct Option:** **(A) $(890	ext{--}915)\,	ext{MHz}$**
+- **Correct Option:** **(A)** $(890\text{--}915)\,\text{MHz}$
 - **Reason:** GSM 900 uses $890\text{--}915\,\text{MHz}$ for uplink (mobile to tower) and $935\text{--}960\,\text{MHz}$ for downlink (tower to mobile).
 
 #### Question 1(ix): RF Channel Estimation for GOS
@@ -957,7 +1097,7 @@ flowchart LR
 | **FCC** | **Forward Control Channel** | Tower $\to$ Phone (Downlink) | **Downlink Signaling:**<br>1. Broadcasts tower parameters and cell IDs.<br>2. Transmits **paging messages** to alert phones of incoming calls.<br>3. Orders phones to switch to specific voice channels. | $\approx 2.5\%$ |
 | **RCC** | **Reverse Control Channel** | Phone $\to$ Tower (Uplink) | **Uplink Signaling:**<br>1. Sends call request packets when dialing.<br>2. Sends ACK reply when a phone hears itself being paged.<br>3. Sends location update messages. | $\approx 2.5\%$ |
 
-**The 5% Rule:** In cellular systems, about **$5\%$ of channels are used for control/signaling (FCC and RCC)** to set up calls, while **$95\%$ are reserved for voice conversation (FVC and RVC)**.
+**The 5% Rule:** In cellular systems, about **5% of channels are used for control/signaling (FCC and RCC)** to set up calls, while **95% are reserved for voice conversation (FVC and RVC)**.
 
 ---
 
@@ -996,20 +1136,27 @@ To maximize radio spectrum utilization and minimize call blocking, 2G cellular n
 *(ii) A system covers $2310\,\text{km}^2$ and each cell area is $6\,\text{km}^2$. Calculate system capacity.*
 
 **2. Direct Answers First:**
-- **Part (i):** Each cell receives **$83\,\text{full-duplex channels}$** (with 4 spare channels in the cluster).
-- **Part (ii):** Total system capacity is **$32,083\,\text{simultaneous calls}$** (or $31,955\,\text{calls}$ with 83 integer channels/cell).
+- **Part (i):** Each cell receives **83 full-duplex channels** (with 4 spare channels in the cluster).
+- **Part (ii):** Total system capacity is **32,083 simultaneous calls** (or $31,955\,\text{calls}$ with 83 integer channels/cell).
 
 **3. Part (i) Step-by-Step Calculation:**
 - Duplex Channel Width: $2 \times 20\,\text{kHz} = 40\,\text{kHz} = 0.04\,\text{MHz}$
 - Total System Channels: $S = \frac{40\,\text{MHz}}{0.04\,\text{MHz}} = \mathbf{1,000\,\text{channels}}$
 - Channels per Cell for $N = 12$:
-  $$K = \frac{S}{N} = \frac{1000}{12} = 83.33 \implies \mathbf{83\,\text{channels per cell}}$$
+
+$$
+K = \frac{S}{N} = \frac{1000}{12} = 83.33 \implies \mathbf{83\,\text{channels per cell}}
+$$
 
 **4. Part (ii) Step-by-Step Calculation:**
 - Total Cells: $N_{\text{cells}} = \frac{2310}{6} = \mathbf{385\,\text{cells}}$
 - Cluster Replications: $M = \frac{385}{12} \approx \mathbf{32.083\,\text{clusters}}$
 - Total System Capacity:
-  $$C = M \cdot S = 32.0833 \times 1000 = \mathbf{32,083.33\,\text{simultaneous channels}}$$
+
+$$
+C = M \cdot S = 32.0833 \times 1000 = \mathbf{32,083.33\,\text{simultaneous channels}}
+$$
+
   *Discrete integer capacity:* $C_{\text{int}} = 385 \times 83 = \mathbf{31,955\,\text{channels}}$.
 
 ---
@@ -1037,15 +1184,15 @@ The **Home Location Register (HLR)** is the central master database in a GSM net
 
 **3. Five Essential Assumptions of Blocked-Calls-Cleared (Erlang B) Model:**
 1. **Memoryless (Poisson) Call Arrivals:** Call requests arrive following a Poisson process where inter-arrival times are exponentially distributed. Blocked users do not diminish future request rates.
-2. **Fixed Arrival Rate ($\lambda$):** The mean call arrival rate remains constant over the busy hour.
+2. **Fixed Arrival Rate** ($\lambda$): The mean call arrival rate remains constant over the busy hour.
 3. **Exponentially Distributed Call Durations:** Call holding times follow a negative exponential distribution ($h = 1/\mu$), meaning long conversations are progressively less probable.
-4. **Finite Number of Channels ($C$):** The system has a fixed pool of $C$ radio trunk channels available.
-5. **Infinite User Population ($U \to \infty$):** The number of potential callers is vastly larger than the channel capacity $C$, so individual caller behavior does not alter overall traffic arrival statistics.
+4. **Finite Number of Channels** ($C$): The system has a fixed pool of $C$ radio trunk channels available.
+5. **Infinite User Population** ($U \to \infty$): The number of potential callers is vastly larger than the channel capacity $C$, so individual caller behavior does not alter overall traffic arrival statistics.
 6. **Zero Call Waiting (Immediate Clearance):** Any call arriving when all $C$ channels are occupied is immediately dropped and cleared from the system without queuing.
 
 ---
 
-### Question 2(b): Erlang Definition & User Capacity Numerical ($C=20, 	ext{GOS}=0.5\%, A=11.10$)
+### Question 2(b): Erlang Definition & User Capacity Numerical ($C=20, \text{GOS}=0.5\%, A=11.10$)
 > **Exam Meta:** Marks: **[5M]** | Tier: **Tier 2 (SA)** — Numerical  
 > **Reference Section in Guide:** [📘 Section 13.2 & §13.3](file:///c:/PROJECTS/Learnmat/academics/mpc/Mobile_Computing_SDB_Learning_Guide.md#132-technical-mechanism--architecture)
 
@@ -1054,7 +1201,11 @@ The **Home Location Register (HLR)** is the central master database in a GSM net
 
 **2. Direct Definition of Erlang:**
 An **Erlang** is a dimensionless unit of telecommunications traffic intensity. One Erlang represents the continuous, 100% occupancy of a single channel over a given observation period (e.g., one channel carrying traffic for 60 minutes in an hour equals 1 Erlang). Mathematically:
-$$A = \lambda \cdot h$$
+
+$$
+A = \lambda \cdot h
+$$
+
 where $\lambda$ is the mean call arrival rate and $h$ is the mean call holding time.
 
 **3. Given Parameters:**
@@ -1065,9 +1216,16 @@ where $\lambda$ is the mean call arrival rate and $h$ is the mean call holding t
 
 **4. Step-by-Step Calculation:**
 The total traffic intensity carried by a population of $n$ subscribers is:
-$$A = n \cdot A_{\text{pu}}$$
+
+$$
+A = n \cdot A_{\text{pu}}
+$$
+
 Solving for the number of supported subscribers $n$:
-$$n = \frac{A}{A_{\text{pu}}} = \frac{11.10\,\text{Erlangs}}{0.1\,\text{Erlangs/user}} = \mathbf{111\,\text{users}}$$
+
+$$
+n = \frac{A}{A_{\text{pu}}} = \frac{11.10\,\text{Erlangs}}{0.1\,\text{Erlangs/user}} = \mathbf{111\,\text{users}}
+$$
 
 **Conclusion:** The trunked system supports **111 users** with at most $0.5\%$ call blocking during the peak busy hour.
 
@@ -1081,7 +1239,7 @@ $$n = \frac{A}{A_{\text{pu}}} = \frac{11.10\,\text{Erlangs}}{0.1\,\text{Erlangs/
 | **Co-Channel Reuse Ratio** | $Q = \frac{D}{R} = \sqrt{3N}$ | $D$: Distance between co-channel cells; $R$: Cell radius | Measures how far apart towers using the same frequency are. |
 | **Channels per Cell** | $K = \frac{S}{N}$ | $S$: Total channels; $N$: Cluster size | Dividing channels equally among cells in a cluster. |
 | **Total System Capacity** | $C = M \cdot S = M \cdot K \cdot N$ | $M = \frac{A_{\text{total}}}{N \cdot A_{\text{cell}}}$: Cluster repeats | Total simultaneous calls across the entire network. |
-| **Worst-Case $S/I$ (Omni)** | $\frac{S}{I} \approx \frac{1}{6} \left(\frac{D}{R}\right)^k = \frac{1}{6} (\sqrt{3N})^k$ | $k$: Path loss exponent ($k=3\text{--}4$); 6 interferers | Calculates interference from the 6 neighboring towers. |
+| **Worst-Case** $S/I$ **(Omni)** | $\frac{S}{I} \approx \frac{1}{6} \left(\frac{D}{R}\right)^k = \frac{1}{6} (\sqrt{3N})^k$ | $k$: Path loss exponent ($k=3\text{--}4$); 6 interferers | Calculates interference from the 6 neighboring towers. |
 | **Traffic Intensity (Erlangs)** | $A = \lambda \cdot h = n \cdot A_{\text{pu}}$ | $\lambda$: Calls/hr; $h$: Holding time in hours; $n$: Users | Quantifies continuous channel occupancy load. |
 | **Erlang B Formula (LCC)** | $P_b = \frac{A^C / C!}{\sum_{k=0}^C A^k / k!}$ | $C$: Trunked channels; $A$: Offered load | Probability of call blocking in lost-calls-cleared systems. |
 | **CDMA Spreading Factor** | $\text{SF} = \frac{T_b}{T_c} = \frac{R_{\text{chip}}}{R_{\text{data}}}$ | $T_b$: Bit period; $T_c$: Chip period | Processing gain expanding data into wideband spread spectrum. |
