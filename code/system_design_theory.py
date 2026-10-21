@@ -91,6 +91,30 @@ def demo_jitter():
     print("sleeps (s):", [round(backoff_full_jitter(a, rng=rng), 3) for a in range(6)])
 
 
+# ---------------------------------------------------------------- Part 4: token bucket rate limiter
+class TokenBucket:
+    """In production this state lives in Redis and the update runs atomically (a Lua script)."""
+    def __init__(self, capacity, refill_per_s):
+        self.capacity, self.rate = capacity, refill_per_s
+        self.tokens, self.last = capacity, 0.0
+
+    def allow(self, now):
+        self.tokens = min(self.capacity, self.tokens + (now - self.last) * self.rate)  # lazy refill
+        self.last = now
+        if self.tokens >= 1:
+            self.tokens -= 1
+            return True
+        return False
+
+
+def demo_token_bucket():
+    tb = TokenBucket(capacity=10, refill_per_s=5)
+    burst = [tb.allow(0.0) for _ in range(12)]
+    print("burst of 12 at t=0.0s: allowed", sum(burst), "rejected", 12 - sum(burst))
+    later = [tb.allow(0.6) for _ in range(4)]
+    print("4 more at t=0.6s:      allowed", sum(later), "rejected", 4 - sum(later))
+
+
 if __name__ == "__main__":
-    for d in (demo_bloom, demo_vector_clocks, demo_idempotency, demo_jitter):
+    for d in (demo_bloom, demo_vector_clocks, demo_idempotency, demo_jitter, demo_token_bucket):
         print(f"--- {d.__name__}"); d()

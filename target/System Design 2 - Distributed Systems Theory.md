@@ -1,6 +1,6 @@
 # System Design 2: Distributed Systems Theory
 
-> **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · **Part 2 (this file)** · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md)
+> **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · **Part 2 (this file)** · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
 > **Source:** built from research: the classic papers (Lamport, FLP, Dynamo, Raft, Spanner, SWIM, CRDTs), Kleppmann and Riccomini's *DDIA* 2nd edition, and the MIT 6.5840 course. Full list in [References](#14-references). Every number recomputed with Python; figures from [make_figs.py](../figures/system_design_theory/make_figs.py); code from [system_design_theory.py](../code/system_design_theory.py).
 > **Facts re-checked:** 21 October 2026.
 

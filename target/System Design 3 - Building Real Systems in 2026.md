@@ -1,6 +1,6 @@
 # System Design 3: Building Real Systems in 2026
 
-> **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · **Part 3 (this file)**
+> **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · **Part 3 (this file)** · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
 > **Related notes:** [APIs, Databases, Caching, CDNs and Scaling](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) (auth, rate limiting, web security in depth) · [Scaling to 1 Million Requests per Second](Scaling%20to%201%20Million%20Requests%20per%20Second.md) · [Platform Engineering at Atlassian](../Theory/Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md) · [Agent Harnesses](../Theory/Agent%20Harnesses%20-%20Why%20the%20Scaffold%20Beats%20the%20Model.md) · [Multi-head Latent Attention (KV cache)](../Theory/Multi-head%20Latent%20Attention%20-%20Shrinking%20the%20KV%20Cache.md)
 > **Source:** built from research: papers, official specs and engineering write-ups listed in [References](#13-references). Every number recomputed with Python; figures from [make_figs.py](../figures/system_design_theory/make_figs.py); code from [system_design_theory.py](../code/system_design_theory.py).
 > **Facts re-checked:** 21 October 2026. Things that moved recently: OAuth 2.1 is **still an IETF draft** (revision -16, September 2026); hybrid post-quantum key exchange is now the browser default; Kafka runs without ZooKeeper since 4.0; LLM serving and agent infrastructure are now standard system-design topics.
@@ -202,6 +202,63 @@ Engines: Apache Flink (the reference), Kafka Streams (a library inside your serv
 **The problem.** Business processes span minutes to months (order → payment → shipping → a 30-day return window). Writing them as code over queues and cron jobs, with manual state tracking, retries and compensations, is where bugs live.
 
 **How it works.** **Durable execution** engines (Temporal, Restate, AWS Step Functions, Azure Durable Functions) let you write the workflow as ordinary code. The engine **records every step's result in an event history**. If the worker crashes, another worker *replays* the history to rebuild the exact state, and continues from the next step. Timers ("wait 30 days") and retries are built in. Your workflow code must be **deterministic** (no direct randomness or clock reads, which go through the engine's APIs instead), because replay must produce the same decisions. This is the natural home for sagas (Part 2 §8.3), and increasingly for long-running AI agents (§9.5).
+
+### 3.8 Poison messages and dead-letter queues
+
+**The problem.** Some messages will *never* succeed: malformed data, a bug triggered by one particular input, a reference to a deleted record. With automatic retries, such a **poison message** either loops forever, burning capacity, or (in an ordered log like Kafka) **blocks its whole partition**, so every message behind it waits.
+
+**How it works.**
+
+1. **Classify errors.** *Transient* errors (timeouts, 503, a lock conflict) deserve retries with backoff. *Permanent* errors (a validation failure, a 400 from the downstream) will fail every time, so stop retrying immediately.
+2. After N failed attempts, or on a permanent error, move the message to a **dead-letter queue (DLQ)** with its error details, the number of attempts and a timestamp. The main queue keeps flowing.
+3. **Treat the DLQ as an alarm.** Alert when its depth grows. Build tooling to inspect messages, fix the cause, and **re-drive** them back into the main queue. A DLQ nobody watches is just a slower way to lose data.
+
+Queues such as SQS and RabbitMQ have DLQs built in (SQS moves a message after `maxReceiveCount` failed receives). Kafka has none. The usual pattern is a chain of **retry topics** with increasing delays (`orders.retry.1m` → `orders.retry.1h`), then a final `orders.dlq` topic.
+
+> **The ordering catch.** Moving one message aside breaks per-key order: later events for the same order are processed before the failed one. If order matters (account balance updates), park the *whole key*: stop processing that key until its stuck message is resolved, and keep processing other keys.
+
+### 3.9 Job scheduling: task queues, delayed jobs and distributed cron
+
+**The problem.** Much of a backend's work isn't a user request: sending emails, generating reports, nightly cleanups, retrying a payment in an hour. "Design a job scheduler" is a common interview question because it combines queues, leases, idempotency and time.
+
+**Task queues** (Celery, Sidekiq, BullMQ, SQS + workers): producers enqueue jobs, and a pool of workers pulls and runs them.
+
+- **Visibility timeout / lease.** When a worker takes a job, the job becomes invisible to others for a set time. If the worker finishes, it deletes the job. If it crashes, the timeout expires and the job reappears for another worker. So delivery is **at-least-once**, and **jobs must be idempotent** (Part 2 §8.5). Set the timeout above the job's p99 duration, and have long jobs send heartbeats to extend their lease.
+- Per-job **timeouts, retries with backoff, a DLQ** (§3.8), **priorities** (separate queues), and **per-tenant fairness**, so one customer's 1M jobs don't starve everyone else.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Scheduled: run_at in the future
+    Scheduled --> Ready: run_at reached
+    [*] --> Ready: enqueue now
+    Ready --> Running: worker takes lease
+    Running --> Succeeded: done, job deleted
+    Running --> Ready: lease expired (worker crashed)
+    Running --> Retrying: transient error
+    Retrying --> Ready: after backoff
+    Running --> Dead: permanent error or too many attempts
+    Retrying --> Dead: attempts exhausted
+```
+
+**Delayed jobs** ("send a reminder in 24 hours"): store jobs with a `run_at` time in a structure ordered by time, such as a Redis sorted set or a database table indexed on `run_at`. Pollers claim due jobs. In PostgreSQL, this query lets many workers claim *different* jobs without blocking each other:
+
+```sql
+SELECT id FROM jobs
+WHERE status = 'scheduled' AND run_at <= now()
+ORDER BY run_at
+LIMIT 100
+FOR UPDATE SKIP LOCKED;
+```
+
+`SKIP LOCKED` makes each worker skip rows another worker has already locked, which turns an ordinary table into a safe, concurrent job queue.
+
+**Distributed cron** (run "every day at 02:00" exactly once across a fleet):
+
+- Cron on *every* server runs the job N times. Cron on *one* server is a single point of failure.
+- **Option 1: a leader runs the scheduler.** Elect a leader with a lease in etcd or ZooKeeper (Part 2 §7.5), and protect its side effects with fencing tokens (Part 2 §7.6), because a paused old leader may wake up and run the job again.
+- **Option 2: claim each run in the database.** For every scheduled run, insert `(job_id, scheduled_time)` under a **unique constraint**. Whichever scheduler inserts first owns that run. The others get a constraint violation and skip it. Exactly one claim per run, with no leader needed.
+- Decide what happens to **missed runs** (the scheduler was down at 02:00: catch up, or skip?), and handle **time zones and daylight-saving changes** (02:30 may happen twice, or not at all, on change days).
+- For multi-step or long-running jobs, a durable workflow engine (§3.7) handles retries, timers and state for you.
 
 ---
 
@@ -564,6 +621,24 @@ This section is about architecture-level security. The [earlier guide](System%20
 - **Post-quantum cryptography**: as Part 1 §4.5 described, the browser default is now hybrid `X25519MLKEM768` key exchange. The next steps for system designers: inventory where your systems use public-key crypto, make sure your TLS stack (for example OpenSSL 3.5+) negotiates the hybrid groups, and plan the slower migration to post-quantum **signatures** (ML-DSA, FIPS 204) for certificates, code signing and tokens. The goal is **crypto-agility**: being able to swap algorithms without redesigning.
 - **Multi-tenancy isolation** (one platform, many customers): choose per tier, from shared tables with a `tenant_id` on every row (cheapest; enforce it with row-level security) to a schema per tenant to a database or cell per tenant (strongest isolation; noisy neighbours can't hurt others; most expensive). Tenant context must flow through every layer: caches, queues, logs, search indexes.
 
+### 7.7 Privacy and compliance by design
+
+**The problem.** Privacy laws (the EU's GDPR, California's CCPA/CPRA and many similar laws) put legal requirements on how personal data is stored, moved and deleted. Bolting these onto a finished system is extremely expensive: "delete this user" across 40 services, their caches, logs, backups and analytics copies is a project in itself. They have to be design inputs.
+
+**How it works: the design consequences.**
+
+1. **Know your data.** Classify fields (public / internal / confidential / restricted) and mark **PII** (personally identifiable information: names, emails, IPs, device IDs, location). Keep a **data map**: which systems hold which personal data, and why. You can't delete or export what you can't find.
+2. **Minimise.** Don't collect what you don't need, and set **retention periods** with automatic deletion (TTLs, partition drops). Data you never stored can't leak or be subpoenaed.
+3. **Right of access and portability.** A user can ask for all their data. Design a per-user export path across services, usually an internal API that each service implements, keyed by user ID.
+4. **Right to erasure.** Deletion must reach the primary databases, caches, search indexes, event logs, analytics, ML training data, logs and backups. Techniques: deletion events that every service consumes (and confirms), short retention on logs, and **crypto-shredding** (§7.4: encrypt each user's data with a per-user key, and delete the key to make every copy unreadable, including the copies inside backups).
+5. **Data residency.** Some data must stay in a jurisdiction (EU data in the EU). Partition users by region with region-local storage, which fits cell-based architecture (§5.6). Watch the side channels that quietly copy data abroad: logs, analytics, support tools, third-party SDKs and external LLM APIs.
+6. **Pseudonymisation vs anonymisation.** Replacing names with IDs (pseudonymisation) is reversible with the mapping, so it's still personal data under GDPR. True anonymisation is hard: Latanya Sweeney showed that ZIP code + birth date + gender alone uniquely identifies about 87% of Americans. Aggregate, add noise (differential privacy), or treat the data as personal.
+7. **Keep PII out of logs and prompts.** Redact at the logging library and at the LLM gateway (§9.6). Logs are the most common accidental PII store.
+
+**Audit logs** record who did what, to which record, when and from where. Especially: access to sensitive data, permission changes and admin actions. Make them **append-only**, stored separately from the system they audit, and **tamper-evident**: each entry includes a hash of the previous entry, so editing or deleting any entry breaks the chain from that point on (the same idea as a Merkle tree, Part 2 §10.4).
+
+**Other regimes you'll meet:** PCI DSS (card data; keep your scope small by letting a payment provider handle cards, Part 4 §4), HIPAA (US health data), SOC 2 (a security-controls audit that B2B customers ask for), and the EU AI Act, whose obligations for AI systems are phasing in. The design moves are the same each time: know where the data is, minimise it, control and log access, and be able to delete it.
+
 ---
 
 ## 8. Data and analytics systems
@@ -882,7 +957,7 @@ sequenceDiagram
 
 ### 11.5 Systems to practise next
 
-Work each through all eight steps, on paper, before looking anything up:
+[Part 4](System%20Design%204%20-%20Worked%20Case%20Studies.md) works through eight more designs in full: rate limiter, key-value store, payments, ticket booking, video streaming, notifications, ride matching and an LLM chat service. For the rest, work each one through all eight steps, on paper, before looking anything up:
 
 | Category | Systems | The key concept each one tests |
 |---|---|---|
@@ -894,6 +969,50 @@ Work each through all eight steps, on paper, before looking anything up:
 | Infra | Web crawler · metrics/monitoring system · distributed job scheduler · search autocomplete | Politeness and dedup (Bloom filters) · time series · leases and fencing · tries and caching |
 | Collaboration | Collaborative document editor · file sync (Dropbox) | CRDTs/OT (Part 2 §9) · chunking, dedup and conflict handling |
 | AI | Chat assistant at scale · enterprise RAG · LLM gateway · coding-agent platform | KV-cache capacity (§9.3) · retrieval with permissions · routing and budgets · durable sandboxed agents |
+
+### 11.6 Writing it down: design docs and ADRs
+
+**The problem.** At work, a design that lives only in someone's head (or on a whiteboard photo) can't be reviewed before it's built, and nobody remembers later *why* it was built that way. Senior engineers are judged as much on how clearly they write designs as on the designs themselves.
+
+**A design doc** (also called an RFC or tech spec) is written and reviewed *before* building. A useful structure:
+
+1. **Context and problem**: what's wrong or missing, and why now.
+2. **Goals and non-goals**: non-goals stop scope creep ("we will not support multi-region in v1").
+3. **Requirements**: functional and non-functional, with numbers (§11.1 steps 1–2).
+4. **Proposed design**: diagrams, APIs, data model, the key flows.
+5. **Alternatives considered**: each with *why it was rejected*. This is the section that shows real thinking.
+6. **Trade-offs and risks**: what you're giving up, and what could go wrong.
+7. **Rollout and migration**: phases, feature flags, backfills, rollback plan (§6.3).
+8. **Operations**: SLOs, dashboards, alerts, on-call impact.
+9. **Security, privacy and cost** (§7, §7.7, §6.5).
+10. **Open questions**.
+
+Keep it as short as the decision allows. A two-page doc that gets read beats a 30-page one that doesn't.
+
+**An ADR (architecture decision record)**, a format proposed by Michael Nygard in 2011, records *one* decision in a short file kept in the repository next to the code:
+
+```markdown
+# ADR 0007: Use PostgreSQL for the orders service
+
+Status: Accepted (2026-10-21). Supersedes ADR 0003.
+
+## Context
+Orders need multi-row transactions and ad-hoc reporting queries.
+Peak load is about 2,000 writes/s, well within one primary with replicas.
+
+## Decision
+Use PostgreSQL 18 with one primary and two replicas. No sharding until
+write load passes about 20,000/s.
+
+## Consequences
++ Serializable transactions, mature tooling, the team already knows it.
+- Vertical write ceiling; sharding later will be a project of its own.
+- We must run connection pooling (PgBouncer) for the serverless workers.
+```
+
+ADRs are **never edited after acceptance**. A changed decision gets a *new* ADR that supersedes the old one. Over time, the folder becomes the project's memory: a new engineer can read why things are the way they are, instead of undoing a decision whose reason they never knew.
+
+**The interview connection:** say your design the same way. State the alternatives, pick one, and give the trade-off out loud ("I'll use fan-out on write *because* reads outnumber writes 50:1, *accepting* the celebrity problem, which I'll handle with…"). That's what interviewers mean by "trade-off reasoning".
 
 ---
 
@@ -996,6 +1115,13 @@ Celebrities: one post becomes millions of writes (100M followers at 1M writes/s 
 | **Bounded context** | A domain area with its own consistent model |
 | **Strangler fig** | Incremental replacement of a legacy system |
 | **Conway's Law** | Systems mirror the communication structure of their organisations |
+| **Poison message / DLQ** | A message that always fails / the queue it's moved to after N attempts |
+| **Visibility timeout** | How long a taken job stays hidden before reappearing for another worker |
+| **SKIP LOCKED** | SQL clause letting concurrent workers claim different rows without blocking |
+| **PII** | Personally identifiable information |
+| **Crypto-shredding** | Deleting a per-user key to make all copies of their data unreadable |
+| **Data residency** | Keeping data stored and processed inside a required jurisdiction |
+| **ADR** | Architecture decision record: one short, immutable file per decision |
 
 ---
 
@@ -1021,5 +1147,7 @@ Celebrities: one post becomes millions of writes (100M followers at 1M writes/s 
 - Eric Evans, *Domain-Driven Design*, 2003. Matthew Skelton and Manuel Pais, *Team Topologies*, 2019. Melvin Conway, "How Do Committees Invent?", 1968.
 - Alex Xu, *System Design Interview*, volumes 1 and 2 (for more worked designs in the §11 format).
 - Martin Kleppmann and Chris Riccomini, *Designing Data-Intensive Applications*, 2nd ed., O'Reilly, 2026.
+
+**Next:** [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md), eight more systems designed end to end.
 
 **Back to:** [Part 1](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · [Part 2](System%20Design%202%20-%20Distributed%20Systems%20Theory.md)

@@ -1,6 +1,6 @@
 # System Design 1: Foundations, Building Blocks and Storage
 
-> **Series:** **Part 1 (this file)** · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md)
+> **Series:** **Part 1 (this file)** · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
 > **Related notes (go deeper on specific topics):** [APIs, Databases, Caching, CDNs and Scaling](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) · [Scaling to 1 Million Requests per Second](Scaling%20to%201%20Million%20Requests%20per%20Second.md)
 > **Source:** built from research (textbooks, papers and official specs listed in [References](#12-references)). Every number in this guide was recomputed with Python; figures come from [make_figs.py](../figures/system_design_theory/make_figs.py) and code from [system_design_theory.py](../code/system_design_theory.py).
 > **Facts re-checked:** 21 October 2026.
@@ -359,6 +359,51 @@ Ideas a designer uses:
 - **GeoDNS / latency-based routing**: answer with the IP of the nearest region.
 - **Anycast**: announce *the same IP* from many locations. The internet's routing protocol (BGP) delivers each user to the nearest one. CDNs and public resolvers (such as 1.1.1.1 and 8.8.8.8) work this way, which also spreads out DDoS traffic.
 
+### 4.7 Cloud networking basics: VPCs, subnets and NAT
+
+**The problem.** In the cloud, your servers live on a network you design yourself. Get it wrong and your database is reachable from the internet, or your app can't reach anything at all. Every cloud architecture diagram assumes you know these few pieces.
+
+**How it works.**
+
+- A **VPC (virtual private cloud)** is your own private network inside one cloud region, with an address range written in **CIDR** notation. `10.0.0.0/16` means "the first 16 bits are fixed", leaving $2^{32-16} = 65{,}536$ addresses.
+- You split the VPC into **subnets**, each inside one availability zone. A `/24` subnet has $2^{8} = 256$ addresses (AWS reserves 5 in each, leaving 251 usable). Use one set of subnets per AZ so that losing an AZ doesn't take everything down.
+- A **public subnet** has a route to an **internet gateway**, so things in it can have public IPs. A **private subnet** has no inbound route from the internet.
+- **NAT (network address translation)** lets many private machines share one public IP for *outgoing* traffic (downloading updates, calling an external API). The NAT device remembers each outgoing connection and maps replies back. Nobody outside can *start* a connection to a private machine. A managed **NAT gateway** does this per AZ.
+- **Security groups** are stateful firewalls attached to each instance ("allow port 5432 only from the app servers' group"). Return traffic is allowed automatically. **Network ACLs** are stateless rules on whole subnets, a coarser second layer.
+- To reach other networks: **VPC peering** or a **transit gateway** (VPC to VPC), **private endpoints** (reach cloud services such as S3 without crossing the internet), and **VPN** or a dedicated line such as Direct Connect (reach your own datacenter).
+
+**The standard layout:**
+
+```mermaid
+flowchart LR
+    accTitle: Standard VPC layout
+    accDescr: Internet traffic reaches a load balancer in public subnets; app servers and databases sit in private subnets; outbound traffic from private subnets leaves through a NAT gateway.
+    NET(["Internet"]) --> IGW["Internet gateway"]
+    subgraph vpc ["VPC 10.0.0.0/16, one set of subnets per AZ"]
+        subgraph pub ["Public subnets"]
+            LB["Load balancer"]
+            NAT["NAT gateway"]
+        end
+        subgraph priv ["Private subnets"]
+            APP["App servers"]
+            DB[("Database")]
+        end
+    end
+    IGW --> LB
+    LB --> APP
+    APP --> DB
+    APP -->|"outbound only"| NAT
+    NAT --> IGW
+    class NET primary;
+    class IGW,LB,NAT intermediate;
+    class APP,DB target;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+```
+
+Only the load balancer faces the internet. App servers and databases sit in private subnets, and the database's security group accepts connections only from the app servers. **Two cost surprises to watch:** NAT gateways charge per GB processed, and traffic between AZs is billed too. Chatty cross-AZ services and heavy outbound traffic through NAT show up on the bill (Part 3 §6.5).
+
 ---
 
 ## 5. The building blocks
@@ -615,6 +660,47 @@ Key ideas:
 - **Composite index** on `(country, city, age)` follows the **leftmost prefix rule**: it helps queries filtering on `country`, or `country + city`, but not on `city` alone. Order the columns by how you query.
 - **Every index slows writes.** Each insert must update every index on the table. Index for your actual query patterns, not "just in case".
 - Specialised indexes: **inverted indexes** for full-text search (§7.7), **GiST/R-trees** for geometry, **HNSW** graphs for vector similarity (Part 3 §9).
+
+### 6.6 Connection pooling and reading query plans
+
+These two practical skills cause many real production problems, and interviewers like to ask about them.
+
+**Connection pooling: the problem.** Opening a database connection is expensive: a TCP handshake, often TLS, authentication, and on the server side a new backend. PostgreSQL starts a whole **OS process per connection**, using several MB of memory each. If every request opens its own connection, you pay several round trips per request, and thousands of connections can exhaust the database's memory.
+
+**How it works.** A **pool** keeps a fixed set of connections open and lends one to each request, which returns it when done. How many do you need? Little's Law (Part 3 §4.1) gives the number that are busy at once:
+
+$$
+\text{connections busy} = \text{query rate} \times \text{time per query}
+$$
+
+*On average, the number of connections in use equals queries per second times how long each query holds its connection.* **Example:** 2,000 queries/s × 5 ms = **10** busy connections. A pool of about 20 gives headroom for bursts.
+
+Two traps:
+
+1. **Bigger pools aren't faster.** The database has a fixed number of CPU cores and disks. Beyond a point, extra connections just compete for locks and CPU, and every query slows down. Size the pool from the formula, not "as big as possible".
+2. **Many app instances multiply.** 50 app instances × a pool of 20 = 1,000 database connections, even if each one is mostly idle. That's why there are external poolers (**PgBouncer**, RDS Proxy). In *transaction mode* they hand a real server connection to a client only for the length of one transaction, so thousands of client connections share a few dozen server connections. Serverless functions, which can scale to thousands of instances in seconds, almost always need one.
+
+**Query plans: the problem.** A query that ran in 2 ms in testing takes 4 seconds in production. Why? The database chose a bad way to run it, or it has no good way.
+
+**How it works.** SQL says *what* you want, not *how* to get it. The **query planner** considers possible plans (which index to use, which join order and join method) and estimates the cost of each, using **statistics** about the data (row counts, distinct values, value distributions). `EXPLAIN` shows the chosen plan. `EXPLAIN ANALYZE` actually runs the query and shows real row counts and times next to the estimates.
+
+| Plan node | What it does | When it's a warning sign |
+|---|---|---|
+| **Seq Scan** | Reads the whole table | On a big table with a selective `WHERE`: probably a missing index |
+| **Index Scan** | Walks the index, then fetches matching rows | Fine for few rows. Slow if it fetches a large fraction of the table (random I/O). |
+| **Index Only Scan** | Answers from the index alone (a covering index, §6.5) | Usually the best case |
+| **Bitmap Heap Scan** | Collects matches from one or more indexes, then reads pages in order | Normal for medium-selectivity filters |
+| **Nested Loop** | For each outer row, look up matching inner rows | Fine when the outer side is small. A disaster when the estimates were wrong and it's huge. |
+| **Hash Join** | Builds a hash table from one side, probes it with the other | Normal for big joins; watch its memory |
+| **Sort** | Sorts rows | "external merge" or "Disk" in the output means it spilled to disk: add an index matching the `ORDER BY`, or more memory |
+
+**The three things to check first:**
+
+1. **Estimated rows vs actual rows.** If the planner expected 10 rows and got 1,000,000, it chose a plan for the wrong situation. Usually the statistics are stale (run `ANALYZE`), or the columns are correlated in a way the planner can't see.
+2. **A sequential scan where you expected an index.** The index may be missing, or the query may prevent its use: a function on the column (`WHERE lower(email) = …` needs an index on `lower(email)`), a type mismatch, or a leading wildcard (`LIKE '%foo'`).
+3. **Where the time goes.** `EXPLAIN ANALYZE` reports time per node. Fix the most expensive node first.
+
+**The N+1 query problem** is the most common slow pattern in application code, and it doesn't show in any single query plan. An ORM loads 100 posts with one query, then lazily loads each post's author with *another* query: 101 round trips. At 0.5 ms each inside a datacenter, that's about 50 ms of pure network waiting. One join, or one batched `WHERE author_id IN (…)` query, does it in 1–2 round trips. The same problem appears in GraphQL resolvers (Part 3 §2.1).
 
 ---
 
@@ -948,6 +1034,12 @@ Points close together can sit on opposite sides of a cell boundary and share no 
 | **HyperLogLog** | Sketch estimating distinct counts at ~1.04/√m error |
 | **Count-Min Sketch** | Counter grid estimating frequencies, never underestimating |
 | **Geohash** | Base-32 string for a lat/long cell; shared prefix ≈ nearby |
+| **VPC / subnet** | Your private cloud network / a slice of it inside one AZ |
+| **NAT** | Many private machines sharing one public IP for outbound traffic |
+| **Security group** | Stateful firewall rules attached to instances |
+| **Connection pool** | A set of open DB connections reused across requests |
+| **Query plan** | The planner's chosen way to run a query; shown by `EXPLAIN` |
+| **N+1 queries** | One query plus one more per result row; fixed with a join or batching |
 
 ---
 
