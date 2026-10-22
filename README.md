@@ -44,6 +44,21 @@ Thirteen notes taken from YouTube talks, rewritten as self-contained study guide
 | [**System design theory, part 3: real systems in 2026**](target/System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) | Kafka and stream processing, queueing theory and tail latency, retries/circuit breakers/metastable failures, SLOs, Kubernetes, zero trust, lakehouses, LLM serving and RAG, plus three worked designs. |
 | [**System design theory, part 4: worked case studies**](target/System%20Design%204%20-%20Worked%20Case%20Studies.md) | Eight more designs end to end: rate limiter, key-value store, payments with a double-entry ledger, ticket booking under contention, video streaming, notifications, ride matching, and an LLM chat service with a gateway. |
 
+### AI engineering series (`target/ai/`, research-built, October 2026)
+
+| Guide | What you'll get out of it |
+|---|---|
+| [**0 Start Here**](target/ai/AI%20Engineering%200%20-%20Start%20Here.md) | The thinking layer: ten lasting principles, a decision path from problem to product, a toolkit for judging AI claims, a fully worked decision, and how to learn without memorising. **Read first.** |
+| [**1 How LLMs Work**](target/ai/AI%20Engineering%201%20-%20How%20LLMs%20Work.md) | Tokens and BPE, embeddings, attention worked by hand, context windows, the training pipeline, sampling, why models hallucinate, reasoning models, open vs closed. |
+| [**2 Prompting and Context Engineering**](target/ai/AI%20Engineering%202%20-%20Prompting%20and%20Context%20Engineering.md) | Clear instructions, few-shot, structured outputs with validation and retry, the context budget, chaining, prompting reasoning models, long context vs retrieval. |
+| [**3 Evals and Quality**](target/ai/AI%20Engineering%203%20-%20Evals%20and%20Quality.md) | Error analysis, code checks, calibrated LLM judges (kappa, TPR/TNR), sample sizes, regression tests, A/B tests, the data flywheel. |
+| [**4 Retrieval and RAG**](target/ai/AI%20Engineering%204%20-%20Retrieval%20and%20RAG.md) | Parsing, chunking, embeddings, ANN indexes, permission filtering, hybrid search with RRF, reranking, citations, GraphRAG, retrieval metrics. |
+| [**5 Agents**](target/ai/AI%20Engineering%205%20-%20Agents.md) | The agent loop, workflows vs agents, tool design, memory, MCP and A2A, multi-agent, human-in-the-loop, coding agents, durable agents, agent evals. |
+| [**6 Production LLM Engineering**](target/ai/AI%20Engineering%206%20-%20Production%20LLM%20Engineering.md) | Routing and fallbacks, the gateway, streaming, rate limits, latency and cost, prompt vs semantic caching, tracing, CI/CD, voice, AI UX. |
+| [**7 Safety, Security and Governance**](target/ai/AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) | OWASP LLM Top 10, prompt injection and the lethal trifecta, sandboxing and exfiltration, guardrails, red teaming, PII, supply chain, the EU AI Act after the 2026 deferral. |
+| [**8 Serving and GPU Infrastructure**](target/ai/AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) | Roofline, prefill vs decode, KV-cache maths, batching, PagedAttention, quantisation, speculative decoding, parallelism, capacity and cost planning. |
+| [**9 Customising Models**](target/ai/AI%20Engineering%209%20-%20Customising%20Models.md) | When to fine-tune, SFT, LoRA/QLoRA, DPO, distillation, synthetic data, RL with verifiable rewards (GRPO), evaluating fine-tunes. |
+
 ---
 
 ## What changed since the source videos (verified 18 September 2026)
@@ -111,6 +126,7 @@ Guide ↔ figure folder ↔ code file:
 | Scaling to 1M req/s | `figures/million_rps/` | `code/million_rps_math.py` |
 | Platform Engineering | `figures/platform_engineering/` | `code/platform_patterns.py` |
 | System Design theory, parts 1–4 (`target/`) | `figures/system_design_theory/` | `code/system_design_theory.py` |
+| AI Engineering 1–9 (`target/ai/`) | `figures/ai_engineering/` | `code/ai_*.py` (tokens and sampling, structured output, eval harness, hybrid retrieval, agent loop, LLM router, PII and exfiltration, LoRA/DPO/GRPO) |
 
 ### Regenerating the figures
 
