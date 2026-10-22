@@ -39,10 +39,10 @@ Thirteen notes taken from YouTube talks, rewritten as self-contained study guide
 | [**8 API laws**](Theory/REST%20API%20Design%20-%20The%208%20Laws.md) | Resources vs actions, method semantics, status codes, one error shape, pagination, versioning. Includes a working API in pure Python that follows all eight. |
 | [**1 million requests per second**](Theory/Scaling%20to%201%20Million%20Requests%20per%20Second.md) | The four walls: bandwidth, CPU per request, concurrency and memory. Why a query rewrite beat every hardware upgrade. |
 | [**8 years of platform engineering (Atlassian)**](Theory/Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md) | Async provisioning, control plane vs data plane, immutable infrastructure, centralizing auth/rate limits at the edge — and why maintenance is the hard part. |
-| [**System design theory, part 1: foundations and storage**](target/System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) | Requirements and estimation, the latency ladder, TCP/QUIC round trips, caching failure modes, B-trees vs LSM-trees, isolation anomalies, Bloom filters and HyperLogLog. Research-built, not from a video. |
-| [**System design theory, part 2: distributed systems**](target/System%20Design%202%20-%20Distributed%20Systems%20Theory.md) | Replication and quorums, consistent hashing, linearizability, CAP and PACELC, Lamport and vector clocks, Raft step by step, 2PC vs sagas, idempotency, CRDTs, gossip. |
-| [**System design theory, part 3: real systems in 2026**](target/System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) | Kafka and stream processing, queueing theory and tail latency, retries/circuit breakers/metastable failures, SLOs, Kubernetes, zero trust, lakehouses, LLM serving and RAG, plus three worked designs. |
-| [**System design theory, part 4: worked case studies**](target/System%20Design%204%20-%20Worked%20Case%20Studies.md) | Eight more designs end to end: rate limiter, key-value store, payments with a double-entry ledger, ticket booking under contention, video streaming, notifications, ride matching, and an LLM chat service with a gateway. |
+| [**System design theory, part 1: foundations and storage**](target/system-design/System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) | Requirements and estimation, the latency ladder, TCP/QUIC round trips, caching failure modes, B-trees vs LSM-trees, isolation anomalies, Bloom filters and HyperLogLog. Research-built, not from a video. |
+| [**System design theory, part 2: distributed systems**](target/system-design/System%20Design%202%20-%20Distributed%20Systems%20Theory.md) | Replication and quorums, consistent hashing, linearizability, CAP and PACELC, Lamport and vector clocks, Raft step by step, 2PC vs sagas, idempotency, CRDTs, gossip. |
+| [**System design theory, part 3: real systems in 2026**](target/system-design/System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) | Kafka and stream processing, queueing theory and tail latency, retries/circuit breakers/metastable failures, SLOs, Kubernetes, zero trust, lakehouses, LLM serving and RAG, plus three worked designs. |
+| [**System design theory, part 4: worked case studies**](target/system-design/System%20Design%204%20-%20Worked%20Case%20Studies.md) | Eight more designs end to end: rate limiter, key-value store, payments with a double-entry ledger, ticket booking under contention, video streaming, notifications, ride matching, and an LLM chat service with a gateway. |
 
 ### AI engineering series (`target/ai/`, research-built, October 2026)
 
@@ -90,7 +90,7 @@ The AI guides age fastest. These are the substantive updates, each written up in
 
 **Becoming a better backend engineer:** System design → 8 API laws → 1M requests/s → Atlassian platform engineering
 
-**System design from first principles (theory-first):** System design theory parts 1 → 2 → 3 → 4, in `target/`
+**System design from first principles (theory-first):** System design theory parts 1 → 2 → 3 → 4, in `target/system-design/` (self-contained: its own images and code, with decision guides and drills throughout)
 
 **Just curious:** read **§0.1** of any guide — that's the plain-language version of the whole topic, and it takes about two minutes — then look at the figures. Each guide also opens with a "how to use this" table for 10 minutes / 1 hour / a weekend.
 
@@ -125,7 +125,7 @@ Guide ↔ figure folder ↔ code file:
 | REST API Design | `figures/api_design/` | `code/rest_api_server.py` |
 | Scaling to 1M req/s | `figures/million_rps/` | `code/million_rps_math.py` |
 | Platform Engineering | `figures/platform_engineering/` | `code/platform_patterns.py` |
-| System Design theory, parts 1–4 (`target/`) | `figures/system_design_theory/` | `code/system_design_theory.py` |
+| System Design theory, parts 1–4 (`target/system-design/`) | `target/system-design/images/` | `target/system-design/code/system_design_theory.py` |
 | AI Engineering 1–9 (`target/ai/`) | `figures/ai_engineering/` | `code/ai_*.py` (tokens and sampling, structured output, eval harness, hybrid retrieval, agent loop, LLM router, PII and exfiltration, LoRA/DPO/GRPO) |
 
 ### Regenerating the figures
@@ -140,6 +140,12 @@ Each topic folder has its own script; running it rewrites that topic's PNGs. The
 
 ```bash
 python figures/predictive_coding/make_figs.py figures/predictive_coding
+```
+
+The system design guide is self-contained, so its figure script lives inside its own folder and needs only `numpy` and `matplotlib`:
+
+```bash
+python target/system-design/images/make_figs.py
 ```
 
 ### Running the code examples
@@ -159,7 +165,7 @@ python code/rest_api_server.py         # REST API following the 8 laws (+ self-t
 python code/platform_patterns.py       # async broker, config validation, token bucket
 python code/system_design_demos.py     # SQL injection, JWT, consistent hashing, LRU cache
 python code/million_rps_math.py              # the arithmetic behind 1M requests/second
-python code/system_design_theory.py    # Bloom filter, vector clocks, idempotency keys, retry jitter, token bucket
+python target/system-design/code/system_design_theory.py    # Bloom filter, vector clocks, idempotency keys, retry jitter, token bucket
 ```
 
 ---

@@ -1,9 +1,9 @@
 # System Design 1: Foundations, Building Blocks and Storage
 
 > **Series:** **Part 1 (this file)** · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
-> **Related notes (go deeper on specific topics):** [APIs, Databases, Caching, CDNs and Scaling](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) · [Scaling to 1 Million Requests per Second](Scaling%20to%201%20Million%20Requests%20per%20Second.md)
-> **Source:** built from research (textbooks, papers and official specs listed in [References](#12-references)). Every number in this guide was recomputed with Python; figures come from [make_figs.py](../figures/system_design_theory/make_figs.py) and code from [system_design_theory.py](../code/system_design_theory.py).
-> **Facts re-checked:** 21 October 2026.
+> **Self-contained:** the four parts in this folder need nothing else. Each part links only to the others, to its own `images/` and to its own `code/`.
+> **Source:** built from research (textbooks, papers and official specs listed in [References](#12-references)). Every number in this guide was recomputed with Python; figures come from [make_figs.py](images/make_figs.py) and code from [system_design_theory.py](code/system_design_theory.py).
+> **Facts re-checked:** 22 October 2026.
 
 **The big picture:** every large system is a set of trade-offs between speed, cost, correctness and survival. To make those trade-offs well, you need to know what the machine, the network and the storage engine are *physically* doing underneath. This part builds that ground floor.
 
@@ -23,7 +23,7 @@ Diagram colours: 🔵 input / primary · 🟣 processing · 🟢 result · 🟠 
 7. [Data models and choosing a database](#7-data-models-and-choosing-a-database)
 8. [Transactions and isolation](#8-transactions-and-isolation)
 9. [Probabilistic and spatial data structures](#9-probabilistic-and-spatial-data-structures)
-10. [Self-check](#10-self-check)
+10. [Self-check and decision drills](#10-self-check-and-decision-drills)
 11. [Glossary](#11-glossary)
 12. [References](#12-references)
 
@@ -35,9 +35,15 @@ Diagram colours: 🔵 input / primary · 🟣 processing · 🟢 result · 🟠 
 |---|---|
 | 10 minutes | §0.1, §1 (TL;DR) and the latency ladder figure in §2.4 |
 | 1 hour | §2, §5 and §6: thinking method, building blocks, storage engines |
-| A weekend | Everything, then the self-check in §10, then move to Part 2 |
+| A weekend | Everything, then the decision drills in §10, then move to Part 2 |
 
-The three parts build on each other. Part 1 is *one machine and its neighbours*. Part 2 is *many machines that must agree*. Part 3 is *the real systems people build from all of that*.
+The four parts build on each other. Part 1 is *one machine and its neighbours*. Part 2 is *many machines that must agree*. Part 3 is *the real systems people build from all of that*. Part 4 is *eight complete designs*, worked from a blank page.
+
+**How this guide trains judgement, not just knowledge.** Facts are cheap; deciding well is the skill. So every part has the same three habits built in:
+
+1. **"The problem" first.** Every concept starts with what breaks without it. If you can't say what problem a tool solves, you can't judge when to use it.
+2. **Decision guides.** Wherever there's a real choice (SQL vs NoSQL, cache pattern, consistency level, sync vs async), there's a guide saying *which questions decide it*.
+3. **Decision drills** at the end of each part. Each one is a realistic situation with no single right answer. Commit to your answer *before* opening the reasoning. §2.5 explains the thinking toolkit they practise.
 
 ### 0.1 First, in completely plain words
 
@@ -159,16 +165,119 @@ Media (photos, video) is usually 100× bigger than text and goes in object stora
 
 **The problem.** You cannot judge a design without knowing what each step costs. "Call the database twice" is fine inside a datacenter (about 1 ms) and terrible across continents (about 400 ms).
 
-![Fig 1 – Latency ladder (fig01_latency_ladder.png): approximate time for common operations, log scale. Each colour band is roughly 1,000× slower than the one before.](../figures/system_design_theory/fig01_latency_ladder.png)
+![Fig 1 – Latency ladder (fig01_latency_ladder.png): approximate time for common operations, log scale. Each colour band is roughly 1,000× slower than the one before.](images/fig01_latency_ladder.png)
 
 *Fig 1 (fig01_latency_ladder.png). Orders of magnitude, not benchmarks. Exact values change with hardware; the ratios are what matter.*
 
 The rules to take away:
 
-1. **Memory is about 1,000× faster than SSD access, and SSD is about 25× faster than a datacenter round trip.** Keep hot data in RAM.
+1. **RAM is about 200× faster than an NVMe SSD read (100 ns vs 20 µs), and an SSD read is about 25× faster than a datacenter round trip (20 µs vs 500 µs).** Keep hot data in RAM, and notice that *a local SSD beats a network call*. That's why reading a local replica or an embedded store can beat a remote cache.
 2. **A network round trip inside a datacenter (~0.5 ms) costs as much as thousands of memory reads.** Batch your calls. Avoid chatty protocols.
 3. **Cross-continent round trips (80–200 ms) are set by the speed of light in fibre** (about 200,000 km/s, two-thirds of the speed in a vacuum). The only fix is to move data closer to the user: CDNs, edge computing, regional replicas.
 4. **Sequential reads are much faster than random ones** (see §3.2).
+
+### 2.5 Making decisions: a toolkit for thinking like a system designer
+
+**The problem.** Knowing what Kafka, Raft and B-trees are doesn't tell you *what to do* on Monday morning. Two engineers with the same knowledge make very different designs. The difference is how they decide. This section is the thinking method that every later "decision guide" and "decision drill" uses.
+
+**The decision loop.** Run every significant decision through these seven steps. It takes minutes, and it catches most bad designs before they're built.
+
+```mermaid
+flowchart LR
+    accTitle: The design decision loop
+    accDescr: Clarify the real problem, quantify it, generate at least two options, test them against requirements, choose and name the trade-off, state what would change your mind, then check how reversible it is.
+    A["1. Clarify<br/>the real problem"] --> B["2. Quantify<br/>numbers, not adjectives"]
+    B --> C["3. Generate<br/>at least 2 options"]
+    C --> D["4. Test against<br/>requirements + failures"]
+    D --> E["5. Choose<br/>and name the cost"]
+    E --> F["6. Say what would<br/>change your mind"]
+    F --> G{"7. Reversible?"}
+    G -->|"yes"| H(["Decide fast,<br/>measure, adjust"])
+    G -->|"no"| I(["Slow down: prototype,<br/>review, write it down"])
+    class A,B primary;
+    class C,D,E,F intermediate;
+    class H target;
+    class I warning;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+    classDef warning fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+```
+
+1. **Clarify the real problem.** "We need Kafka" is a solution, not a problem. Ask "what goes wrong today, for whom, and how often?" Often the real problem is smaller (one slow query) or different (the team can't deploy independently).
+2. **Quantify.** Replace adjectives with numbers: "lots of traffic" becomes "4,000 writes/s at peak, growing 50% a year". Numbers kill bad options fast (§2.3). A design for 400 writes/s and one for 400,000 writes/s are different designs.
+3. **Generate at least two options**, and include the boring one ("one PostgreSQL database with a read replica"). If you only have one option, you haven't made a decision; you've made an assumption.
+4. **Test each option against the requirements *and* against failure.** For each, ask: what happens when a node dies, the network is slow, traffic doubles, or a request is retried twice?
+5. **Choose, and name the cost out loud.** "We pick X; we accept Y." If you can't name what you're giving up, you don't understand the option yet.
+6. **Say what would change your mind.** "If writes pass 20,000/s, or we need cross-region writes, we revisit this." That turns a frozen opinion into a monitored decision.
+7. **Check reversibility.** Some decisions are **two-way doors**: cheap to undo (instance size, cache TTL, a library, a timeout). Decide those quickly and measure. Others are **one-way doors**: expensive or impossible to undo. Spend your care on those.
+
+| Usually a **one-way door** (decide slowly) | Usually a **two-way door** (decide fast) |
+|---|---|
+| The data model and primary keys | Instance sizes and counts |
+| The partition (shard) key | Cache TTLs, pool sizes, timeouts |
+| Consistency guarantees promised to users or other teams | Which internal library or framework version |
+| Public API shapes and event schemas others consume | Internal service boundaries behind one API |
+| Choice of primary database for critical data | Adding a cache or a read replica |
+| Data residency and deletion guarantees | Deployment strategy, alert thresholds |
+
+**Questions that expose hidden requirements.** Before designing, ask these out loud. Each one has changed a real design:
+
+- **Who** uses it, and **how many**? Read-heavy or write-heavy? What's the ratio?
+- What happens to the user if it's **slow**? **Down**? **Wrong**? **Duplicated**? **Lost**? (The answers set latency, availability, consistency, idempotency and durability.)
+- Which data **must** be strongly consistent, and which can be minutes stale?
+- How fast does it **grow**? What does traffic look like on the worst day (a sale, a launch, a news event)?
+- What are the **access patterns**: by key, by range, by text search, by relationship, by time?
+- What does the **team** know how to run? What's the **budget**?
+- Are there **legal** constraints: where data lives, how long it's kept, who may see it?
+
+**Heuristics that hold up in practice:**
+
+1. **Start with the simplest design that meets the numbers.** A single well-tuned PostgreSQL primary with replicas carries far more load than most products ever reach. Add distribution only when a number forces you to.
+2. **Every new component is a new failure mode, a new thing to monitor, and a new thing to be on call for.** A cache, a queue or a new service has to pay for itself.
+3. **Put strong consistency only where the business needs it** (money, inventory, identity, permissions) and make everything else fast and eventually consistent. Finding those few points is most of the design.
+4. **Design for 10×, not 1,000×.** Systems usually get rewritten before 1,000× anyway, and the 1,000× design is slower and costlier today.
+5. **Make operations idempotent and services stateless by default.** It's cheap at the start and very expensive to retrofit.
+6. **Measure before optimising.** Profile, trace and load-test. Intuition about bottlenecks is wrong surprisingly often.
+7. **Prefer boring, well-understood technology** for the core. Spend your "innovation budget" only where it's a competitive advantage.
+
+**Second-order thinking: "and then what?"** Every fix has consequences, and good designers follow them one more step:
+
+| First-order fix | Second-order consequence you must design for |
+|---|---|
+| Add a cache | Stale data, invalidation bugs, a stampede when it empties (§5.3) |
+| Add retries | Retry storms that keep an overloaded service down (Part 3 §5.1, §5.3) |
+| Split into microservices | Distributed transactions, network failures, harder debugging (Part 2 §8, Part 3 §10) |
+| Add a read replica | Replication lag: users may not see their own writes (Part 2 §3.2) |
+| Shard the database | Cross-shard queries and transactions; hot shards; rebalancing (Part 2 §4) |
+| Go multi-region | Conflicting writes, or cross-region latency on every write (Part 2 §5.4, Part 3 §5.7) |
+| Autoscale aggressively | A traffic spike scales up the database's client connections too (§6.6) |
+
+**The premortem.** Before building, imagine it's six months later and the system has failed badly. Write down the three most likely reasons. Each reason is either a risk to design out now, or an alert to add. It's the cheapest reliability work there is.
+
+**A worked decision: PostgreSQL or DynamoDB for an orders service?** A **weighted decision matrix** forces you to make your priorities explicit. Score each option 1–5 on each criterion, multiply by the criterion's weight, and add up.
+
+| Criterion (weight) | PostgreSQL | DynamoDB |
+|---|---|---|
+| Multi-row transactions (×3) | 5 → 15 | 3 → 9 |
+| Operational burden (×2) | 3 → 6 | 5 → 10 |
+| Scale headroom (×2) | 3 → 6 | 5 → 10 |
+| Query flexibility (×2) | 5 → 10 | 2 → 4 |
+| Cost at our current scale (×1) | 4 → 4 | 3 → 3 |
+| **Total** | **41** | **36** |
+
+PostgreSQL wins. But do one more step: a **sensitivity check**. If scale headroom really matters more (weight 4 instead of 2), the totals become 47 vs 46, nearly a tie. **What you've learned is that the decision hinges on the growth forecast.** So the right next action isn't "pick Postgres"; it's "get a credible growth estimate". The matrix doesn't make the decision for you. It shows which assumption the decision depends on, and that's where to spend effort.
+
+**Smells that a design hasn't been thought through:**
+
+- A technology was chosen before the requirements were written down.
+- No numbers anywhere: no QPS, no data size, no latency target.
+- "It's highly available" with no answer to "what happens when *this* box dies?"
+- Strong consistency everywhere "to be safe", or eventual consistency everywhere "for scale". Both mean nobody decided per path.
+- No mention of retries, timeouts, idempotency or what happens on a duplicate message.
+- No migration or rollback plan, and no answer to "how do we know it's working?"
+
+> **"It depends" is only half an answer.** Always finish the sentence: "it depends *on the read/write ratio; above about 10:1 I'd add a cache*". Naming what it depends on is the skill being tested, in interviews and at work.
 
 ---
 
@@ -185,7 +294,7 @@ Caches work because programs show **locality**:
 - **Temporal locality**: data used now will likely be used again soon.
 - **Spatial locality**: data next to what you used will likely be used soon. Memory moves in **cache lines** (usually 64 bytes), so reading one byte brings its 63 neighbours along for free.
 
-**Why this matters for system design:** the same idea repeats at every scale. A CDN is a cache for a datacenter. Redis is a cache for a database. The OS page cache is a cache for the disk. Each one only pays off when the access pattern has locality, which real traffic usually does: a few items are very popular. That skew is why a cache holding 1% of items can serve half the requests (see the [caching chapter in the earlier guide](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md)).
+**Why this matters for system design:** the same idea repeats at every scale. A CDN is a cache for a datacenter. Redis is a cache for a database. The OS page cache is a cache for the disk. Each one only pays off when the access pattern has locality, which real traffic usually does: a few items are very popular. That skew is why a cache holding 1% of items can serve half the requests (§5.3 works out the numbers).
 
 ### 3.2 Disks: random vs sequential
 
@@ -315,7 +424,7 @@ UDP sends independent datagrams with no handshake, no ordering, no retransmissio
 | **HTTP/2** (2015) | Multiplexing: many concurrent streams over one TCP connection, binary framing, header compression (HPACK) | One lost TCP packet stalls *all* streams (TCP head-of-line blocking) |
 | **HTTP/3** (2022, RFC 9114) | Runs over **QUIC** (RFC 9000) on UDP. Each stream is independent, so loss on one doesn't stall the others. TLS 1.3 is built into the handshake. Connections survive network changes (Wi-Fi → mobile) via connection IDs. | UDP is sometimes blocked or throttled by middleboxes, so clients fall back to HTTP/2 |
 
-![Fig 2 – Handshake round trips (fig02_handshake_rtts.png): time until the response arrives at 100 ms RTT for TCP+TLS 1.2 (400 ms), TCP+TLS 1.3 (300 ms), QUIC first visit (200 ms) and QUIC 0-RTT (100 ms).](../figures/system_design_theory/fig02_handshake_rtts.png)
+![Fig 2 – Handshake round trips (fig02_handshake_rtts.png): time until the response arrives at 100 ms RTT for TCP+TLS 1.2 (400 ms), TCP+TLS 1.3 (300 ms), QUIC first visit (200 ms) and QUIC 0-RTT (100 ms).](images/fig02_handshake_rtts.png)
 
 *Fig 2 (fig02_handshake_rtts.png). Counting round trips at RTT = 100 ms: handshake RTTs plus one for the request itself.*
 
@@ -408,7 +517,7 @@ Only the load balancer faces the internet. App servers and databases sit in priv
 
 ## 5. The building blocks
 
-These are the Lego bricks of every architecture. The [earlier guide](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) has simulations for load balancing, consistent hashing and cache hit ratios. Here we focus on the theory and the failure modes.
+These are the Lego bricks of every architecture. For each one we cover what it's for, how it works, and (most important) how it fails.
 
 ```mermaid
 flowchart LR
@@ -439,14 +548,18 @@ flowchart LR
 - An **L4 load balancer** sees only IP addresses and ports. It forwards TCP/UDP connections without reading them. It is very fast and protocol-agnostic, but it cannot route by URL or header.
 - An **L7 load balancer** terminates the connection and reads HTTP. It can route `/api/*` and `/images/*` to different pools, retry, add headers, and terminate TLS. It costs more CPU, and it sees the plaintext.
 
-**Algorithms** (simulated in the earlier guide):
+**Algorithms:**
 
 | Algorithm | Idea | Use when |
 |---|---|---|
 | Round robin / weighted | Take turns, possibly weighted by capacity | Requests cost about the same |
 | Least connections / least outstanding requests | Send to the least busy server | Request costs vary |
 | **Power of two choices** | Pick 2 servers at random, send to the less loaded one | Large fleets. Close to the best possible, with no global state. |
-| Consistent hashing on a key | The same key always goes to the same server | You need cache affinity or sticky sessions (Part 2 §3) |
+| Consistent hashing on a key | The same key always goes to the same server | You need cache affinity or sticky sessions (Part 2 §4.2) |
+
+**Why the choice matters more than it looks.** Round robin is *blind*: it keeps sending a slow server its full share. Suppose one of four servers slows to half speed (a noisy neighbour, a long GC pause). Round robin still gives it 25% of the traffic, but it can only finish about 12.5%. Its queue grows without limit, and every request that lands there waits longer and longer. Part 3 §4.2 shows the maths: waiting time explodes as utilisation nears 100%. **Load-aware** algorithms (least outstanding requests, power of two choices) notice the queue and route around it.
+
+Power of two choices is the surprising one. Picking the less-loaded of just *two* random servers is dramatically better than picking one at random. With $n$ servers and random placement, the busiest server's excess load grows like $\log n / \log \log n$; with two choices it grows only like $\log \log n$ (Mitzenmacher, 2001). It needs no global view of the fleet, so many independent load balancers can use it at once without coordinating. That's why it's common in large systems such as Envoy and Nginx's `random two` mode.
 
 **Health checks** remove dead servers: *active* checks probe an endpoint every few seconds, and *passive* checks watch real traffic for errors. A load balancer must itself be redundant: an active-passive pair sharing a floating IP, or many instances behind anycast or DNS.
 
@@ -482,6 +595,28 @@ $$
 
 Read the last column again: **going from 90% to 99% hits cuts database load by another 10×.** The last few percent of hit ratio are often worth more than they look.
 
+**How big must the cache be? It depends on skew.** Real traffic is very uneven: a few items get most of the requests. A common model is the **Zipf distribution**: the item of popularity rank $r$ is requested with probability proportional to $1/r^{s}$. Here $s$ measures how skewed the traffic is ($s \approx 1$ is typical for web content).
+
+An ideal cache holding the $k$ most popular of $N$ items then serves this fraction of requests:
+
+$$
+h(k) = \frac{\sum_{r=1}^{k} r^{-s}}{\sum_{r=1}^{N} r^{-s}}
+$$
+
+*The hit ratio is the popularity of the top k items divided by the popularity of all items.*
+
+**Worked example.** A catalogue of 100,000 items with $s = 1$:
+
+| Cache size | Ideal hit ratio | Real LRU (simulated) |
+|---|---|---|
+| 0.1% (100 items) | 43% | — |
+| **1% (1,000 items)** | **62%** | **51%** |
+| 10% (10,000 items) | 81% | — |
+
+![Fig 13 – Zipf cache hit ratio (fig13_zipf_cache.png): hit ratio against cache size for Zipf skew 0.8, 1.0 and 1.2, against uniform traffic, with simulated LRU points.](images/fig13_zipf_cache.png)
+
+*Fig 13 (fig13_zipf_cache.png). With typical skew, a cache holding 1% of the items serves about half of the requests even with plain LRU. With no skew (the dotted line), a 1% cache serves 1%. **Measure your skew before sizing a cache:** it decides whether a cache helps a lot or barely at all. LRU falls below the ideal because one-off requests push popular items out, which is the problem LFU-style policies address.*
+
 **Patterns** (who loads and who writes):
 
 | Pattern | Reads | Writes | Trade-off |
@@ -504,7 +639,17 @@ Read the last column again: **going from 90% to 99% hits cuts database load by a
 | **Cache penetration** | Requests for keys that *don't exist* always miss and hit the DB (often an attack) | Cache negative results briefly; put a Bloom filter (§9.1) in front |
 | **Cache avalanche** | Many keys expire at the same moment, or the cache cluster restarts empty | Add random jitter to TTLs; warm the cache; keep the cache replicated |
 | **Hot key** | One key (a celebrity's profile) overloads one cache node | Replicate the hot key to several nodes; add a small in-process cache in front |
-| **Inconsistency** | The cache and the DB disagree | TTLs, delete-on-write, or invalidation driven by change data capture (Part 3 §2) |
+| **Inconsistency** | The cache and the DB disagree | TTLs, delete-on-write, or invalidation driven by change data capture (Part 3 §3.5) |
+
+**Decision guide: should you add a cache here?**
+
+1. **Is the data read much more than it's written?** Roughly 10:1 or more. If it changes on almost every read, a cache mostly adds invalidation work.
+2. **Is the traffic skewed?** Without skew (Fig 13), a cache must hold most of the data to help, and then it's just a second database.
+3. **Can the reader tolerate staleness, and for how long?** That number becomes your TTL. "Never stale" usually means "don't cache this", or cache with write-through and accept slower writes.
+4. **Is the database actually the bottleneck?** Check first. Sometimes an index (§6.5) or a better query (§6.6) removes the need for a cache entirely.
+5. **What happens when the cache is empty** (a restart, a deploy, an avalanche)? If the database can't survive full traffic without the cache, the cache has become critical infrastructure. It then needs replication, warming and stampede protection, and its own on-call attention.
+
+**Current note (2026):** Redis changed its licence in 2024, then returned to open source under AGPLv3 with Redis 8 in 2025. Meanwhile **Valkey**, a Linux Foundation fork of Redis 7.2, is widely offered by cloud providers. They're protocol-compatible for typical cache use, so the design advice here applies to both.
 
 ### 5.4 CDNs
 
@@ -522,9 +667,37 @@ Read the last column again: **going from 90% to 99% hits cuts database load by a
 
 **The problem.** If server A holds a user's session in memory, every request from that user must go to A. Scaling, deploys and crashes all break it.
 
-**How it works.** Make application servers **stateless**: any server can handle any request. Push the state out to a shared store (database, Redis), or into the request itself (a signed token such as a JWT). Then you can add, remove or replace servers freely, which is the foundation of autoscaling (Part 3 §5). The [earlier guide](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) compares server sessions and JWTs.
+**How it works.** Make application servers **stateless**: any server can handle any request. Push the state out to a shared store (database, Redis), or into the request itself (a signed token such as a JWT). Then you can add, remove or replace servers freely, which is the foundation of autoscaling (Part 3 §5.8).
+
+**Two ways to keep a logged-in user's session:**
+
+| | **Server-side session** | **Self-contained token (JWT)** |
+|---|---|---|
+| What the client holds | A random session ID in a cookie | A signed token containing the user ID, roles and expiry |
+| Each request | Look up the ID in a shared store (Redis, DB) | Verify the signature locally; no lookup |
+| Logout / revoke | **Instant**: delete the session | **Hard**: the token stays valid until it expires, unless you add a deny-list (which is a lookup again) |
+| Cost at scale | One fast store lookup per request | CPU for signature checks; no shared store on the hot path |
+| Size | Tiny cookie | Hundreds of bytes to a few KB on every request |
+| Best for | Web apps with a browser session; anything needing instant revocation | Service-to-service calls; APIs spanning many services; short-lived access tokens |
+
+The common modern answer combines them: a **short-lived access token** (a JWT valid for about 5–15 minutes, verified locally by every service) plus a **long-lived refresh token** kept server-side and revocable. Revoking the refresh token cuts a user off within one access-token lifetime. The token's expiry *is* your revocation delay, so choose it deliberately. Store browser tokens in `HttpOnly`, `Secure`, `SameSite` cookies rather than in JavaScript-readable storage, which cross-site scripting can steal (Part 3 §7.8).
 
 **The general principle:** *push state to the edges of the system and keep the middle stateless.* The state that remains (databases, queues, caches) is where all the hard problems of Part 2 live.
+
+### 5.6 Scaling up vs scaling out
+
+**The problem.** Load is growing. You can buy a bigger machine, or more machines. Each choice has a ceiling and a price.
+
+| | **Vertical scaling (scale up)** | **Horizontal scaling (scale out)** |
+|---|---|---|
+| How | Bigger machine: more cores, RAM, faster disks | More machines behind a load balancer, or data split across nodes |
+| Code changes | None | Services must be stateless; data must be partitioned or replicated |
+| Ceiling | The largest machine you can buy or rent | Very high, if the work divides cleanly (Part 3 §4.4) |
+| Failure | Still one machine: a single point of failure | Survives losing nodes, if designed to |
+| Cost curve | Rises steeply at the top end | Roughly linear, plus coordination overhead |
+| Complexity | Low | High for stateful parts (Part 2 is all about this) |
+
+**How to decide.** *Stateless tiers* (web and app servers) should scale out from day one. It's cheap, and it also gives you redundancy. *Stateful tiers* (databases) should usually **scale up first**: modern servers with hundreds of cores and terabytes of RAM take a single database a very long way. Add read replicas for read load. Shard only when a number forces you to, because sharding is close to a one-way door (§2.5). The mistake to avoid is distributing data early "for scale" and paying the complexity cost for years before the scale arrives.
 
 ---
 
@@ -702,6 +875,19 @@ Two traps:
 
 **The N+1 query problem** is the most common slow pattern in application code, and it doesn't show in any single query plan. An ORM loads 100 posts with one query, then lazily loads each post's author with *another* query: 101 round trips. At 0.5 ms each inside a datacenter, that's about 50 ms of pure network waiting. One join, or one batched `WHERE author_id IN (…)` query, does it in 1–2 round trips. The same problem appears in GraphQL resolvers (Part 3 §2.1).
 
+### 6.7 Choosing primary keys: a one-way door
+
+**The problem.** The primary key looks like a detail, but it's very hard to change later. It affects index performance, sharding, security and whether two systems can generate IDs independently.
+
+| Key type | How it works | Strengths | Weaknesses |
+|---|---|---|---|
+| **Auto-increment integer** | The database hands out 1, 2, 3… | Small (8 bytes), sequential, fast B-tree inserts | Needs one central counter, so it doesn't work across shards; it leaks business volume (order #1,000,042 tells competitors your sales); IDs are guessable |
+| **UUIDv4** (random, 128-bit) | Generated anywhere, no coordination | Unique without coordination; unguessable | **Random inserts scatter across the whole B-tree**: every insert touches a random page, which bloats the cache and slows writes as the table grows. 16 bytes per key in every index. |
+| **UUIDv7** (RFC 9562, 2024) | A 48-bit millisecond timestamp first, then random bits | Generated anywhere, *and* roughly time-ordered, so inserts append near the end of the B-tree like auto-increment | Reveals creation time; 16 bytes |
+| **Snowflake-style 64-bit** | Timestamp + machine ID + per-machine sequence | Time-ordered, compact (8 bytes), very fast | Needs machine IDs assigned; depends on clocks not going backwards (Part 3 §11.2 shows the bit layout) |
+
+**The reasoning.** B-trees love keys that arrive in order (§6.3): new rows go into the right-most page, which stays in memory. Random keys spread writes over every page. **Default choice in 2026:** UUIDv7 (or Snowflake-style IDs) for most new tables. PostgreSQL 18 added a built-in `uuidv7()` function. Use a separate random or opaque public identifier if you don't want to reveal creation time. One caution for sharded systems: a time-ordered key used as a **range** shard key sends all new writes to the newest shard (a hot spot, Part 2 §4.1). Hash the key for placement, or shard by something else (such as the tenant).
+
 ---
 
 ## 7. Data models and choosing a database
@@ -710,7 +896,7 @@ Two traps:
 
 ### 7.1 Relational (SQL)
 
-Data lives in tables of rows and columns with a fixed **schema**. Relations are expressed with foreign keys and combined with **joins**. **Normalisation** stores each fact once, which avoids update anomalies but needs joins to reassemble data. Relational databases give you powerful ad-hoc queries (SQL), strong transactions (§8) and decades of tooling. **PostgreSQL** is the default choice for new systems in 2026 for good reason: with extensions it also covers JSON documents (`jsonb`), full-text search, geospatial data (PostGIS) and vectors (`pgvector`).
+Data lives in tables of rows and columns with a fixed **schema**. Relations are expressed with foreign keys and combined with **joins**. **Normalisation** stores each fact once, which avoids update anomalies but needs joins to reassemble data. Relational databases give you powerful ad-hoc queries (SQL), strong transactions (§8) and decades of tooling. **PostgreSQL** is the default choice for new systems in 2026 for good reason: with extensions it also covers JSON documents (`jsonb`), full-text search, geospatial data (PostGIS) and vectors (`pgvector`). (Versions: PostgreSQL 18, released in 2025, added asynchronous I/O and native `uuidv7()`. PostgreSQL 19 is due in late 2026, with headline features such as SQL property-graph queries and better read-your-writes support on standbys.)
 
 ### 7.2 Document
 
@@ -736,7 +922,23 @@ Data is append-mostly measurements keyed by time (metrics, IoT sensors, prices):
 
 **The problem.** "Find documents containing *distributed* and *consensus*" by scanning every document is hopeless at scale.
 
-**How it works.** An **inverted index** maps each term to its **posting list**: the IDs (and positions) of the documents containing it. A query intersects posting lists, then **ranks** results, classically with BM25 (term frequency, inverse document frequency, length normalisation; see the [BM25 guide](../Theory/BM25%20-%20Keyword%20Search%20for%20AI%20Agents.md)). Text goes through **analysis** first: tokenising, lowercasing, stemming. Elasticsearch and OpenSearch (both built on Lucene) are the standard engines. They are usually *secondary* stores fed from the main database, not the source of truth.
+**How it works.** An **inverted index** maps each term to its **posting list**: the IDs (and positions) of the documents containing it, like the index at the back of a book. A query intersects posting lists, then **ranks** the matches. Text goes through **analysis** first: tokenising, lowercasing, stemming ("running" → "run").
+
+**Ranking with BM25**, the standard keyword-relevance formula:
+
+```math
+\text{score}(D, Q) = \sum_{q \in Q} \text{IDF}(q) \cdot \frac{f(q, D) \cdot (k_1 + 1)}{f(q, D) + k_1 \left(1 - b + b \cdot \frac{\lvert D \rvert}{\text{avgdl}}\right)}
+```
+
+*For each query word, multiply how rare the word is across all documents (IDF) by a saturating count of how often it appears in this document, adjusted for document length; then add over the query words.*
+
+The three ideas inside it:
+
+1. **Rare words matter more.** IDF is large for words in few documents ("Raft") and near zero for common ones ("the").
+2. **Repetition helps, but with diminishing returns.** $f(q, D)$ is how often the word appears in document $D$. The $k_1$ term (typically 1.2–2.0) makes the 10th occurrence add far less than the 2nd.
+3. **Long documents are penalised a little.** $\lvert D \rvert$ is the document's length and avgdl the average length; $b$ (typically 0.75) controls how much. Otherwise long documents would win just by containing more words.
+
+Elasticsearch and OpenSearch (both built on Lucene) are the standard engines. They are usually *secondary* stores fed from the main database, not the source of truth. In AI systems, BM25 is paired with vector search, because each finds what the other misses (Part 3 §9.4).
 
 ### 7.8 Vector databases
 
@@ -767,7 +969,67 @@ Object storage is cheap, extremely durable (S3 is designed for 11 nines of durab
 | Global SQL with strong consistency | Distributed SQL (Spanner, CockroachDB, YugabyteDB; Part 2) |
 | Semantic similarity | Vector index (pgvector first; dedicated if it outgrows it) |
 
-Big systems use several (**polyglot persistence**). The hard part then becomes keeping them in sync, which is what change data capture solves (Part 3 §2).
+Big systems use several (**polyglot persistence**). The hard part then becomes keeping them in sync, which is what change data capture solves (Part 3 §3.5).
+
+### 7.11 SQL vs NoSQL: thinking the decision through
+
+**The problem.** "SQL or NoSQL?" is one of the most common design questions, and one of the most commonly answered by habit. "NoSQL scales, SQL doesn't" was a reasonable rule of thumb in 2010. In 2026 it's mostly wrong, and believing it leads to expensive designs.
+
+**First, what the labels really mean.** "NoSQL" isn't one thing. It's four different families (key-value, document, wide-column, graph) that share only "not a relational table". The real differences that matter are these:
+
+| Dimension | Relational (SQL) | Typical NoSQL (key-value, document, wide-column) |
+|---|---|---|
+| **Data model** | Normalised tables + joins; any question can be asked later | Shaped around known access patterns; questions you didn't plan for are hard |
+| **Schema** | Enforced by the database; migrations needed (Part 3 §6.3) | Flexible per record; *the schema still exists*, but in your code, enforced by nobody |
+| **Transactions** | Multi-row, multi-table ACID by default | Often single-record or single-partition only; multi-item transactions are limited or slower |
+| **Query flexibility** | Ad-hoc SQL, joins, aggregations | Lookups by key or by pre-designed index; scans are expensive |
+| **Scaling writes** | One primary, scaled up first; sharding is manual or needs distributed SQL | Built-in partitioning; scales writes horizontally |
+| **Consistency** | Strong on the primary | Often tunable; eventual by default in leaderless systems (Part 2 §3.4) |
+| **Operations** | Mature tooling; vertical limits | Managed services can be nearly zero-ops (DynamoDB); self-run clusters (Cassandra) need expertise |
+
+**Three myths worth unlearning:**
+
+1. **"SQL doesn't scale."** A single PostgreSQL or MySQL primary on modern hardware handles thousands to tens of thousands of writes per second and far more reads with replicas. Very few products outgrow that. When they do, **distributed SQL** (Spanner, CockroachDB, YugabyteDB, TiDB) scales horizontally *and keeps SQL and transactions* (Part 2 §7, §11).
+2. **"NoSQL is schemaless, so it's more flexible."** The schema moves from the database into your application code, where nothing enforces it. Old records in old shapes accumulate, and every reader must handle every historical shape. That's flexibility for the writer and a cost for every reader.
+3. **"NoSQL is faster."** A key lookup is fast in any database with an index. NoSQL systems are *predictably* fast at the access patterns they were designed for, at very large scale. They're often slower, or unable to answer, for anything else.
+
+**Decision flow:**
+
+```mermaid
+flowchart TD
+    accTitle: SQL vs NoSQL decision flow
+    accDescr: Questions about transactions, query flexibility, write scale, data shape and team skills lead to relational, distributed SQL, or a specific NoSQL family.
+    S(["New data store needed"]) --> Q1{"Need multi-row<br/>transactions or joins?"}
+    Q1 -->|"yes"| Q2{"Fits one primary<br/>for 2–3 years?"}
+    Q2 -->|"yes"| PG(["Relational<br/>PostgreSQL / MySQL"])
+    Q2 -->|"no"| DSQL(["Distributed SQL<br/>Spanner, CockroachDB, YugabyteDB"])
+    Q1 -->|"no"| Q3{"Access patterns<br/>known and few?"}
+    Q3 -->|"no, ad-hoc queries"| PG
+    Q3 -->|"yes"| Q4{"What shape?"}
+    Q4 -->|"lookups by key,<br/>huge scale"| KV(["Key-value / DynamoDB"])
+    Q4 -->|"time-ordered rows<br/>per entity, heavy writes"| WC(["Wide-column<br/>Cassandra, ScyllaDB"])
+    Q4 -->|"whole nested records"| DOC(["Document store<br/>or Postgres jsonb"])
+    Q4 -->|"many-hop relationships"| GR(["Graph database"])
+    class S primary;
+    class Q1,Q2,Q3,Q4 intermediate;
+    class PG,DSQL,KV,WC,DOC,GR target;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+```
+
+**Worked decisions** (cover the answer and try each one first):
+
+| Situation | Choice | The deciding reason |
+|---|---|---|
+| Orders, payments, inventory for an online shop | **PostgreSQL** | Multi-row transactions and invariants ("stock never negative") need ACID; load fits one primary for years |
+| Chat messages for 500M users | **Wide-column** (partition by conversation, cluster by time) | Enormous append-heavy writes; the access pattern is fixed: "latest messages in conversation X" (a full chat design is in Part 3 §11.4) |
+| User sessions and rate-limit counters | **Key-value in memory** (Redis/Valkey) | Microsecond lookups; losing some data is acceptable; TTLs built in |
+| Product catalogue with varied attributes per category | **PostgreSQL with `jsonb`** for the variable attributes | You get flexible attributes *and* joins, transactions and SQL. A separate document database would add a second system for little gain. |
+| Global bank ledger across three continents | **Distributed SQL** | Needs both transactions and multi-region survival; the latency cost of consensus is accepted (Part 2 §5.4) |
+| Fraud detection over account–device–card links | **Graph** (or graph queries in SQL) | The question is "how are these connected, 4 hops out?", which is a graph traversal |
+
+**The deciding questions, in order:** (1) Do I need transactions across multiple items? (2) Do I know all my query patterns in advance, and are they few? (3) Will writes outgrow one primary within the planning horizon? (4) What does my team already run well? If the first answer is yes, start relational. If the second answer is yes *and* the third is yes, a NoSQL family that matches the shape is a strong choice.
 
 ---
 
@@ -882,11 +1144,11 @@ $$
 - Total memory: $9.59 \times 10^6$ bits ≈ **1.2 MB** (vs tens of MB to store the keys themselves).
 - Hash functions: $k = 9.59 \times 0.693 = 6.6$, so use **7**.
 
-![Fig 3 – Bloom filter false-positive rate (fig03_bloom_filter.png): false-positive rate against bits per key for k = 1, 3, 7 and the best k, with simulated points matching the theory.](../figures/system_design_theory/fig03_bloom_filter.png)
+![Fig 3 – Bloom filter false-positive rate (fig03_bloom_filter.png): false-positive rate against bits per key for k = 1, 3, 7 and the best k, with simulated points matching the theory.](images/fig03_bloom_filter.png)
 
 *Fig 3 (fig03_bloom_filter.png). The green curve is the best achievable rate. Red dots are measured from a simulation with 5,000 keys, and they sit on the theory line. Each extra ~4.8 bits per key cuts the false-positive rate 10×.*
 
-Code is useful here, because the whole structure fits in a few lines (from [system_design_theory.py](../code/system_design_theory.py)):
+Code is useful here, because the whole structure fits in a few lines (from [system_design_theory.py](code/system_design_theory.py)):
 
 ```python
 class BloomFilter:
@@ -958,7 +1220,7 @@ With $w = \lceil e/\varepsilon \rceil$ and $d = \lceil \ln(1/\delta) \rceil$, th
 
 ---
 
-## 10. Self-check
+## 10. Self-check and decision drills
 
 <details>
 <summary>1. A service gets 50 million requests a day with a peak factor of 4. What peak QPS do you design for?</summary>
@@ -1002,6 +1264,70 @@ An **LSM-based** store (wide-column or time-series): sequential writes, good com
 Points close together can sit on opposite sides of a cell boundary and share no prefix, so searching one cell misses them.
 </details>
 
+### Decision drills
+
+These have no single right answer. Write your decision and *the reason* before opening each one, then compare your reasoning, not just your conclusion. Each one uses the loop from §2.5.
+
+<details>
+<summary><b>Drill 1.</b> A three-person startup expects 2,000 orders a day. The CTO wants Cassandra and Kafka "so we're ready for scale". What do you recommend?</summary>
+
+**Quantify first:** 2,000 orders/day ÷ 86,400 ≈ 0.02 per second. Even 100× growth is 2 per second. **One PostgreSQL primary with a replica** handles that with enormous headroom, and orders need transactions (stock, payment state), which Cassandra makes hard.
+
+**Name the cost of the alternative:** Cassandra and Kafka are two distributed systems a team of three must run, monitor and be on call for, with no requirement that needs them.
+
+**Say what would change your mind:** "If we pass ~5,000 writes/s, or need multi-region writes, we revisit." Then add the cheap insurance now: UUIDv7 keys (§6.7), idempotent order creation, and a clean module boundary around orders, so a later move is possible.
+</details>
+
+<details>
+<summary><b>Drill 2.</b> Product pages take 800 ms. A teammate says "add Redis". What do you do first?</summary>
+
+**Measure where the 800 ms goes** before adding a component. Trace one request. Common findings: an N+1 query pattern (§6.6: 100 queries × 0.5 ms each, plus processing), a missing index (a Seq Scan in `EXPLAIN ANALYZE`), or a slow external call. Each has a cheaper fix than a cache.
+
+If the database really is the cost, then use the cache decision guide (§5.3): Is it read-heavy? Is the traffic skewed? How stale may a product page be (that's your TTL)? What happens when the cache is empty? A cache that hides an N+1 bug still has the bug on every miss.
+</details>
+
+<details>
+<summary><b>Drill 3.</b> Security requires that a compromised account is locked out within 1 minute. Your services use 1-hour JWT access tokens. What changes?</summary>
+
+A JWT can't be revoked before it expires (§5.5), so today the worst case is **60 minutes**. Options:
+
+1. **Shorten access tokens to ≤ 1 minute** with refresh tokens. Simple, but every client refreshes about once a minute, which adds load on the auth service.
+2. **Keep 5–15 minute tokens and add a deny-list check** (a fast key-value lookup of revoked token or user IDs) on each request. Revocation is near-instant, at the cost of one lookup, which is close to what server-side sessions cost anyway.
+3. **Server-side sessions** for the browser app, with tokens only between services.
+
+The interesting judgement: the requirement has quietly turned a stateless design into a stateful one. Say that out loud, and choose where the state lives.
+</details>
+
+<details>
+<summary><b>Drill 4.</b> You're creating the main tables of a multi-tenant SaaS product that will probably need sharding in two years. Which primary keys, and what will you shard by later?</summary>
+
+**Keys:** UUIDv7 (or Snowflake IDs). They're generated anywhere without a central counter (which sharding would break), they're time-ordered so B-tree inserts stay fast (§6.7), and they're not guessable like auto-increment IDs.
+
+**Future shard key:** `tenant_id`. Almost every query is "within one tenant", so a tenant's data stays together, and cross-shard queries become rare (Part 2 §4). Put `tenant_id` into every table and every index *now*, while it's cheap. Watch for one giant tenant becoming a hot shard; plan to move big tenants onto shards of their own.
+</details>
+
+<details>
+<summary><b>Drill 5.</b> Users in Australia say the app is slow. Servers are in Virginia, and server-side processing time is 40 ms. Will adding more servers help?</summary>
+
+**No.** The problem is physics, not capacity. A Sydney–Virginia round trip is about 200 ms (Fig 1), and a new HTTPS connection needs 2–3 round trips before the first response (§4.4). The 40 ms of processing is the small part.
+
+Fixes, cheapest first: a **CDN** for static assets and cacheable responses; **connection reuse** and HTTP/3; then **regional read replicas or edge compute** for read-heavy pages; and only if writes must also be fast there, multi-region writes, with all of Part 2's consistency costs (Part 3 §5.7).
+</details>
+
+<details>
+<summary><b>Drill 6.</b> A colleague wants to set every transaction to SERIALIZABLE "to be safe". Agree?</summary>
+
+**Partly.** Serializable prevents every anomaly (§8.3), so it's the right default for code that checks an invariant across rows (bookings, on-call rotas, balances). But it costs throughput, and it **aborts** conflicting transactions, so *every* caller needs a retry loop. Code without one turns the aborts into user-facing errors.
+
+A more precise policy: use **atomic updates** for simple counters (`likes = likes + 1`), **unique constraints** for uniqueness, **SERIALIZABLE (with retries)** for multi-row invariants, and the database default (read committed) for simple reads. That's deciding per path, not everywhere.
+</details>
+
+<details>
+<summary><b>Drill 7.</b> The analytics team wants to run heavy hourly reports directly against the production PostgreSQL primary. What do you say?</summary>
+
+Heavy scans compete with user transactions for CPU, I/O and the buffer cache. Long-running queries also hold back cleanup (VACUUM), so tables bloat. **Protect the primary.** Options: (1) a **dedicated read replica** for reporting, cheap and quick, with a lag of seconds; (2) **change data capture into a columnar warehouse** (Part 3 §3.5 and §8) when reports grow, since columnar storage is far faster for this work. Choose by how fresh the reports must be and how heavy they'll get.
+</details>
+
 ---
 
 ## 11. Glossary
@@ -1009,6 +1335,11 @@ Points close together can sit on opposite sides of a cell boundary and share no 
 | Term | Meaning |
 |---|---|
 | **NFR** | Non-functional requirement: how well (latency, availability, durability, cost…) |
+| **One-way / two-way door** | A decision that's expensive / cheap to reverse |
+| **Premortem** | Imagining a future failure to find its likely causes now |
+| **Zipf distribution** | Popularity where rank r gets traffic ∝ 1/rˢ; makes small caches effective |
+| **UUIDv7** | Time-ordered 128-bit ID (RFC 9562); B-tree-friendly |
+| **Power of two choices** | Pick two random servers, use the less loaded one |
 | **QPS / RPS** | Queries / requests per second |
 | **p99** | 99th percentile: 99% of requests are at least this fast |
 | **RTT** | Round-trip time: there and back over the network |
@@ -1056,5 +1387,10 @@ Points close together can sit on opposite sides of a cell boundary and share no 
 - RFC 9000 (QUIC), RFC 9114 (HTTP/3), RFC 8446 (TLS 1.3), RFC 6928 (TCP initial window of 10).
 - On post-quantum TLS adoption (2026): [Post-quantum TLS: what's actually shipping in 2026](https://unveilscan.unveiltech.com/blog/post-quantum-tls.html); NIST FIPS 203 (ML-KEM).
 - Latency figures after Jeff Dean's "Numbers Everyone Should Know" and Colin Scott's interactive update.
+- Michael Mitzenmacher, "The Power of Two Choices in Randomized Load Balancing", *IEEE TPDS*, 2001.
+- Lee Breslau et al., "Web Caching and Zipf-like Distributions: Evidence and Implications", INFOCOM 1999.
+- Stephen Robertson and Hugo Zaragoza, "The Probabilistic Relevance Framework: BM25 and Beyond", 2009.
+- RFC 9562 (UUIDs, including UUIDv7), 2024. RFC 7519 (JSON Web Token).
+- Redis 8 relicensing under AGPLv3: [The Register, May 2025](https://www.theregister.com/2025/05/01/redis_returns_to_open_source/); PostgreSQL 19 beta notes: [postgresql.org](https://postgresql.org/about/news/postgresql-19-beta-1-released-3313/).
 
 **Next:** [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md), where many machines must agree on what is true.

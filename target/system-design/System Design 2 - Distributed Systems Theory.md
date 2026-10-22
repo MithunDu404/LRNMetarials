@@ -1,8 +1,9 @@
 # System Design 2: Distributed Systems Theory
 
 > **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · **Part 2 (this file)** · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
-> **Source:** built from research: the classic papers (Lamport, FLP, Dynamo, Raft, Spanner, SWIM, CRDTs), Kleppmann and Riccomini's *DDIA* 2nd edition, and the MIT 6.5840 course. Full list in [References](#14-references). Every number recomputed with Python; figures from [make_figs.py](../figures/system_design_theory/make_figs.py); code from [system_design_theory.py](../code/system_design_theory.py).
-> **Facts re-checked:** 21 October 2026.
+> **Source:** built from research: the classic papers (Lamport, FLP, Dynamo, Raft, Spanner, SWIM, CRDTs), Kleppmann and Riccomini's *DDIA* 2nd edition, and the MIT 6.5840 course. Full list in [References](#14-references). Every number recomputed with Python; figures from [make_figs.py](images/make_figs.py); code from [system_design_theory.py](code/system_design_theory.py).
+> **Self-contained:** the four parts in this folder need nothing else; Part 1 §2.5 explains the decision method the drills here practise.
+> **Facts re-checked:** 22 October 2026.
 
 **The big picture:** once data lives on more than one machine, machines can crash, messages can be lost or delayed, and clocks disagree. This part teaches how systems still keep copies in sync (replication), split data up (partitioning), define what "correct" means (consistency models), order events without a shared clock, agree on decisions (consensus), and stay correct across failures (transactions, idempotency, CRDTs, gossip).
 
@@ -24,7 +25,7 @@ Diagram colours: 🔵 input / primary · 🟣 processing · 🟢 result · 🟠 
 9. [CRDTs: convergence without coordination](#9-crdts-convergence-without-coordination)
 10. [Failure detection, gossip and anti-entropy](#10-failure-detection-gossip-and-anti-entropy)
 11. [Putting it together: how real systems choose](#11-putting-it-together-how-real-systems-choose)
-12. [Self-check](#12-self-check)
+12. [Self-check and decision drills](#12-self-check-and-decision-drills)
 13. [Glossary](#13-glossary)
 14. [References](#14-references)
 
@@ -248,7 +249,7 @@ With $p = 0.99$:
 | $N=3$, majority 2 | 0.999702 | 0.03% |
 | $N=5$, majority 3 | 0.99999015 | 0.001% |
 
-![Fig 4 – Quorum availability (fig04_quorum_availability.png): probability that an operation is unavailable, against single-node availability, for 1 node, N=3 needing all, N=3 majority and N=5 majority.](../figures/system_design_theory/fig04_quorum_availability.png)
+![Fig 4 – Quorum availability (fig04_quorum_availability.png): probability that an operation is unavailable, against single-node availability, for 1 node, N=3 needing all, N=3 majority and N=5 majority.](images/fig04_quorum_availability.png)
 
 *Fig 4 (fig04_quorum_availability.png). Requiring **all** replicas makes things worse than a single node. Requiring a **majority** makes things far better. This assumes independent failures. Correlated failures (one rack, one region, one bad deploy) are why replicas are spread across failure domains.*
 
@@ -259,6 +260,18 @@ With $p = 0.99$:
 - **Sloppy quorums and hinted handoff**: if some home replicas are unreachable, accept the write on *other* nodes temporarily with a "hint", and hand it back later. Writes stay available, but $R + W > N$ no longer guarantees overlap with the home replicas.
 
 > **Quorums are not linearizability.** Even with $R + W > N$, concurrent writes, partial write failures (a write that reached only 1 of the required 2) and LWW conflict resolution can produce non-linearizable results. Quorums give "probably fresh", not "behaves like one copy". For that you need consensus (§7).
+
+### 3.5 Decision guide: which replication strategy?
+
+| Ask yourself… | If yes → | Because |
+|---|---|---|
+| Do writes need a single, clear order (balances, inventory, uniqueness)? | **Single-leader** (with consensus-based failover) | One place decides the order; no conflicts to merge |
+| Must writes be accepted in several regions, or offline, with low latency? | **Multi-leader**, or leaderless with CRDTs (§9) | Local writes are fast and available, but you *must* design conflict resolution |
+| Is it high-volume data where availability beats perfect freshness (carts, sensor data, likes)? | **Leaderless** with tunable quorums | No failover pause; per-request R/W choice |
+| Can you tolerate losing the last few seconds of writes in a failover? | Async replication is fine | Faster writes |
+| Must an acknowledged write *never* be lost? | Synchronous (or semi-synchronous) replication to at least one other zone, or consensus | The write exists in two places before you say "OK" |
+
+**The question people forget:** *what happens to writes during a failover?* For each dataset, write down the answer: "the last ~1 s of writes may be lost", "nothing is lost but writes pause ~10 s", or "both sides accept writes and we merge". If nobody can answer, the system will answer for you, during an incident.
 
 ---
 
@@ -285,13 +298,13 @@ A common hybrid is a **compound key**: hash the first part, sort by the second. 
 
 **Consistent hashing** (Karger et al., 1997) places both servers and keys on a ring of hash values ($0$ to $2^{m}-1$). Each key belongs to the first server clockwise from it. When a server joins, it takes keys only from its clockwise neighbour, about $1/(N+1)$ of the total.
 
-![Fig 5 – Keys moved when adding a server (fig05_rehash_moved.png): fraction of keys that must move with hash mod N versus consistent hashing, for N from 2 to 20.](../figures/system_design_theory/fig05_rehash_moved.png)
+![Fig 5 – Keys moved when adding a server (fig05_rehash_moved.png): fraction of keys that must move with hash mod N versus consistent hashing, for N from 2 to 20.](images/fig05_rehash_moved.png)
 
 *Fig 5 (fig05_rehash_moved.png). At 10 → 11 servers, modulo moves 90.9% of keys. Consistent hashing moves about 9.1%. Moving data is the expensive part of scaling, so this difference is everything.*
 
 **Virtual nodes.** With one point per server, the ring's arcs are random lengths, and one server can easily get nearly twice its fair share. The fix: give each server many points (**virtual nodes**). More points mean arcs average out. It also lets a bigger machine take more points, and spreads a failed server's load across *all* survivors instead of dumping it on one neighbour.
 
-![Fig 6 – Virtual nodes balance the ring (fig06_vnode_balance.png): load of the busiest of 10 servers divided by the average, as virtual nodes per server go from 1 to 400.](../figures/system_design_theory/fig06_vnode_balance.png)
+![Fig 6 – Virtual nodes balance the ring (fig06_vnode_balance.png): load of the busiest of 10 servers divided by the average, as virtual nodes per server go from 1 to 400.](images/fig06_vnode_balance.png)
 
 *Fig 6 (fig06_vnode_balance.png). Simulation with 10 servers and 60,000 keys: with 1 point each, the busiest server carries 1.87× the average. At 100 points it carries 1.12×, and at 200 about 1.06×.*
 
@@ -409,6 +422,26 @@ The "else" half is the trade-off you make on *every request*. Even with a perfec
 
 **Worked example: the latency side of PACELC.** You run 3 replicas in Virginia, Oregon and Frankfurt, with the leader in Virginia. RTTs from Virginia: Oregon ≈ 70 ms, Frankfurt ≈ 90 ms. A majority write needs the leader plus **one** follower, so it waits for the *fastest* follower: ≈ 70 ms. With 5 replicas (leader + 4), it needs 2 followers, so it waits for the *second-fastest*. **Where you place replicas sets your write latency.** Many systems therefore keep a majority inside one region and accept losing it if that region fails, or they pick a 3-region layout carefully.
 
+### 5.5 Decision guide: choosing consistency per operation
+
+**The core idea:** consistency isn't a setting for the whole system. It's a decision for **each operation**, based on what goes wrong if that operation sees stale or out-of-order data. Strong consistency on everything is slow and fragile. Eventual consistency on everything produces bugs that are very hard to find. Good designs are deliberately mixed.
+
+**Ask for each operation: "If this read is stale, or this write is applied twice or out of order, what is the worst outcome?"**
+
+| Operation | Worst outcome if stale or misordered | What it needs |
+|---|---|---|
+| Debit an account, reserve the last seat, claim a username | Money lost, double-sold seat, two owners | **Linearizable** (or serializable): a single leader, consensus, or a conditional write on one primary |
+| Check a permission after it was revoked | A removed user still gets access | **Linearizable**, or bounded staleness with a short, known bound (Part 3 §7.3) |
+| User sees their own new post or setting | User thinks the save failed and does it again | **Read-your-writes** (§3.2), which is cheap |
+| Comment threads, chat | A reply shows before its question | **Causal** consistency (§5.2) |
+| Like counts, view counts, recommendations | A number is a little off for a few seconds | **Eventual** is fine |
+| Analytics dashboards | Yesterday's numbers are a few minutes late | Eventual; sometimes hours of delay are fine |
+
+**Two practical rules:**
+
+1. **Make the strongly consistent part as small as possible.** Keep the invariant inside *one* record or *one* partition when you can (one seat row, one account row), so a single-node atomic operation enforces it without cross-node coordination.
+2. **Make the weaker guarantees explicit in the product.** "Counts update within a minute" is a fine product decision. "Counts are sometimes wrong and nobody knows why" is a bug.
+
 ---
 
 ## 6. Time and ordering
@@ -469,7 +502,7 @@ $$
 
 *a happened before b exactly when a's vector is less than or equal to b's in every entry and different in at least one.* Unlike Lamport clocks, this works in both directions.
 
-This is short enough that code makes it concrete (from [system_design_theory.py](../code/system_design_theory.py)):
+This is short enough that code makes it concrete (from [system_design_theory.py](code/system_design_theory.py)):
 
 ```python
 def vc_merge(a, b):
@@ -608,6 +641,18 @@ sequenceDiagram
 **Also part of Raft:** membership changes (joint consensus, or single-server changes) and log compaction via snapshots.
 
 **The cost.** Each write costs one round trip from the leader to a majority, plus disk fsyncs. All writes funnel through one leader. Systems scale this by running **many independent Raft groups**, one per data range: CockroachDB, TiKV and YugabyteDB run thousands of them ("multi-Raft").
+
+**Reads: the part most explanations skip.** Writes go through the log, but what about reads? Answering a read straight from the leader's memory is **not automatically linearizable**. The reason: a leader that has just been cut off by a partition may not know it has been replaced. It would happily serve old data while a new leader on the other side accepts writes. Raft systems use one of these:
+
+| Read method | How it stays correct | Cost |
+|---|---|---|
+| **Log read** | Put the read through the log like a write | A full replication round trip and a disk write: slow |
+| **ReadIndex** | The leader records its commit index, sends a heartbeat round to confirm a majority still accepts it as leader, waits until it has applied up to that index, then answers | One network round trip, no disk write. etcd's default linearizable reads work this way. |
+| **Lease read** | After a successful heartbeat round, the leader assumes nobody else can be elected for a time window shorter than the election timeout, and answers locally | No extra round trip, but correctness now depends on **bounded clock drift**. Fast, slightly riskier. |
+| **Follower read** | A follower asks the leader for the current commit index (ReadIndex), waits until it has applied that far, then answers | Spreads read load across followers; still linearizable |
+| **Stale (bounded) read** | Read from any replica as of a timestamp a few seconds old | Fastest, served locally even across regions; explicitly *not* the latest (CockroachDB's `AS OF SYSTEM TIME`, etcd's serializable reads) |
+
+This is PACELC (§5.4) in miniature: each row trades latency for freshness. The right choice depends on the operation (§5.5).
 
 ### 7.5 What consensus is used for
 
@@ -750,6 +795,25 @@ The client was charged once. In a real service, the "check key, then act" must b
 
 - **Deduplication by sequence number**: a consumer remembers the last offset or message ID processed per producer or partition, and skips anything older. Kafka's idempotent producer and transactions use this to give exactly-once semantics *inside* Kafka's read-process-write pipelines.
 
+### 8.6 Decision guide: do you need a distributed transaction at all?
+
+**The best distributed transaction is the one you designed away.** Work down this list and stop at the first option that meets the requirement:
+
+1. **Put the invariant in one place.** If "an order and its line items must change together", keep them in the same database, or the same partition (an *aggregate*, Part 3 §10.2). Then an ordinary local transaction does it. Most "we need distributed transactions" problems are really service or shard boundaries drawn in the wrong place.
+2. **Use a single atomic operation or conditional write** on one record (compare-and-set, Part 1 §8.5).
+3. **Use the outbox pattern** (§8.4) when the requirement is "change the database *and* tell others about it".
+4. **Use a saga** (§8.3) when steps span services or companies and intermediate states can be made safe (PENDING statuses) and undone (compensations).
+5. **Use real cross-partition ACID**, meaning 2PC run over consensus groups, when you truly need atomic, isolated changes across partitions. Buy it from a distributed SQL database (Spanner, CockroachDB, YugabyteDB, TiDB) rather than building it.
+6. **Avoid** XA-style 2PC across heterogeneous systems you don't control (a database plus a message broker plus a third-party API). Its blocking failure mode (§8.2) will eventually stall production.
+
+| Requirement | Natural fit |
+|---|---|
+| "Order + items saved together" | One local transaction (same aggregate) |
+| "Save order, then emit OrderCreated" | Outbox + CDC |
+| "Book flight + hotel + charge card" | Saga with compensations |
+| "Move money between accounts on different shards, never inconsistent" | Distributed SQL transaction |
+| "Update our DB and a partner's API atomically" | Impossible to make truly atomic; saga + idempotency + reconciliation |
+
 ---
 
 ## 9. CRDTs: convergence without coordination
@@ -813,7 +877,7 @@ $$
 
 **Worked example.** N = 1,000: $\log_2 1000 + \ln 1000 = 9.97 + 6.91 \approx 17$ rounds. Simulated: 18.0 rounds on average. N = 100,000: theory ≈ 28, simulated 29.6. **100× more nodes costs only ~12 more rounds**, and each node sends a constant number of messages per round.
 
-![Fig 7 – Gossip spread (fig07_gossip_spread.png): fraction of nodes informed per gossip round for clusters of 100, 1,000 and 10,000 nodes, 15 simulated runs each.](../figures/system_design_theory/fig07_gossip_spread.png)
+![Fig 7 – Gossip spread (fig07_gossip_spread.png): fraction of nodes informed per gossip round for clusters of 100, 1,000 and 10,000 nodes, 15 simulated runs each.](images/fig07_gossip_spread.png)
 
 *Fig 7 (fig07_gossip_spread.png). The S-shaped curves: slow start, explosive middle, slow tail (finding the last few uninformed nodes takes several rounds). Each 10× more nodes shifts the curve right by only a few rounds.*
 
@@ -844,7 +908,7 @@ $$
 
 ---
 
-## 12. Self-check
+## 12. Self-check and decision drills
 
 <details>
 <summary>1. N = 5 replicas. Pick R and W so reads always overlap the latest write and up to 2 nodes can fail for both reads and writes.</summary>
@@ -900,6 +964,65 @@ The relay can publish and then crash before marking the row sent, so it publishe
 Commutative (order of arrival doesn't matter), associative (grouping of merges doesn't matter), idempotent (duplicates don't matter). Together they guarantee convergence under any delivery pattern.
 </details>
 
+### Decision drills
+
+Commit to an answer and a reason before opening each one (method: Part 1 §2.5).
+
+<details>
+<summary><b>Drill 1.</b> A team stores product stock counts in Cassandra with QUORUM reads and writes, and decrements stock on purchase. During a flash sale they oversell by 3%. Why, and what would you change?</summary>
+
+**Why:** quorums aren't linearizable (§3.4). Two buyers can both read "stock = 1" from overlapping quorums and both write "stock = 0". Last-writer-wins then keeps one write and silently drops the other, so two items are sold. A read-modify-write over quorums is the lost-update anomaly (Part 1 §8.2) in distributed form.
+
+**Fixes, by cost:** (1) make the decrement a **conditional write** on a linearizable path (Cassandra's lightweight transactions use Paxos: `UPDATE … IF stock = 1`); (2) keep inventory in a **single-leader** store (one PostgreSQL row per SKU with `UPDATE … SET stock = stock - 1 WHERE stock > 0`); (3) for extreme rates, split stock into **pre-allocated shards** per server, each decremented locally. Rule (§5.5): *invariants need linearizable writes; counters you only display don't.*
+</details>
+
+<details>
+<summary><b>Drill 2.</b> A nightly billing job uses a Redis lock (<code>SET key NX PX 30000</code>) so only one worker runs it. About once a month, customers are billed twice. What's happening?</summary>
+
+A worker took the lock, then paused (GC, VM migration, a slow network) for more than 30 s. The lock expired, a second worker took it, and both billed (§2.5, §7.6). A lock with a timeout can't guarantee mutual exclusion on its own.
+
+**Fix:** make correctness **not depend on the lock**. Make billing **idempotent** per (customer, period) with a unique constraint, so a second run changes nothing (§8.5). Optionally add a **fencing token** from a consensus-backed lock service (etcd), which storage checks. Keep the Redis lock only as an efficiency measure, to avoid duplicate work.
+</details>
+
+<details>
+<summary><b>Drill 3.</b> Someone proposes a 5-node etcd cluster with one node in each of 5 regions, "for maximum availability". Writes now take 150 ms. Good design?</summary>
+
+It depends on what it stores. Each write waits for the leader plus **2** followers, which means the second-fastest cross-region round trip (§5.4). For rarely-changing **global configuration**, 150 ms writes may be perfectly fine, and surviving 2 region failures is valuable.
+
+For anything on a request path, it's a poor fit. Better: **3 nodes in three nearby regions** (or three zones of one region) for low-latency consensus, plus read-only **caches or watchers** in the other regions. The decision hinges on write frequency × latency sensitivity, versus how many simultaneous region failures you must survive.
+</details>
+
+<details>
+<summary><b>Drill 4.</b> Orders and Payments are separate services with separate databases. The product manager wants "an order exists only if its payment succeeded", atomically. What do you propose?</summary>
+
+True atomicity across two services and an external payment provider isn't available (§8.6, last row). Two good options:
+
+1. **Saga with an explicit state**: create the order as `PENDING_PAYMENT`, charge (with an idempotency key), then mark it `CONFIRMED` or `CANCELLED`. Other features simply ignore PENDING orders. That's a *semantic* guarantee that meets the product need.
+2. **Question the boundary**: if orders and payments are always created together and owned by one team, maybe they belong in one service and one database, and then it's a local transaction.
+
+The skill here is translating "atomically" into what the user must actually never see: a confirmed order without a payment.
+</details>
+
+<details>
+<summary><b>Drill 5.</b> A multi-region user-profile store uses last-writer-wins. Users report that edits made on their phone "disappear" when they also edit on their laptop. Diagnose and fix.</summary>
+
+**LWW keeps one whole record and discards the other**, even when the two edits changed *different* fields (a name on the phone, an avatar on the laptop). Clock skew (§6.1) can even make the older edit win.
+
+**Fixes:** merge **per field** (each field is its own LWW register, a simple CRDT map, §9), so different-field edits both survive. Or route each user's writes to their **home region** so they're ordered by one leader. Reserve whole-record LWW for data where losing a concurrent write is truly harmless.
+</details>
+
+<details>
+<summary><b>Drill 6.</b> In a 1,000-node cluster, a 2-second heartbeat timeout causes several false "node dead" events a day during GC pauses, each triggering data rebalancing. What do you change?</summary>
+
+False positives here are expensive (rebalancing load can cascade, §10.1). Options: switch to an **adaptive detector** (φ-accrual, §10.2) that learns normal jitter; use **SWIM-style indirect probes** (§10.3) so one bad link doesn't condemn a node; **separate "suspected" from "dead"**, delaying expensive actions such as data movement for minutes while routing traffic away at once; and fix the root cause (GC tuning). The deeper principle: *make cheap reactions fast and expensive reactions slow.*
+</details>
+
+<details>
+<summary><b>Drill 7.</b> You shard a SaaS database by <code>tenant_id</code>. One customer grows to 40% of all traffic, and its shard is overloaded. Options?</summary>
+
+Hashing balances *keys*, not *load* (§4.4). Options: (1) move the big tenant to **dedicated shards** (or its own cell, Part 3 §5.6), which also isolates its noise from others; (2) **sub-partition inside that tenant** by a second key (such as project ID), using a compound key: `(tenant_id, project_id)`; (3) add read replicas if the load is mostly reads. Don't re-shard everyone by a new key because of one tenant: that's a far bigger, riskier change than the problem requires.
+</details>
+
 ---
 
 ## 13. Glossary
@@ -934,6 +1057,8 @@ Commutative (order of arrival doesn't matter), associative (grouping of merges d
 | **Term (Raft)** | Numbered leadership epoch; at most one leader per term |
 | **Commit (Raft)** | Entry stored on a majority; never lost after that |
 | **Lease** | Time-limited lock |
+| **ReadIndex / lease read** | Linearizable Raft reads via a heartbeat round / via a time-bounded leadership lease |
+| **Follower / stale read** | Reading from a replica after catching up / at an older timestamp on purpose |
 | **Fencing token** | Increasing number that lets storage reject stale lock holders |
 | **BFT** | Byzantine fault tolerance; needs $3f + 1$ nodes |
 | **2PC** | Two-phase commit: prepare (vote) then commit/abort |

@@ -1,13 +1,30 @@
-"""Figures for the three-part 'System Design' theory guides in target/.
+"""Figures for the four-part 'System Design' guide (target/system-design/).
 Every figure is computed from a formula or a simulation; toy assumptions are written on the figure.
-Run:  py -3.12 figures/system_design_theory/make_figs.py
+Self-contained: needs only numpy and matplotlib. Writes the PNGs next to this script.
+Run (from anywhere):  py -3.12 target/system-design/images/make_figs.py
 """
-import sys, os, hashlib, bisect, random
+import os, hashlib, bisect, random
+from collections import OrderedDict
 from math import comb, log, exp
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from _style import *
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
-OUT = out_dir(__file__)
+BLUE, RED, GREEN, AMBER = "#2563eb", "#dc2626", "#16a34a", "#d97706"
+PURPLE, GRAY, LIGHT = "#7c3aed", "#6b7280", "#e5e7eb"
+plt.rcParams.update({
+    "figure.dpi": 150, "savefig.bbox": "tight", "savefig.facecolor": "white",
+    "font.size": 10, "axes.spines.top": False, "axes.spines.right": False,
+    "axes.titleweight": "bold", "axes.titlesize": 11, "legend.frameon": False,
+})
+OUT = os.path.dirname(os.path.abspath(__file__))
+
+
+def save(fig, out, name):
+    fig.savefig(os.path.join(out, name))
+    plt.close(fig)
+    print("wrote", name)
 random.seed(7)
 rng = np.random.default_rng(7)
 
@@ -228,7 +245,42 @@ def fig12_kv():
     save(fig, OUT, "fig12_kv_cache.png")
 
 
+def fig13_zipf_cache():
+    N = 100_000
+    ranks = np.arange(1, N + 1, dtype=float)
+    frac = np.logspace(-4, 0, 60)                     # cache size as a fraction of all items
+    fig, ax = plt.subplots(figsize=(7.5, 4.3))
+    for s, c in [(0.8, AMBER), (1.0, BLUE), (1.2, GREEN)]:
+        w = ranks ** -s; cum = np.cumsum(w) / w.sum()
+        ax.plot(frac * 100, [cum[max(0, int(f * N) - 1)] * 100 for f in frac], color=c, lw=2,
+                label=f"ideal cache, Zipf s = {s}")
+    ax.plot(frac * 100, frac * 100, color=GRAY, ls=":", label="uniform traffic (no skew)")
+    # LRU simulation at s = 1.0 on the same 100k-item catalogue, to show the real-policy gap
+    n2 = 100_000; r2 = np.arange(1, n2 + 1, dtype=float); p2 = r2 ** -1.0; p2 /= p2.sum()
+    reqs = rng.choice(n2, size=400_000, p=p2)
+    xs, ys = [], []
+    for f in [0.001, 0.01, 0.05, 0.2]:
+        cap = int(f * n2); lru = OrderedDict(); hits = 0
+        for i, k in enumerate(reqs):
+            if k in lru:
+                lru.move_to_end(k)
+                if i >= 100_000: hits += 1
+            else:
+                lru[k] = 1
+                if len(lru) > cap: lru.popitem(last=False)
+        xs.append(f * 100); ys.append(hits / 300_000 * 100)
+    ax.scatter(xs, ys, color=RED, zorder=5, s=30, label="real LRU, s = 1.0 (simulated)")
+    ax.set_xscale("log"); ax.set_xlabel("Cache size (% of all items, log scale)")
+    ax.set_ylabel("Hit ratio (%)"); ax.set_ylim(0, 102); ax.grid(alpha=0.3)
+    ax.legend(fontsize=8, loc="upper left")
+    ax.set_title("Skewed traffic: a tiny cache serves most requests")
+    note_txt = "Zipf: item of rank r is requested ∝ 1/rˢ.\nIdeal = always holds the top items (100k-item catalogue)."
+    ax.text(0.98, 0.04, note_txt, transform=ax.transAxes, fontsize=8, color=GRAY, ha="right", va="bottom",
+            bbox=dict(fc="white", ec=LIGHT, pad=3))
+    save(fig, OUT, "fig13_zipf_cache.png")
+
+
 if __name__ == "__main__":
     for f in [fig01_latency_ladder, fig02_handshakes, fig03_bloom, fig04_quorum, fig05_rehash, fig06_vnodes,
-              fig07_gossip, fig08_mm1, fig09_scaling, fig10_fanout, fig11_jitter, fig12_kv]:
+              fig07_gossip, fig08_mm1, fig09_scaling, fig10_fanout, fig11_jitter, fig12_kv, fig13_zipf_cache]:
         f()

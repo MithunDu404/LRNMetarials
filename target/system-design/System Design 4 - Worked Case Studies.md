@@ -1,8 +1,9 @@
 # System Design 4: Worked Case Studies
 
 > **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) · **Part 4 (this file)**
-> **Source:** built from research (references at the end) and from the theory in Parts 1–3, which every design links back to. Every estimate was recomputed with Python. Code from [system_design_theory.py](../code/system_design_theory.py).
-> **Facts re-checked:** 21 October 2026.
+> **Source:** built from research (references at the end) and from the theory in Parts 1–3, which every design links back to. Every estimate was recomputed with Python. Code from [system_design_theory.py](code/system_design_theory.py).
+> **Self-contained:** the four parts in this folder need nothing else. Part 1 §2.5 explains the decision method used throughout.
+> **Facts re-checked:** 22 October 2026.
 
 **The big picture:** theory only counts when you can use it on a blank page. This part works through eight more systems with the same 8-step method from [Part 3 §11](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md). Part 3 already did the URL shortener, news feed and chat. Each design here is chosen because it tests a *different* hard idea.
 
@@ -23,7 +24,8 @@ Diagram colours: 🔵 input / primary · 🟣 processing · 🟢 result · 🟠 
 8. [Ride matching (proximity in real time)](#8-ride-matching-proximity-in-real-time)
 9. [ChatGPT-style chat service and LLM gateway](#9-chatgpt-style-chat-service-and-llm-gateway)
 10. [The patterns that keep coming back](#10-the-patterns-that-keep-coming-back)
-11. [References](#11-references)
+11. [Decision drills: change the requirements](#11-decision-drills-change-the-requirements)
+12. [References](#12-references)
 
 ---
 
@@ -92,7 +94,7 @@ Use this for every design (explained in [Part 3 §11.1](System%20Design%203%20-%
 
 ### The algorithm choice
 
-The [earlier guide](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) simulates the main algorithms. In summary:
+Five algorithms are in common use:
 
 | Algorithm | State per key | Behaviour | Weakness |
 |---|---|---|---|
@@ -110,7 +112,7 @@ $$
 
 *Before each request, refill the bucket by the rate r times the seconds since the last update, capped at the capacity C. If at least one token remains, take it and allow the request.*
 
-The refill is computed **lazily**, at check time. There's no background timer per key, which is what makes 10M keys cheap. Running the demo from [system_design_theory.py](../code/system_design_theory.py) with $C = 10$ and $r = 5$/s:
+The refill is computed **lazily**, at check time. There's no background timer per key, which is what makes 10M keys cheap. Running the demo from [system_design_theory.py](code/system_design_theory.py) with $C = 10$ and $r = 5$/s:
 
 ```python
 class TokenBucket:
@@ -666,7 +668,82 @@ Across all eleven designs (eight here, three in Part 3), the same few ideas solv
 
 ---
 
-## 11. References
+## 11. Decision drills: change the requirements
+
+Real projects rarely keep their first requirements. The skill that separates senior designers is **re-deciding well when a requirement changes**: seeing which parts of the design survive, which break, and what the new trade-off is. Each drill changes one requirement of a design above. Decide before opening each one (method: Part 1 §2.5).
+
+<details>
+<summary><b>Drill 1 (rate limiter).</b> The limit is now a paid quota: "exactly 1,000,000 API calls per month per customer, across all three regions". Approximate is no longer acceptable.</summary>
+
+What breaks: per-region allowances (§2) are approximate by design. Options:
+
+1. **One global counter** in a single region. Exact, but every check from far regions pays 80–200 ms. Unacceptable on the request path.
+2. **Leased allocations**: a central quota service hands each region a block of the quota (say 10,000 calls) and gives more as blocks are used. Checks stay local and fast. The total can never exceed the quota. The only cost is up to one unused block per region near the limit. **This is the usual answer.**
+3. Accept a small overshoot and **reconcile in billing** afterwards.
+
+The reframe that helps: "exact" in billing usually means *never charge for more than the quota*. That's satisfied by option 2, or by option 3 plus a billing cap.
+</details>
+
+<details>
+<summary><b>Drill 2 (key-value store).</b> A new client needs compare-and-set ("write only if the current version is 7") on some keys, with no lost updates.</summary>
+
+The leaderless, last-writer-wins design can't provide this (Part 2 §3.4: quorums aren't linearizable). Add a **linearizable path for those operations only**: per-key Paxos, as Cassandra's lightweight transactions do, or route those keys to consensus-replicated ranges (Raft per range). Ordinary reads and writes keep the fast path. Then *document* the cost: CAS operations take several round trips and are slower under contention. That's the per-operation consistency choice (Part 2 §5.5).
+</details>
+
+<details>
+<summary><b>Drill 3 (payments).</b> The company expands to the EU and US. Payment data must stay in its jurisdiction, and a whole-region outage must not lose any acknowledged payment.</summary>
+
+1. **Partition by merchant home region** (Part 3 §5.7): EU merchants' ledgers live only in EU regions. That satisfies residency and keeps ledgers independent.
+2. **"No acknowledged payment lost if a region fails"** means RPO = 0 across regions. Within a jurisdiction, use **synchronous replication or consensus across two or three EU regions** (distributed SQL, or a database with synchronous cross-region replicas). Accept the extra write latency: payments are about 116/s, so latency matters far less than correctness.
+3. Keep **reconciliation** (§4) as the final safety net; it also catches any cross-region failover edge cases.
+</details>
+
+<details>
+<summary><b>Drill 4 (ticket booking).</b> Users no longer pick seats. The system must assign "the best available adjacent seats" automatically.</summary>
+
+Contention moves from many users fighting over seat rows to **one allocator per section** choosing for many users. A good shape: admitted requests go into a **queue per section**, and a **single-writer allocator** (one owner per section, Part 2 §7) assigns blocks of adjacent seats in batches. That removes conflicting conditional writes entirely, because one writer can't conflict with itself. Holds and payment stay as before. The new trade-off: a little queueing latency in exchange for good adjacency and no wasted retries.
+</details>
+
+<details>
+<summary><b>Drill 5 (video).</b> Add live streaming with under 5 seconds of delay from camera to viewer.</summary>
+
+The upload design (§6) relied on time: transcode after upload, using minute-long parallel batch work. Live has no "after". Changes:
+
+1. **Ingest** over a streaming protocol (RTMP, SRT or WebRTC) to the nearest ingest point.
+2. **Real-time transcoding**: each stream gets a dedicated encoder producing the bitrate ladder as it arrives. Capacity is now sized by *concurrent streams*, not by uploads per day.
+3. **Low-latency segments**: low-latency HLS/DASH with 1–2 s parts (or WebRTC for sub-second, interactive use). Shorter segments mean more requests per viewer, so CDN request costs rise.
+4. Failure handling changes too: a dead encoder must be replaced within seconds, so run hot standbys for big streams.
+
+The trade-off line: lower latency ⇒ smaller buffers ⇒ more stalls on bad networks. Choose the latency target per product (a sports broadcast vs a video call).
+</details>
+
+<details>
+<summary><b>Drill 6 (notifications).</b> Product wants each user's notifications delivered strictly in order, and each 2FA code delivered "exactly once".</summary>
+
+**Order:** partition queues by `user_id`, so one consumer handles each user's messages in sequence (as Kafka keys do). Cost: a slow provider call for one message delays that user's later ones, and the DLQ needs per-key parking (Part 3 §3.8).
+
+**Exactly once:** you can't guarantee exactly-once *delivery to a phone* through third-party providers (Part 2 §8.5). What you can do is **dedupe on send** with idempotency keys, and make the *effect* idempotent: the same 2FA code shown twice is harmless; two *different* codes are confusing. So the real requirement becomes "never generate a second code while one is still valid". Say that reframing out loud.
+</details>
+
+<details>
+<summary><b>Drill 7 (ride matching).</b> Add shared rides: two or three riders going the same way share one car.</summary>
+
+Matching changes from "nearest available driver, now" to an **optimisation over many requests**. Collect requests over a short **batching window** (a few seconds), then solve an assignment problem: which riders fit together, and which driver serves each group, minimising detours. The trade-off is explicit: a slightly longer wait before matching in exchange for much better efficiency. The window length becomes a tunable product parameter. Exactly-once driver assignment (§8) still applies, now per group.
+</details>
+
+<details>
+<summary><b>Drill 8 (LLM chat).</b> Enterprise customers require that their data never leaves their region and is never used for training, and they want a 99.9% SLO. Today you depend on one external model provider with about 99.5% availability.</summary>
+
+1. **The availability maths first:** a hard dependency on a 99.5% provider caps you at 99.5% (Part 3 §5.4). To reach 99.9%, add **fallback** to a second provider or a self-hosted model. If the two fail independently, the pair is up $1 - 0.005 \times 0.005 = 0.999975$ of the time, i.e. 99.9975%.
+2. **Residency:** deploy per region (EU and US cells), using providers' regional endpoints or self-hosted models in-region. The LLM gateway (§9) enforces "this tenant's requests only go to these endpoints". Fallback choices must respect residency too, which may limit options.
+3. **No training on customer data:** contractual zero-retention terms with providers, gateway-level PII redaction where possible, and per-tenant logging policies (Part 3 §7.7).
+
+The tension to name: the strictest residency rules shrink the pool of fallback options, which makes the availability goal harder. Decide with the customer which requirement wins.
+</details>
+
+---
+
+## 12. References
 
 - Alex Xu, *System Design Interview: An Insider's Guide*, volumes 1 (2020) and 2 (2022, with Sahn Lam): rate limiter, key-value store, notification system, YouTube, payment system, proximity service.
 - Giuseppe DeCandia et al., "Dynamo: Amazon's Highly Available Key-value Store", SOSP 2007 (§3).

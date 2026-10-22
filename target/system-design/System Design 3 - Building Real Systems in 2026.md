@@ -1,9 +1,17 @@
 # System Design 3: Building Real Systems in 2026
 
 > **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · **Part 3 (this file)** · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
-> **Related notes:** [APIs, Databases, Caching, CDNs and Scaling](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) (auth, rate limiting, web security in depth) · [Scaling to 1 Million Requests per Second](Scaling%20to%201%20Million%20Requests%20per%20Second.md) · [Platform Engineering at Atlassian](../Theory/Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md) · [Agent Harnesses](../Theory/Agent%20Harnesses%20-%20Why%20the%20Scaffold%20Beats%20the%20Model.md) · [Multi-head Latent Attention (KV cache)](../Theory/Multi-head%20Latent%20Attention%20-%20Shrinking%20the%20KV%20Cache.md)
-> **Source:** built from research: papers, official specs and engineering write-ups listed in [References](#13-references). Every number recomputed with Python; figures from [make_figs.py](../figures/system_design_theory/make_figs.py); code from [system_design_theory.py](../code/system_design_theory.py).
-> **Facts re-checked:** 21 October 2026. Things that moved recently: OAuth 2.1 is **still an IETF draft** (revision -16, September 2026); hybrid post-quantum key exchange is now the browser default; Kafka runs without ZooKeeper since 4.0; LLM serving and agent infrastructure are now standard system-design topics.
+> **Self-contained:** the four parts in this folder need nothing else. Part 1 §2.5 explains the decision method used throughout.
+> **Source:** built from research: papers, official specs and engineering write-ups listed in [References](#13-references). Every number recomputed with Python; figures from [make_figs.py](images/make_figs.py); code from [system_design_theory.py](code/system_design_theory.py).
+> **Facts re-checked:** 22 October 2026. Things that moved recently:
+> - OAuth 2.1 is **still an IETF draft** (revision -16, September 2026).
+> - The **OWASP Top 10:2025** added *Software Supply Chain Failures* and *Mishandling of Exceptional Conditions*.
+> - Hybrid post-quantum key exchange is now the browser default.
+> - Kafka runs without ZooKeeper since 4.0, and **Kafka 4.2 (February 2026) made share groups ("queues for Kafka") production-ready**.
+> - **MCP** moved to the Linux Foundation's Agentic AI Foundation (December 2025), and **A2A** became the common agent-to-agent protocol.
+> - OpenTelemetry **profiles** reached public alpha (March 2026).
+> - **Iceberg v3** (deletion vectors, row lineage) reached general availability in major warehouses.
+> - Disaggregated LLM serving is now in production use.
 
 **The big picture:** Parts 1 and 2 gave you the bricks and the physics. This part is how real systems are put together and kept alive: how services talk, how work flows asynchronously, why latency explodes under load, how to survive failure, how infrastructure and security are built, how data and AI systems work, and a repeatable method for designing anything.
 
@@ -25,7 +33,7 @@ Diagram colours: 🔵 input / primary · 🟣 processing · 🟢 result · 🟠 
 9. [AI and LLM systems](#9-ai-and-llm-systems)
 10. [Architecture patterns](#10-architecture-patterns)
 11. [The design method, applied to three systems](#11-the-design-method-applied-to-three-systems)
-12. [Self-check and glossary](#12-self-check-and-glossary)
+12. [Self-check, decision drills and glossary](#12-self-check-decision-drills-and-glossary)
 13. [References](#13-references)
 
 ---
@@ -84,7 +92,25 @@ And finally, **a method**: the steps a senior engineer follows to design any sys
 | **WebSocket / SSE** | Long-lived connection; server pushes | Real-time updates | Stateful connections complicate scaling and load balancing | Chat, live dashboards, notifications |
 | **Webhooks** | You call *their* URL when an event happens | Push between companies | Delivery must be retried, signed and idempotent | Payment events, integrations |
 
-The [8 laws of REST API design guide](../Theory/REST%20API%20Design%20-%20The%208%20Laws.md) covers REST conventions in depth.
+**How to choose.** Use the style that matches *who calls you and how*. Public APIs that third parties integrate with: **REST**, because everyone can call it and caches understand it. Internal calls between your own services, where latency and typed contracts matter: **gRPC**. One front-end that stitches data from many backends: **GraphQL**, usually as a gateway layer in front of REST or gRPC services. Server push: **SSE** for one-way streams (notifications, LLM tokens), **WebSocket** for two-way traffic (chat, collaboration). Mixing styles across layers is normal.
+
+**REST essentials**, the conventions every REST API should follow:
+
+| Method | Meaning | Safe (no side effects)? | Idempotent (repeating it = doing it once)? |
+|---|---|---|---|
+| `GET` | Read a resource | Yes | Yes |
+| `PUT` | Replace a resource with this full version | No | **Yes**: sending it twice leaves the same state |
+| `DELETE` | Remove a resource | No | **Yes**: the second call finds it already gone |
+| `POST` | Create a resource or run an action | No | **No**: needs an idempotency key (§2.3) |
+| `PATCH` | Partially update | No | Not necessarily |
+
+Why it matters: **safe and idempotent methods can be retried automatically** by clients, proxies and load balancers. A `POST` cannot, unless you make it idempotent yourself.
+
+- **Resources are nouns**: `/orders/42/items`, not `/getOrderItems?id=42`. Actions that don't fit the resource model become sub-resources (`POST /orders/42/cancellation`).
+- **Status codes carry meaning**: `200/201/204` success; `400` bad input; `401` not authenticated; `403` authenticated but not allowed; `404` not found; `409` conflict (such as a version mismatch); `422` well-formed but invalid; `429` rate-limited; `5xx` the server's fault, which may be retryable. Never return `200` with an error inside the body.
+- **One error format everywhere**: RFC 9457 "Problem Details" (`type`, `title`, `status`, `detail`, plus your own fields) is the standard shape. Clients can then handle errors generically.
+- **Versioning**: evolve by adding (§2.2). Introduce `/v2` only for genuinely breaking changes, run versions side by side, and announce retirement with the `Deprecation` and `Sunset` headers.
+- **Concurrency control**: return an `ETag` (a version) with each resource. Clients send `If-Match: <etag>` on updates, and the server rejects stale ones with `412`. This is optimistic concurrency (compare-and-set, Part 1 §8.5) over HTTP.
 
 ### 2.2 Contracts and schema evolution
 
@@ -109,7 +135,7 @@ A **schema registry** (common with Kafka) enforces these rules on every producer
 - **Offset pagination** (`?offset=1000000&limit=20`) makes the database walk past a million rows every time, and pages shift when rows are inserted. **Cursor pagination** (`?after=<last_id>`, implemented as `WHERE id > :last_id ORDER BY id LIMIT 20`) is O(page size) with an index, and stable under inserts. Use cursors for anything large.
 - **Idempotency keys** on every non-idempotent operation (POST payments, orders) make client retries safe (Part 2 §8.5).
 - **Timeouts and deadlines**: gRPC propagates a deadline so downstream services stop working on a request the caller has already given up on.
-- **Rate limits** with clear `429` responses and `Retry-After` headers (algorithms and simulations are in the [earlier guide](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md)).
+- **Rate limits** with clear `429` responses and `Retry-After` headers. The algorithms (fixed and sliding windows, token and leaky buckets) and a full distributed design are in [Part 4 §2](System%20Design%204%20-%20Worked%20Case%20Studies.md).
 - **Service discovery**: callers find healthy instances through DNS, a registry (Consul, etcd) or the platform itself (Kubernetes Services).
 
 ---
@@ -127,6 +153,18 @@ A **schema registry** (common with Kafka) enforces these rules on every producer
 3. **Fan-out**: many independent consumers can react to one event.
 
 The costs: eventual consistency (the work isn't done when the user gets "OK"), harder debugging, and the delivery-semantics problems from Part 2 §8.5.
+
+**Decision guide: synchronous call or asynchronous message?**
+
+| Question | Points to **synchronous** (request/response) | Points to **asynchronous** (queue/event) |
+|---|---|---|
+| Does the user need the result to continue? | Yes: "is this card valid?", "show my balance" | No: "send the receipt email", "update the search index" |
+| Must the work finish within the request's time budget? | Yes, and it's fast | It's slow (video transcoding, reports) or bursty |
+| What if the downstream is briefly down? | The user can see an error and retry | The work must not be lost; it should wait and happen later |
+| How many parties care? | One caller | Many consumers (analytics, notifications, search…) |
+| Is strict ordering across steps needed? | Easy in one call chain | Possible per key/partition only |
+
+**A common good shape:** do the *minimum* synchronously (validate, write the core record, return an ID), then publish an event and let everything else happen asynchronously. Tell the user honestly what's pending ("Your report is being prepared").
 
 ### 3.2 Queues vs logs
 
@@ -148,6 +186,10 @@ The costs: eventual consistency (the work isn't done when the user gets "OK"), h
 - **Replication**: each partition has a leader and followers. The **in-sync replicas (ISR)** are the followers that are caught up. With `acks=all` and `min.insync.replicas=2` (replication factor 3), a write is acknowledged only once at least 2 replicas have it. That survives a broker loss without losing data.
 - **Retention** by time or size; **log compaction** keeps only the latest value per key, which turns a topic into a durable table of the current state.
 - **Metadata** is managed by an internal Raft quorum (**KRaft**); ZooKeeper support was removed in Kafka 4.0 (2025).
+- **Rebalancing.** When a consumer joins, leaves or crashes, the group reassigns partitions. A consumer that's too slow to poll (it exceeds `max.poll.interval.ms`) is presumed dead and its partitions are taken away. That causes **duplicate processing**, because its uncommitted offsets get re-read by the new owner. Modern clients use incremental, cooperative rebalancing so only the moved partitions pause. Design consumers to be idempotent anyway.
+- **Consumer lag** (the latest offset minus the committed offset, per partition) is *the* health metric of a streaming system. Lag that keeps growing means consumers can't keep up; see backpressure (§3.4).
+- **Offsets and "exactly once".** A consumer that processes a message and then crashes *before committing its offset* will see that message again. Commit after processing and make processing idempotent (at-least-once + idempotency), or use Kafka transactions for read-process-write pipelines that stay inside Kafka.
+- **Share groups ("queues for Kafka")**, production-ready since Kafka 4.2 (February 2026): consumers in a share group **share** a partition, each message is acknowledged individually, and there's a delivery count per message. That gives queue-style work distribution (more consumers than partitions, per-message retry) on a Kafka topic, at the cost of per-key ordering. Some client libraries still lagged behind the brokers in 2026. Use classic consumer groups when order matters; share groups for independent tasks.
 
 **Worked example: sizing partitions.** You need to ingest 1 GB/s, and one consumer instance processes about 10 MB/s. Partitions needed ≥ 1,000 MB/s ÷ 10 MB/s = **100**. Add headroom (say 150–200), because adding partitions later changes which partition each key maps to, and that breaks per-key ordering during the change.
 
@@ -274,7 +316,7 @@ $$
 
 *The average number of items in a system equals the average arrival rate times the average time each item spends inside.* It holds for any stable system, whatever the distributions.
 
-**Worked example.** 10,000 requests/s, each spending 50 ms in the service: $L = 10{,}000 \times 0.05 = 500$ concurrent requests. If a downstream slowdown raises $W$ to 500 ms, concurrency jumps to **5,000**. Pools sized for 500 run out and requests start queueing or failing. **A latency problem quickly becomes a capacity problem.** (The [1M RPS guide](Scaling%20to%201%20Million%20Requests%20per%20Second.md) applies this at extreme scale.)
+**Worked example.** 10,000 requests/s, each spending 50 ms in the service: $L = 10{,}000 \times 0.05 = 500$ concurrent requests. If a downstream slowdown raises $W$ to 500 ms, concurrency jumps to **5,000**. Pools sized for 500 run out and requests start queueing or failing. **A latency problem quickly becomes a capacity problem.** At extreme scale the same law sets hard limits: 1,000,000 requests/s at 20 ms each means 20,000 requests in flight at every instant, and every one of them holds memory, a connection and often a thread. That's why high-throughput servers use event loops (Part 1 §3.4) rather than a thread per request.
 
 ### 4.2 Why latency explodes near full utilisation
 
@@ -300,7 +342,7 @@ $$
 
 Going from 90% to 99% busy (only 10% more throughput) makes latency **10× worse**. In this model the response time is exponentially distributed, so the 99th percentile is $W \ln 100 \approx 4.6 W$: at 90% utilisation, p99 ≈ 460 ms.
 
-![Fig 8 – Queue latency vs utilisation (fig08_queue_latency.png): mean and 99th-percentile latency of an M/M/1 queue with 10 ms service time, rising sharply above 80% utilisation.](../figures/system_design_theory/fig08_queue_latency.png)
+![Fig 8 – Queue latency vs utilisation (fig08_queue_latency.png): mean and 99th-percentile latency of an M/M/1 queue with 10 ms service time, rising sharply above 80% utilisation.](images/fig08_queue_latency.png)
 
 *Fig 8 (fig08_queue_latency.png). Real systems aren't exactly M/M/1, but the hockey-stick shape is universal. Variability (in arrivals or in service time) is what creates the queue. Lower variability (batching, uniform work) moves the knee to the right.*
 
@@ -320,7 +362,7 @@ $$
 
 **Worked example.** $q = 0.01$, i.e. 1% (each backend's p99): fan-out 1 gives 1%; fan-out 10 gives $1 - 0.99^{10} \approx 0.096$, i.e. 9.6%; fan-out 100 gives $1 - 0.99^{100} \approx 0.634$, i.e. **63.4%**. The backend's rare 1-in-100 slowness becomes the user's *typical* experience.
 
-![Fig 10 – Tail at scale (fig10_tail_fanout.png): probability a user request is slow against fan-out, for backends slow 1%, 0.1% and 0.01% of the time.](../figures/system_design_theory/fig10_tail_fanout.png)
+![Fig 10 – Tail at scale (fig10_tail_fanout.png): probability a user request is slow against fan-out, for backends slow 1%, 0.1% and 0.01% of the time.](images/fig10_tail_fanout.png)
 
 *Fig 10 (fig10_tail_fanout.png). This is why large systems obsess over p99 and p99.9 of their **backends**, not their averages.*
 
@@ -356,7 +398,7 @@ $$
 
 **Worked example.** $\sigma = 0.05$, $\kappa = 0.001$: $N^{\ast} = \sqrt{0.95 / 0.001} = \sqrt{950} \approx 31$ nodes, giving 9.0× capacity. At 100 nodes, capacity *drops* to 6.3×. Adding machines made it slower.
 
-![Fig 9 – Scalability laws (fig09_scalability_laws.png): linear ideal, Amdahl with 5% serial work capped at 20×, and the USL curve peaking near 31 nodes then declining.](../figures/system_design_theory/fig09_scalability_laws.png)
+![Fig 9 – Scalability laws (fig09_scalability_laws.png): linear ideal, Amdahl with 5% serial work capped at 20×, and the USL curve peaking near 31 nodes then declining.](images/fig09_scalability_laws.png)
 
 *Fig 9 (fig09_scalability_laws.png). You can fit σ and κ to your own load-test measurements to predict where your system stops scaling. **The design lesson:** shared-nothing architectures (independent partitions, no cross-node coordination on the hot path) drive κ toward 0. That's why partitioning (Part 2 §4) scales and global locks don't.*
 
@@ -375,11 +417,11 @@ $$
 3. **Exponential backoff**: wait $\text{base} \times 2^{\text{attempt}}$ (capped) between tries, giving the dependency room to recover.
 4. **Jitter**: randomise the wait. Without it, every client that failed at the same instant retries at the same instant. That's a synchronised wave that hits the recovering service again and again.
 
-![Fig 11 – Retry jitter (fig11_retry_jitter.png): with no jitter, 1,000 clients' retries arrive in four 1,000-request spikes; with full jitter they spread out over time.](../figures/system_design_theory/fig11_retry_jitter.png)
+![Fig 11 – Retry jitter (fig11_retry_jitter.png): with no jitter, 1,000 clients' retries arrive in four 1,000-request spikes; with full jitter they spread out over time.](images/fig11_retry_jitter.png)
 
 *Fig 11 (fig11_retry_jitter.png). Toy simulation: 1,000 clients fail at t = 0 and retry 4 times with backoff 100·2ᵃ ms. Left: every retry lands in four spikes of 1,000 requests. Right: "full jitter" (sleep a uniform random time between 0 and the backoff) spreads them out, so the peak is under 300 per 20 ms.*
 
-Full jitter is one line (from [system_design_theory.py](../code/system_design_theory.py)):
+Full jitter is one line (from [system_design_theory.py](code/system_design_theory.py)):
 
 ```python
 def backoff_full_jitter(attempt, base=0.1, cap=10.0, rng=random):
@@ -484,6 +526,68 @@ Back-up rules: the **3-2-1 rule** (3 copies, 2 media types, 1 off-site), *immuta
 
 **Chaos engineering** (Netflix's Chaos Monkey, now a discipline): deliberately inject failures in controlled experiments (kill instances, add latency, partition networks, fail an AZ) to verify that the resilience mechanisms above actually work. Start with a hypothesis ("checkout's SLO holds if one cache node dies"), limit the blast radius, then automate it.
 
+### 5.7 Multi-region architecture: the patterns and how to choose
+
+**The problem.** One region can fail completely (it has happened to every major cloud), and users far away are slow (Part 1 §2.4). Going multi-region solves both, but it's the single biggest jump in complexity in this whole guide, because it brings every problem from Part 2 into play at 80–200 ms round trips.
+
+**First, be clear which problem you're solving:**
+
+- **Latency for distant users** → mostly a *read* problem. CDNs, edge caches and regional read replicas fix most of it *without* multi-region writes.
+- **Surviving a region outage** → a *DR* problem. Its cost depends on your RPO and RTO (§5.6).
+- **Data residency** → a *legal* problem (§7.7). Partition users by region; it doesn't require writes anywhere else.
+
+**The patterns, from simple to hard:**
+
+| Pattern | How it works | RPO / RTO on region loss | Write latency | Main difficulty |
+|---|---|---|---|---|
+| **Single region + backups elsewhere** | Everything in one region; backups copied to another | Hours / hours | Local | Long recovery |
+| **Active-passive (warm standby)** | All writes in region A; async replication to B; fail over on disaster | Seconds of data (the replication lag) / minutes | Local in A, far for others | Failover must be practised; the lag is lost |
+| **Read-local, write-home** | Every region serves reads from local replicas; writes go to the primary region | As active-passive | One cross-region trip for writers far from home | Read-your-writes after a write (Part 2 §3.2) |
+| **Partitioned by user (home region)** | Each user's data lives in their home region; that region is the only writer for it | Only that region's users are affected | Local for each user's own data | Cross-region data (a user messages someone in another region); moving users between regions |
+| **Active-active, conflict-tolerant** | Every region accepts writes to the same data; replicate async and merge | ≈ 0 / ≈ 0 | Local | **Conflicts**: needs CRDTs or careful merge rules (Part 2 §3.3, §9) |
+| **Active-active, globally consistent** | Consensus spans regions (Spanner, CockroachDB, YugabyteDB) | 0 / seconds | A cross-region quorum on *every* write (Part 2 §5.4) | Latency and cost |
+
+**Worked example: what async replication actually risks.** Region A takes 5,000 writes/s, and replication lag to region B averages 200 ms. If A disappears, B is missing about $5{,}000 \times 0.2 = 1{,}000$ writes. Is that acceptable? For likes, yes. For payments, no. So those need synchronous replication to a second zone or region, or consensus. **The RPO comes straight out of the lag × write rate.**
+
+**Decision guide.**
+
+1. Most products: **one primary region with multiple AZs, plus a CDN, plus a tested DR plan** (active-passive). It covers the large majority of needs.
+2. Need low latency *and* data residency: **partition users by home region**. It's the most scalable pattern, because regions rarely coordinate.
+3. Must survive a region loss with no data loss and no manual failover, on data with invariants: **globally consistent distributed SQL**, accepting slower writes.
+4. Data with no invariants that must be writable everywhere (presence, carts, collaborative documents): **active-active with CRDTs**.
+
+**Hidden costs to name in any multi-region design:** cross-region data transfer fees, running double the capacity, failover that nobody has rehearsed (test it regularly, like backups), global services that quietly live in one region (DNS, auth, config, CI), and the operational load of everything happening twice.
+
+### 5.8 Capacity planning and autoscaling
+
+**The problem.** Too little capacity means outages at the peak. Too much wastes money. And capacity must cover not just normal peaks, but **the peak with something broken**.
+
+**Headroom for failure (N+1 and zone loss).** If you need 10 servers at peak, run at least 11 (**N+1**) so one can fail or be deployed without overload. The same logic at zone level: with traffic spread evenly over $n$ availability zones, losing one zone moves its share onto the survivors. To stay under 100% after losing one zone, normal utilisation must be at most:
+
+$$
+U_{\max} = \frac{n - 1}{n}
+$$
+
+*The highest safe normal utilisation is the number of surviving zones divided by the number of zones.*
+
+| Zones | Max normal utilisation to survive losing one |
+|---|---|
+| 2 | 50% |
+| 3 | 66.7% |
+| 4 | 75% |
+
+That's the ceiling *before* latency is considered. Queueing theory (§4.2) says latency already climbs steeply above about 70–80%. So a 3-zone service typically targets around 50–60% at peak.
+
+**Autoscaling: reactive vs predictive.**
+
+- **Reactive** autoscaling adds capacity when a metric (CPU, requests per instance, queue depth) crosses a threshold. The catch is **lag**: detecting the rise, booting instances, warming caches and runtimes can take minutes. If traffic grows 10% per minute and scale-up takes 5 minutes, demand is $1.1^5 \approx 1.61$ times higher, **61% more**, before the new capacity arrives. Headroom must cover that gap.
+- **Predictive / scheduled** scaling adds capacity *before* known patterns (the daily evening peak, a planned launch, a sale). Most real traffic is very regular, so this removes most of the lag risk.
+- **Scale on the right signal.** CPU is a poor signal for I/O-bound services. Requests in flight per instance (Little's Law, §4.1) or queue depth usually track load better.
+- **Scale-down slowly, scale-up quickly.** That avoids "flapping" (scaling up and down repeatedly).
+- **Remember the dependencies.** Doubling the app servers also doubles the database connections (Part 1 §6.6) and the calls to every downstream service. Autoscaling one tier can overload the next.
+
+**Load testing** turns capacity guesses into numbers. Test at the expected peak, at about 2–3× peak, and to breaking point, so you know *where* and *how* the system fails, not just that it fails. §6.7 covers testing more broadly.
+
 ---
 
 ## 6. Cloud-native infrastructure and observability
@@ -525,11 +629,22 @@ Core objects: **Pod** (one or more co-located containers), **Deployment** (rolli
 
 **Schema changes** follow **expand → migrate → contract**: add the new column (compatible with old code), deploy code that writes both and reads the new one, backfill, then remove the old column in a *later* release. Never make a breaking schema change in the same step as the code change.
 
+**Migrating to a new data store with zero downtime** (for example, from a single PostgreSQL to a sharded store, or from one service's database to another). This is one of the riskiest operations in enterprise work, and it follows a standard sequence:
+
+1. **Backfill** the new store with a copy of the existing data. Size it first: 1 billion rows at 5,000 rows/s takes about **2.3 days**; at 50,000 rows/s, about **5.6 hours**. Throttle it so production traffic isn't hurt.
+2. **Keep the new store in sync** with ongoing writes. Prefer **change data capture** (§3.5) from the old database over application dual-writes, which can diverge whenever one of the two writes fails (Part 2 §8.4).
+3. **Shadow reads**: read from both stores, serve the old result, and log any differences. Fix the differences until they're zero.
+4. **Cut over reads** gradually (1% → 100%) behind a feature flag, watching errors and latency.
+5. **Cut over writes**, often reversing the sync direction so the *old* store stays current as a rollback path.
+6. **Decommission** the old store only after a safe period.
+
+Every step is reversible until the last. That's the point: a one-way door (Part 1 §2.5) broken into a series of two-way doors.
+
 ### 6.4 eBPF, WebAssembly and platform engineering
 
 - **eBPF** runs small, verified programs *inside the Linux kernel* safely, attached to network events, system calls or functions. It powers high-performance networking and load balancing (Cilium, Meta's Katran), deep observability without code changes (continuous profiling, per-request network tracing), and runtime security (Falco, Tetragon). It's now the foundation of cloud-native networking.
 - **WebAssembly (Wasm) on the server**: a portable, sandboxed bytecode that starts in microseconds, with capability-based security through WASI. It's used for plugins (Envoy filters, database UDFs), edge functions, and multi-tenant code isolation that's lighter than containers.
-- **Platform engineering**: a dedicated team builds an **internal developer platform**, the paved road of templates, CI/CD, infrastructure and observability defaults, so product teams ship without each rebuilding the stack. See the [Atlassian platform engineering guide](../Theory/Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md).
+- **Platform engineering**: a dedicated team builds an **internal developer platform**, the paved road of templates, CI/CD, infrastructure and observability defaults, so product teams ship without each rebuilding the stack. The platform is run **as a product**: internal developers are its customers, adoption is earned rather than mandated, and its success is measured by how fast and safely teams ship. A useful split it often makes is **control plane vs data plane**: the control plane (provisioning, configuration, deployment) can be slow and asynchronous, while the data plane (serving requests) must stay up even when the control plane is down.
 
 ### 6.5 Cost (FinOps) and carbon as design constraints
 
@@ -553,7 +668,7 @@ In 2026, cost is a first-class non-functional requirement, not an afterthought:
 | **Traces** | The path of one request across services: a tree of **spans** with timings | Finding *where* latency or errors come from | Needs context propagation everywhere; sampling decisions |
 | **Profiles** | Where CPU and memory go, continuously | Finding hot code paths in production | Overhead (eBPF-based profilers keep it low) |
 
-**OpenTelemetry (OTel)** is the vendor-neutral standard for producing and shipping all of these: SDKs, auto-instrumentation and the OTel Collector. Traces, metrics and logs are stable, and profiling is being added as a further signal. **Trace context** travels between services in the W3C `traceparent` header, so spans from every service join into one trace.
+**OpenTelemetry (OTel)** is the vendor-neutral standard for producing and shipping all of these: SDKs, auto-instrumentation and the OTel Collector. Traces, metrics and logs are stable. **Profiles** became the fourth signal in public alpha in March 2026, so treat them as early-stage. **Trace context** travels between services in the W3C `traceparent` header, so spans from every service join into one trace.
 
 **Sampling**: **head sampling** decides at the start of a request (cheap, but may drop the interesting traces). **Tail sampling** decides after the request finishes, so it can keep all errors and slow traces (more useful, but it must buffer whole traces).
 
@@ -565,11 +680,30 @@ In 2026, cost is a first-class non-functional requirement, not an afterthought:
 
 **Alerting philosophy:** page a human only for **symptoms that hurt users** (SLO burn rate), not for causes ("CPU 80%"). Cause-based signals go on dashboards for diagnosis. After incidents, write **blameless postmortems** that focus on how the system allowed the failure, not who triggered it.
 
+**Incident response in one paragraph.** When something breaks: (1) **mitigate first, diagnose later**: roll back the last change, fail over, or shed load, because restoring service beats understanding it; (2) one **incident commander** coordinates while others investigate, so effort doesn't scatter; (3) communicate status on a regular rhythm; (4) afterwards, the postmortem lists contributing causes and *specific* follow-up actions with owners. The best predictor of a fast recovery is a **recent change you can undo**, which is why canaries and feature flags (§6.3) are reliability tools.
+
+### 6.7 Testing and verifying distributed systems
+
+**The problem.** Unit tests check that one function is correct. Most production failures in distributed systems come from *interactions*: two services disagreeing about a contract, a retry storm under load, a timeout that's too long, a failover nobody tried.
+
+| Test type | What it catches | Notes |
+|---|---|---|
+| **Unit tests** | Logic errors inside one component | Fast; the base of everything |
+| **Contract tests** (consumer-driven, such as Pact) | A provider changing an API or event schema that a consumer depends on | Each consumer publishes the expectations it relies on; the provider's build fails if it breaks them. Cheaper and more reliable than full end-to-end tests between teams. |
+| **Integration tests** | Wrong assumptions about a real database, queue or cache | Run against real dependencies (often in containers) |
+| **End-to-end tests** | Broken critical user journeys | Keep them few: slow and flaky in large numbers |
+| **Load and soak tests** | Capacity limits, memory leaks, latency knees (§4.2) | At peak, 2–3× peak, and for hours (soak) |
+| **Failure injection / chaos** | Missing timeouts, broken failover, retry storms | Kill nodes, add latency, drop packets (§5.6) |
+| **Deterministic simulation** | Rare interleavings in consensus or replication code | Run the whole system in one controllable simulated world (FoundationDB's approach, now used by others) |
+| **Production verification** | Everything the above missed | Canaries with automatic SLO checks, synthetic probes, shadow traffic (§6.3) |
+
+**The principle:** you can't test every interaction before release. So test the **contracts** between teams thoroughly, test **failure behaviour** deliberately, and make releases **small and reversible**, so production itself can safely serve as the final test.
+
 ---
 
 ## 7. Security architecture
 
-This section is about architecture-level security. The [earlier guide](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) covers sessions vs JWT, OAuth flows, CORS, CSRF, XSS, injection and the OWASP Top 10:2025 in detail.
+This section is about security architecture, from network trust down to the web-application attacks every service must defend against (§7.8).
 
 ### 7.1 Zero trust
 
@@ -586,6 +720,27 @@ This section is about architecture-level security. The [earlier guide](System%20
 
 - **OAuth 2.0** is *delegated authorisation*: letting an app access an API on a user's behalf with **access tokens**. **OpenID Connect (OIDC)** adds *authentication* on top: an **ID token** saying who the user is. They're the basis of "Sign in with…" and of enterprise SSO.
 - **OAuth 2.1** consolidates a decade of security lessons. It requires **PKCE** on the authorization-code flow for *all* clients, removes the implicit flow and the password grant, and requires exact redirect-URI matching. **Status:** as of September 2026 it is still an IETF Internet-Draft (revision -16), not yet an RFC, but its rules are already what modern identity providers implement. Design to OAuth 2.1 today.
+**The authorization-code flow with PKCE** (how "Sign in with…" works for a web or mobile app):
+
+```mermaid
+sequenceDiagram
+    participant U as User's browser / app
+    participant C as Your app (client)
+    participant A as Authorization server
+    participant R as API (resource server)
+    C->>C: create random code_verifier, hash it into code_challenge
+    C->>U: redirect to A with code_challenge
+    U->>A: log in (passkey / password + MFA), consent
+    A->>U: redirect back with a one-time code
+    U->>C: code
+    C->>A: exchange code + original code_verifier
+    A->>A: check hash(code_verifier) matches code_challenge
+    A->>C: access token (short) + refresh token + ID token (OIDC)
+    C->>R: API call with the access token
+```
+
+Why PKCE matters: the one-time code passes through the browser and can be intercepted (by a malicious app or a leaked redirect). It's useless without the secret `code_verifier`, which never left your app. Only its hash travelled in the first step.
+
 - **Tokens**: keep access tokens short-lived (minutes) and refresh them with **rotating refresh tokens**. Bind tokens to the client where possible (sender-constrained tokens such as DPoP or mTLS) so a stolen token is useless elsewhere.
 - **Passkeys (WebAuthn/FIDO2)**: public-key credentials stored on the user's device or synced through their platform's password manager. The private key never leaves the device, and each credential is bound to the site's domain, so **passkeys are phishing-resistant** in a way passwords and SMS codes are not. They're now supported across all major platforms and are the recommended default for consumer sign-in.
 
@@ -639,6 +794,33 @@ This section is about architecture-level security. The [earlier guide](System%20
 
 **Other regimes you'll meet:** PCI DSS (card data; keep your scope small by letting a payment provider handle cards, Part 4 §4), HIPAA (US health data), SOC 2 (a security-controls audit that B2B customers ask for), and the EU AI Act, whose obligations for AI systems are phasing in. The design moves are the same each time: know where the data is, minimise it, control and log access, and be able to delete it.
 
+### 7.8 Web application security essentials
+
+**The problem.** Most real breaches don't defeat cryptography. They exploit an ordinary bug: a missing permission check, a query built from user input, a misconfigured bucket. The **OWASP Top 10** is the industry's ranked list of these risks. The **2025 edition** is:
+
+| Rank | Category (OWASP Top 10:2025) | The design defence |
+|---|---|---|
+| A01 | **Broken Access Control** (now also includes SSRF) | Check authorisation on *every* request, for *the specific object*, on the server |
+| A02 | Security Misconfiguration | Secure defaults, infrastructure as code, automated config scanning |
+| A03 | **Software Supply Chain Failures** (new) | SBOMs, signed builds, pinned dependencies (§7.5) |
+| A04 | Cryptographic Failures | TLS everywhere, managed keys (§7.4), no home-made crypto |
+| A05 | Injection | Parameterised queries, never string-built commands |
+| A06 | Insecure Design | Threat modelling at design time, which is this guide's whole point |
+| A07 | Authentication Failures | Passkeys/MFA, rate-limited logins, safe session handling (§7.2) |
+| A08 | Software or Data Integrity Failures | Verify signatures on updates and artifacts; don't deserialise untrusted data |
+| A09 | Security Logging & Alerting Failures | Audit logs (§7.7), alerts on suspicious patterns |
+| A10 | **Mishandling of Exceptional Conditions** (new) | Fail *closed* on errors in security checks; don't leak internals in error messages |
+
+**The attacks every system designer must be able to explain:**
+
+- **Broken object-level authorisation** (often called IDOR). `GET /invoices/1043` returns invoice 1043 to *any* logged-in user, because the code checked "is logged in" but not "owns invoice 1043". It's the most common serious API bug. **Defence:** every data access checks ownership or permission for that specific object, ideally through one central authorisation service (§7.3). Unguessable IDs (Part 1 §6.7) are a second layer, not a fix.
+- **Injection.** User input concatenated into SQL (or a shell command, or an LLM prompt, §9.5) becomes code. `'; DROP TABLE users; --` is the classic. **Defence:** parameterised queries or prepared statements, so input is always treated as data.
+- **Cross-site scripting (XSS).** Attacker-supplied text is shown on a page *as HTML*, so their script runs in other users' browsers and can steal tokens or act as them. **Defence:** context-aware output encoding (modern frameworks do it by default; avoid raw-HTML escape hatches), a Content Security Policy header, and keeping session tokens in `HttpOnly` cookies that scripts can't read.
+- **Cross-site request forgery (CSRF).** A malicious site makes the *user's own browser* send a request to your site, and the browser attaches the user's cookies automatically. **Defence:** `SameSite=Lax` or `Strict` cookies (the modern baseline), plus anti-CSRF tokens on state-changing forms.
+- **CORS is not a CSRF defence.** CORS controls which *other origins' JavaScript may read your responses*. It loosens the browser's same-origin policy; it doesn't stop requests being sent. Configure it narrowly (exact allowed origins, never `*` with credentials).
+- **Server-side request forgery (SSRF).** Your server fetches a URL the user supplied ("import from URL", webhooks, link previews), and the attacker points it at internal addresses, especially the **cloud metadata endpoint**, which can hand out credentials. **Defence:** allow-lists of destinations, blocking private and link-local address ranges, a separate egress proxy, and the hardened metadata service (AWS IMDSv2 requires a session token).
+- **DDoS.** *Volumetric* floods (huge traffic) are absorbed by anycast CDNs and cloud scrubbing networks (Part 1 §4.6). *Application-layer* floods (expensive requests that look legitimate) need rate limiting (Part 4 §2), a **WAF** (web application firewall rules at the edge), caching, and load shedding (§5.3).
+
 ---
 
 ## 8. Data and analytics systems
@@ -663,7 +845,7 @@ This section is about architecture-level security. The [earlier guide](System%20
 
 - **Data warehouse**: structured, cleaned, schema-on-write data in a managed columnar engine. Fast and governed, but storage and compute are coupled to the vendor.
 - **Data lake**: raw files of any kind (Parquet, JSON, images) dumped on cheap object storage. Flexible and cheap, but it became a "data swamp": no transactions, no schema enforcement, unclear "current" state.
-- **Lakehouse**: open **table formats** (Apache **Iceberg**, Delta Lake, Apache Hudi) add a **metadata layer** on top of Parquet files in object storage. That layer gives you ACID transactions (via atomic swaps of metadata pointers), schema evolution, **time travel** (query a past snapshot), and partition pruning. Many engines (Spark, Trino, Flink, Snowflake, DuckDB…) can then read and write *the same tables*. In 2026, Iceberg has become the de-facto interoperable table format, supported by all the major warehouses and clouds.
+- **Lakehouse**: open **table formats** (Apache **Iceberg**, Delta Lake, Apache Hudi) add a **metadata layer** on top of Parquet files in object storage. That layer gives you ACID transactions (via atomic swaps of metadata pointers), schema evolution, **time travel** (query a past snapshot), and partition pruning. Many engines (Spark, Trino, Flink, Snowflake, DuckDB…) can then read and write *the same tables*. In 2026, Iceberg has become the de-facto interoperable table format, supported by all the major warehouses and clouds. Its **v3 spec** (generally available in major warehouses during 2026) adds *deletion vectors*, compact bitmaps of deleted rows that make updates and deletes much cheaper, and *row lineage*, row IDs that make change data capture from the lake easier. Engine support for v3 was still uneven in 2026, and upgrading a table is one-way, so check every engine that reads it before you upgrade.
 
 ### 8.4 Batch and stream processing architectures
 
@@ -724,9 +906,9 @@ $$
 - On 2 × 80 GB GPUs, after 140 GB of weights about 20 GB is left: **only about 7 concurrent 8K-token requests** fit.
 - Without grouped-query attention (64 KV heads, classic multi-head), it would be 2,560 KiB per token, 8× worse.
 
-![Fig 12 – KV cache memory (fig12_kv_cache.png): KV cache size per request against context length, for 64 and 8 KV heads, against the roughly 20 GB left after FP16 weights on two 80 GB GPUs.](../figures/system_design_theory/fig12_kv_cache.png)
+![Fig 12 – KV cache memory (fig12_kv_cache.png): KV cache size per request against context length, for 64 and 8 KV heads, against the roughly 20 GB left after FP16 weights on two 80 GB GPUs.](images/fig12_kv_cache.png)
 
-*Fig 12 (fig12_kv_cache.png). Assumed model shape, back-of-envelope. The point: long contexts and many users compete for the same GPU memory. Architectures that shrink the KV cache, like grouped-query attention and DeepSeek's multi-head latent attention (see the [MLA guide](../Theory/Multi-head%20Latent%20Attention%20-%20Shrinking%20the%20KV%20Cache.md)), translate directly into more users per GPU.*
+*Fig 12 (fig12_kv_cache.png). Assumed model shape, back-of-envelope. The point: long contexts and many users compete for the same GPU memory. Architectures that shrink the KV cache translate directly into more users per GPU: **grouped-query attention** (several query heads share one key-value head, so fewer KV heads are stored) and **multi-head latent attention** (introduced by DeepSeek: it caches one small compressed vector per token and rebuilds keys and values from it when needed).*
 
 **The serving techniques that follow from this physics:**
 
@@ -737,7 +919,7 @@ $$
 | **Prefix caching** | The same long system prompt is recomputed for every request | Reuse KV blocks for shared prefixes (also sold as "prompt caching" by API providers) |
 | **Quantisation** (FP8, INT4) | Weights and KV take too much memory and bandwidth | Fewer bytes per value: more speed and more capacity, with a small quality cost to measure |
 | **Speculative decoding** | One token per expensive step | A small draft model proposes several tokens; the big model verifies them in one pass |
-| **Disaggregated prefill/decode** | Compute-bound and memory-bound phases interfere | Run prefill and decode on separate GPU pools and transfer the KV cache between them |
+| **Disaggregated prefill/decode** | Compute-bound and memory-bound phases interfere | Run prefill and decode on separate GPU pools and transfer the KV cache between them. In production by 2026 (NVIDIA Dynamo, Mooncake, DeepSeek); it trades simplicity for more predictable latency |
 | **Model routing** | Using the largest model for everything is slow and costly | Send easy requests to small, cheap models and hard ones to big models |
 
 Serving engines: vLLM, SGLang, TensorRT-LLM, and the managed APIs. The metrics to set SLOs on are **TTFT**, **TPOT** (or tokens/s per user), throughput (tokens/s per GPU), and **cost per million tokens**.
@@ -769,7 +951,7 @@ flowchart LR
 
 1. **Chunking**: split documents into passages that fit the embedding model and carry one idea each. Use overlap or structure-aware splits (headings, paragraphs), and keep metadata (source, date, permissions).
 2. **Embedding**: map each chunk to a vector (hundreds to a few thousand dimensions) where similar meanings are close together.
-3. **Hybrid retrieval**: vectors find *semantic* matches but miss exact terms (product codes, names). Keyword search (**BM25**, see the [BM25 guide](../Theory/BM25%20-%20Keyword%20Search%20for%20AI%20Agents.md)) catches those. Run both and fuse the rankings, commonly with **reciprocal rank fusion**: score $= \sum 1/(k + \text{rank})$ across the lists.
+3. **Hybrid retrieval**: vectors find *semantic* matches but miss exact terms (product codes, names). Keyword search (**BM25**, explained in Part 1 §7.7) catches those. Run both and fuse the rankings, commonly with **reciprocal rank fusion**: score $= \sum 1/(k + \text{rank})$ across the lists.
 4. **Reranking**: a cross-encoder scores (question, chunk) pairs jointly. That's much more accurate than vector similarity, but too slow for millions of chunks, so it's applied only to the top few dozen.
 5. **Generation** with instructions to answer only from the context and to cite sources.
 6. **Enforce permissions at retrieval time** (filter by the user's access rights). Otherwise RAG becomes a data-leak engine.
@@ -786,13 +968,19 @@ flowchart LR
 
 **The problem.** Many tasks need multiple steps, actions and external data: "find the failing test, fix it, open a PR". A single prompt-response can't do that.
 
-**How it works.** An **agent** is an LLM in a loop: decide → call a **tool** (search, code execution, an API) → observe the result → decide again, until done. The system around the loop (the **harness**) matters as much as the model: context management, tool design, memory, verification and limits (see the [agent harness guide](../Theory/Agent%20Harnesses%20-%20Why%20the%20Scaffold%20Beats%20the%20Model.md) and the [agent workflows as DAGs guide](../Theory/Graph%20Engineering%20-%20Agent%20Workflows%20as%20DAGs.md)).
+**How it works.** An **agent** is an LLM in a loop: decide → call a **tool** (search, code execution, an API) → observe the result → decide again, until done. The system around the loop (the **harness**) matters as much as the model. The harness decides:
+
+- **What goes into the context** each step: instructions, relevant files, tool results, summaries of earlier steps. The context window is limited and expensive, so choosing what to include is the core engineering problem.
+- **Which tools exist and how they're described**: few, clear, well-named tools beat many overlapping ones.
+- **How work is structured**: a free loop, or an explicit graph of steps (plan → split into parallel sub-tasks → check → merge) where the order is known in advance. Explicit graphs are easier to test, parallelise and debug. Free loops handle open-ended tasks. Many systems combine both.
+- **How results are verified**: tests, linters, a second model checking the first, and **human approval gates** before irreversible actions.
 
 System-design concerns specific to agents:
 
-- **Tool protocols**: the **Model Context Protocol (MCP)**, an open standard introduced by Anthropic in 2024 and now widely supported across AI clients and platforms, standardises how agents discover and call tools and data sources. It's a client-server protocol, so one MCP server (for your database, ticketing system or docs) works with many agent clients. Design tools like APIs: clear schemas, idempotent where possible, least-privilege credentials.
+- **Tool protocols**: the **Model Context Protocol (MCP)** standardises how agents discover and call tools and data sources. Anthropic introduced it in 2024 and donated it in December 2025 to the **Agentic AI Foundation** under the Linux Foundation; it's supported across the major AI clients and platforms. It's a client-server protocol, so one MCP server (for your database, ticketing system or docs) works with many agent clients. Design tools like APIs: clear schemas, idempotent where possible, least-privilege credentials.
+- **Agent-to-agent protocols**: **A2A** (Agent2Agent), launched by Google in 2025 and governed by the Linux Foundation since June 2025, covers a different layer: *agents calling other agents* (discovery through "agent cards", task hand-off, streaming status), possibly across companies. Rule of thumb: **MCP connects an agent to tools and data; A2A connects agents to each other.**
 - **Durability**: agent runs can take minutes to hours. Run them on durable execution (§3.7) so a crash resumes instead of restarting, with checkpoints and human approval steps for risky actions.
-- **Memory**: short-term (the context window, compacted or summarised as it fills) and long-term (facts stored in a database or vector store and retrieved when relevant; see the [agent memory guide](../Theory/Agent%20Memory%20-%20Long-Term%20Memory%20with%20Mem0.md)).
+- **Memory**: short-term (the context window, compacted or summarised as it fills) and long-term (facts extracted from conversations, stored in a database or vector store, and retrieved when relevant, with the same hybrid retrieval as RAG, §9.4). Long-term memory needs the same care as any user data: deletion, privacy (§7.7), and handling of facts that become outdated.
 - **Security**: **prompt injection** is the defining threat. Text inside a retrieved web page, email or file can contain instructions the model may follow. Defences are architectural: treat all tool output as untrusted data, give agents least-privilege and scoped credentials, require confirmation for irreversible actions, isolate code execution in sandboxes, and filter outputs that could exfiltrate data (such as URLs with embedded secrets).
 - **Cost and loop control**: budget limits on steps, tokens and wall time; detection of loops that repeat the same failing action.
 
@@ -803,6 +991,24 @@ System-design concerns specific to agents:
 - **Evaluations (evals)**: you can't unit-test free text with `assertEquals`. Build eval sets of real tasks with graded expectations: exact checks where possible, rubric-based **LLM-as-judge** where not (calibrated against human labels). Run them in CI on every prompt or model change, like a regression suite, and monitor production samples continuously. **Evals are the test suite of AI systems.**
 - **Guardrails**: input and output classifiers (safety, PII, off-topic), structured-output validation (JSON schema), groundedness checks for RAG, and rate limits against abuse.
 - **Observability**: trace every step (prompt, retrieved chunks, tool calls, tokens, latency, cost) with OpenTelemetry's generative-AI conventions or dedicated LLM tracing tools. Without traces, agent failures are impossible to debug.
+
+### 9.7 Decision guide: how to add AI to a system
+
+**First question: should this be an LLM at all?** LLMs are slow (hundreds of ms to seconds), costly per call, and non-deterministic. If the task has a precise rule ("is this a valid email?", "sum the invoice"), use ordinary code. LLMs earn their place on fuzzy language tasks: understanding, summarising, extracting from messy text, drafting, answering questions over documents, and multi-step tool use.
+
+**Second question: how does the model get the knowledge or behaviour it needs?**
+
+| Approach | Use when | Strengths | Weaknesses |
+|---|---|---|---|
+| **Prompting** (instructions + examples) | The model already knows how; it just needs direction | Instant to change; no training | Limited by context; behaviour can drift with model updates (catch it with evals) |
+| **Long context** (put the documents in the prompt) | The relevant material is small (tens to a few hundred pages) and changes often | Simple; no retrieval pipeline | Cost and latency grow with every token on every call (§9.3); prompt caching helps |
+| **RAG** (§9.4) | Large or fast-changing knowledge; citations needed; per-user permissions | Fresh, traceable, scales to millions of documents | Retrieval quality is the ceiling; more moving parts |
+| **Fine-tuning** | A consistent *style, format or skill* is needed, or a small model must do a narrow task well and cheaply | Shorter prompts, cheaper inference, consistent output | Needs good training data; knowledge goes stale; must retrain to update |
+| **Agents** (§9.5) | Multi-step tasks needing actions and observation | Handles open-ended work | Hardest to make reliable, secure and affordable |
+
+**The usual progression:** start with prompting plus a strong eval set (§9.6). Add RAG when knowledge is the gap. Fine-tune when cost or consistency at volume is the gap. Reach for agents only when the task truly needs multiple steps with actions. Common mistakes are fine-tuning to add *facts* (use RAG instead; fine-tuned facts go stale and can't be cited) and building an agent where a fixed pipeline would be more reliable.
+
+**Third question: what happens when the model is wrong?** Design for it. Show sources so users can check, keep a human in the loop for consequential actions, constrain outputs with schemas, and measure error rates with evals before and after every change. A model being wrong some of the time is a given; a system that hides it is a design failure.
 
 ---
 
@@ -1016,7 +1222,7 @@ ADRs are **never edited after acceptance**. A changed decision gets a *new* ADR 
 
 ---
 
-## 12. Self-check and glossary
+## 12. Self-check, decision drills and glossary
 
 <details>
 <summary>1. A service handles 2,000 req/s at 80 ms average latency. How many requests are in flight? What if latency degrades to 800 ms?</summary>
@@ -1058,6 +1264,75 @@ Vectors miss exact tokens (IDs, names); BM25 catches them. Permissions must be e
 <summary>7. News feed: why not fan out on write for everyone?</summary>
 
 Celebrities: one post becomes millions of writes (100M followers at 1M writes/s = 100 s). Use the hybrid: push for normal users, pull for celebrities.
+</details>
+
+**Decision drills.** Commit to an answer and a reason before opening each one (method: Part 1 §2.5).
+
+<details>
+<summary><b>Drill 1.</b> Checkout synchronously calls six services in sequence: inventory, pricing, tax, fraud, payment and email. p99 is 2.5 s and checkout fails more often than any one service does. What do you change?</summary>
+
+Two separate problems. **Availability multiplies** in a chain (§5.4): six 99.9% services give about 99.4%. **Latency adds** in a sequence. Fixes:
+
+1. **Move non-essential work off the critical path**: email (and analytics) become events after the order commits (§3.1). They no longer affect checkout at all.
+2. **Run independent calls in parallel**: pricing, tax and fraud don't depend on each other. Latency becomes the *slowest* of them, not the sum.
+3. **Timeouts and fallbacks** for the soft dependencies: if fraud scoring times out, accept low-value orders and flag them for review, rather than failing.
+4. Keep inventory reservation and payment synchronous; they're the truly essential steps (Part 4 §4–§5).
+</details>
+
+<details>
+<summary><b>Drill 2.</b> On a sale day, traffic jumps 5× within 10 minutes. Autoscaling takes 6 minutes to add capacity. The site falls over. What should the design have been?</summary>
+
+Reactive autoscaling can't absorb a spike faster than its own lag (§5.8). Layers of defence:
+
+1. **Predictive scaling**: the sale was scheduled, so pre-scale before it starts.
+2. **Load shedding with priorities** (§5.3): protect checkout; shed recommendations and other non-essential calls first.
+3. **Graceful degradation**: switch off expensive features (personalisation, live stock counts), and serve more from caches with longer TTLs.
+4. **A waiting room** (Part 4 §5) if demand exceeds what any amount of scaling can serve.
+5. **Check the dependencies**: the database can't autoscale the way app servers do. Did more app servers just multiply its connections?
+</details>
+
+<details>
+<summary><b>Drill 3.</b> A B2B SaaS team wants active-active multi-region "for availability". Their customers are mainly in the EU, and their SLO is 99.95%. Do you agree?</summary>
+
+**Clarify the problem first** (§5.7). 99.95% allows about 22 minutes of downtime a month. That's achievable with **one region across multiple AZs**, good deploy practices, and a **tested DR plan** to a second region (active-passive). Active-active brings conflict handling or cross-region consensus, double the cost, and much more operational complexity, for availability they probably don't need.
+
+What their EU customers may truly need is **data residency**: an EU home region. If they later add US customers, partition by home region instead of making every region write everything. Say what would change your mind: a contractual SLO of 99.99%+, or regulators requiring no single-region dependency.
+</details>
+
+<details>
+<summary><b>Drill 4.</b> Ten minutes after a deploy, the error rate is 2% and rising, and nobody knows why. What do you do first?</summary>
+
+**Roll back.** Mitigate first, diagnose later (§6.6). The most likely cause of a new problem is the most recent change, and undoing it is usually fast and safe. Investigate on the rolled-back system, or with the bad version in a canary.
+
+Then the design lesson: a **canary with automatic SLO checks** (§6.3) should have stopped this at 1% of traffic, before it reached everyone. If rollback is hard (say, a schema change that went with the deploy), that's the real finding for the postmortem: the change should have used expand → migrate → contract.
+</details>
+
+<details>
+<summary><b>Drill 5.</b> A Kafka consumer keeps crashing on one malformed event. Lag on that partition grows by the hour, and orders behind it are delayed. Fix it now, and fix it for good.</summary>
+
+**Now:** move the bad message aside (to a dead-letter topic), or skip it with a recorded offset, so the partition flows again (§3.8). If per-key ordering matters, park only that key's later events.
+
+**For good:** separate *permanent* errors (malformed data, which goes to the DLQ immediately) from *transient* ones (retry with backoff). Add schema validation at the producer (a schema registry, §2.2) so malformed events can't be published. Alert on DLQ growth and consumer lag. And make the consumer **catch failures per message** instead of crashing the whole process.
+</details>
+
+<details>
+<summary><b>Drill 6.</b> HR wants an assistant that answers employee questions from 2,000 policy documents. They're updated weekly, and some are restricted to managers. Which approach?</summary>
+
+**RAG** (§9.4, §9.7). The knowledge is too large and changes too often for fine-tuning, and answers need citations. Key design points:
+
+1. **Permission filtering at retrieval time**, so a non-manager's question never retrieves manager-only chunks. This is the most important requirement.
+2. Hybrid search (BM25 + vectors), because policy questions often use exact terms ("parental leave", form numbers).
+3. Re-index on each weekly update (CDC or a scheduled job), keeping document versions and dates.
+4. An **eval set** of real questions with expected answers, run on every change.
+5. "I don't know, contact HR" when retrieval finds nothing relevant, rather than letting the model guess.
+</details>
+
+<details>
+<summary><b>Drill 7.</b> A security review finds that <code>GET /api/files/{id}</code> returns any file to any logged-in user who knows its ID. How do you fix it, and how do you make sure the bug class is gone?</summary>
+
+It's broken object-level authorisation, OWASP A01 (§7.8). **Fix:** check, on the server, that the requesting user may access *that* file, on every request.
+
+**Make the class go away**, because this bug is rarely alone: route all data access through one **authorisation layer or service** with one permission model (§7.3), so a new endpoint can't forget the check. Add automated tests that call every endpoint as the wrong user. Use unguessable IDs (UUIDv7 or random) as extra defence, not as the fix. Review the audit logs (§7.7) to learn whether the hole was exploited.
 </details>
 
 **Glossary**
@@ -1122,6 +1397,17 @@ Celebrities: one post becomes millions of writes (100M followers at 1M writes/s 
 | **Crypto-shredding** | Deleting a per-user key to make all copies of their data unreadable |
 | **Data residency** | Keeping data stored and processed inside a required jurisdiction |
 | **ADR** | Architecture decision record: one short, immutable file per decision |
+| **RFC 9457 Problem Details** | Standard JSON shape for API errors |
+| **ETag / If-Match** | Resource version and conditional update over HTTP (optimistic concurrency) |
+| **Share group** | Kafka 4.2+ queue-style consumption: per-message acknowledgement, no per-key order |
+| **Consumer lag** | How far a consumer is behind the newest message |
+| **Home region** | The one region that owns (writes) a given user's data |
+| **N+1 capacity** | One spare unit beyond what peak needs, to survive a failure |
+| **Contract test** | Test that a provider still meets the expectations its consumers rely on |
+| **IDOR / BOLA** | Broken object-level authorisation: accessing others' objects by ID |
+| **SSRF** | Tricking a server into fetching an attacker-chosen (often internal) URL |
+| **PKCE** | OAuth proof key binding the code exchange to the client that started it |
+| **A2A** | Agent2Agent protocol for agents calling other agents |
 
 ---
 
@@ -1143,7 +1429,14 @@ Celebrities: one post becomes millions of writes (100M followers at 1M writes/s 
 - Woosuk Kwon et al., "Efficient Memory Management for Large Language Model Serving with PagedAttention" (vLLM), SOSP 2023.
 - Yu. A. Malkov and D. A. Yashunin, "Efficient and robust approximate nearest neighbor search using HNSW graphs", 2016/2018. Hervé Jégou et al., "Product Quantization for Nearest Neighbor Search", 2011.
 - Patrick Lewis et al., "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks", NeurIPS 2020.
-- Model Context Protocol specification ([modelcontextprotocol.io](https://modelcontextprotocol.io)).
+- Model Context Protocol specification ([modelcontextprotocol.io](https://modelcontextprotocol.io)); [Anthropic: donating MCP and establishing the Agentic AI Foundation](https://anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation), December 2025.
+- [Linux Foundation: A2A protocol at one year](https://linuxfoundation.org/press/a2a-protocol-surpasses-150-organizations-lands-in-major-cloud-platforms-and-sees-enterprise-production-use-in-first-year), April 2026.
+- [OWASP Top 10:2025](https://owasp.org/Top10/2025/0x00_2025-Introduction/). RFC 9457 (Problem Details for HTTP APIs), RFC 7636 (PKCE).
+- Apache Kafka 4.2 release (share groups production-ready): [Confluent: Apache Kafka 4.2 release](https://www.confluent.io/blog/apache-kafka-4-2-release/).
+- [OpenTelemetry Profiles enters public alpha](https://opentelemetry.io/blog/2026/profiles-alpha), March 2026.
+- Iceberg v3 general availability: [Snowflake release note, May 2026](https://docs.snowflake.com/en/release-notes/2026/other/2026-05-07-iceberg-v3-ga).
+- NVIDIA Dynamo documentation on [disaggregated serving](https://docs.nvidia.com/dynamo/v1.0.0/design-docs/disaggregated-serving).
+- Pact consumer-driven contract testing; FoundationDB's deterministic simulation testing (Will Wilson, "Testing Distributed Systems w/ Deterministic Simulation", Strange Loop 2014).
 - Eric Evans, *Domain-Driven Design*, 2003. Matthew Skelton and Manuel Pais, *Team Topologies*, 2019. Melvin Conway, "How Do Committees Invent?", 1968.
 - Alex Xu, *System Design Interview*, volumes 1 and 2 (for more worked designs in the §11 format).
 - Martin Kleppmann and Chris Riccomini, *Designing Data-Intensive Applications*, 2nd ed., O'Reilly, 2026.
