@@ -59,6 +59,16 @@ Thirteen notes taken from YouTube talks, rewritten as self-contained study guide
 | [**8 Serving and GPU Infrastructure**](target/ai/AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) | Roofline, prefill vs decode, KV-cache maths, batching, PagedAttention, quantisation, speculative decoding, parallelism, capacity and cost planning. |
 | [**9 Customising Models**](target/ai/AI%20Engineering%209%20-%20Customising%20Models.md) | When to fine-tune, SFT, LoRA/QLoRA, DPO, distillation, synthetic data, RL with verifiable rewards (GRPO), evaluating fine-tunes. |
 
+### Python for backends (`target/py/`, research-built, October 2026)
+
+| Guide | What you'll get out of it |
+|---|---|
+| [**Start here: reading order**](target/py/README.md) | How the series fits with `notes/py-dsa.md`, `notes/py-backend.md` and the Mastery drills, plus how to run everything. |
+| [**1 The Python You Need**](target/py/Reading%20a%20Python%20Backend%201%20-%20The%20Python%20You%20Need.md) | Imports, decorators, type hints that FastAPI acts on, `with`/`yield`, async (with a measured event-loop freeze), exceptions and Pydantic, each shown in backend code with real output. |
+| [**2 A Codebase Tour and One Request Traced**](target/py/Reading%20a%20Python%20Backend%202%20-%20A%20Codebase%20Tour%20and%20One%20Request%20Traced.md) | A runnable FastAPI app (11 tests) walked file by file, and one request traced through every layer, including cleanup after the response, and how a missing `response_model` leaks password hashes. |
+| [**3 Backend Concepts, Decisions and Unfamiliar Code**](target/py/Reading%20a%20Python%20Backend%203%20-%20Backend%20Concepts%20Decisions%20and%20Unfamiliar%20Code.md) | Transactions, connection-pool maths, N+1 measured, Argon2 vs SHA-256 measured, state, timeouts, queues, workers; a method for reading any backend (Flask and Django too) and a checklist for LLM-written code. |
+| [**Python Mastery for C++ Engineers**](target/Python%20Mastery%20for%20C%2B%2B%20Engineers%20-%20DSA%20and%20Backend%20Systems.md) | The practice gym: 26 two-minute drills on Python mechanics and backend patterns. Two FastAPI claims corrected inline (routing, dependency resolution). |
+
 ---
 
 ## What changed since the source videos (verified 18 September 2026)

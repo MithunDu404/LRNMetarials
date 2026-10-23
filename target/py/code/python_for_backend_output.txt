@@ -1,0 +1,79 @@
+
+======== 1. Decorators: how @app.get('/x') works =====================
+registered routes: {('GET', '/ping'): 'ping'}
+calling the handler the router found: {'pong': True}
+  slow_add took 10.06 ms
+slow_add(2, 3) = 5
+name kept by functools.wraps: slow_add | signature: (a: int, b: int) -> int
+
+======== 2. How FastAPI reads your function signature ================
+  order_id  int                                path parameter (its name appears in the URL '/orders/{order_id}')
+  data      Body                               request body (a model class)
+  db        Annotated[str, Depends(get_db)]    dependency -> run Depends(get_db) first
+  limit     int                                query parameter, default=20
+FastAPI does this once at startup, not on every request.
+
+======== 3. A 40-line Depends(): yield, caching, cleanup order =======
+  request 1 (succeeds):
+    open session
+    load user using SESSION
+    build service using SESSION
+    endpoint runs with user=ada, svc=OrderService
+    close session
+    response: {'ok': True}
+  request 2 (endpoint raises):
+    open session
+    load user using SESSION
+    build service using SESSION
+    endpoint runs with user=ada, svc=OrderService
+    close session
+    exception reached the caller: boom
+
+======== 4. Context managers: Python's RAII ==========================
+  BEGIN t1
+  ...work in t1
+  COMMIT t1
+  BEGIN t2
+  ROLLBACK t2 because: stock went negative
+  caller still sees the ValueError
+
+======== 5. async/await: sequential vs concurrent, and blocking the loop 
+  sequential      ['db', 'cache', 'api']  0.63 s
+  concurrent      ['db', 'cache', 'api']  0.21 s
+  with_taskgroup  ['db', 'cache', 'api']  0.21 s
+  without await you get: coroutine - the function body never ran
+  ping answered    0.0 ms late while a 'good' handler ran
+  ping answered  491.2 ms late while a 'bad' handler ran
+  ping answered    0.0 ms late while a 'offloaded' handler ran
+
+======== 6. ContextVar: per-request 'globals' ========================
+  [req-A] start
+  [req-B] start
+  [req-B] end (still my own id after other requests ran)
+  [req-A] end (still my own id after other requests ran)
+
+======== 7. Pydantic: parse, validate, coerce, dump ==================
+  '3' coerced to int: item='pen' quantity=3
+  rejected ('item',): String should have at least 1 character
+  rejected ('quantity',): Input should be a valid integer, unable to parse string as an integer
+  strict mode refuses '3': Input should be a valid integer
+  UserOut from an object: {'id': 1, 'email': 'ada@example.com'} <- no password_hash
+
+======== 8. The mutable-default-argument bug =========================
+  add_tag('a') -> ['a']
+  add_tag('b') -> ['a', 'b']  <- 'a' leaked from the previous call
+  fixed: ['a'] ['b']
+
+======== 9. Protocol: duck typing you can type-check =================
+  with a fake store: hello ada@example.com | who are you?
+
+======== 10. ORM: N+1 queries, and the async lazy-load crash =========
+  lazy (default)  50 users, 100 orders -> 51 SQL queries
+  selectinload    50 users, 100 orders -> 2 SQL queries
+  async lazy load -> StatementError: (sqlalchemy.exc.MissingGreenlet) greenlet_spawn has not been called; c...
+  async + selectinload -> 1 order(s), no error
+
+======== 11. Threads: fine for waiting, useless for CPU (with the GIL) 
+  CPU work: 4 in a row 0.51 s | 4 threads 0.50 s
+  I/O wait: 4 in a row 0.80 s | 4 threads 0.20 s
+  (Python 3.12.10, GIL enabled: True)

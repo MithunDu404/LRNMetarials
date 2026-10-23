@@ -154,6 +154,9 @@ Here is the exact code mapping showing how classic computer science algorithms p
 ### 4.1 HTTP URL Router via Radix / Prefix Trie
 Modern routers match URL segments using a Trie rather than evaluating hundreds of sequential regular expressions:
 
+> [!warning] Correction (checked 23 Oct 2026 in the Starlette 1.7 source)
+> This is true of *some* routers (Go's `httprouter`, for example), but **not of FastAPI/Starlette**. Starlette compiles each route path to a regex and tries the routes **in registration order**, taking the first full match (`for route in self.routes: ... if match == Match.FULL` in `starlette/routing.py`). That's why `/users/me` must be declared before `/users/{user_id}`. The trie below is still a good DSA exercise; it just isn't how FastAPI routes. See `py/Reading a Python Backend 2`, §4.3.
+
 ```python
 class TrieNode:
     def __init__(self):
@@ -227,6 +230,9 @@ class TokenBucketRateLimiter:
 
 ### 4.3 Dependency Injection Resolution via DAG & Kahn's Topological Sort
 FastAPI's `Depends()` resolver analyzes the dependency graph between functions and models, computes the topological execution order, and detects circular dependency deadlocks:
+
+> [!warning] Correction (checked 23 Oct 2026 in the FastAPI 0.143 source)
+> FastAPI does **not** run Kahn's algorithm. `solve_dependencies` (in `fastapi/dependencies/utils.py`) **recurses depth-first** into each sub-dependency and stores results in a per-request `dependency_cache`, so a dependency shared by two others runs once. A depth-first recursion also produces a valid topological order, so the *outcome* matches; the mechanism differs. The Kahn's code below is a correct exercise in topological sorting, as a model of the idea rather than FastAPI's implementation. See `py/Reading a Python Backend 1`, §6.3, for a 40-line recursive resolver that behaves like FastAPI's.
 
 ```python
 from collections import defaultdict, deque
