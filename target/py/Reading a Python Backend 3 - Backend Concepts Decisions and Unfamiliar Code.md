@@ -445,6 +445,8 @@ LLMs learned from years of older tutorials, so their mistakes are predictable. C
 | Set | Permission and scope checks (`required <= granted`), dedup of idempotency keys | `py-dsa.md` Node 4 |
 | LRU cache | `functools.lru_cache` for settings and pure lookups | Mastery Paradigm 10 |
 
+For the contest side of the same structures (tested templates, measured costs, recursion limits), see [Python DSA: Templates, Patterns and Performance](Python%20DSA%20-%20Templates%20Patterns%20and%20Performance.md).
+
 The difference from contest code: in a backend, the data structure usually lives **outside your process** (a database index, a Redis sorted set). The algorithmic thinking is the same; the cost model adds network round trips.
 
 ---

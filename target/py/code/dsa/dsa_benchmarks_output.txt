@@ -1,0 +1,53 @@
+Python 3.12.10 on win32
+
+1. Draining a queue of n items (seconds)
+   n=   1000: list.pop(0)   0.0001 | deque.popleft   0.0000 | ratio     2.5x
+   n=   5000: list.pop(0)   0.0014 | deque.popleft   0.0002 | ratio     7.2x
+   n=  10000: list.pop(0)   0.0058 | deque.popleft   0.0004 | ratio    15.0x
+   n=  25000: list.pop(0)   0.0399 | deque.popleft   0.0009 | ratio    44.1x
+   n=  50000: list.pop(0)   0.1364 | deque.popleft   0.0020 | ratio    67.7x
+   n= 100000: list.pop(0)   0.6004 | deque.popleft   0.0041 | ratio   144.9x
+   n= 200000: list.pop(0)   2.8497 | deque.popleft   0.0087 | ratio   328.9x
+
+2. Building a string of n chars one at a time (seconds)
+   n=  10000: s += 'x' 0.0007 | with extra refs 0.0009 | aliased 0.0022 | ''.join 0.0002
+   n=  50000: s += 'x' 0.0034 | with extra refs 0.0054 | aliased 0.0285 | ''.join 0.0013
+   n= 100000: s += 'x' 0.0069 | with extra refs 0.0114 | aliased 0.1010 | ''.join 0.0025
+   n= 200000: s += 'x' 0.0139 | with extra refs 0.0268 | aliased 0.3670 | ''.join 0.0061
+   n= 400000: s += 'x' 0.0274 | with extra refs 0.0643 | aliased 1.5862 | ''.join 0.0130
+
+3. Reading 500,000 integers from stdin (seconds, interpreter startup 0.098s subtracted)
+   input() loop                     0.267
+   sys.stdin.readline loop          0.114
+   sys.stdin.read().split()         0.085
+   sys.stdin.buffer.read().split()  0.064
+
+4. Push 100,000 random floats then pop them all (seconds)
+   heapq push + pop       0.049
+   heapify + pop          0.043
+   queue.PriorityQueue    0.192
+   bisect.insort list     1.243
+   SortedList             0.149
+
+5. Product of n numbers <= 1e9, mod 1e9+7 (seconds)
+   n=  1000: mod every step 0.0001 | mod at the end 0.0007 | ratio   13.5x
+   n=  5000: mod every step 0.0002 | mod at the end 0.0122 | ratio   56.7x
+   n= 10000: mod every step 0.0004 | mod at the end 0.0460 | ratio  108.0x
+   n= 20000: mod every step 0.0009 | mod at the end 0.1831 | ratio  204.7x
+   n= 40000: mod every step 0.0017 | mod at the end 0.7141 | ratio  417.2x
+
+6. Deepest recursion that works (searched up to 1,000,000; recursion limit set to 10**6)
+   plain recursive function     main   1,000,000  (= search cap)
+   plain recursive function     thread 1,000,000  (= search cap)
+   @functools.cache recursion   main         998
+   @functools.cache recursion   thread       998
+   hand-written dict memo       main   1,000,000  (= search cap)
+   hand-written dict memo       thread 1,000,000  (= search cap)
+
+7. Loop styles over 1,000,000 items (seconds)
+   append_loop        0.0540
+   append_loop_local  0.0579
+   comprehension      0.0480
+   map_lambda         0.0684
+   manual_sum         0.0240
+   builtin_sum        0.0059

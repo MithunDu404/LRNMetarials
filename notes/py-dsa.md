@@ -271,6 +271,9 @@ graph TD
 > 1. **Slicing creates copies:** `sub = arr[l:r]` creates an independent list and copies $(r - l)$ pointers in $O(r - l)$ time. In recursive algorithms (e.g. divide-and-conquer, binary search), never slice! Always pass index pointers `l` and `r`.
 > 2. **String Immutability:** Python strings are immutable byte arrays. Doing `s += ch` in a loop of $N$ characters can become $O(N^2)$ because the growing string is reallocated.
 >    - Idiom: accumulate in a list and call `"".join(chars)` in $O(N)$ total time.
+>
+> > [!warning] Correction (measured 23 Oct 2026, CPython 3.12)
+> > In CPython, `s += ch` is usually **linear**: when `s` has only one reference, CPython resizes the string in place. Measured: 400,000 appends took about 0.03 s with `s += 'x'` and about 0.01 s with `"".join`. It turns quadratic **when another reference to the string exists** (`t = s; s = t + 'x'` took about 1.6 s for the same 400,000) and on runtimes such as PyPy that don't have the trick. `"".join` is still the safe habit. Figure 5 in `target/py/Python DSA - Templates Patterns and Performance.md` shows all four curves.
 
 ```mermaid
 graph TD
@@ -508,6 +511,8 @@ graph TD
 > 
 > ### 3. CP Alert: The Anti-Hash Trap on Codeforces
 > In CPython, `hash(x) == x` for almost all small integers.
+> *(Correction, 23 Oct 2026: CPython's probing isn't quadratic. It's a "perturbation" scheme, `j = (5*j + 1 + perturb) mod table_size`, with `perturb` shifted right by 5 bits each step, so higher bits of the hash gradually join in. The collision risk below is real, and is "as reported" from Codeforces hacks; it wasn't reproduced here.)*
+>
 > Because `dict` and `set` use open addressing with quadratic-style probing, malicious test cases containing crafted arithmetic progressions can force **every single insertion to collide**, degrading lookup from $O(1)$ to $O(N)$ and total time to $O(N^2)$ (TLE).
 > 
 > #### The CP Defense (Custom XOR Hash):
@@ -708,6 +713,11 @@ graph TD
 >     thread.join()
 > ```
 > 
+> > [!warning] Correction (measured 23 Oct 2026, CPython 3.12.10 on Windows)
+> > - With `sys.setrecursionlimit(10**6)`, a **plain** recursive function reached **1,000,000** calls deep on the main thread. Since Python 3.11, Python-to-Python calls no longer use the C stack, so the thread trick isn't needed for plain recursion on modern CPython. It still matters on PyPy and older CPython, which judges may run.
+> > - **`threading.stack_size(1 << 29)` (512 MiB) and `1 << 28` (256 MiB) were rejected on Windows** with `ValueError: size not valid`; 64 MiB worked.
+> > - **Recursion through `@functools.cache` / `@lru_cache` stopped at 998 calls deep**, even with the limit set to 10**6 and even inside a 64 MiB thread. The cache wrapper is C code, and CPython 3.12 limits C-level recursion separately. Deep top-down DP needs a hand-written `memo` dict (reached 1,000,000) or a bottom-up loop. See Figure 9 in `target/py/Python DSA - Templates Patterns and Performance.md`. Other versions and operating systems give different numbers, so test on your judge's version.
+>
 > ---
 > 
 > ### 3. Iterative DFS: Bulletproof Zero-Recursion Pattern
@@ -864,6 +874,9 @@ graph TD
 > ```python
 > solve.cache_clear()
 > ```
+>
+> #### Trap 3 (added 23 Oct 2026, measured): `@cache` has its own depth limit
+> On CPython 3.12.10 (Windows), a `@cache`-decorated recursive function failed beyond **998** nested calls, **whatever `sys.setrecursionlimit` says**. The wrapper is C code, and C-level recursion is limited separately. If the recursion can go deeper than about 1,000 (a DP over `i` up to 10^5, for example), use a manual `memo = {}` dict, which reached 1,000,000 in the same test, or convert to bottom-up.
 > 
 > ---
 > 
@@ -905,7 +918,12 @@ graph TD
 > Furthermore:
 > - **No 64-bit Overflow:** Python integers have arbitrary precision (bignums). They will never overflow to negative values like C++ `int` or `long long`.
 > - **The Bignum Trap:** Multiplying huge numbers without `% MOD` at each step degrades multiplication from $O(1)$ hardware instructions to $O(\text{digits}^{1.58})$ Karatsuba arithmetic, eating up seconds of CPU time!
-> 
+>
+> > [!warning] Corrections (measured 23 Oct 2026, CPython 3.12.10)
+> > - **`input()` is slower, but not 1.5 s slow here.** Reading 500,000 integers took about **0.27 s** with an `input()` loop, **0.11 s** with `sys.stdin.readline`, **0.085 s** with `sys.stdin.read().split()` and **0.064 s** with `sys.stdin.buffer.read().split()` (interpreter startup removed; input redirected from a file). Bulk reading is still about 4× faster and still the right habit. The 1.5–2.5 s figures are "as reported" and may reflect older Pythons or slow judge pipes.
+> > - **Karatsuba isn't the cause.** Multiplying a big product by one number ≤ 10^9 is a *big × small* multiplication, and that's **linear** in the product's size; Karatsuba only applies when both numbers are large. The product grows by about 30 bits per step, so the total work is $O(n^2)$. Measured at n = 40,000: about 0.71 s versus 0.0017 s with `% MOD` every step (about 400×).
+> > - **"No overflow" has one catch:** since Python 3.11, `str(x)` and `print(x)` raise `ValueError: Exceeds the limit (4300 digits) for integer string conversion` for huge ints. Call `sys.set_int_max_str_digits(0)` when a problem really prints big integers.
+>
 > ---
 > 
 > ### 2. The Gold Standard: Fast I/O via `sys.stdin.read().split()`
@@ -972,9 +990,9 @@ graph TD
 ```mermaid
 graph TD
     subgraph InputComparison ["Input Processing Speed ($N = 5 \times 10^5$)"]
-        A["input() in a loop<br/>~1.8 - 2.5s (High Risk of TLE)"]
-        B["sys.stdin.readline in loop<br/>~0.6 - 0.8s"]
-        C["sys.stdin.read().split() + iterator<br/>~0.10 - 0.15s (Optimal)"]
+        A["input() in a loop<br/>as reported ~1.8 - 2.5s; measured 0.27s (3.12)"]
+        B["sys.stdin.readline in loop<br/>as reported ~0.6 - 0.8s; measured 0.11s"]
+        C["sys.stdin.read().split() + iterator<br/>as reported ~0.10 - 0.15s; measured 0.085s (buffer: 0.064s)"]
     end
 ```
 
@@ -997,6 +1015,7 @@ graph TD
 > [!success] Correct ✓
 > **Learner Answer:** As `prod` grows to hundreds of thousands of digits, each multiplication takes superlinear $O(D^{1.58})$ time instead of $O(1)$, making total time explode.
 > **Takeaway:** Always apply modulo at **every single intermediate step** in Python (`prod = (prod * x) % MOD`), even though Python integers never overflow.
+> *(Correction, 23 Oct 2026: the conclusion is right, but the reason is wrong. Each `prod *= x` is big × small, which is linear in the size of `prod`, not $O(D^{1.58})$. The total over n steps is $O(n^2)$. See the Node 8 correction box above, and Figure 8 in `target/py/Python DSA - Templates Patterns and Performance.md`.)*
 
 ---
 
@@ -1012,6 +1031,6 @@ graph TD
 | `std::unordered_map` | `dict` or `collections.defaultdict` | Lookup/Insert: $O(1)$ amortized | Integer keys can collide to $O(N^2)$ on Codeforces without XOR salt. |
 | Frequency Counting | `collections.Counter` | Count: $O(N)$<br/>`most_common(k)`: $O(U \log K)$ | Returns `0` on missing key instead of raising `KeyError`. |
 | `std::set` / `std::map` (Balanced BST) | `sortedcontainers.SortedList` | Insert/Delete/Bisect: $O(\log N)$ | Built-in `set` is a hash table (no ordering). Use `SortedList` on LeetCode; Fenwick/Segment Tree on Codeforces. |
-| Top-Down DP Memoization | `@functools.cache` | $O(1)$ lookup | All arguments must be immutable/hashable (`tuple`, not `list`). Clear cache between test cases with `func.cache_clear()`. |
-| Fast I/O (`cin.tie(NULL)`) | `sys.stdin.read().split()` | Reads $10^6$ tokens in ~0.15s | `input()` in a loop causes TLE ($>1.5\text{s}$ overhead). |
-| Recursion Stack | `sys.setrecursionlimit(300000)` | Matches DFS depth | Default CPython recursion limit is only 1000! |
+| Top-Down DP Memoization | `@functools.cache` | $O(1)$ lookup | All arguments must be immutable/hashable (`tuple`, not `list`). Clear cache between test cases with `func.cache_clear()`. **Measured on 3.12: fails beyond about 1,000 nested calls whatever the recursion limit says. Use a dict memo or bottom-up for deep DP** (correction, 23 Oct 2026). |
+| Fast I/O (`cin.tie(NULL)`) | `sys.stdin.read().split()` | Reads $10^6$ tokens in ~0.15s | `input()` in a loop causes TLE ($>1.5\text{s}$ overhead). *Measured on 3.12: 0.27 s vs 0.085 s for 500k ints. Slower, but about 3×, not 15×.* |
+| Recursion Stack | `sys.setrecursionlimit(300000)` | Matches DFS depth | Default CPython recursion limit is only 1000! *On 3.11+, plain recursion to 10^6 worked once raised (measured 3.12).* |

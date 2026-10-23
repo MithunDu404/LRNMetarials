@@ -1,0 +1,50 @@
+
+--- 1. Division and modulo round toward minus infinity (C++ truncates toward zero) ---
+-7 // 2 = -4    (C++: -3)
+-7 % 2  = 1    (C++: -1)
+int(-7 / 2) = -3   <- truncates like C++, but goes through a float
+math.fmod(-7, 2) = -1.0  <- C-style remainder
+(-1) % (10**9 + 7) = 1000000006  <- always non-negative: no '+ MOD' fix-up needed
+
+--- 2. Big integers: no overflow, but printing huge ones is limited ---
+7**10000 has 8451 decimal digits; arithmetic on it is fine: 1
+str(7**10000) -> ValueError: Exceeds the limit (4300 digits) for integer string conversion; use sys.set_...
+after sys.set_int_max_str_digits(0): printed 8451 digits fine
+
+--- 3. Bit operations treat ints as infinite two's complement ---
+~5 = -6   -5 >> 1 = -3   -1 & 0xFF = 255
+(1 << 64) = 18446744073709551616   <- no wrap-around; mask with & ((1 << 64) - 1) to emulate uint64
+(13).bit_count() = 3   (13).bit_length() = 4   lowbit 12 & -12 = 4
+
+--- 4. round() is banker's rounding; floats are doubles ---
+round(0.5), round(1.5), round(2.5) = 0 2 2
+0.1 + 0.2 == 0.3 -> False   math.isclose -> True
+int(math.sqrt(10**18 - 1)) = 1000000000  math.isqrt = 999999999 <- the float is wrong, isqrt is exact
+float(2**53 + 1) == 2**53 -> True
+
+--- 5. Heap tuples compare element by element; ties reach the payload ---
+push (1, dict) twice -> TypeError: '<' not supported between instances of 'dict' and 'dict'
+with (priority, counter, payload): ['a', 'b']
+
+--- 6. Sorting: stable, key-based, and mixed types fail ---
+sorted by number only (stable keeps letter order): [('a', 1), ('d', 1), ('b', 2), ('c', 2)]
+sorted([3, 'a', 1]) -> TypeError: '<' not supported between instances of 'str' and 'int'
+max with key + default: None ccc
+
+--- 7. 'is' is identity, '==' is value ---
+256 is 256 -> True  | int('257') is int('257') -> False  | == -> True
+use 'is' only for None: x is None
+
+--- 8. Strings: immutable, compared by code point, no char type ---
+'Z' < 'a' -> True   ord('a') = 97   chr(98) = b
+'abc'[::-1] = cba   'a,b,,c'.split(',') = ['a', 'b', '', 'c']   ' x '.split() = ['x']
+letter counts of 'banana' via ord(ch) - 97: {'a': 3, 'b': 1, 'n': 2}
+
+--- 9. Default arguments and @cache persist across calls / test cases ---
+ways(30) = 1346269  cache_info: CacheInfo(hits=28, misses=31, maxsize=None, currsize=31)
+after cache_clear(): CacheInfo(hits=0, misses=0, maxsize=None, currsize=0)
+
+--- 10. Copying 2D grids ---
+[[0]*3]*2 after grid[0][0]=1: [[1, 0, 0], [1, 0, 0]]  <- one row, two references
+[[0]*3 for _ in range(2)]:    [[1, 0, 0], [0, 0, 0]]
+grid[:] is shallow, so grid changed too: [[1, 0, 0], [0, 9, 0]]  -> use [row[:] for row in grid]
