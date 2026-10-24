@@ -1,8 +1,8 @@
 # Reading a Python Backend 2: A Codebase Tour and One Request Traced
 
 > **Series:** [Part 1: The Python You Need](Reading%20a%20Python%20Backend%201%20-%20The%20Python%20You%20Need.md) · **Part 2 (this file)** · [Part 3: Backend Concepts, Decisions and Unfamiliar Code](Reading%20a%20Python%20Backend%203%20-%20Backend%20Concepts%20Decisions%20and%20Unfamiliar%20Code.md) · [Folder index](README.md)
-> **Source:** the runnable app in [code/shop_api/](code/shop_api/README.md). It has 11 passing tests and was written for this guide in the layout real FastAPI projects use. Every output block is pasted from a real run (Python 3.12, FastAPI 0.143, Starlette 1.7, SQLAlchemy 2.1, Pydantic 2.14).
-> **Facts re-checked:** 23 October 2026.
+> **Source:** the runnable app in [code/shop_api/](code/shop_api/README.md). It has 11 passing tests and was written for this guide in the layout real FastAPI projects use. Every output block is pasted from a real run (Python 3.12, FastAPI 0.143, Starlette 1.7, SQLAlchemy 2.1, Pydantic 2.14). **Re-run on the latest releases (FastAPI 0.162, Starlette 1.9, SQLAlchemy 2.1.6) on 24 October 2026:** the tests pass, and the trace, the route-order trap and the missing-`response_model` leak all behave exactly as shown. Only the timings differ.
+> **Facts re-checked:** 24 October 2026.
 
 **The big picture:** reading a backend isn't reading files in alphabetical order. You find the entry point, draw the layer map, then **follow one request** from the socket to the database and back. Once you've traced one request, every other endpoint is a variation on it. This part does exactly that, on a small app you can run and break.
 
@@ -53,8 +53,8 @@ If you can say who does what, you can read any backend, because almost all of th
 1. **Open `main.py` first** (or wherever the `FastAPI()` / `Flask()` / Django `settings` object is). It lists routers, middleware, startup work and error handlers.
 2. **Layers point one way:** routers → services → repositories → models. Schemas sit at the HTTP edge. If a router builds SQL, or a repository raises `HTTPException`, the layering is leaking.
 3. **Trace one request.** The real order, measured in §4: middleware → dependencies (session, auth, service) → body validation → endpoint → service → repository → SQL → commit → response serialisation → middleware → **cleanup after the response is sent**.
-4. **Each dependency runs once per request** and is shared, so the session is opened once even though three things need it.
-5. **Dependencies run before the body is checked.** An invalid body still costs you a token check and a database query, then returns 422.
+4. **Each dependency runs once per request** and is shared, so the session is opened once even though two other dependencies need it.
+5. **Dependencies run before the body's *values* are checked.** A body with invalid values still costs you a token check and a database query, then returns 422. (Malformed JSON is rejected earlier, before any dependency runs.)
 6. **Route order matters.** Starlette tries routes in the order they were added; `/users/{user_id}` registered before `/users/me` turns "me" into a 422.
 7. **The tests show how the app is meant to be used.** Read them early.
 
@@ -77,9 +77,13 @@ py -3.12 -m pytest -q
 py -3.12 -m uvicorn app.main:app --reload
 ```
 
-Then open `http://127.0.0.1:8000/docs`. FastAPI generated that page from your type hints and Pydantic schemas (OpenAPI). Try `POST /auth/register`, then `POST /auth/token`, copy the token, and call `POST /orders` with an `Authorization: Bearer <token>` header.
+Then open `http://127.0.0.1:8000/docs`. FastAPI generated that page from your type hints and Pydantic schemas (OpenAPI). Try it:
 
-> **Note:** the login endpoint here takes a JSON body. The OAuth2 password flow behind Swagger's "Authorize" button sends a *form* instead, which needs the `python-multipart` package. To keep the install small, this demo skips the form. Apart from that, everything matches FastAPI's own security tutorial (PyJWT + pwdlib/Argon2, checked 23 Oct 2026).
+1. `POST /auth/register` with `{"email": "ada@example.com", "password": "correct-horse"}`.
+2. Click **Authorize** (top right), type the email into *username* and the password into *password*, and log in. Swagger calls `POST /auth/token` with a **form** and stores the token it gets back.
+3. Call `POST /orders`. Swagger now adds `Authorization: Bearer <token>` for you.
+
+> **Why the login takes a form, not JSON:** the OAuth2 "password flow" standard sends `username=...&password=...` as a form, and Swagger's Authorize button speaks that standard. [routers/auth.py](code/shop_api/app/routers/auth.py) uses FastAPI's `OAuth2PasswordRequestForm` for this, exactly as FastAPI's own security tutorial does (with PyJWT and pwdlib/Argon2, checked 24 Oct 2026). Reading forms needs the `python-multipart` package. The field is called `username` by the standard; this app puts the email in it.
 
 ---
 
@@ -246,7 +250,21 @@ status : 422
 body   : {'detail': [{'type': 'greater_than', 'loc': ['body', 'quantity'], 'msg': 'Input should be greater than 0', 'input': 0, 'ctx': {'gt': 0}}]}
 ```
 
-FastAPI solves the dependencies, validates the body, and only then reports all the errors together as a 422. So the endpoint never ran, but the token check and the user `SELECT` did. Two practical consequences:
+FastAPI solves the dependencies, validates the body, and only then reports all the errors together as a 422. So the endpoint never ran, but the token check and the user `SELECT` did.
+
+There's one exception. **Malformed** JSON (for example `{not json`) is rejected while the body is being read, *before* any dependency runs. Measured on FastAPI 0.162: the only log lines were `middleware: start` and `middleware: done 422`, with error type `json_invalid`. So the order is: read and parse the JSON → run the dependencies → check the body's values against the schema → call the endpoint.
+
+```mermaid
+flowchart LR
+    A["request arrives"] --> B{"body is valid JSON?"}
+    B -- no --> X1["422 json_invalid<br/>(no dependency ran)"]
+    B -- yes --> C["run dependencies<br/>(session, token check, DB lookup)"]
+    C --> D{"values match<br/>OrderCreate?"}
+    D -- no --> X2["422 with field errors<br/>(dependencies already ran,<br/>yield cleanup still runs)"]
+    D -- yes --> E["call the endpoint"]
+```
+
+Two practical consequences:
 
 - Expensive dependencies (calling an auth server, loading big objects) are paid even for junk requests.
 - The `RequestValidationError` passed **through** `get_session`, which is why you see "rolled back after an error". Your `except` in a yield dependency sees validation failures too.
@@ -315,7 +333,7 @@ app = create_app()
 
 `Mapped[int]` / `mapped_column(...)` is SQLAlchemy 2.x style. If you see `Column(Integer, ...)` without `Mapped`, the code was written for 1.x and still works. `relationship(back_populates=...)` links `User.orders` ↔ `Order.user`. `CheckConstraint("quantity > 0")` makes the **database** enforce a rule as well as Pydantic. That's defence in depth, because not every write comes through the API.
 
-**Look for:** money stored as `Float` (a bug: use integer cents or `Numeric`); missing `index=True` on columns used in `WHERE`; a `relationship` you later loop over (the N+1 risk: see Part 3 §3 and Figure 2).
+**Look for:** money stored as `Float` (a bug: use integer cents or `Numeric`); missing `index=True` on columns used in `WHERE`; a `relationship` you later loop over (the N+1 risk: see Part 3 §3.3).
 
 ### 5.4 `schemas.py`: the API contract
 
@@ -329,11 +347,21 @@ Separate **input** schemas (`UserCreate`, `OrderCreate`) and **output** schemas 
 
 No error and no warning: FastAPI's fallback encoder turned the ORM object's columns into JSON, **password hash included**. The only thing standing between the database row and the client is the output schema.
 
-**Look for:** one schema used for both input and output (a client could then set fields like `is_admin`); and **any endpoint with neither `response_model` nor a return type annotation that returns an ORM object**. That's the leak above. A return annotation such as `-> UserOut` works as a response model too.
+**Look for:** one schema used for both input and output (a client could then set fields like `is_admin`); and **any endpoint with neither `response_model` nor a return type annotation that returns an ORM object**. That's the leak above.
+
+A return annotation works as a response model too. Measured on FastAPI 0.162, the same leaky endpoint written as `async def annot(...) -> UserOut:` returned `{"id":1,"email":"a@b.co","is_admin":false}`, with the hash filtered out. The status code still comes from the decorator (`status_code=201`).
 
 ### 5.5 `repositories.py`: queries only
 
 Each method answers one question: `get_by_email`, `list_for_user(user_id, after_id, limit)`. **No commits and no permission decisions.** `list_for_user` implements **keyset pagination**: `WHERE id > :cursor ORDER BY id LIMIT n`.
+
+Why keyset instead of the more familiar `LIMIT 20 OFFSET 40`? `OFFSET n` makes the database walk past n rows and throw them away, so every page is slower than the one before it. `WHERE id > cursor` uses the primary-key index to jump straight to the right row:
+
+![Line chart: time to fetch one 20-row page from a 1,000,000-row table. With OFFSET the time grows linearly from about 0 to about 10 ms at row 990,000; with WHERE id > cursor it stays flat at about 0.03 ms.](images/fig11_pagination.png)
+
+*Figure 1 (measured, SQLite in memory, 1,000,000 rows). Each point fetches one 20-row page that many rows deep. OFFSET (red) grows in a straight line, because the skipped rows are read and discarded. Keyset (green) is flat, because it's an index lookup. On a disk-backed database with wider rows the red line is much steeper. Keyset also keeps pages stable: a new row inserted while you page can't shift items into or out of the next page.*
+
+Keyset's trade-off: you can only go "next" (or "previous") from a cursor, not "jump to page 37". Most feeds and APIs don't need page numbers.
 
 **Look for:** queries in loops (N+1); `OFFSET` pagination on big tables (it gets slower page by page); repositories that commit (two repository calls can then no longer form one transaction).
 

@@ -24,11 +24,6 @@ class UserCreate(BaseModel):
         return v
 
 
-class LoginIn(BaseModel):
-    email: str
-    password: str
-
-
 class OrderCreate(BaseModel):
     item: str = Field(min_length=1, max_length=100)
     quantity: int = Field(gt=0, le=100)

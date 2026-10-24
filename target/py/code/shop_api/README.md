@@ -24,7 +24,7 @@ trace_request.py     prints every layer one request passes through
 Run from this folder (`target/py/code/shop_api`):
 
 ```bash
-py -3.12 -m pip install fastapi uvicorn sqlalchemy aiosqlite greenlet pydantic-settings pyjwt "pwdlib[argon2]" pytest httpx
+py -3.12 -m pip install fastapi uvicorn sqlalchemy aiosqlite greenlet pydantic-settings pyjwt "pwdlib[argon2]" python-multipart pytest httpx
 py -3.12 -m pytest -q
 py -3.12 trace_request.py
 py -3.12 -m uvicorn app.main:app --reload

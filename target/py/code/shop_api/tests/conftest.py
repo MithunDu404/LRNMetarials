@@ -23,5 +23,5 @@ def client(tmp_path):
 def auth_headers(client):
     """Register a user, log in, and return the Authorization header."""
     client.post("/auth/register", json={"email": "ada@example.com", "password": "correct-horse"})
-    token = client.post("/auth/token", json={"email": "ada@example.com", "password": "correct-horse"}).json()
+    token = client.post("/auth/token", data={"username": "ada@example.com", "password": "correct-horse"}).json()
     return {"Authorization": f"Bearer {token['access_token']}"}

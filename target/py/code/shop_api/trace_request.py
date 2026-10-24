@@ -41,7 +41,7 @@ def main() -> None:
     root.setLevel(logging.WARNING)  # keep setup quiet
     with TestClient(create_app(settings)) as client:
         client.post("/auth/register", json={"email": "ada@example.com", "password": "correct-horse"})
-        token = client.post("/auth/token", json={"email": "ada@example.com", "password": "correct-horse"}).json()["access_token"]
+        token = client.post("/auth/token", data={"username": "ada@example.com", "password": "correct-horse"}).json()["access_token"]
 
         print("=== POST /orders  (X-Request-ID: demo-001) ===")
         root.setLevel(logging.INFO)

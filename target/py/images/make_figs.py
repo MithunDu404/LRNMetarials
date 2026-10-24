@@ -178,7 +178,88 @@ def fig03_password_hashing():
     save(fig, "fig03_password_hashing.png")
 
 
+# ------------------------------------------------------------------ fig 10
+def fig10_async_timeline():
+    """Measured start/end of three awaited 'I/O calls', run one after another vs together."""
+    jobs = [("database query", 0.30), ("cache lookup", 0.10), ("payment API", 0.20)]
+
+    async def call(name, secs, t0, log):
+        start = time.perf_counter() - t0
+        await asyncio.sleep(secs)              # stands in for waiting on a socket
+        log.append((name, start, time.perf_counter() - t0))
+
+    async def sequential():
+        t0, log = time.perf_counter(), []
+        for name, secs in jobs:
+            await call(name, secs, t0, log)
+        return log
+
+    async def together():
+        t0, log = time.perf_counter(), []
+        async with asyncio.TaskGroup() as tg:
+            for name, secs in jobs:
+                tg.create_task(call(name, secs, t0, log))
+        return log
+
+    runs = [("await one after another", asyncio.run(sequential())),
+            ("asyncio.TaskGroup (all at once)", asyncio.run(together()))]
+    colours = {"database query": BLUE, "cache lookup": GREEN, "payment API": AMBER}
+    fig, axes = plt.subplots(2, 1, figsize=(8.4, 4.4), sharex=True)
+    for ax, (title, log) in zip(axes, runs):
+        order = {n: i for i, (n, _) in enumerate(jobs)}
+        for name, start, end in log:
+            y = len(jobs) - 1 - order[name]
+            ax.barh(y, end - start, left=start, color=colours[name], height=0.6)
+            ax.text(end + 0.005, y, f"{name}  {start:.2f}-{end:.2f} s", va="center", fontsize=8)
+        total = max(e for _, _, e in log)
+        ax.axvline(total, color=GRAY, ls="--", lw=1)
+        ax.set_yticks([])
+        ax.set_title(f"{title}: finished at {total:.2f} s", loc="left", fontsize=10)
+    axes[-1].set_xlabel("seconds since the request started")
+    axes[-1].set_xlim(0, 0.85)
+    fig.suptitle("Concurrency only happens where you let the waits overlap", fontweight="bold")
+    fig.text(0.01, -0.02, MACHINE + ". asyncio.sleep stands in for network waits.", fontsize=8, color=GRAY)
+    fig.tight_layout()
+    save(fig, "fig10_async_timeline.png")
+
+
+# ------------------------------------------------------------------ fig 11
+def fig11_pagination(rows=1_000_000, page=20):
+    """Time to fetch one page deep into a table: OFFSET vs keyset (WHERE id > cursor)."""
+    import sqlite3
+    db = sqlite3.connect(":memory:")
+    db.execute("CREATE TABLE orders (id INTEGER PRIMARY KEY, user_id INT, item TEXT)")
+    db.executemany("INSERT INTO orders (user_id, item) VALUES (?, ?)",
+                   ((i % 1000, f"item{i}") for i in range(rows)))
+    db.commit()
+
+    def best(sql, args, reps=5):
+        b = float("inf")
+        for _ in range(reps):
+            t0 = time.perf_counter()
+            db.execute(sql, args).fetchall()
+            b = min(b, time.perf_counter() - t0)
+        return b * 1000
+
+    depths = [0, 10_000, 100_000, 250_000, 500_000, 750_000, 990_000]
+    off = [best("SELECT * FROM orders ORDER BY id LIMIT ? OFFSET ?", (page, d)) for d in depths]
+    key = [best("SELECT * FROM orders WHERE id > ? ORDER BY id LIMIT ?", (d, page)) for d in depths]
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.plot([d / 1000 for d in depths], off, "o-", color=RED, label="LIMIT 20 OFFSET n  (skips n rows one by one)")
+    ax.plot([d / 1000 for d in depths], key, "o-", color=GREEN, label="WHERE id > cursor LIMIT 20  (index jump)")
+    ax.set_xlabel("how deep the page is (thousands of rows skipped)")
+    ax.set_ylabel("ms to fetch one 20-row page")
+    ax.set_title(f"Deep pages: OFFSET {off[-1] / key[-1]:,.0f}x slower than keyset at row {depths[-1]:,}")
+    ax.legend(loc="upper left", fontsize=8)
+    ax.text(0.0, -0.22, MACHINE + f". SQLite in memory, {rows:,} rows, best of 5.\nPostgreSQL behaves the same way: OFFSET must walk past every skipped row.",
+            transform=ax.transAxes, fontsize=8, color=GRAY, va="top")
+    save(fig, "fig11_pagination.png")
+    return depths, off, key
+
+
 if __name__ == "__main__":
     fig01_event_loop_blocking()
     fig02_n_plus_one()
     fig03_password_hashing()
+    fig10_async_timeline()
+    fig11_pagination()

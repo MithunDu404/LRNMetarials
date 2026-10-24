@@ -273,7 +273,7 @@ graph TD
 >    - Idiom: accumulate in a list and call `"".join(chars)` in $O(N)$ total time.
 >
 > > [!warning] Correction (measured 23 Oct 2026, CPython 3.12)
-> > In CPython, `s += ch` is usually **linear**: when `s` has only one reference, CPython resizes the string in place. Measured: 400,000 appends took about 0.03 s with `s += 'x'` and about 0.01 s with `"".join`. It turns quadratic **when another reference to the string exists** (`t = s; s = t + 'x'` took about 1.6 s for the same 400,000) and on runtimes such as PyPy that don't have the trick. `"".join` is still the safe habit. Figure 5 in `target/py/Python DSA - Templates Patterns and Performance.md` shows all four curves.
+> > In CPython, `s += ch` is usually **linear**: when `s` has only one reference, CPython resizes the string in place. Measured: 400,000 appends took about 0.03 s with `s += 'x'` and about 0.01 s with `"".join`. It turns quadratic **when another reference to the string exists** (`t = s; s = t + 'x'` took about 1.6 s for the same 400,000) and on runtimes such as PyPy that don't have the trick. `"".join` is still the safe habit. Figure 2 in `target/py/Python DSA - Templates Patterns and Performance.md` shows all four curves.
 
 ```mermaid
 graph TD
@@ -716,7 +716,7 @@ graph TD
 > > [!warning] Correction (measured 23 Oct 2026, CPython 3.12.10 on Windows)
 > > - With `sys.setrecursionlimit(10**6)`, a **plain** recursive function reached **1,000,000** calls deep on the main thread. Since Python 3.11, Python-to-Python calls no longer use the C stack, so the thread trick isn't needed for plain recursion on modern CPython. It still matters on PyPy and older CPython, which judges may run.
 > > - **`threading.stack_size(1 << 29)` (512 MiB) and `1 << 28` (256 MiB) were rejected on Windows** with `ValueError: size not valid`; 64 MiB worked.
-> > - **Recursion through `@functools.cache` / `@lru_cache` stopped at 998 calls deep**, even with the limit set to 10**6 and even inside a 64 MiB thread. The cache wrapper is C code, and CPython 3.12 limits C-level recursion separately. Deep top-down DP needs a hand-written `memo` dict (reached 1,000,000) or a bottom-up loop. See Figure 9 in `target/py/Python DSA - Templates Patterns and Performance.md`. Other versions and operating systems give different numbers, so test on your judge's version.
+> > - **Recursion through `@functools.cache` / `@lru_cache` stopped at 998 calls deep**, even with the limit set to 10**6 and even inside a 64 MiB thread. The cache wrapper is C code, and CPython 3.12 limits C-level recursion separately. Deep top-down DP needs a hand-written `memo` dict (reached 1,000,000) or a bottom-up loop. See Figure 7 in `target/py/Python DSA - Templates Patterns and Performance.md`. Other versions and operating systems give different numbers, so test on your judge's version. *(Added 24 Oct 2026: CPython's internal docs say this C-recursion guard was a counter in 3.12 and became a real stack-depth check in 3.14, so on 3.14+ the `@cache` depth depends on stack size, and a bigger thread stack should help again. Not measured here.)*
 >
 > ---
 > 
@@ -1015,7 +1015,7 @@ graph TD
 > [!success] Correct ✓
 > **Learner Answer:** As `prod` grows to hundreds of thousands of digits, each multiplication takes superlinear $O(D^{1.58})$ time instead of $O(1)$, making total time explode.
 > **Takeaway:** Always apply modulo at **every single intermediate step** in Python (`prod = (prod * x) % MOD`), even though Python integers never overflow.
-> *(Correction, 23 Oct 2026: the conclusion is right, but the reason is wrong. Each `prod *= x` is big × small, which is linear in the size of `prod`, not $O(D^{1.58})$. The total over n steps is $O(n^2)$. See the Node 8 correction box above, and Figure 8 in `target/py/Python DSA - Templates Patterns and Performance.md`.)*
+> *(Correction, 23 Oct 2026: the conclusion is right, but the reason is wrong. Each `prod *= x` is big × small, which is linear in the size of `prod`, not $O(D^{1.58})$. The total over n steps is $O(n^2)$. See the Node 8 correction box above, and Figure 4 in `target/py/Python DSA - Templates Patterns and Performance.md`.)*
 
 ---
 

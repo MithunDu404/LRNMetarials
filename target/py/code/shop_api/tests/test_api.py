@@ -19,7 +19,7 @@ def test_duplicate_email_is_409_with_error_shape(client):
 
 
 def test_wrong_password_is_401(client, auth_headers):
-    r = client.post("/auth/token", json={"email": "ada@example.com", "password": "wrong-pass"})
+    r = client.post("/auth/token", data={"username": "ada@example.com", "password": "wrong-pass"})
     assert r.status_code == 401
     assert r.headers["WWW-Authenticate"] == "Bearer"
 

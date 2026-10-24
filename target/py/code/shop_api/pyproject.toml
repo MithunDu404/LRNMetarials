@@ -12,6 +12,7 @@ dependencies = [
     "pydantic-settings>=2.0",
     "pyjwt>=2.8",
     "pwdlib[argon2]>=0.2",
+    "python-multipart>=0.0.9",  # needed to read the OAuth2 login form
 ]
 
 [dependency-groups]

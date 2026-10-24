@@ -132,7 +132,71 @@ def fig09_recursion():
     save(fig, "fig09_recursion_limits.png")
 
 
+def fig12_fenwick(n=16):
+    """Which range of the array each Fenwick slot tree[i] sums: (i - lowbit(i), i]."""
+    fig, ax = plt.subplots(figsize=(8.6, 4.6))
+    for i in range(1, n + 1):
+        low = i & -i
+        lo, hi = i - low, i
+        col = {1: GRAY, 2: BLUE, 4: GREEN, 8: AMBER, 16: RED}[low]
+        ax.barh(i, hi - lo, left=lo + 0.5, height=0.7, color=col, alpha=0.85)
+        ax.text(hi + 0.65, i, f"tree[{i}] = a[{lo + 1}..{hi}]   ({i:05b}, lowbit {low})",
+                va="center", fontsize=7.5)
+    # path for prefix(13): 13 -> 12 -> 8 -> 0
+    path, i = [], 13
+    while i:
+        path.append(i)
+        i -= i & -i
+    for k in path:
+        ax.plot(k - (k & -k) / 2 + 0.5, k, marker="*", color="black", ms=9)
+    ax.set_yticks(range(1, n + 1))
+    ax.set_xticks(range(1, n + 1))
+    ax.set_xlim(0.5, n + 12)
+    ax.invert_yaxis()
+    ax.set_xlabel("array position a[1..16] (1-based, as Fenwick trees use internally)")
+    ax.set_ylabel("slot i of tree[]")
+    ax.set_title("Fenwick tree: slot i covers the last lowbit(i) positions ending at i")
+    ax.text(0.0, -0.13, "Computed from i & -i, not drawn by hand. Stars: prefix(13) = tree[13] + tree[12] + tree[8] "
+            "(13 -> 12 -> 8 -> 0 by i -= i & -i), so 3 slots instead of 13 additions.",
+            transform=ax.transAxes, fontsize=8, color=GRAY, va="top")
+    save(fig, "fig12_fenwick_ranges.png")
+
+
+def fig13_binary_search_answer():
+    """Feasibility of 'ship weights 1..10 within 5 days' as capacity grows: False...False True...True."""
+    weights, days = list(range(1, 11)), 5
+
+    def days_needed(cap):
+        need, load = 1, 0
+        for w in weights:
+            if load + w > cap:
+                need, load = need + 1, 0
+            load += w
+        return need
+
+    caps = list(range(max(weights), sum(weights) + 1))
+    need = [days_needed(c) for c in caps]
+    ok = [d <= days for d in need]
+    answer = caps[ok.index(True)]
+    fig, ax = plt.subplots(figsize=(8, 3.8))
+    ax.bar(caps, need, color=[GREEN if o else RED for o in ok], width=0.8)
+    ax.axhline(days, color=GRAY, ls="--", lw=1)
+    ax.text(caps[-1], days + 0.15, f"limit: {days} days", ha="right", fontsize=8, color=GRAY)
+    ax.annotate(f"first capacity that works = {answer}\n(the answer first_true finds)",
+                xy=(answer, days_needed(answer)), xytext=(answer + 12, 6.2),
+                arrowprops=dict(arrowstyle="->", color="black"), fontsize=9)
+    ax.set_xlabel("ship capacity tried")
+    ax.set_ylabel("days needed")
+    ax.set_title("Binary search on the answer: red (too small) then green (works), never mixed")
+    ax.text(0.0, -0.22, f"Computed for weights 1..10. Capacities {caps[0]}..{caps[-1]} = {len(caps)} candidates; "
+            f"binary search checks about log2({len(caps)}) = {len(caps).bit_length()} of them.",
+            transform=ax.transAxes, fontsize=8, color=GRAY, va="top")
+    save(fig, "fig13_binary_search_answer.png")
+
+
 if __name__ == "__main__":
+    fig12_fenwick()
+    fig13_binary_search_answer()
     fig04_queue()
     fig05_strings()
     fig06_input()

@@ -1,8 +1,8 @@
 # Reading a Python Backend 1: The Python You Need
 
 > **Series:** **Part 1 (this file)** · [Part 2: A Codebase Tour and One Request Traced](Reading%20a%20Python%20Backend%202%20-%20A%20Codebase%20Tour%20and%20One%20Request%20Traced.md) · [Part 3: Backend Concepts, Decisions and Unfamiliar Code](Reading%20a%20Python%20Backend%203%20-%20Backend%20Concepts%20Decisions%20and%20Unfamiliar%20Code.md) · [Folder index](README.md)
-> **Source:** built from the official Python, FastAPI, Pydantic and SQLAlchemy documentation and from the installed library source code (FastAPI 0.143, Starlette 1.7, Pydantic 2.14, SQLAlchemy 2.1). Every output block in this part is pasted from [python_for_backend.py](code/python_for_backend.py), run on Python 3.12. Figures come from [make_figs.py](images/make_figs.py) and are measured, not drawn.
-> **Facts re-checked:** 23 October 2026.
+> **Source:** built from the official Python, FastAPI, Pydantic and SQLAlchemy documentation and from the installed library source code. Written against FastAPI 0.143 / Starlette 1.7 and **re-verified on the latest releases (FastAPI 0.162, Starlette 1.9, Pydantic 2.14, SQLAlchemy 2.1) on 24 October 2026**: every behaviour shown here was re-run and is unchanged. Every output block in this part is pasted from [python_for_backend.py](code/python_for_backend.py), run on Python 3.12. The current Python release is **3.15** (9 October 2026); §2.5 lists what 3.14 and 3.15 change for code readers. Figures come from [make_figs.py](images/make_figs.py) and are measured, not drawn.
+> **Facts re-checked:** 24 October 2026.
 
 **The big picture:** a Python backend is mostly ordinary Python. What makes it hard to read is a handful of language features: decorators, type hints that libraries *act on*, `yield`, `with`, `async`/`await`. Frameworks lean on these heavily, so a short file can do a lot without saying so. This part teaches exactly those features, each shown in the backend code where you will actually meet it.
 
@@ -32,7 +32,7 @@
 
 | If you have… | Read |
 |---|---|
-| 10 minutes | §0.1, §1 (TL;DR), and Figure 1 in §7.4 |
+| 10 minutes | §0.1, §1 (TL;DR), the diagram in §2.2, and Figures 1 and 2 in §7 |
 | 1 hour | §3 (decorators), §4 (type hints), §6 (`yield`) and §7 (async). These four explain 80% of "how does this framework code even work?" |
 | A weekend | All of Part 1 with the demo script open beside you, then [Part 2](Reading%20a%20Python%20Backend%202%20-%20A%20Codebase%20Tour%20and%20One%20Request%20Traced.md), which tours a real codebase line by line |
 
@@ -40,7 +40,7 @@
 
 | File | Role | When |
 |---|---|---|
-| `notes/py-dsa.md` | The Python object model (names are tags, mutability, hashability) and the STL ↔ stdlib mapping | Already done. §2.3 here assumes it |
+| `notes/py-dsa.md` | The Python object model (names are tags, mutability, hashability) and the STL ↔ stdlib mapping | Already done. §2.4 here builds on it |
 | **This series (`target/py/`)** | **How to read and judge a whole backend.** The language features, a real runnable codebase, and the concepts that connect them | **Now** |
 | `notes/py-backend.md` | Deeper notes on each backend concept (GIL, ASGI, Pydantic, DI, SQLAlchemy, JWT, Celery, Docker) | Alongside Part 2/3, as the "go deeper" reference |
 | [Python Mastery for C++ Engineers](../Python%20Mastery%20for%20C%2B%2B%20Engineers%20-%20DSA%20and%20Backend%20Systems.md) | A practice gym: 26 two-minute drills, one mechanic each | After each section here, do the matching drill (each section names it) |
@@ -74,7 +74,7 @@ Once you can read these signs, framework code stops being magic. You can follow 
 2. **A decorator is just `f = decorator(f)`.** `@app.get("/x")` is a function call that *registers* your function in a table. `@functools.wraps` keeps the wrapped function's name and signature, which frameworks rely on.
 3. **Type hints do nothing in plain Python, but FastAPI, Pydantic and SQLAlchemy read them at runtime** and act on them. `Annotated[T, Depends(f)]` means "this is a T, and here's how to get one".
 4. **`yield` inside a function makes a pause point.** A `yield` dependency or `@contextmanager` runs setup, pauses while your code runs, then runs cleanup in `finally:` even if your code raised.
-5. **`async def` only helps if everything slow inside it is `await`ed.** One blocking call (`time.sleep`, `requests.get`, a sync DB driver) freezes *every* request on that worker. Measured in Figure 1: about 500 ms of freeze from one 0.5 s `time.sleep`.
+5. **`async def` only helps if everything slow inside it is `await`ed.** One blocking call (`time.sleep`, `requests.get`, a sync DB driver) freezes *every* request on that worker. Measured in Figure 2: about 500 ms of freeze from one 0.5 s `time.sleep`.
 6. **`def` endpoints run in a thread pool; `async def` endpoints run on the event loop.** Use `def` when you must call blocking code.
 7. **Exceptions are how backends say "stop"**: a service raises `NotFound`, and one handler somewhere turns it into a 404.
 8. **Pydantic parses input into typed objects** (and rejects junk with a 422) before your code runs. Response models filter output so secrets don't leak.
@@ -106,10 +106,26 @@ Things you'll see created at module level in real projects, and why:
 | `app = FastAPI(...)` or `app = create_app()` | The server needs one object to send requests to |
 | `router = APIRouter(prefix="/orders")` | Routes get attached to it as the file is imported |
 | `log = logging.getLogger(__name__)` | One named logger per module (`__name__` is e.g. `"app.services"`) |
-| `engine = create_async_engine(URL)` | One connection pool per process. (Our app creates it in `lifespan` instead; §5 of Part 2 explains why that's better.) |
+| `engine = create_async_engine(URL)` | One connection pool per process. (Our app creates it in `lifespan` instead, so the URL comes from the settings the app was *built* with. Tests can then pass a different database, and the pool is closed cleanly on shutdown. See Part 2 §5.1.) |
 | `settings = Settings()` / `@lru_cache def get_settings()` | Read environment variables once |
 
 > **Reading tip:** when a value "just exists", search for where it's assigned at module level. It was built during import.
+
+Most of the confusion goes away once you separate the code that runs **once, at import** from the code that runs **on every request**:
+
+```mermaid
+flowchart LR
+    subgraph IMPORT["Once per process: at import / startup"]
+        A["uvicorn imports app.main"] --> B["modules run top to bottom:<br/>routers created, @router.get registers handlers,<br/>Annotated aliases defined, FastAPI reads signatures"]
+        B --> C["lifespan startup:<br/>engine + pool created"]
+    end
+    subgraph REQ["Every request"]
+        D["middleware"] --> E["dependencies run<br/>(session, current user)"] --> F["your endpoint body"] --> G["response"] --> H["yield cleanup"]
+    end
+    C --> D
+```
+
+*Left: things that happen once and are then shared by every request in that process. Right: things that happen again for every request. A bug that "only happens after a restart" usually lives on the left; a bug that "only happens under load" usually lives on the right.*
 
 `if __name__ == "__main__":` guards code that should run only when the file is executed directly (`python file.py`), not when it's imported. Scripts like [trace_request.py](code/shop_api/trace_request.py) use it.
 
@@ -140,7 +156,7 @@ One dot is "this package", two dots is "the parent package". They only work insi
 
 1. Move the shared thing to a third module both can import. Layered projects (Part 2) avoid most cycles because imports only point "down" the layers.
 2. Import inside the function that needs it, so the import happens at call time.
-3. For type hints only, use `from typing import TYPE_CHECKING` with `if TYPE_CHECKING: from .models import User`, plus quoted hints like `"User"`.
+3. For type hints only, use `from typing import TYPE_CHECKING` with `if TYPE_CHECKING: from .models import User`, plus quoted hints like `"User"`. (On Python 3.14+ the quotes are optional, see §2.5.)
 
 ### 2.4 Names are tags (a recap from py-dsa)
 
@@ -153,6 +169,19 @@ Everything from `notes/py-dsa.md` Node 1 applies in backends too:
 That last point is the backend version of the backtracking bug. A module-level `cache = {}` is shared by **all concurrent requests in one worker**, but **not** between workers (each worker process has its own copy). Part 3 §5 comes back to this.
 
 > **Practice:** Mastery guide, Mechanic 2 (in-place slice mutation) and Capstone 8.1 (RequestCache and pointer isolation).
+
+### 2.5 What Python 3.14 and 3.15 change for a code reader
+
+Most codebases you read today target Python 3.10–3.13, but new code is starting to use these features (checked against the official "What's New" pages, 24 Oct 2026):
+
+| You may see | Version | What it means |
+|---|---|---|
+| Hints like `def f(u: User)` where `User` is defined *later* in the file, without quotes | 3.14 (PEP 649/749) | Annotations are now evaluated lazily, only when something asks for them, so forward references no longer need quotes. `from __future__ import annotations` opts back into the old "store everything as strings" behaviour, and you'll still see it everywhere in pre-3.14 code |
+| `lazy import json` / `lazy from x import y` at the top of a module | 3.15 (PEP 810) | The module is loaded on first *use*, not at import. It's used to cut startup time. Only allowed at module level. Note that it changes §2.2's "importing runs the file" timing for that module |
+| `t"SELECT * FROM t WHERE id = {uid}"` | 3.14 (PEP 750) | A *template string*: like an f-string, but it returns a `Template` object instead of a `str`, so a library can escape the interpolated parts safely (SQL, HTML, shell) |
+| `except ValueError, TypeError:` without brackets | 3.14 (PEP 758) | Same as `except (ValueError, TypeError):` |
+| `frozendict({...})` | 3.15 (PEP 814) | A built-in immutable, hashable dict. Usable as a dict key or set member |
+| `open(path)` with no `encoding=` | 3.15 (PEP 686) | Now defaults to UTF-8 everywhere, including Windows. Older code that relied on the locale encoding can read files differently |
 
 ---
 
@@ -237,7 +266,13 @@ There are two kinds of decorator. Learn to tell them apart, because they behave 
 | **Registering** | The original function, unchanged; it records it somewhere | `@app.get`, `@router.post`, `@celery_app.task`, `@pytest.fixture`, `@app.exception_handler` |
 | **Wrapping** | A new function that calls the original with extra behaviour around it | `@lru_cache`, `@timed`, `@retry`, `@login_required` (Flask/Django), `@field_validator` |
 
-**Why `@functools.wraps` matters in backends.** FastAPI builds the request handling from the endpoint's **signature**. A wrapper written as `def wrapper(*args, **kwargs)` without `@wraps` hides that signature. FastAPI then sees no parameters, and your endpoint stops receiving its inputs. `wraps` copies the name and docstring, and sets `__wrapped__`, which `inspect.signature` follows back to the original. If a decorated endpoint mysteriously loses its parameters, check for a missing `@wraps`.
+**Why `@functools.wraps` matters in backends.** FastAPI builds the request handling from the endpoint's **signature**. A wrapper written as `def wrapper(*args, **kwargs)` without `@wraps` hides that signature. FastAPI then sees the wrapper's own parameters instead, and reads `args` and `kwargs` as **two required query parameters**. Measured on FastAPI 0.162, an endpoint `limit: int = 5` wrapped this way answered `GET /a?limit=7` with:
+
+```text
+422 {"detail":[{"type":"missing","loc":["query","args"],"msg":"Field required",...},{"type":"missing","loc":["query","kwargs"],...}]}
+```
+
+With `@functools.wraps(func)` on the wrapper, the same request returns `200 {"limit":7}`. `wraps` copies the name and docstring, and sets `__wrapped__`, which `inspect.signature` follows back to the original. If a decorated endpoint suddenly demands `args` and `kwargs`, check for a missing `@wraps`. (The wrapper must also be `async def` if the endpoint is, so it can `await` it.)
 
 **Stacked decorators apply bottom-up:**
 
@@ -276,7 +311,8 @@ FastAPI's rules for "where does this parameter come from?":
 |---|---|
 | Its name appears in the path, like `{order_id}` | The URL path, converted to the hinted type |
 | Hint is a Pydantic model | The JSON body |
-| Hint is a simple type (`int`, `str`, `bool`, `list[str]`) and not in the path | The query string `?limit=5` |
+| Hint is a simple type (`int`, `str`, `bool`, `float`) and not in the path | The query string `?limit=5` |
+| `Annotated[list[str], Query()]` | Repeated query keys `?tags=a&tags=b`. **Without `Query()`, a `list[str]` parameter is read from the JSON body**; measured: `GET /c?tags=x&tags=y` returned `422 ... "loc":["body"]` |
 | `Annotated[T, Depends(f)]` | Calls `f` (and *its* dependencies) and passes the result |
 | `Annotated[int, Query(ge=1, le=100)]` | The query string, with extra validation |
 | `Annotated[str, Header()]`, `Cookie()`, `Form()`, `File()` | That part of the request |
@@ -293,7 +329,7 @@ FastAPI's rules for "where does this parameter come from?":
 | `Mapped[int]` (SQLAlchemy) | "a column holding an int". SQLAlchemy reads it to build the table |
 | `Callable[[int], str]` | A function taking an int and returning a str |
 | `Literal["asc", "desc"]` | Only these exact values are allowed; FastAPI validates them |
-| `"User"` in quotes | A forward reference, for a class defined later or imported only for type checking |
+| `"User"` in quotes | A forward reference, for a class defined later or imported only for type checking (quotes optional from 3.14, §2.5) |
 
 **Type aliases are how modern FastAPI code stays short.** In [deps.py](code/shop_api/app/deps.py):
 
@@ -413,6 +449,29 @@ FastAPI turns every dependency that uses `yield` into a context manager and ente
     exception reached the caller: boom
 ```
 
+The life of one request through a `yield` dependency, step by step:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant F as FastAPI
+    participant G as get_session (generator)
+    participant E as endpoint
+    F->>G: start it: runs up to `yield`
+    G-->>F: yields the session (generator now paused)
+    F->>E: call endpoint(session=...)
+    alt endpoint returns normally
+        E-->>F: return value
+        F->>F: build and send the response
+        F->>G: resume after `yield` (the finally: block runs)
+    else endpoint raises
+        E-->>F: exception
+        F->>G: throw the exception in at `yield` (the except: and finally: blocks run)
+    end
+```
+
+*A paused generator is what makes "setup, then your code, then cleanup" possible in one function. FastAPI keeps it paused for the whole request and resumes it at the end. With the default `scope="request"`, that resumption happens after the response is sent (Part 2 §4.3).*
+
 Three things to notice. Each holds in real FastAPI too; Part 2 §4 shows the same thing in the real app.
 
 1. **Caching.** `get_user` and `get_service` both need the session, but it's opened **once**. Within one request, a dependency runs once and its result is shared (FastAPI: `use_cache=True` by default).
@@ -453,6 +512,10 @@ A web request spends almost all its time **waiting**: for the database, a cache,
   without await you get: coroutine - the function body never ran
 ```
 
+![Two timelines of the same three awaited calls (0.3 s, 0.1 s, 0.2 s). Awaited one after another they finish at 0.62 s; started together in a TaskGroup they all begin at 0 and finish at 0.31 s, the length of the longest call.](images/fig10_async_timeline.png)
+
+*Figure 1 (measured). The same three waits, two ways. With `await` one after another, each starts only when the previous one ends, so the total is the **sum** (0.62 s). In a `TaskGroup` they all start at once, and the event loop switches between them while each waits, so the total is the **longest one** (0.31 s). There's still only one thread: the overlap comes purely from waiting at the same time.*
+
 Reading tip: in code review, `x = await a(); y = await b()` means *one after another*. If `a` and `b` don't depend on each other, `gather` or a `TaskGroup` would make them concurrent. And a call to an `async def` function **without** `await` does nothing at all. Python warns "coroutine was never awaited", which is easy to miss in logs.
 
 ### 7.3 Where async does *not* help
@@ -468,7 +531,7 @@ Reading tip: in code review, `x = await a(); y = await b()` means *one after ano
 
 Four threads of CPU work took the same time as running them one after another. Four threads of waiting finished 4× faster.
 
-> **Update (verified Oct 2026):** Python 3.13 added an optional *free-threaded* build without the GIL (PEP 703), and Python 3.14 made it officially supported (PEP 779). It's still a separate build (`python3.14t`), and some C extensions don't support it yet. Every standard deployment you'll read today assumes the GIL. CPU parallelism in backends still comes from **multiple processes** (workers, Celery) or native code that releases the GIL.
+> **Update (verified 24 Oct 2026):** Python 3.13 added an optional *free-threaded* build without the GIL (PEP 703). Python 3.14 made it officially supported (PEP 779), with single-threaded code running about 5–10% slower in that build. Python 3.15 added a stable ABI for free-threaded extensions (PEP 803), and its official macOS installer includes the free-threaded build by default. It's still a **separate build** (`python3.14t`, `python3.15t`), and many C extensions are still catching up. Every standard deployment you'll read today assumes the GIL. CPU parallelism in backends still comes from **multiple processes** (workers, Celery) or native code that releases the GIL.
 
 ### 7.4 The cardinal sin, measured
 
@@ -476,7 +539,7 @@ One blocking call inside `async def` stops the event loop, so **every** request 
 
 ![A 10 ms ticker on the event loop keeps time within about 30 ms when the handler awaits asyncio.sleep or uses asyncio.to_thread, but is delayed about 500 ms when the handler calls time.sleep inside async def.](images/fig01_event_loop_blocking.png)
 
-*Figure 1 (measured). A ticker that should run every 10 ms stands in for "all the other requests". At 0.3 s a handler starts that waits 0.5 s. Written with `await asyncio.sleep` (green) or `asyncio.to_thread(time.sleep)` (blue), the ticker carries on. Written with `time.sleep` inside `async def` (red), the ticker is frozen for the whole 0.5 s. The small 10–30 ms sawtooth on every line is the Windows timer, not blocking.*
+*Figure 2 (measured). A ticker that should run every 10 ms stands in for "all the other requests". At 0.3 s a handler starts that waits 0.5 s. Written with `await asyncio.sleep` (green) or `asyncio.to_thread(time.sleep)` (blue), the ticker carries on. Written with `time.sleep` inside `async def` (red), the ticker is frozen for the whole 0.5 s. The small 10–30 ms sawtooth on every line is the Windows timer, not blocking.*
 
 The demo prints the same thing as numbers:
 
@@ -599,7 +662,7 @@ The Pydantic v2 vocabulary you'll read:
 | Belief | Reality |
 |---|---|
 | "Type hints are just comments." | Python ignores them, but FastAPI, Pydantic and SQLAlchemy read them at runtime and change behaviour. Removing a hint can break an endpoint. |
-| "`async def` makes code faster." | It makes *waiting* overlap. CPU work and blocking calls inside it make things worse (Figure 1). |
+| "`async def` makes code faster." | It makes *waiting* overlap. CPU work and blocking calls inside it make things worse (Figure 2). |
 | "A decorator changes the function's code." | It replaces the *name* with whatever the decorator returns. Registering decorators return the original function untouched. |
 | "If an exception is raised, cleanup is skipped." | `finally:`, `with` and `yield` dependencies run cleanup on the way out. |
 | "Module-level variables are per request." | They're per **process**: shared by every request in that worker, and *not* shared across workers. |
@@ -619,7 +682,7 @@ The Pydantic v2 vocabulary you'll read:
 <details>
 <summary><b>Q2.</b> An endpoint is <code>async def</code> and calls <code>requests.get(url, timeout=3)</code>. Production p99 latency for <em>every</em> endpoint jumps whenever that URL is slow. Why, and what are the two fixes?</summary>
 
-`requests` is blocking, so the event loop thread is stuck for up to 3 s and every other request on that worker waits (Figure 1). Fix A: use `httpx.AsyncClient` and `await` it. Fix B: make the endpoint a plain `def`, so FastAPI runs it in the thread pool. A third option is `await asyncio.to_thread(requests.get, url, timeout=3)`.
+`requests` is blocking, so the event loop thread is stuck for up to 3 s and every other request on that worker waits (Figure 2). Fix A: use `httpx.AsyncClient` and `await` it. Fix B: make the endpoint a plain `def`, so FastAPI runs it in the thread pool. A third option is `await asyncio.to_thread(requests.get, url, timeout=3)`.
 </details>
 
 <details>
@@ -629,9 +692,9 @@ One. Within a single request FastAPI caches each dependency's result (`use_cache
 </details>
 
 <details>
-<summary><b>Q4.</b> You add a timing decorator to an endpoint and suddenly FastAPI says the endpoint takes no parameters. What did you forget?</summary>
+<summary><b>Q4.</b> You add a timing decorator to an endpoint, and suddenly every call returns 422 complaining that query parameters <code>args</code> and <code>kwargs</code> are missing. What did you forget?</summary>
 
-`@functools.wraps(func)` on the wrapper. Without it, FastAPI inspects `wrapper(*args, **kwargs)` instead of the real signature.
+`@functools.wraps(func)` on the wrapper. Without it, FastAPI inspects `wrapper(*args, **kwargs)` instead of the real signature, and treats `args` and `kwargs` as required query parameters (§3.3 shows the measured response).
 </details>
 
 <details>
@@ -679,8 +742,10 @@ The questions that decide it: does the endpoint also `await` other async things?
 
 ## 14. References
 
-- Python docs: [Data model](https://docs.python.org/3/reference/datamodel.html), [`contextlib`](https://docs.python.org/3/library/contextlib.html), [`asyncio` tasks and TaskGroup](https://docs.python.org/3/library/asyncio-task.html), [`contextvars`](https://docs.python.org/3/library/contextvars.html), [`typing`](https://docs.python.org/3/library/typing.html). Checked 23 Oct 2026.
+- Python docs: [Data model](https://docs.python.org/3/reference/datamodel.html), [`contextlib`](https://docs.python.org/3/library/contextlib.html), [`asyncio` tasks and TaskGroup](https://docs.python.org/3/library/asyncio-task.html), [`contextvars`](https://docs.python.org/3/library/contextvars.html), [`typing`](https://docs.python.org/3/library/typing.html). Checked 24 Oct 2026.
+- [What's New in Python 3.14](https://docs.python.org/3/whatsnew/3.14.html) (deferred annotations, template strings, free-threading supported) and [What's New in Python 3.15](https://docs.python.org/3.15/whatsnew/3.15.html) (lazy imports, `frozendict`, UTF-8 default; released 9 Oct 2026).
+- FastAPI docs: [Query parameters and string validations](https://fastapi.tiangolo.com/tutorial/query-params-str-validations/) (lists need `Query()`).
 - [PEP 703](https://peps.python.org/pep-0703/) (making the GIL optional) and [PEP 779](https://peps.python.org/pep-0779/) (free-threaded Python officially supported in 3.14).
 - FastAPI docs: [Dependencies with yield](https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/) (including the `scope` parameter) and [Concurrency and async/await](https://fastapi.tiangolo.com/async/). Checked 23 Oct 2026.
 - Pydantic v2 docs: [Models](https://docs.pydantic.dev/latest/concepts/models/), [Validators](https://docs.pydantic.dev/latest/concepts/validators/), [Migration guide v1 → v2](https://docs.pydantic.dev/latest/migration/).
-- Library source read directly: `fastapi/dependencies/utils.py` (`solve_dependencies`: recursive, with a per-request `dependency_cache`) and `starlette/routing.py` (`Router.app`: first full match wins), FastAPI 0.143 / Starlette 1.7.
+- Library source read directly: `fastapi/dependencies/utils.py` (`solve_dependencies`: recursive, with a per-request `dependency_cache`) and `starlette/routing.py` (`Router.app`: first full match wins), FastAPI 0.143 / Starlette 1.7, re-checked unchanged in FastAPI 0.162 / Starlette 1.9.

@@ -1,8 +1,8 @@
 # Python DSA: Templates, Patterns and Performance
 
 > **Series:** companion to `notes/py-dsa.md` · backend series: [Part 1](Reading%20a%20Python%20Backend%201%20-%20The%20Python%20You%20Need.md) · [Part 2](Reading%20a%20Python%20Backend%202%20-%20A%20Codebase%20Tour%20and%20One%20Request%20Traced.md) · [Part 3](Reading%20a%20Python%20Backend%203%20-%20Backend%20Concepts%20Decisions%20and%20Unfamiliar%20Code.md) · [Folder index](README.md)
-> **Source:** Python documentation, CPython's own library source, and measurements. Every template is in [dsa_templates.py](code/dsa/dsa_templates.py), **checked against brute force on random inputs** by [test_dsa_templates.py](code/dsa/test_dsa_templates.py) (15 tests pass). Every output block is pasted from [dsa_gotchas.py](code/dsa/dsa_gotchas.py), [dsa_patterns.py](code/dsa/dsa_patterns.py) or [dsa_benchmarks.py](code/dsa/dsa_benchmarks.py). Figures come from [make_dsa_figs.py](images/make_dsa_figs.py). All measurements: CPython 3.12.10 on Windows. **PyPy wasn't available, so PyPy claims are marked "as reported".**
-> **Facts re-checked:** 23 October 2026.
+> **Source:** Python documentation, CPython's own library source, and measurements. Every template is in [dsa_templates.py](code/dsa/dsa_templates.py), **checked against brute force on random inputs** by [test_dsa_templates.py](code/dsa/test_dsa_templates.py) (15 tests pass). Every output block is pasted from [dsa_gotchas.py](code/dsa/dsa_gotchas.py), [dsa_patterns.py](code/dsa/dsa_patterns.py) or [dsa_benchmarks.py](code/dsa/dsa_benchmarks.py). Figures come from [make_dsa_figs.py](images/make_dsa_figs.py). All measurements: CPython 3.12.10 on Windows. The current release is **Python 3.15** (9 October 2026); where 3.13–3.15 behave differently, the text says so (§4.1, §7). **PyPy wasn't available, so PyPy claims are marked "as reported".**
+> **Facts re-checked:** 24 October 2026.
 
 **The big picture:** `py-dsa.md` taught you how Python's containers map to the C++ STL. This guide is what you need to actually **solve problems** in Python: a measured cost model (what's fast and what isn't), the C++ habits that silently give wrong answers, tested templates for the standard algorithms, the patterns that recognise each problem type, and the recursion limits that measurement shows are different from what most advice says.
 
@@ -32,7 +32,7 @@
 
 | If you have… | Read |
 |---|---|
-| 10 minutes | §0.1, §1, and Figure 9 in §7 (the `@cache` depth limit, which surprises nearly everyone) |
+| 10 minutes | §0.1, §1, and Figure 7 in §7 (the `@cache` depth limit, which surprises nearly everyone) |
 | 1 hour | §2 (cost model), §3 (wrong-answer habits), §5 (templates), §7 (recursion) |
 | A weekend | Everything, then solve 10 problems using only the templates and the §6 recognition table, then do the drills in §12 |
 
@@ -66,12 +66,12 @@ That's what this guide gives you.
 
 1. **Budget:** plain CPython runs about **4 × 10⁷ trivial loop steps per second** (measured) and realistically 10⁶–10⁷ steps of typical DSA work. At n = 2 × 10⁵, O(n log n) is fine and O(n²) is not.
 2. **Built-ins run at C speed:** `sum(data)` was **4× faster** than a hand-written loop; `sorted`, `heapq`, `bisect`, `Counter` and `str.join` all run in C. Push work into them.
-3. **`list.pop(0)` is O(n):** 329× slower than `deque.popleft()` at n = 200,000 (Figure 4).
-4. **`s += ch` is usually linear in CPython**, but quadratic once anything else references the string (Figure 5). `"".join` is always safe.
-5. **Read input in one go:** `sys.stdin.buffer.read().split()` read 500k ints about 4× faster than an `input()` loop (Figure 6).
-6. **Take `% MOD` every step:** about 400× faster at n = 40,000 (Figure 8).
+3. **`list.pop(0)` is O(n):** 329× slower than `deque.popleft()` at n = 200,000 (Figure 1).
+4. **`s += ch` is usually linear in CPython**, but quadratic once anything else references the string (Figure 2). `"".join` is always safe.
+5. **Read input in one go:** `sys.stdin.buffer.read().split()` read 500k ints about 4× faster than an `input()` loop (Figure 8).
+6. **Take `% MOD` every step:** about 400× faster at n = 40,000 (Figure 4).
 7. **Wrong-answer traps from C++:** `//` and `%` round toward −∞; ints don't wrap at 2⁶⁴; `round(2.5) == 2`; `math.sqrt` is inexact for big ints (use `math.isqrt`); `str()` refuses ints over 4,300 digits unless you call `sys.set_int_max_str_digits(0)`.
-8. **Biggest surprise:** on CPython 3.12, **`@cache` recursion failed at 998 calls deep** even with `sys.setrecursionlimit(10**6)` and a big thread stack. Plain recursion and a hand-written dict memo both reached 1,000,000 (Figure 9). For deep top-down DP, use a dict memo or go bottom-up.
+8. **Biggest surprise:** on CPython 3.12, **`@cache` recursion failed at 998 calls deep** even with `sys.setrecursionlimit(10**6)` and a big thread stack. Plain recursion and a hand-written dict memo both reached 1,000,000 (Figure 7). For deep top-down DP, use a dict memo or go bottom-up.
 
 ---
 
@@ -119,13 +119,13 @@ The general rule: **one C-level call over the whole data beats a Python loop.** 
 
 ![Log-log plot: draining a queue with list.pop(0) takes time growing with slope 2, reaching about 2.8 s at 200,000 items, while deque.popleft grows with slope 1 and takes about 9 ms.](images/fig04_queue_pop0.png)
 
-*Figure 4 (measured). Each `pop(0)` shifts every remaining pointer one slot left, so draining n items costs about n²/2 shifts in total. That's slope 2 on a log-log plot. `deque.popleft` is O(1), slope 1. At 200,000 items: 2.85 s vs 0.009 s.*
+*Figure 1 (measured). Each `pop(0)` shifts every remaining pointer one slot left, so draining n items costs about n²/2 shifts in total. That's slope 2 on a log-log plot. `deque.popleft` is O(1), slope 1. At 200,000 items: 2.85 s vs 0.009 s.*
 
 ### 2.4 Strings: when `+=` is fine and when it isn't
 
 ![Log-log plot: building a 400,000-character string with s += 'x' takes about 0.03 s and ''.join about 0.01 s, both linear; adding an extra reference to the string each step makes it quadratic at about 1.6 s.](images/fig05_string_building.png)
 
-*Figure 5 (measured). CPython has a special trick: if the string on the left of `+=` has **no other references**, it's resized in place, so the blue line is linear. The moment another name points at it (red: `t = s; s = t + 'x'`), every step copies the whole string, which is quadratic. Keeping occasional extra references (amber) costs in between. `"".join` (green) is linear by design.*
+*Figure 2 (measured). CPython has a special trick: if the string on the left of `+=` has **no other references**, it's resized in place, so the blue line is linear. The moment another name points at it (red: `t = s; s = t + 'x'`), every step copies the whole string, which is quadratic. Keeping occasional extra references (amber) costs in between. `"".join` (green) is linear by design.*
 
 So `py-dsa.md`'s rule "always use `join`" is the safe habit, but **`s += ch` isn't automatically a bug in CPython**. It becomes one when the string is shared, and on runtimes without the in-place trick (such as PyPy, as reported).
 
@@ -133,13 +133,13 @@ So `py-dsa.md`'s rule "always use `join`" is the safe habit, but **`s += ch` isn
 
 ![Bar chart: push 100,000 floats then pop all; heapq about 0.05 s, heapify then pop about 0.04 s, queue.PriorityQueue about 0.19 s, SortedList about 0.15 s, bisect.insort on a list about 1.24 s.](images/fig07_priority_structures.png)
 
-*Figure 7 (measured). `queue.PriorityQueue` is about 4× slower than `heapq` because it takes a thread lock on every operation; it's for threads, not algorithms. `bisect.insort` is O(n) per insert (it shifts the list), so 100,000 inserts take 25× longer than heapq. `SortedList` costs about 3× a heap but also answers "k-th smallest" and "predecessor" queries.*
+*Figure 3 (measured). `queue.PriorityQueue` is about 4× slower than `heapq` because it takes a thread lock on every operation; it's for threads, not algorithms. `bisect.insort` is O(n) per insert (it shifts the list), so 100,000 inserts take 25× longer than heapq. `SortedList` costs about 3× a heap but also answers "k-th smallest" and "predecessor" queries.*
 
 ### 2.6 Big integers: no overflow, but not free
 
 ![Log-log plot: multiplying 40,000 numbers and taking the modulus once at the end takes about 0.71 s with slope 2, while taking the modulus every step takes about 0.002 s with slope 1.](images/fig08_bignum_mod.png)
 
-*Figure 8 (measured). Without `% MOD`, the product grows by about 30 bits per step, and each multiplication re-touches all of it. That's n steps of growing linear work, O(n²) in total. With `% MOD` every step, the number stays one machine-sized "digit". About 400× apart at n = 40,000.*
+*Figure 4 (measured). Without `% MOD`, the product grows by about 30 bits per step, and each multiplication re-touches all of it. That's n steps of growing linear work, O(n²) in total. With `% MOD` every step, the number stays one machine-sized "digit". About 400× apart at n = 40,000.*
 
 > **Correction to `py-dsa.md` Node 8:** it blames Karatsuba's O(D^1.58) multiplication. Karatsuba only applies when **both** numbers are large. Here, each step multiplies a big number by a small one (≤ 10⁹), which is linear in the big number's size. The conclusion ("mod every step") is right; the mechanism is "linear work on a growing number, n times".
 
@@ -257,6 +257,18 @@ sorted by length then alphabet                       ['a', 'ab', 'bb', 'ccc']
 
 `Counter.most_common(k)` uses `heapq.nlargest` internally (confirmed in the CPython 3.12 library source), so it's O(U log k), as `py-dsa.md` says.
 
+### 4.1 Newer Pythons add a few DSA-relevant tools
+
+Not available on every judge yet, so check the version first (from the official "What's New" pages, checked 24 Oct 2026):
+
+| Feature | Version | Why it matters for DSA |
+|---|---|---|
+| `itertools.batched(it, n)` | 3.12 | Split into chunks of n without index arithmetic |
+| `frozendict({...})` | 3.15 (PEP 814) | A **hashable** dict, so a small mapping can be a `set` member, a dict key or a `@cache` argument without converting it to a sorted tuple |
+| `[*row for row in grid]` | 3.15 (PEP 798) | Unpacking inside a comprehension flattens a list of lists without `itertools.chain` |
+| `math.integer` module | 3.15 (PEP 791) | A new home for integer maths functions (`gcd`, `isqrt`, `comb` and friends) |
+| Faster interpreter, experimental JIT | 3.11+ / 3.13+ | 3.11 was a big step up in plain loop speed, which is why the §2.2 micro-tricks stopped mattering. The JIT is still experimental, so don't count on it in contests |
+
 ---
 
 ## 5. Tested templates
@@ -314,6 +326,20 @@ def first_true(lo, hi, pred):
 
 `first_true` is the only binary search you need to memorise. `bisect_left(a, x)` is `first_true(0, len(a), lambda i: a[i] >= x)`, and "binary search on the answer" is `first_true(lowest, highest + 1, feasible)`.
 
+It works whenever the yes/no question flips **once**, from all "no" to all "yes". Here's that shape for a real problem ("smallest ship capacity that delivers packages 1..10 within 5 days", solved in §6.2):
+
+![Bar chart: for each ship capacity from 10 to 55, the number of days needed. Capacities 10 to 14 need more than 5 days (red); from 15 upward every capacity needs 5 or fewer (green). The answer, 15, is the first green bar.](images/fig13_binary_search_answer.png)
+
+*Figure 5 (computed). Each bar is one call to `feasible(capacity)`. Bigger capacities never need more days, so the bars go red, red, …, green, green and never mix. That one-way flip is the only condition binary search needs. Of the 46 candidates it checks about 6.*
+
+### 5.1 How a Fenwick tree works, in one picture
+
+The Fenwick code is short but opaque until you see what each slot holds. Slot `i` stores the sum of the last `lowbit(i)` array positions ending at `i`, where `lowbit(i) = i & -i` is the value of i's lowest set bit:
+
+![Diagram computed from i & -i: for slots 1 to 16, a bar showing which array positions each slot sums. Odd slots cover one position; slot 2 covers 1-2, slot 4 covers 1-4, slot 8 covers 1-8, slot 12 covers 9-12, slot 16 covers 1-16. Stars mark slots 13, 12 and 8, which together give the prefix sum up to 13.](images/fig12_fenwick_ranges.png)
+
+*Figure 6 (computed). To get the sum of a[1..13], start at 13 and repeatedly strip the lowest set bit: 13 → 12 → 8 → 0. The three slots on that path (stars) cover 13, 9–12 and 1–8: exactly a[1..13], with no overlap. Any prefix needs at most about log₂ n slots. An update to position i walks the other way (`i += i & -i`), touching every slot whose range contains i.*
+
 ---
 
 ## 6. Patterns: recognise the problem, pick the tool
@@ -361,6 +387,16 @@ merge([[1,3],[8,10],[2,6],[15,18]])                  [[1, 6], [8, 10], [15, 18]]
 
 === Monotonic stack: days until a warmer temperature ===
 daily_temperatures([73,74,75,71,69,72,76,73])        [1, 1, 4, 2, 1, 1, 0, 0]
+  step-by-step:
+   i t[i]  popped (answer found)          stack after push
+   0   73  -                              ['0:73']
+   1   74  0:73 waits 1                   ['1:74']
+   2   75  1:74 waits 1                   ['2:75']
+   3   71  -                              ['2:75', '3:71']
+   4   69  -                              ['2:75', '3:71', '4:69']
+   5   72  4:69 waits 1, 3:71 waits 2     ['2:75', '5:72']
+   6   76  5:72 waits 1, 2:75 waits 4     ['6:76']
+   7   73  -                              ['6:76', '7:73']
 
 === Grid BFS: shortest path, 4 directions ===
 grid_shortest(4x4 maze)                              6
@@ -393,6 +429,8 @@ largest < 4 (predecessor)                            3
 after remove(9); k-th smallest sl[2]                 4
 ```
 
+**How to read the monotonic-stack trace above.** The stack holds days that are *still waiting* for a warmer day, and their temperatures always decrease from bottom to top. When a warmer day arrives (day 5, 72°), it "answers" every waiting day that is colder (69° and 71°), pops them, and records how long each waited. Day 2 (75°) stays until day 6 (76°). Each index is pushed once and popped at most once, so the whole thing is O(n), even though there's a `while` inside the `for`.
+
 Three DP details that are easy to get wrong, all visible in [dsa_patterns.py](code/dsa/dsa_patterns.py):
 
 1. **0/1 knapsack loops capacity backwards** (`range(cap, w - 1, -1)`), so each item is used at most once. Looping forwards gives the *unbounded* knapsack.
@@ -407,7 +445,7 @@ The standard advice (`py-dsa.md` Nodes 6–7) is: write recursive DFS/DP with `@
 
 ![Bar chart, log scale: with sys.setrecursionlimit(10**6), plain recursion and a hand-written dict memo both reach the 1,000,000 search cap on the main thread and in a 64 MiB thread; functools.cache recursion stops at 998 in both.](images/fig09_recursion_limits.png)
 
-*Figure 9 (measured, CPython 3.12.10, Windows). For each style, the deepest chain f(n) → f(n−1) → … that ran without `RecursionError`, binary-searched up to 1,000,000, with the recursion limit set to 10⁶. Plain recursion and a manual memo dict reach the cap. `@functools.cache` stops at **998**, on the main thread and inside a 64 MiB thread alike.*
+*Figure 7 (measured, CPython 3.12.10, Windows). For each style, the deepest chain f(n) → f(n−1) → … that ran without `RecursionError`, binary-searched up to 1,000,000, with the recursion limit set to 10⁶. Plain recursion and a manual memo dict reach the cap. `@functools.cache` stops at **998**, on the main thread and inside a 64 MiB thread alike.*
 
 ```text
 6. Deepest recursion that works (searched up to 1,000,000; recursion limit set to 10**6)
@@ -419,13 +457,24 @@ The standard advice (`py-dsa.md` Nodes 6–7) is: write recursive DFS/DP with `@
    hand-written dict memo       thread 1,000,000  (= search cap)
 ```
 
-**Why.** Since Python 3.11, a Python function calling a Python function doesn't use the C stack, so `sys.setrecursionlimit` is the only limit and it can go very high. But `@cache` wraps your function in **C code**, so every level of recursion passes through C, and CPython 3.12 limits C-level recursion separately, ignoring your `setrecursionlimit`. The thread-stack trick doesn't help either: the limit is a counter, not stack space.
+**Why.** Since Python 3.11, a Python function calling a Python function doesn't use the C stack, so `sys.setrecursionlimit` is the only limit and it can go very high. But `@cache` wraps your function in **C code**, so every level of recursion passes through C, and CPython 3.12 limits C-level recursion separately, ignoring your `setrecursionlimit`. On 3.12 the thread-stack trick doesn't help either: that limit is a **counter**, not stack space.
+
+> **Changed in 3.14 (not measured here):** CPython's internal documentation says the C-recursion protection "was initially implemented using a counter" in 3.12 and was "improved in 3.14 to use the actual stack depth". So on 3.14 and 3.15, how deep `@cache` recursion can go depends on the **real stack size**: likely deeper than 998 on the main thread, and a bigger `threading.stack_size` should help again. Only 3.12 was available to measure here, so test this on your own judge's version before relying on it.
 
 **Also measured:** `threading.stack_size(256 MiB)` and `(512 MiB)` were **rejected on Windows** (`ValueError: size not valid`); 64 MiB worked.
 
 > **This is version- and platform-dependent.** Other CPython versions and other operating systems have different C-recursion limits, and PyPy behaves differently again (as reported, PyPy still benefits from the thread-stack trick). Before relying on deep `@cache` recursion on a judge, test it there with a quick depth probe like the one in [dsa_benchmarks.py](code/dsa/dsa_benchmarks.py).
 
 **Decision guide for recursive problems:**
+
+```mermaid
+flowchart TD
+    Q["How deep can the recursion get?"] --> S{"under about 900?"}
+    S -- yes --> C["@cache recursion is fine"]
+    S -- "no, or unknown" --> J{"Can you test on the<br/>judge's exact Python?"}
+    J -- "yes, and plain recursion passes" --> M["plain recursion + dict memo<br/>+ sys.setrecursionlimit"]
+    J -- "no / PyPy / old CPython" --> I["iterative: bottom-up DP,<br/>or iterative_dfs_order"]
+```
 
 | Depth can reach… | Do this |
 |---|---|
@@ -452,7 +501,7 @@ def f(i):
 
 ![Bar chart: reading and summing 500,000 integers; input() loop 0.27 s, sys.stdin.readline loop 0.11 s, sys.stdin.read().split() 0.09 s, sys.stdin.buffer.read().split() 0.06 s.](images/fig06_input_reading.png)
 
-*Figure 6 (measured). Interpreter startup (about 0.1 s) subtracted; input redirected from a file. Bulk reading of bytes is about 4× faster than an `input()` loop. That's a real saving, but much smaller than the 10–15× gap `py-dsa.md` reports, which may reflect older Pythons or slower judge pipes.*
+*Figure 8 (measured). Interpreter startup (about 0.1 s) subtracted; input redirected from a file. Bulk reading of bytes is about 4× faster than an `input()` loop. That's a real saving, but much smaller than the 10–15× gap `py-dsa.md` reports, which may reflect older Pythons or slower judge pipes.*
 
 `int()` accepts bytes directly (`int(b"42")`), so `sys.stdin.buffer.read().split()` works without decoding. For string tokens, call `.decode()`.
 
@@ -490,10 +539,25 @@ PyPy uses a JIT compiler, and it's commonly reported as **several times faster t
 
 ## 9. Choosing a data structure
 
+```mermaid
+flowchart TD
+    A["What do you need to do repeatedly?"] --> B{"take from the front<br/>and add at the back?"}
+    B -- yes --> DQ["deque"]
+    B -- no --> C{"always take the<br/>smallest / largest?"}
+    C -- yes --> H["heapq<br/>(negate for max)"]
+    C -- no --> D{"need sorted order AND<br/>inserts or deletes?"}
+    D -- yes --> SL["SortedList (LeetCode)<br/>or Fenwick over compressed values (Codeforces)"]
+    D -- no --> E{"look up / count by key?"}
+    E -- yes --> DI["dict / set / Counter / defaultdict<br/>(tuple keys for compound state)"]
+    E -- no --> F{"range sum / min with updates?"}
+    F -- yes --> FW["Fenwick (sums) or SegTree (any op)"]
+    F -- no --> L["list (stack: append / pop)"]
+```
+
 | You need… | Use | Avoid |
 |---|---|---|
 | Stack | `list` with `append` / `pop()` | `deque` (fine, but no benefit) |
-| Queue / BFS | `deque` | `list.pop(0)` (Figure 4) |
+| Queue / BFS | `deque` | `list.pop(0)` (Figure 1) |
 | Min/max repeatedly, with inserts | `heapq` (negate for max) | `queue.PriorityQueue` (locks), `insort` (O(n)) |
 | Sorted order with inserts/deletes and rank queries | `SortedList` (LeetCode), or Fenwick over compressed values (Codeforces) | `bisect.insort` beyond about 10⁴ items |
 | Membership / dedup | `set` / `frozenset` | Lists (`in` is O(n)) |
@@ -511,12 +575,12 @@ All are marked inline in `notes/py-dsa.md` as "Correction (… 23 Oct 2026)" box
 
 | Where | It said | Measured / checked |
 |---|---|---|
-| Node 2 §4 | `s += ch` in a loop can be O(N²) | Usually linear in CPython; quadratic when the string is shared (Figure 5) |
+| Node 2 §4 | `s += ch` in a loop can be O(N²) | Usually linear in CPython; quadratic when the string is shared (Figure 2) |
 | Node 4 §3 | Quadratic-style probing | CPython uses perturbation probing; the hack risk itself is "as reported" |
 | Node 6 §2 | Needs the thread-stack trick for deep recursion | Plain recursion to 10⁶ works on 3.12 main thread; 256/512 MiB stacks rejected on Windows |
-| Node 7 | Use `@cache` + raise the limit | `@cache` recursion stops at 998 on 3.12 regardless (Figure 9) |
+| Node 7 | Use `@cache` + raise the limit | `@cache` recursion stops at 998 on 3.12 regardless (Figure 7) |
 | Node 8 | `input()` loop: 1.5–2.5 s | 0.27 s for 500k ints (bulk read about 4× faster, still recommended) |
-| Node 8 | Karatsuba O(D^1.58) | Big × small is linear; the total is O(n²) (Figure 8) |
+| Node 8 | Karatsuba O(D^1.58) | Big × small is linear; the total is O(n²) (Figure 4) |
 | Node 8 | Ints never overflow, so print freely | `str()` limited to 4,300 digits since 3.11: `sys.set_int_max_str_digits(0)` |
 
 Everything else checked out, including `Counter.most_common` using `heapq.nlargest`, `deque`'s 64-item blocks, and `heapify` being O(n).
@@ -548,7 +612,7 @@ Everything else checked out, including `Counter.most_common` using `heapq.nlarge
 <details>
 <summary><b>Q2.</b> Your top-down DP is <code>@cache def f(i)</code> with i up to 10⁵, and you added <code>sys.setrecursionlimit(10**6)</code>. It throws <code>RecursionError</code> at depth about 1,000. Why, and what are two fixes?</summary>
 
-`@cache` is C code, and CPython 3.12 limits C-level recursion separately from `setrecursionlimit` (Figure 9). Fix 1: replace `@cache` with a manual `memo = {}` dict (plain Python recursion reached 10⁶). Fix 2: rewrite bottom-up as a loop over `i`.
+`@cache` is C code, and CPython 3.12 limits C-level recursion separately from `setrecursionlimit` (Figure 7). Fix 1: replace `@cache` with a manual `memo = {}` dict (plain Python recursion reached 10⁶). Fix 2: rewrite bottom-up as a loop over `i`.
 </details>
 
 <details>
@@ -576,7 +640,7 @@ Going backwards, `dp[c - w]` still holds the value *without* the current item, s
 
 Read all queries first (offline), coordinate-compress every x and y, and use a **Fenwick tree** of counts: insert is `add(r, 1)`, delete is `add(r, -1)`, the query is `prefix(rank(y) + 1)`. O(log n) each, standard library only.
 
-On LeetCode, `SortedList` with `bisect_right` is simpler. `bisect.insort` on a plain list is O(n) per insert, so O(n²) in total: Figure 7 measured 1.24 s for only 10⁵ random inserts, and doubling n roughly quadruples that, before any queries are counted.
+On LeetCode, `SortedList` with `bisect_right` is simpler. `bisect.insort` on a plain list is O(n) per insert, so O(n²) in total: Figure 3 measured 1.24 s for only 10⁵ random inserts, and doubling n roughly quadruples that, before any queries are counted.
 </details>
 
 <details>

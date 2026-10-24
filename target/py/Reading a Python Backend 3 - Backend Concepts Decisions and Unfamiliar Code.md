@@ -1,8 +1,8 @@
 # Reading a Python Backend 3: Backend Concepts, Decisions and Unfamiliar Code
 
 > **Series:** [Part 1: The Python You Need](Reading%20a%20Python%20Backend%201%20-%20The%20Python%20You%20Need.md) · [Part 2: A Codebase Tour and One Request Traced](Reading%20a%20Python%20Backend%202%20-%20A%20Codebase%20Tour%20and%20One%20Request%20Traced.md) · **Part 3 (this file)** · [Folder index](README.md)
-> **Source:** official docs for FastAPI, SQLAlchemy, Uvicorn, PostgreSQL, Flask and Django, plus measurements from [make_figs.py](images/make_figs.py). Numbers in worked examples are computed in the text. The Flask and Django snippets in §10 are **illustrative and were not run** (those frameworks aren't installed here); everything else was.
-> **Facts re-checked:** 23 October 2026.
+> **Source:** official docs for FastAPI, SQLAlchemy, Uvicorn, PostgreSQL, Flask and Django, plus measurements from [make_figs.py](images/make_figs.py). Numbers in worked examples are computed in the text. The Flask and Django snippets in §10 are **illustrative and were not run** (those frameworks aren't installed here); everything else was. Library versions re-checked against PyPI on 24 October 2026: FastAPI 0.162, Starlette 1.9, SQLAlchemy 2.1.6, Uvicorn 0.54, pwdlib 0.3.1, PyJWT 2.15, Django 6.1, Flask 3.1.
+> **Facts re-checked:** 24 October 2026.
 
 **The big picture:** Part 2 showed *how* one request moves through a codebase. This part covers the **decisions** behind that code: where state lives, how the database is used safely, what happens with many workers, what to do about slow calls and slow jobs. It ends with a method for reading **any** Python backend (FastAPI, Flask or Django) and a checklist for reviewing backend code an LLM wrote for you.
 
@@ -57,8 +57,8 @@ Every backend, in any framework, answers these same questions somewhere in its c
 
 1. **One transaction per unit of work**, committed by the code that knows the work is complete (the service). Let the database enforce invariants (UNIQUE, CHECK, foreign keys), because application checks can race.
 2. **Connection math:** pods × workers × (pool_size + max_overflow) must stay under the database's `max_connections`. With SQLAlchemy defaults, 4 pods × 4 workers × 15 = 240, more than PostgreSQL's default of 100.
-3. **N+1 grows linearly with rows** (Figure 2: 401 queries for 400 users versus 2 with `selectinload`). In async SQLAlchemy, lazy loading crashes instead (`MissingGreenlet`).
-4. **Password hashes must be slow:** Argon2id measured at about 70 ms per hash versus about 0.8 µs for SHA-256 (Figure 3). FastAPI's docs now use `pwdlib` + `PyJWT`, not `passlib` + `python-jose`.
+3. **N+1 grows linearly with rows** (Figure 1: 401 queries for 400 users versus 2 with `selectinload`). In async SQLAlchemy, lazy loading crashes instead (`MissingGreenlet`).
+4. **Password hashes must be slow:** Argon2id measured at about 70 ms per hash versus about 0.8 µs for SHA-256 (Figure 2). FastAPI's docs now use `pwdlib` + `PyJWT`, not `passlib` + `python-jose`.
 5. **Process memory is per worker.** Anything that must be shared or survive restarts goes in Redis or the database.
 6. **Every outgoing call needs a timeout.** Retry only idempotent operations, with backoff and jitter.
 7. **Slow work leaves the request:** `BackgroundTasks` for small, losable work; a real queue (Celery, arq, Dramatiq, RQ) for anything that must survive a crash.
@@ -122,9 +122,25 @@ $$\text{peak connections} = \text{pods} \times \text{workers} \times (\text{pool
 
 *Read it out loud: "peak connections equals the number of pods, times the workers in each pod, times the most connections each worker's pool can open". Here that's 240, against a database that accepts 100 by default.*
 
+```mermaid
+flowchart LR
+    subgraph P1["pod 1"]
+        W1["worker 1<br/>pool ≤ 15"]
+        W2["worker 2<br/>pool ≤ 15"]
+        W3["worker 3<br/>pool ≤ 15"]
+        W4["worker 4<br/>pool ≤ 15"]
+    end
+    subgraph P2["pods 2, 3, 4"]
+        W5["12 more workers<br/>each pool ≤ 15"]
+    end
+    W1 & W2 & W3 & W4 & W5 --> DB[("PostgreSQL<br/>max_connections = 100")]
+```
+
+*Each worker process owns its own pool; nothing is shared between processes. The database sees the sum of every pool: 16 × 15 = 240 possible connections against a limit of 100.*
+
 Under load, new connections fail with `FATAL: sorry, too many clients already` or the pool raises `TimeoutError`. Typical fixes:
 
-- Shrink the per-process pool: 100 ÷ 16 processes ≈ 6 connections each, so `pool_size=4, max_overflow=2`, leaving room for migrations and admin tools.
+- Shrink the per-process pool so the sum fits with headroom. Reserve, say, 20 connections for migrations, admin tools and monitoring: (100 − 20) ÷ 16 processes = 5 each, so `pool_size=3, max_overflow=2`. That's 16 × 5 = 80 at peak.
 - Put **PgBouncer** in front of PostgreSQL. Note that PgBouncer in *transaction* mode has caveats with asyncpg prepared statements, so check the asyncpg and SQLAlchemy docs for the settings.
 - Use fewer, larger processes.
 
@@ -134,7 +150,7 @@ Under load, new connections fail with `FATAL: sorry, too many clients already` o
 
 ![Left: lazy loading sends one query per user plus one (401 queries for 400 users) while selectinload sends 2 and joinedload sends 1 regardless of size. Right: time grows much faster for lazy loading even on an in-memory database.](images/fig02_n_plus_one.png)
 
-*Figure 2 (measured). Loading N users and reading each user's orders. Lazy loading (red) sends 1 query for the users plus 1 per user. `selectinload` (green) always sends 2 (`... WHERE user_id IN (...)`), and `joinedload` (blue) sends 1 JOIN. Timings are on in-memory SQLite, with no network. Against a real database server each query also pays a network round trip, so the red line gets far steeper.*
+*Figure 1 (measured). Loading N users and reading each user's orders. Lazy loading (red) sends 1 query for the users plus 1 per user. `selectinload` (green) always sends 2 (`... WHERE user_id IN (...)`), and `joinedload` (blue) sends 1 JOIN. Timings are on in-memory SQLite, with no network. Against a real database server each query also pays a network round trip, so the red line gets far steeper.*
 
 Part 1's demo 10 shows both faces of the same mistake:
 
@@ -176,7 +192,7 @@ alembic downgrade -1
 | Ecosystem | Everything works | Every library on the request path must be async |
 | Good default when… | Moderate traffic, a team new to async, lots of sync libraries | High concurrency, lots of waiting on I/O, a fully async stack |
 
-Both are legitimate. Many production FastAPI apps use **sync SQLAlchemy with `def` endpoints**, and that's not a mistake. Mixing them carelessly (a sync driver inside `async def`) *is* the mistake (Part 1 Figure 1).
+Both are legitimate. Many production FastAPI apps use **sync SQLAlchemy with `def` endpoints**, and that's not a mistake. Mixing them carelessly (a sync driver inside `async def`) *is* the mistake (Part 1 Figure 2).
 
 ---
 
@@ -186,9 +202,15 @@ Both are legitimate. Many production FastAPI apps use **sync SQLAlchemy with `de
 
 ![Bar chart on a log scale: SHA-256 about 0.8 microseconds per hash, PBKDF2-SHA256 with 600k iterations about 300 ms, Argon2id about 70 ms; guesses per second per core shown for each.](images/fig03_password_hashing.png)
 
-*Figure 3 (measured on one core). A fast hash lets an attacker who stole your database try about a million passwords per second per core, and far more on GPUs. Argon2id (pwdlib's default: 64 MiB memory, 3 passes) allows about 14. Its memory cost is what makes GPU cracking expensive.*
+*Figure 2 (measured on one core). A fast hash lets an attacker who stole your database try about a million passwords per second per core, and far more on GPUs. Argon2id (pwdlib's default: 64 MiB memory, 3 passes) allows about 14. Its memory cost is what makes GPU cracking expensive.*
 
-> **Update (verified 23 Oct 2026):** FastAPI's security tutorial uses **`pwdlib` (Argon2)** for password hashing and **`PyJWT`** for tokens. Older tutorials, many existing codebases and `notes/py-backend.md` Node 6 use `passlib` and `python-jose`. Both are much less actively maintained, and `passlib` has known compatibility warnings with newer `bcrypt` releases. When you read `from passlib.context import CryptContext` or `from jose import jwt`, read it as "older code"; it isn't wrong, but it's due for an upgrade. [security.py](code/shop_api/app/security.py) shows the current form.
+> **Update (verified 24 Oct 2026):** FastAPI's security tutorial uses **`pwdlib` (Argon2)** for password hashing and **`PyJWT`** for tokens. Older tutorials, many existing codebases and `notes/py-backend.md` Node 6 use `passlib` and `python-jose`.
+> - `passlib`'s last release is **1.7.4, from 2020** (checked on PyPI), and it has known compatibility warnings with newer `bcrypt` releases.
+> - `python-jose` did get new releases in 2025 (3.5.0 is current), but FastAPI's docs moved to PyJWT.
+>
+> When you read `from passlib.context import CryptContext` or `from jose import jwt`, read it as "older code": it isn't wrong, but it's due for an upgrade. [security.py](code/shop_api/app/security.py) shows the current form.
+>
+> **How slow is slow enough?** OWASP's Password Storage Cheat Sheet sets a *minimum* for Argon2id of 19 MiB of memory, 2 iterations and parallelism 1, and recommends 600,000 iterations if you must use PBKDF2-HMAC-SHA256. pwdlib's default (64 MiB, 3 iterations, parallelism 4) is above that minimum.
 
 ### 4.2 Tokens: JWT versus server sessions
 
@@ -198,6 +220,25 @@ Both are legitimate. Many production FastAPI apps use **sync SQLAlchemy with `de
 | Log out / revoke now | **Hard**: the token stays valid until `exp`. You need a denylist (a lookup again) or short expiry plus refresh tokens | Delete the session row: instant |
 | Many workers / services | Any process with the key can verify | Every process needs the shared store |
 | Typical use | APIs called by other services, mobile apps | Browser apps, especially with cookie-based login |
+
+The two flows side by side:
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as Any API worker
+    participant S as Session store (Redis/DB)
+    Note over C,S: Stateless JWT
+    C->>A: request + header Authorization: Bearer (JWT)
+    A->>A: verify signature + exp with the secret key (no lookup)
+    A-->>C: response
+    Note over C,S: Server-side session
+    C->>A: request + Cookie: session_id=abc
+    A->>S: look up abc
+    S-->>A: user 42, still valid
+    A-->>C: response
+    Note over C,S: Log out = delete abc from the store, which works at once. A JWT keeps working until exp.
+```
 
 `py-backend.md` Node 6 explains why JWTs suit multi-worker systems. The trade-off it doesn't mention is **revocation**, which is why real systems use short-lived access tokens (5–30 minutes; ours is 30) plus a refresh token that *is* checked against a store.
 
@@ -234,7 +275,19 @@ CORS headers tell a **browser** whether JavaScript from another site may read yo
 | Shared, must not be lost | Orders, balances, users | The database |
 | Expensive per-process resources | DB engine, `httpx.AsyncClient`, Redis client | Created once in `lifespan`, stored on `app.state` |
 
-**Cache-aside**, the pattern in `py-backend.md` Node 7, works like this. Read the cache; on a miss, read the database and write the cache with a TTL; on a write, **delete** the key rather than updating it. The two traps:
+**Cache-aside**, the pattern in `py-backend.md` Node 7, works like this. Read the cache; on a miss, read the database and write the cache with a TTL; on a write, **delete** the key rather than updating it.
+
+```mermaid
+flowchart TD
+    R["GET /products/7"] --> Q{"in Redis?"}
+    Q -- "hit" --> H["return cached JSON"]
+    Q -- "miss" --> DB["read from the database"] --> W["SET product:7 ... EX 300<br/>(always with a TTL)"] --> H2["return it"]
+    U["PUT /products/7"] --> UD["update the database"] --> DEL["DEL product:7<br/>(next read refills it)"]
+```
+
+*Reads fill the cache lazily; writes only delete. Deleting rather than writing the new value avoids a race where two concurrent writers leave the older value in the cache.*
+
+The two traps:
 
 1. **Invalidation.** Forgetting to delete on some write path serves stale data until the TTL runs out.
 2. **Stampede.** A hot key expires and 1,000 requests miss at once and all hit the database. Fixes: a lock so only one request refills the key, early refresh, or random jitter on TTLs.
@@ -278,6 +331,27 @@ Libraries you'll see: `tenacity` (`@retry(stop=stop_after_attempt(3), wait=wait_
 | Cron / scheduler (Celery beat, APScheduler, Kubernetes CronJob) | On a schedule | Depends | Depends | Nightly reports, cleanups |
 
 **The dual-write trap.** You commit an order, then call `send_email.delay(order.id)`. If the process dies between the two lines, the order exists but no email is ever sent. If you send the message *before* committing, a rollback leaves an email about an order that doesn't exist. The robust pattern is the **transactional outbox**: write an `outbox` row in the **same transaction** as the order, and have a separate worker publish outbox rows. When you see an `outbox` table in a codebase, this is why it's there.
+
+```mermaid
+sequenceDiagram
+    participant API as API request
+    participant DB as Database
+    participant R as Outbox relay (worker)
+    participant Q as Queue (Redis/RabbitMQ/Kafka)
+    API->>DB: BEGIN
+    API->>DB: INSERT order
+    API->>DB: INSERT outbox row (event order_created, order_id)
+    API->>DB: COMMIT (both rows, or neither)
+    loop every second
+        R->>DB: SELECT unsent outbox rows
+        R->>Q: publish event
+        R->>DB: mark row sent
+    end
+```
+
+*The order and the "send an email" intent are committed atomically, so neither can exist without the other. If the relay crashes after publishing but before marking the row sent, the event is published twice. That's why consumers must be idempotent (§6).*
+
+> **Django 6.0 (December 2025) added a built-in `django.tasks` framework** (`@task`, then `.enqueue(...)`). Its built-in backends are mainly for development and testing, and Django doesn't ship a worker, so production use still needs a backend from a third-party package. If you see `from django.tasks import task` in a codebase, it's this.
 
 ---
 
@@ -425,6 +499,8 @@ LLMs learned from years of older tutorials, so their mistakes are predictable. C
 | Outgoing calls | No timeout, retries on non-idempotent `POST` | Timeouts, idempotency keys, backoff |
 | Secrets and config | Hard-coded keys, `allow_origins=["*"]` with credentials | Settings from the environment; an explicit origin list |
 | SQL | f-string SQL | ORM or bound parameters |
+| Decorated endpoints | A wrapper without `@functools.wraps` (every call then 422s on `args`/`kwargs`) | `@wraps(func)` on every wrapper |
+| List query parameters | `tags: list[str]` (read from the **body**) | `tags: Annotated[list[str], Query()]` |
 | Tests | Tests that only check status 200 | Tests on body shape, error cases, permission failures |
 
 **A method that works:** ask the LLM to produce the change **and** the tests. Run the tests. Then trace one request through the new code yourself (Part 2 §4) before accepting it. You don't need to be able to write every line from memory; you do need to be able to say what each line does and in what order it runs.
@@ -529,7 +605,7 @@ Fix the worst problems with tests around them. Only then consider structural cha
 <details>
 <summary><b>D5.</b> An LLM gives you an <code>async def</code> endpoint that calls <code>boto3</code> (sync) to upload a file to S3, then commits a row. What do you ask it to change?</summary>
 
-`boto3` is blocking, so inside `async def` it freezes the loop (Part 1 Figure 1). Options:
+`boto3` is blocking, so inside `async def` it freezes the loop (Part 1 Figure 2). Options:
 
 - Make the endpoint `def`.
 - Wrap the upload in `asyncio.to_thread`.

@@ -1,8 +1,11 @@
 """Auth routes: register and log in. Thin: validate, call a service, shape the reply."""
-from fastapi import APIRouter, status
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, status
+from fastapi.security import OAuth2PasswordRequestForm
 
 from ..deps import SettingsDep, UserServiceDep
-from ..schemas import LoginIn, Token, UserCreate, UserOut
+from ..schemas import Token, UserCreate, UserOut
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -14,8 +17,9 @@ async def register(data: UserCreate, users: UserServiceDep):
 
 
 @router.post("/token", response_model=Token)
-async def login(data: LoginIn, users: UserServiceDep, settings: SettingsDep):
-    # Note: the OAuth2 spec's login is a *form* post (needs python-multipart).
-    # This demo takes JSON to keep dependencies small; the token that comes back is the same.
-    token = await users.login(data.email, data.password, settings)
+async def login(form: Annotated[OAuth2PasswordRequestForm, Depends()], users: UserServiceDep, settings: SettingsDep):
+    # The OAuth2 "password flow" sends a FORM (username=...&password=...), not JSON.
+    # That is what the "Authorize" button on /docs sends, so /docs works out of the box.
+    # The field is called "username" by the spec; this app puts the email in it.
+    token = await users.login(form.username, form.password, settings)
     return Token(access_token=token)

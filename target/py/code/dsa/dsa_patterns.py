@@ -113,6 +113,23 @@ def daily_temperatures(t):
 
 show("daily_temperatures([73,74,75,71,69,72,76,73])", daily_temperatures([73, 74, 75, 71, 69, 72, 76, 73]))
 
+
+def trace_monotonic_stack(t):
+    """Print the stack (as index:value) after each step, to see why it stays decreasing."""
+    stack = []
+    print(f"  {'i':>2} {'t[i]':>4}  popped (answer found)          stack after push")
+    for i, x in enumerate(t):
+        popped = []
+        while stack and t[stack[-1]] < x:
+            j = stack.pop()
+            popped.append(f"{j}:{t[j]} waits {i - j}")
+        stack.append(i)
+        print(f"  {i:>2} {x:>4}  {', '.join(popped) or '-':<30} {[f'{k}:{t[k]}' for k in stack]}")
+
+
+print("  step-by-step:")
+trace_monotonic_stack([73, 74, 75, 71, 69, 72, 76, 73])
+
 print("\n=== Grid BFS: shortest path, 4 directions ===")
 
 
