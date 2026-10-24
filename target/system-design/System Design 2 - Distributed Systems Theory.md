@@ -3,7 +3,7 @@
 > **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · **Part 2 (this file)** · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
 > **Source:** built from research: the classic papers (Lamport, FLP, Dynamo, Raft, Spanner, SWIM, CRDTs), Kleppmann and Riccomini's *DDIA* 2nd edition, and the MIT 6.5840 course. Full list in [References](#14-references). Every number recomputed with Python; figures from [make_figs.py](images/make_figs.py); code from [system_design_theory.py](code/system_design_theory.py).
 > **Self-contained:** the four parts in this folder need nothing else; Part 1 §2.5 explains the decision method the drills here practise.
-> **Facts re-checked:** 22 October 2026.
+> **Facts re-checked:** 24 October 2026 (full audit: DynamoDB multi-region strong consistency, PostgreSQL 19 `WAIT FOR LSN`, new diagrams).
 
 **The big picture:** once data lives on more than one machine, machines can crash, messages can be lost or delayed, and clocks disagree. This part teaches how systems still keep copies in sync (replication), split data up (partitioning), define what "correct" means (consistency models), order events without a shared clock, agree on decisions (consensus), and stay correct across failures (transactions, idempotency, CRDTs, gossip).
 
@@ -187,7 +187,7 @@ With async followers, a read from a follower may return **old data**. The lag is
 
 | Guarantee | Anomaly it prevents | How to get it |
 |---|---|---|
-| **Read-your-writes** | "I posted a comment, refreshed, and it's gone." | Read the user's *own* data from the leader for a while after they write; or remember the write's log position and only read from replicas that have caught up to it |
+| **Read-your-writes** | "I posted a comment, refreshed, and it's gone." | Read the user's *own* data from the leader for a while after they write; or remember the write's log position and only read from replicas that have caught up to it (PostgreSQL 19's `WAIT FOR LSN` does exactly this wait on a replica) |
 | **Monotonic reads** | "The comment appeared, then disappeared on the next refresh." (Two reads hit replicas with different lag.) | Pin each user to one replica (for example, by hashing the user ID) |
 | **Consistent prefix reads** | Seeing an answer before its question, because the two came from different partitions with different lag | Write causally related data to the same partition, or track causality (§6) |
 
@@ -223,6 +223,27 @@ $$
 *If the number of replicas you read from plus the number you wrote to is more than the total number of replicas, at least one replica you read from has the latest write.*
 
 Why: the write set and the read set together have $R + W$ members, but only $N$ distinct replicas exist. So they must share at least $R + W - N \geq 1$ replica. That's the pigeonhole principle.
+
+```mermaid
+flowchart LR
+    accTitle: Quorum overlap with N=3, W=2, R=2
+    accDescr: The write reached replicas A and B. The read asks replicas B and C. Replica B is in both sets, so the read sees version 2 and returns the newest.
+    W(["Write x = v2<br/>needs W = 2 acks"]) --> A[("Replica A<br/>x = v2")]
+    W --> B[("Replica B<br/>x = v2")]
+    W -.->|"slow, not yet"| C[("Replica C<br/>x = v1 (stale)")]
+    RD(["Read x<br/>needs R = 2 replies"]) --> B
+    RD --> C
+    B -->|"v2 wins: newest version"| OUT(["Read returns v2"])
+    class W,RD primary;
+    class A,B target;
+    class C warning;
+    class OUT target;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+    classDef warning fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+```
+
+Whichever two replicas the read picks, at least one of them was in the write's two. The reader compares versions and keeps the newest, and often writes it back to the stale replica (read repair, below).
 
 **Worked example.** $N = 3$, $W = 2$, $R = 2$: $2 + 2 = 4 > 3$ ✓, so the sets share at least one replica. The system tolerates **one** unavailable replica for both reads and writes. Common tunings:
 
@@ -298,6 +319,10 @@ A common hybrid is a **compound key**: hash the first part, sort by the second. 
 
 **Consistent hashing** (Karger et al., 1997) places both servers and keys on a ring of hash values ($0$ to $2^{m}-1$). Each key belongs to the first server clockwise from it. When a server joins, it takes keys only from its clockwise neighbour, about $1/(N+1)$ of the total.
 
+![Fig 14 – Consistent hashing ring (fig14_hash_ring.png): 120 keys and 4 servers placed on a ring by their MD5 hashes; after adding a fifth server, only the 10 keys on the arc just before it move, all to the new server.](images/fig14_hash_ring.png)
+
+*Fig 14 (fig14_hash_ring.png). Real hash positions, one point per server. Adding S5 moves only the keys on the arc between S4 and S5, and they all move to S5. Every other key keeps its server, so every other cache stays warm. Notice also how **uneven** the arcs are: S5 took 10 of 120 keys (8%), not the fair share of 20%, and S3 owns far more of the ring than S1. With one point per server, load depends on luck. That's the problem virtual nodes fix.*
+
 ![Fig 5 – Keys moved when adding a server (fig05_rehash_moved.png): fraction of keys that must move with hash mod N versus consistent hashing, for N from 2 to 20.](images/fig05_rehash_moved.png)
 
 *Fig 5 (fig05_rehash_moved.png). At 10 → 11 servers, modulo moves 90.9% of keys. Consistent hashing moves about 9.1%. Moving data is the expensive part of scaling, so this difference is everything.*
@@ -333,7 +358,7 @@ Hashing balances *keys*, not *traffic*. If one key is very hot (a celebrity's po
 
 ### 4.6 Request routing
 
-How does a client know which node owns a key? Three options: (1) ask any node, which forwards the request (Cassandra, Riak use gossip to share the map); (2) a routing tier that knows the map; (3) partition-aware clients. The authoritative map usually lives in a consensus-backed store such as ZooKeeper or etcd (§7.7), which everyone subscribes to.
+How does a client know which node owns a key? Three options: (1) ask any node, which forwards the request (Cassandra, Riak use gossip to share the map); (2) a routing tier that knows the map; (3) partition-aware clients. The authoritative map usually lives in a consensus-backed store such as ZooKeeper or etcd (§7.5), which everyone subscribes to.
 
 ---
 
@@ -346,6 +371,25 @@ How does a client know which node owns a key? Three options: (1) ask any node, w
 **Definition in plain words:** the system acts as if there is **one copy** of the data, and every operation takes effect **instantly at some point between its start and its finish**. Once any read has seen a new value, every later read (in real time) sees it or something newer.
 
 **Example of a violation.** Alice and Bob both watch a match score. The final whistle blows. Alice's refresh shows "Final: 2–1". She tells Bob, who refreshes and sees "1–1, 89th minute". Bob read *after* Alice in real time but got an *older* value, so this system isn't linearizable. Each replica will eventually show 2–1, but the *real-time order* was broken.
+
+```mermaid
+sequenceDiagram
+    participant L as Leader
+    participant F1 as Follower 1 (caught up)
+    participant F2 as Follower 2 (lagging)
+    participant A as Alice
+    participant B as Bob
+    L->>F1: score = 2–1
+    L--)F2: score = 2–1 (delayed in the network)
+    A->>F1: read score
+    F1->>A: "Final: 2–1"
+    A->>B: "It's over, 2–1!"
+    B->>F2: read score
+    F2->>B: "1–1, 89th minute"
+    Note over B: Bob's read began after Alice's ended, yet saw an older value
+```
+
+Nothing here is broken in the eventual-consistency sense: Follower 2 will catch up. The problem is that **two reads served by different replicas disagree with real time**. Linearizability rules that out, at the cost of making every read check with a quorum or the leader.
 
 **Where you need it:**
 
@@ -480,6 +524,24 @@ a \rightarrow b \implies L(a) < L(b)
 $$
 
 *If a happened before b, then a's Lamport timestamp is smaller than b's.* Break ties by node ID, and you get a **total order** consistent with causality. Every node can sort events the same way without asking anyone.
+
+**Worked trace** with three nodes, every counter starting at 0:
+
+```mermaid
+sequenceDiagram
+    participant P1
+    participant P2
+    participant P3
+    Note over P1: a: local event, C = 1
+    Note over P2: b: local event, C = 1
+    Note over P3: c: local event, C = 1
+    P1->>P2: send m1 (C = 2, stamped 2)
+    Note over P2: receive m1: C = max(1, 2) + 1 = 3
+    P2->>P3: send m2 (C = 4, stamped 4)
+    Note over P3: receive m2: C = max(1, 4) + 1 = 5
+```
+
+Follow the causal chain a → send m1 → receive m1 → send m2 → receive m2: the timestamps 1, 2, 3, 4, 5 rise along it, as the guarantee promises. Now look at **b** on P2 (timestamp 1) and P1's **send m1** (timestamp 2). $1 < 2$, but b happened before P2 heard anything from P1, so the two are **concurrent**. A smaller Lamport timestamp didn't mean "happened before". That's the limitation below.
 
 **The limitation:** the converse is false. $L(a) < L(b)$ does **not** mean $a$ happened before $b$; they might be concurrent. Lamport clocks can't *detect* concurrency, which you need to spot conflicts.
 
@@ -671,6 +733,26 @@ You almost never write consensus code yourself. You use a system built on it:
 3. Client 1 wakes up, *believes it still holds the lease*, and writes too. Data is corrupted.
 
 **The fix: fencing tokens.** Each time the lock service grants the lease, it returns a **monotonically increasing token** (33, then 34…). Every write to storage carries the token, and **storage rejects any token lower than the highest it has seen**. Client 1's late write with token 33 is refused, because 34 was already seen. The protection lives in the *resource*, not in the client's belief. etcd's revision numbers and ZooKeeper's `zxid` work well as fencing tokens.
+
+```mermaid
+sequenceDiagram
+    participant C1 as Client 1
+    participant LS as Lock service
+    participant C2 as Client 2
+    participant S as Storage
+    C1->>LS: acquire lease
+    LS->>C1: OK, token 33 (10 s)
+    Note over C1: GC pause for 15 s. The lease expires while C1 is frozen.
+    C2->>LS: acquire lease
+    LS->>C2: OK, token 34
+    C2->>S: write(data, token 34)
+    S->>C2: OK (highest token seen is now 34)
+    Note over C1: wakes up, still believes it holds the lease
+    C1->>S: write(data, token 33)
+    S->>C1: REJECTED: 33 < 34
+```
+
+The check needs the storage to cooperate: it must remember the highest token and compare on every write. A plain file system or an external API usually can't, which is why the safest designs also make the write itself **idempotent** (Drill 2 below).
 
 > Redis-based "Redlock" was criticised by Kleppmann (2016) exactly because it relies on timing assumptions and provides no fencing token. Use a lock for **efficiency** (avoiding duplicate work) if occasional double-holding is harmless. Use consensus plus fencing for **correctness**.
 
@@ -887,7 +969,27 @@ $$
 
 **The problem.** Two replicas each hold 1 million keys. Find which keys differ without sending all of them.
 
-**How it works.** Build a **Merkle tree**: hash each key range into a leaf, then hash pairs of hashes up to a single root. Two replicas compare roots: equal means identical, and you're done in one message. If they differ, compare the children and descend only into subtrees whose hashes differ. With about a million leaves, the tree is $\log_2 10^6 \approx 20$ levels deep. A handful of differing keys are found by exchanging a few hashes per level, instead of a million records. Dynamo, Cassandra (repair) and Riak use this for background anti-entropy. The same structure secures Git commits, blockchains and certificate transparency logs.
+**How it works.** Build a **Merkle tree**: hash each key range into a leaf, then hash pairs of hashes up to a single root. Two replicas compare roots: equal means identical, and you're done in one message. If they differ, compare the children and descend only into subtrees whose hashes differ.
+
+```mermaid
+flowchart TD
+    accTitle: Merkle tree comparison between two replicas
+    accDescr: The roots differ, so the replicas compare the two children. The left child matches and is skipped; the right child differs. Under it, keys 750 to 999 match and keys 500 to 749 differ; one level further, only keys 625 to 749 differ, so only that range is exchanged.
+    R["root hash<br/>DIFFERS"] --> L["hash(keys 0–499)<br/>matches: skip whole half"]
+    R --> RR["hash(keys 500–999)<br/>DIFFERS"]
+    RR --> M["hash(500–749)<br/>DIFFERS"]
+    RR --> R3["hash(750–999)<br/>matches: skip"]
+    M --> R1["hash(500–624)<br/>matches: skip"]
+    M --> R2["hash(625–749)<br/>DIFFERS: sync these keys"]
+    class R,RR,M warning;
+    class L,R1,R3 target;
+    class R2 error;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+    classDef warning fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef error fill:#FEF2F2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+```
+
+Each matching hash rules out its whole subtree at once, so the work is proportional to *how many keys differ*, not to how many keys exist. With about a million leaves, the tree is $\log_2 10^6 \approx 20$ levels deep. A handful of differing keys are found by exchanging a few hashes per level, instead of a million records. Dynamo, Cassandra (repair) and Riak use this for background anti-entropy. The same structure secures Git commits, blockchains and certificate transparency logs.
 
 ---
 
@@ -897,7 +999,7 @@ $$
 |---|---|---|---|---|
 | **Amazon Dynamo** (2007 paper) | Leaderless, sloppy quorums, hinted handoff | Consistent hashing + virtual nodes | Eventual; tunable N/R/W | Vector clocks; app merges siblings; Merkle anti-entropy; gossip membership |
 | **Cassandra / ScyllaDB** | Leaderless, tunable per query | Consistent hashing (token ring) | Tunable: `ONE` … `QUORUM` … `ALL` | LWW timestamps; Lightweight Transactions use Paxos; phi-accrual + gossip |
-| **DynamoDB** | Leader per partition (Multi-Paxos inside) | Hash partitions, auto-split | Eventual reads by default; strongly consistent reads optional; transactions | Optional global tables with LWW across regions |
+| **DynamoDB** | Leader per partition (Multi-Paxos inside) | Hash partitions, auto-split | Eventual reads by default; strongly consistent reads optional; transactions | Global tables: LWW across regions by default, or (since June 2025) **multi-region strong consistency**, where each write is synchronously copied to another region before it's acknowledged. The mode is chosen at table creation. |
 | **Google Spanner** | Paxos group per split | Range (splits) | **Strict serializability** (external consistency) | TrueTime + commit wait; 2PC across Paxos groups |
 | **CockroachDB / YugabyteDB / TiDB** | Raft per range | Range, auto-split | Serializable (Cockroach default) / snapshot or serializable | HLC timestamps; 2PC across Raft groups |
 | **MongoDB** | Single-leader replica sets (Raft-like election) | Range or hashed | Tunable read/write concerns; causal sessions | Election terms; oplog |
@@ -1091,6 +1193,7 @@ Hashing balances *keys*, not *load* (§4.4). Options: (1) move the big tenant to
 - Hector Garcia-Molina and Kenneth Salem, "Sagas", SIGMOD 1987.
 - Martin Kleppmann, "How to do distributed locking", 2016 (fencing tokens, the Redlock critique).
 - Martin Kleppmann and Chris Riccomini, *Designing Data-Intensive Applications*, 2nd ed., O'Reilly, 2026 ([author's page](https://martin.kleppmann.com/2026/03/24/designing-data-intensive-applications-2e.html)).
+- AWS, [DynamoDB global tables with multi-Region strong consistency now generally available](https://aws.amazon.com/about-aws/whats-new/2025/06/amazon-dynamo-db-global-tables-multi-region-strong-consistency-generally-available/), 30 June 2025.
 - MIT 6.5840 Distributed Systems, Spring 2026 ([course site](https://pdos.csail.mit.edu/6.824)). The labs (MapReduce, Raft, a fault-tolerant KV store) are the best hands-on follow-up to this guide.
 
 **Next:** [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md), where all this theory becomes messaging, reliability, infrastructure, security and AI systems.

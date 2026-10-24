@@ -51,7 +51,7 @@ def fig01_latency_ladder():
         lab = f"{v:g} ns" if v < 1e3 else (f"{v/1e3:g} µs" if v < 1e6 else f"{v/1e6:g} ms")
         ax.text(v * 1.3, y, lab, va="center", fontsize=8)
     ax.set_xlim(0.5, 3e9)
-    ax.set_title("Latency ladder: each colour band is ~1000× slower than the last")
+    ax.set_title("Latency ladder: from nanoseconds (RAM) to hundreds of milliseconds (oceans)")
     note(ax, "Approximate orders of magnitude for 2020s hardware\n(after Jeff Dean / Colin Scott tables). Not benchmarks.", (0.52, 0.97))
     save(fig, OUT, "fig01_latency_ladder.png")
 
@@ -280,7 +280,144 @@ def fig13_zipf_cache():
     save(fig, OUT, "fig13_zipf_cache.png")
 
 
+# ---------------------------------------------------------------- added in the October 2026 audit
+def _pos(name):
+    """Position on a 360-degree ring from an MD5 hash (real hashing, not hand-placed)."""
+    return int(hashlib.md5(name.encode()).hexdigest(), 16) % 3600 / 10.0
+
+
+def _owner(angle, servers):
+    pts = sorted((_pos(s), s) for s in servers)
+    for a, s in pts:
+        if angle <= a:
+            return s
+    return pts[0][1]                                   # wrap around past 360
+
+
+def fig14_hash_ring():
+    before = ["server-1", "server-2", "server-3", "server-4"]; after = before + ["server-5"]
+    cols = dict(zip(after, [BLUE, GREEN, AMBER, PURPLE, RED]))
+    keys = [f"key{i}" for i in range(120)]
+    moved = [k for k in keys if _owner(_pos(k), before) != _owner(_pos(k), after)]
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.6))
+    for ax, servers, title in [(axes[0], before, "Before: 4 servers"), (axes[1], after, "After adding server S5")]:
+        t = np.linspace(0, 2 * np.pi, 400)
+        ax.plot(np.cos(t), np.sin(t), color=LIGHT, lw=6, zorder=1)
+        for k in keys:
+            a = np.radians(90 - _pos(k)); o = _owner(_pos(k), servers)
+            hl = servers is after and k in moved
+            ax.scatter(np.cos(a), np.sin(a), s=55 if hl else 18, color=cols[o], zorder=3,
+                       edgecolor="black" if hl else "none", lw=1.2)
+        for s in servers:
+            a = np.radians(90 - _pos(s))
+            ax.scatter(np.cos(a), np.sin(a), marker="s", s=170, color=cols[s], zorder=4, edgecolor="white")
+            ax.text(1.25 * np.cos(a), 1.25 * np.sin(a), "S" + s[-1], ha="center", va="center", fontsize=12,
+                    fontweight="bold", color=cols[s])
+        ax.set_xlim(-1.45, 1.45); ax.set_ylim(-1.45, 1.45); ax.set_aspect("equal"); ax.axis("off")
+        ax.set_title(title)
+    axes[0].text(0, 0, "Each key (dot) belongs to\nthe first server (square)\nclockwise from it",
+                 ha="center", va="center", fontsize=9, color=GRAY)
+    axes[1].text(0, 0, f"{len(moved)} of {len(keys)} keys moved,\nall of them to S5\n(outlined dots).\nEvery other key stayed put.",
+                 ha="center", va="center", fontsize=9, color=GRAY)
+    fig.text(0.5, 0.01, "Positions are real MD5 hashes of the names \"server-1\"…\"server-5\" and \"key0\"…\"key119\"; "
+             "one point per server (no virtual nodes).\nhash mod N would move about 80% of the keys going from 4 to 5 servers.",
+             ha="center", fontsize=8, color=GRAY)
+    save(fig, OUT, "fig14_hash_ring.png")
+    return len(moved), len(keys)
+
+
+def fig15_watermark():
+    r = np.random.default_rng(15)
+    n = 160
+    event = np.sort(r.uniform(0, 60, n))
+    delay = r.exponential(1.5, n)                      # most events arrive within a few seconds
+    strag = r.random(n) < 0.06                         # a few phones were offline for a while
+    delay[strag] = r.uniform(8, 25, strag.sum())
+    proc = event + delay
+    lag = 5.0                                          # watermark = newest event time seen - 5 s
+    order = np.argsort(proc)
+    # an event is late if, when it arrives, the watermark has already passed its event time
+    late = np.zeros(n, bool); mx = -1e9
+    for i in order:
+        if event[i] < mx - lag:
+            late[i] = True
+        mx = max(mx, event[i])
+    tt = proc[order]; wm = np.maximum.accumulate(event[order]) - lag
+    fig, ax = plt.subplots(figsize=(8.5, 5))
+    for w0 in range(0, 60, 15):
+        ax.axhspan(w0, w0 + 15, color=[BLUE, GREEN][(w0 // 15) % 2], alpha=0.06)
+        ax.text(1, w0 + 7.5, f"window\n{w0}–{w0 + 15} s", fontsize=7.5, color=GRAY, va="center")
+    ax.scatter(proc[~late], event[~late], s=14, color=BLUE, label="on-time event", zorder=3)
+    ax.scatter(proc[late], event[late], s=45, color=RED, marker="x", zorder=4,
+               label="late event (watermark had already passed it)")
+    ax.step(tt, wm, where="post", color=AMBER, lw=2, label="watermark = newest event time seen − 5 s")
+    ax.plot([0, 85], [0, 85], color=GRAY, ls=":", lw=1, label="zero delay (event time = arrival time)")
+    emitted = {}
+    for w_end in [15, 30, 45]:
+        idx = int(np.argmax(wm >= w_end)); emitted[w_end] = round(float(tt[idx]), 1)
+        ax.scatter([tt[idx]], [w_end], color=AMBER, s=60, zorder=5, edgecolor="black")
+        ax.annotate(f"window ending {w_end} s\nclosed at {tt[idx]:.0f} s", (tt[idx], w_end),
+                    xytext=(tt[idx] + 5, w_end - 7), fontsize=7.5, arrowprops=dict(arrowstyle="-", color=GRAY))
+    ax.set_xlim(0, 85); ax.set_ylim(0, 62)
+    ax.set_xlabel("Processing time: when the event reached the stream processor (s)")
+    ax.set_ylabel("Event time: when it actually happened (s)")
+    ax.grid(alpha=0.3); ax.legend(fontsize=7.5, loc="lower right")
+    ax.set_title("Watermarks: deciding when a time window is complete")
+    note(ax, f"Toy simulation: {n} events, delays mostly ~1.5 s,\n6% stragglers delayed 8–25 s. {late.sum()} arrived late.",
+         (0.02, 0.97))
+    save(fig, OUT, "fig15_watermark.png")
+    return int(late.sum()), n, emitted
+
+
+def fig16_token_bucket():
+    C, rate = 10, 5.0
+    reqs = [0.0] * 12 + [0.6] * 4 + list(np.arange(1.5, 4.5, 0.125)) + [7.0] * 10
+    tokens, last = float(C), 0.0
+    T, L, ok_t, bad_t = [0.0], [float(C)], [], []
+    for t in reqs:
+        refilled = min(C, tokens + (t - last) * rate)
+        if t > last:                                   # linear refill between requests
+            T.append(t); L.append(refilled)
+        tokens, last = refilled, t
+        if tokens >= 1:
+            tokens -= 1; ok_t.append(t)
+        else:
+            bad_t.append(t)
+        T.append(t); L.append(tokens)
+    for t in np.linspace(last, 8.5, 40):
+        T.append(t); L.append(min(C, tokens + (t - last) * rate))
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(11, 4.3), gridspec_kw={"width_ratios": [2.2, 1]})
+    ax.plot(T, L, color=BLUE, lw=1.8, label="tokens in the bucket")
+    ax.scatter(ok_t, [-0.6] * len(ok_t), marker="|", s=120, color=GREEN, label=f"allowed ({len(ok_t)})")
+    ax.scatter(bad_t, [-1.4] * len(bad_t), marker="|", s=120, color=RED, label=f"rejected with 429 ({len(bad_t)})")
+    ax.axhline(C, color=GRAY, ls=":", lw=1); ax.text(8.45, C + 0.3, "capacity C = 10", ha="right", fontsize=8, color=GRAY)
+    ax.text(0.05, 11.3, "burst of 12", fontsize=8)
+    ax.text(1.55, 5.3, "steady 8 req/s for 3 s\n(faster than the 5/s refill)", fontsize=8)
+    ax.text(5.6, 11.3, "burst of 10 after a rest", fontsize=8)
+    ax.set_ylim(-2, 12.5); ax.set_xlim(-0.1, 8.5)
+    ax.set_xlabel("Time (s)"); ax.set_ylabel("Tokens"); ax.grid(alpha=0.3)
+    ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(0.42, 0.95)); ax.set_title("Token bucket (C = 10, refill 5 tokens/s)")
+    # Right: the fixed-window edge burst. Client sends 10 at t = 0.95 s and 10 at t = 1.00 s.
+    # Limit: 10 per 1-second window (token bucket: C = 10, refill 10/s).
+    fixed = 10 + 10                                    # new window at t = 1.00 starts from zero
+    prev_weight = 1 - 0.0 / 1.0                        # sliding counter: 0 s into the new window
+    sliding = 10 + max(0, int(10 - prev_weight * 10))
+    bucket = 10 + int(min(10, 0 + 0.05 * 10))          # only 0.5 token refilled in 0.05 s
+    b = ax2.bar(["Fixed\nwindow", "Sliding\nwindow\ncounter", "Token\nbucket"], [fixed, sliding, bucket],
+                color=[RED, GREEN, BLUE])
+    for bar, v in zip(b, [fixed, sliding, bucket]):
+        ax2.text(bar.get_x() + bar.get_width() / 2, v + 0.4, str(v), ha="center", fontsize=9)
+    ax2.axhline(10, color=GRAY, ls=":"); ax2.set_ylim(0, 23); ax2.set_ylabel("Requests allowed")
+    ax2.set_title("10 requests at 0.95 s + 10 at 1.00 s\n(limit: 10 per second)", fontsize=10)
+    ax2.tick_params(axis="x", labelsize=8)
+    save(fig, OUT, "fig16_token_bucket.png")
+    return len(ok_t), len(bad_t)
+
+
 if __name__ == "__main__":
     for f in [fig01_latency_ladder, fig02_handshakes, fig03_bloom, fig04_quorum, fig05_rehash, fig06_vnodes,
-              fig07_gossip, fig08_mm1, fig09_scaling, fig10_fanout, fig11_jitter, fig12_kv, fig13_zipf_cache]:
-        f()
+              fig07_gossip, fig08_mm1, fig09_scaling, fig10_fanout, fig11_jitter, fig12_kv, fig13_zipf_cache,
+              fig14_hash_ring, fig15_watermark, fig16_token_bucket]:
+        out = f()
+        if out is not None:
+            print("   ->", out)

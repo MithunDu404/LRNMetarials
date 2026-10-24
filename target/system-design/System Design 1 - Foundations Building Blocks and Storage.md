@@ -3,7 +3,7 @@
 > **Series:** **Part 1 (this file)** · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
 > **Self-contained:** the four parts in this folder need nothing else. Each part links only to the others, to its own `images/` and to its own `code/`.
 > **Source:** built from research (textbooks, papers and official specs listed in [References](#12-references)). Every number in this guide was recomputed with Python; figures come from [make_figs.py](images/make_figs.py) and code from [system_design_theory.py](code/system_design_theory.py).
-> **Facts re-checked:** 22 October 2026.
+> **Facts re-checked:** 24 October 2026 (full audit: PostgreSQL 19 status, isolation and caching details, new diagrams).
 
 **The big picture:** every large system is a set of trade-offs between speed, cost, correctness and survival. To make those trade-offs well, you need to know what the machine, the network and the storage engine are *physically* doing underneath. This part builds that ground floor.
 
@@ -65,7 +65,7 @@ This part teaches the ground floor: how to reason about requirements and numbers
 
 1. **Start from requirements**, not technologies. Non-functional requirements (latency, availability, consistency, durability, cost) decide the architecture.
 2. **Estimate before designing.** One day is 86,400 seconds, so 1 million requests per day is only about 12 per second on average. Always multiply by a peak factor.
-3. **Know the latency ladder.** RAM ≈ 100 ns, SSD ≈ 20 µs, same-datacenter round trip ≈ 0.5 ms, cross-continent ≈ 80–200 ms. Each step is about 1,000× slower.
+3. **Know the latency ladder.** RAM ≈ 100 ns, SSD ≈ 20 µs, same-datacenter round trip ≈ 0.5 ms, cross-continent ≈ 80–200 ms. The steps aren't equal: RAM → SSD is about 200×, SSD → datacenter round trip about 25×, and datacenter → another continent about 160–400×. From RAM to an ocean crossing is about **two million times** slower.
 4. **Sequential I/O beats random I/O**, by about 500× on spinning disks and still a lot on SSDs. Log-structured designs exist because of this.
 5. **Round trips are the enemy of latency.** TCP + TLS 1.3 costs 2 round trips before the request even starts. QUIC (HTTP/3) cuts that to 1, or 0 on resumption.
 6. **Caching** trades freshness for speed. A 90% hit ratio with a 1 ms cache and a 20 ms database gives an average of 3 ms and 10× less database load.
@@ -165,7 +165,7 @@ Media (photos, video) is usually 100× bigger than text and goes in object stora
 
 **The problem.** You cannot judge a design without knowing what each step costs. "Call the database twice" is fine inside a datacenter (about 1 ms) and terrible across continents (about 400 ms).
 
-![Fig 1 – Latency ladder (fig01_latency_ladder.png): approximate time for common operations, log scale. Each colour band is roughly 1,000× slower than the one before.](images/fig01_latency_ladder.png)
+![Fig 1 – Latency ladder (fig01_latency_ladder.png): approximate time for common operations on a log scale, from a 1 ns L1 cache hit to a 200 ms US–Australia round trip.](images/fig01_latency_ladder.png)
 
 *Fig 1 (fig01_latency_ladder.png). Orders of magnitude, not benchmarks. Exact values change with hardware; the ratios are what matter.*
 
@@ -629,6 +629,25 @@ $$
 
 > **Why "delete", not "update", on write?** If two writers update the cache in different orders from the DB, the cache ends up wrong *forever*. Deleting lets the next read fetch the truth. A small race remains (a slow reader can re-insert a stale value), which is why caches also use TTLs as a safety net.
 
+**The race that remains, step by step.** It needs a cache miss and a write to overlap, which is rare but happens every day at scale:
+
+```mermaid
+sequenceDiagram
+    participant R as Reader
+    participant C as Cache
+    participant DB as Database
+    participant W as Writer
+    R->>C: get(price) → miss
+    R->>DB: read price → 10 (old)
+    W->>DB: write price = 12
+    W->>C: delete(price)
+    Note over R: reader was slow (GC pause, network)
+    R->>C: set(price = 10)
+    Note over C: Stale value 10 now sits in the cache until its TTL expires
+```
+
+The reader read *before* the write and stored its result *after* the delete, so the delete "missed". Three defences, in increasing strength: (1) a **TTL** bounds how long the stale value lives (the cheap default); (2) a **delayed second delete** ("delete again 1 s after the write") catches most slow readers; (3) **leases or versioned sets**: the cache hands the reader a token on a miss, a delete invalidates the token, and a `set` carrying an invalidated token is refused. Facebook's memcache paper describes that last design, which also stops stampedes, because only the token holder loads the value. Pick the defence by how long a stale value may live: if "never", don't use cache-aside for that data.
+
 **Eviction**: when the cache is full, something must go. **LRU** (least recently used) is the default and works well with temporal locality. **LFU** (least frequently used) protects long-term popular items from one-off scans. **TTL** expires entries by age, which bounds staleness.
 
 **The failure modes** (these are what senior engineers ask about):
@@ -896,7 +915,7 @@ Two traps:
 
 ### 7.1 Relational (SQL)
 
-Data lives in tables of rows and columns with a fixed **schema**. Relations are expressed with foreign keys and combined with **joins**. **Normalisation** stores each fact once, which avoids update anomalies but needs joins to reassemble data. Relational databases give you powerful ad-hoc queries (SQL), strong transactions (§8) and decades of tooling. **PostgreSQL** is the default choice for new systems in 2026 for good reason: with extensions it also covers JSON documents (`jsonb`), full-text search, geospatial data (PostGIS) and vectors (`pgvector`). (Versions: PostgreSQL 18, released in 2025, added asynchronous I/O and native `uuidv7()`. PostgreSQL 19 is due in late 2026, with headline features such as SQL property-graph queries and better read-your-writes support on standbys.)
+Data lives in tables of rows and columns with a fixed **schema**. Relations are expressed with foreign keys and combined with **joins**. **Normalisation** stores each fact once, which avoids update anomalies but needs joins to reassemble data. Relational databases give you powerful ad-hoc queries (SQL), strong transactions (§8) and decades of tooling. **PostgreSQL** is the default choice for new systems in 2026 for good reason: with extensions it also covers JSON documents (`jsonb`), full-text search, geospatial data (PostGIS) and vectors (`pgvector`). (Versions: PostgreSQL 18, released in September 2025, added asynchronous I/O and native `uuidv7()`. **PostgreSQL 19** reached release candidate 1 on 15 October 2026, with general availability expected within weeks. Its headline features include SQL/PGQ property-graph queries in standard SQL, a `WAIT FOR LSN` command that makes read-your-writes on replicas easy (Part 2 §3.2), parallel autovacuum and a non-blocking `REPACK` command.)
 
 ### 7.2 Document
 
@@ -1075,6 +1094,23 @@ sequenceDiagram
 
 **Write skew is the subtle one.** Neither transaction overwrote the other's data, so row-level conflict checks miss it. The bug is in the *decision* each made from data that changed underneath it.
 
+```mermaid
+sequenceDiagram
+    participant A as Dr Alice (T1)
+    participant DB as on_call table<br/>Alice ✓, Bob ✓
+    participant B as Dr Bob (T2)
+    A->>DB: SELECT count(*) WHERE on_call → 2
+    B->>DB: SELECT count(*) WHERE on_call → 2
+    Note over A,B: Both snapshots say "2 on call, safe for me to leave"
+    A->>DB: UPDATE Alice SET on_call = false
+    B->>DB: UPDATE Bob SET on_call = false
+    A->>DB: COMMIT ✓
+    B->>DB: COMMIT ✓ (different row, so no write conflict)
+    Note over DB: 0 doctors on call. The rule "at least 1" is broken.
+```
+
+Compare it with the lost update above. There, both transactions wrote the **same** row, so a database that checks write conflicts (snapshot isolation does) catches it. Here they write **different** rows, so only a check on what each transaction *read* (serializable isolation) or an explicit lock on the rows read (`SELECT … FOR UPDATE`) can catch it.
+
 ### 8.3 Isolation levels
 
 | Level | Prevents | Still allows | Notes |
@@ -1091,6 +1127,26 @@ sequenceDiagram
 
 1. **Two-phase locking (2PL)**: readers take shared locks and writers take exclusive locks, all held until commit (the "growing then shrinking" phases). It is truly serializable, but readers and writers block each other and deadlocks happen (the database detects them and aborts one transaction). To stop phantoms it also locks *ranges* of the index (predicate or next-key locks).
 2. **MVCC (multi-version concurrency control)**: every write creates a new *version* of the row tagged with its transaction ID. Each transaction reads the versions that were committed when its snapshot was taken. **Readers never block writers, and writers never block readers.** Old versions are garbage-collected later (PostgreSQL's VACUUM). MVCC is how snapshot isolation is built.
+
+   ```mermaid
+   flowchart LR
+       accTitle: MVCC version chain
+       accDescr: One logical row has three versions created by transactions 100, 205 and 310. A snapshot taken at 250 sees the 205 version; a snapshot taken at 400 sees the 310 version.
+       V1["balance = 50<br/>created by tx 100<br/>replaced by tx 205"] --> V2["balance = 80<br/>created by tx 205<br/>replaced by tx 310"] --> V3["balance = 30<br/>created by tx 310<br/>current"]
+       S1(["Snapshot at tx 250<br/>(a long report)"]) -.->|"sees"| V2
+       S2(["Snapshot at tx 400<br/>(a new query)"]) -.->|"sees"| V3
+       GC["VACUUM removes V1<br/>once no snapshot<br/>older than 205 exists"] -.-> V1
+       class V1 warning;
+       class V2,V3 target;
+       class S1,S2 primary;
+       class GC intermediate;
+       classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+       classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+       classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+       classDef warning fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+   ```
+
+   Each version records which transaction created it and which replaced it. A reader simply picks the newest version that was committed before its snapshot, with no locks. The cost shows up in the last box: **a long-running transaction pins old versions**, so they can't be cleaned up and tables bloat. That's why Drill 7 below warns against long reports on the primary.
 3. **Serializable snapshot isolation (SSI)**: MVCC plus tracking of read-write dependencies between concurrent transactions. When a dangerous pattern (a potential cycle) appears, one transaction is aborted at commit time. It is serializable with no read locks. It is *optimistic*: cheap when conflicts are rare. PostgreSQL's `SERIALIZABLE` level uses it.
 
 ### 8.5 Fixing lost updates and write skew in practice
@@ -1389,8 +1445,9 @@ Heavy scans compete with user transactions for CPU, I/O and the buffer cache. Lo
 - Latency figures after Jeff Dean's "Numbers Everyone Should Know" and Colin Scott's interactive update.
 - Michael Mitzenmacher, "The Power of Two Choices in Randomized Load Balancing", *IEEE TPDS*, 2001.
 - Lee Breslau et al., "Web Caching and Zipf-like Distributions: Evidence and Implications", INFOCOM 1999.
+- Rajesh Nishtala et al., "Scaling Memcache at Facebook", NSDI 2013 (leases against stale sets and stampedes, §5.3).
 - Stephen Robertson and Hugo Zaragoza, "The Probabilistic Relevance Framework: BM25 and Beyond", 2009.
 - RFC 9562 (UUIDs, including UUIDv7), 2024. RFC 7519 (JSON Web Token).
-- Redis 8 relicensing under AGPLv3: [The Register, May 2025](https://www.theregister.com/2025/05/01/redis_returns_to_open_source/); PostgreSQL 19 beta notes: [postgresql.org](https://postgresql.org/about/news/postgresql-19-beta-1-released-3313/).
+- Redis 8 relicensing under AGPLv3: [The Register, May 2025](https://www.theregister.com/2025/05/01/redis_returns_to_open_source/); PostgreSQL 19 beta notes: [postgresql.org](https://postgresql.org/about/news/postgresql-19-beta-1-released-3313/); PostgreSQL 19 RC 1 announced 15 October 2026 ([news archive](https://www.postgresql.org/about/newsarchive/)).
 
 **Next:** [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md), where many machines must agree on what is true.

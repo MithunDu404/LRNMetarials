@@ -3,7 +3,7 @@
 > **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · **Part 3 (this file)** · [Part 4: Worked Case Studies](System%20Design%204%20-%20Worked%20Case%20Studies.md)
 > **Self-contained:** the four parts in this folder need nothing else. Part 1 §2.5 explains the decision method used throughout.
 > **Source:** built from research: papers, official specs and engineering write-ups listed in [References](#13-references). Every number recomputed with Python; figures from [make_figs.py](images/make_figs.py); code from [system_design_theory.py](code/system_design_theory.py).
-> **Facts re-checked:** 22 October 2026. Things that moved recently:
+> **Facts re-checked:** 24 October 2026 (full audit; new diagrams for Kafka, watermarks, metastable failures and envelope encryption). Things that moved recently:
 > - OAuth 2.1 is **still an IETF draft** (revision -16, September 2026).
 > - The **OWASP Top 10:2025** added *Software Supply Chain Failures* and *Mishandling of Exceptional Conditions*.
 > - Hybrid post-quantum key exchange is now the browser default.
@@ -183,6 +183,39 @@ The costs: eventual consistency (the work isn't done when the user gets "OK"), h
 - A **topic** is split into **partitions**, each an append-only log replicated across brokers. Every message has an **offset** in its partition.
 - Producers choose the partition by **key** (`hash(key) mod partitions`), so all events for one key (one order, one user) stay **in order** in one partition.
 - A **consumer group** shares partitions among its members. Each partition goes to exactly one member, so **the partition count caps a group's parallelism**: 12 partitions means at most 12 useful consumers in that group.
+```mermaid
+flowchart LR
+    accTitle: Kafka topic, partitions and consumer groups
+    accDescr: A producer hashes each key to one of four partitions. Consumer group Billing has two consumers that split the partitions; consumer group Analytics has one consumer that reads all four on its own, with its own offsets.
+    P(["Producer<br/>partition = hash(order_id) mod 4"]) --> P0[["Partition 0"]]
+    P --> P1[["Partition 1"]]
+    P --> P2[["Partition 2"]]
+    P --> P3[["Partition 3"]]
+    subgraph g1 ["Consumer group: Billing"]
+        B1["Consumer B1"]
+        B2["Consumer B2"]
+    end
+    subgraph g2 ["Consumer group: Analytics"]
+        A1["Consumer A1"]
+    end
+    P0 --> B1
+    P1 --> B1
+    P2 --> B2
+    P3 --> B2
+    P0 -.-> A1
+    P1 -.-> A1
+    P2 -.-> A1
+    P3 -.-> A1
+    class P primary;
+    class P0,P1,P2,P3 intermediate;
+    class B1,B2,A1 target;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+```
+
+Read the diagram twice. *Within* a group, each partition has exactly one reader, so a third Billing consumer would get no partition until there are more partitions. *Across* groups, every group gets every message, each at its own pace and with its own offsets. All events for `order_id` 42 hash to the same partition, so Billing sees them in order.
+
 - **Replication**: each partition has a leader and followers. The **in-sync replicas (ISR)** are the followers that are caught up. With `acks=all` and `min.insync.replicas=2` (replication factor 3), a write is acknowledged only once at least 2 replicas have it. That survives a broker loss without losing data.
 - **Retention** by time or size; **log compaction** keeps only the latest value per key, which turns a topic into a durable table of the current state.
 - **Metadata** is managed by an internal Raft quorum (**KRaft**); ZooKeeper support was removed in Kafka 4.0 (2025).
@@ -235,6 +268,10 @@ flowchart LR
 - **Windows** group the infinite stream: **tumbling** (fixed and non-overlapping: 12:00–12:01, 12:01–12:02), **sliding/hopping** (overlapping: a 5-minute window every minute), **session** (bursts of activity separated by a gap of inactivity).
 - A **watermark** is the processor's claim: "I believe I've now seen all events with event time ≤ T." When the watermark passes the end of a window, the window's result is emitted. Events that arrive later still are **late data**: drop them, send them to a side output, or update the result (allowed lateness).
 - **The trade-off**: an aggressive watermark gives fast but sometimes incomplete results. A conservative one gives complete but slow results.
+
+![Fig 15 – Watermarks (fig15_watermark.png): 160 simulated events plotted by arrival time against event time, with a watermark lagging 5 s behind the newest event time; windows close when the watermark crosses their end, and 12 straggler events arrive after their window has closed.](images/fig15_watermark.png)
+
+*Fig 15 (fig15_watermark.png). How to read it: each dot is one event. Its height is when it happened; its horizontal position is when it reached the processor. Dots on the dotted diagonal arrived instantly; dots to the right of it arrived late. The orange staircase is the watermark ("newest event time seen, minus 5 s"). The 15–30 s window can't be emitted until the watermark reaches 30, at about 37 s of processing time. The red crosses are stragglers that arrived **after** the watermark had passed them: their window was already emitted. Widen the 5 s margin and fewer events are late, but every window closes later. That's the speed vs completeness dial, as a picture.*
 - **Stateful processing** (running counts, joins) needs fault-tolerant state. Flink takes periodic consistent **checkpoints** across all operators (a variant of the Chandy-Lamport snapshot algorithm), and on failure restores state and replays the log from the matching offsets. That's exactly-once *state*, combined with transactional sinks for exactly-once *output*.
 
 Engines: Apache Flink (the reference), Kafka Streams (a library inside your service), Spark Structured Streaming, and managed equivalents.
@@ -329,6 +366,8 @@ W = \frac{S}{1 - \rho}
 $$
 
 *Mean response time is the service time divided by one minus the utilisation.* As utilisation $\rho$ approaches 1, the denominator approaches 0 and the wait goes to infinity.
+
+**Why, intuitively?** If requests arrived perfectly evenly, one every 11 ms, a server taking exactly 10 ms would be 91% busy with **no queue at all**. Queues come from **randomness**: sometimes three requests arrive close together, and the later two wait. A server can catch up on that backlog only during its idle moments. At 50% utilisation it's idle half the time, so a backlog clears quickly. At 95% it's idle only 5% of the time, so each little burst takes a long time to drain, and the next burst usually arrives before it has. Idle time is the "spare capacity" that absorbs randomness, and near 100% there's almost none left.
 
 **Worked example.** Service time $S = 10$ ms:
 
@@ -466,6 +505,26 @@ stateDiagram-v2
 2. Requests time out, and clients retry, which adds load.
 3. More load means more timeouts, which means more retries.
 4. The trigger has passed, but the system stays overloaded. Its own retry traffic keeps it down.
+
+```mermaid
+flowchart LR
+    accTitle: Metastable failure feedback loop
+    accDescr: A brief trigger slows the service; requests time out; clients retry, which raises load; higher load slows the service further, closing the loop. Retry budgets, load shedding and circuit breakers break the loop.
+    T(["Trigger<br/>spike, deploy, cache flush"]) --> S["Service slows down"]
+    S --> TO["Requests time out"]
+    TO --> RT["Clients retry"]
+    RT --> LD["Load rises above capacity"]
+    LD --> S
+    BRK["Loop breakers:<br/>retry budgets, jitter,<br/>load shedding, circuit breakers"] -.->|"cut the loop"| RT
+    class T warning;
+    class S,TO,RT,LD error;
+    class BRK target;
+    classDef warning fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef error fill:#FEF2F2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+```
+
+The trigger only starts the loop. Once it's running, removing the trigger changes nothing, because the loop feeds itself. That's why "add more servers and wait" often fails during these incidents: you have to cut load sharply to drop out of the loop, then let it back in gradually.
 
 Other self-sustaining loops: a cache that empties under load (every miss hits the DB, which is too slow to refill the cache), and GC thrashing from queued requests. **Defences:** retry budgets and jitter, load shedding, circuit breakers, slow ramp-up after recovery, and (critically) the ability to *drop* load to break the loop.
 
@@ -720,6 +779,7 @@ This section is about security architecture, from network trust down to the web-
 
 - **OAuth 2.0** is *delegated authorisation*: letting an app access an API on a user's behalf with **access tokens**. **OpenID Connect (OIDC)** adds *authentication* on top: an **ID token** saying who the user is. They're the basis of "Sign in with…" and of enterprise SSO.
 - **OAuth 2.1** consolidates a decade of security lessons. It requires **PKCE** on the authorization-code flow for *all* clients, removes the implicit flow and the password grant, and requires exact redirect-URI matching. **Status:** as of September 2026 it is still an IETF Internet-Draft (revision -16), not yet an RFC, but its rules are already what modern identity providers implement. Design to OAuth 2.1 today.
+
 **The authorization-code flow with PKCE** (how "Sign in with…" works for a web or mobile app):
 
 ```mermaid
@@ -759,6 +819,28 @@ Why PKCE matters: the one-time code passes through the browser and can be interc
 - **Secrets management** (Vault, cloud secret managers): no secrets in code or images. Inject them at runtime, rotate them automatically, and prefer **dynamic, short-lived credentials** (a database password valid for one hour) over long-lived ones.
 - **Encryption in transit** (TLS/mTLS everywhere) and **at rest**.
 - **Envelope encryption** is how at-rest encryption scales: each object is encrypted with its own random **data key (DEK)**. The DEK is encrypted by a **key-encryption key (KEK)** that never leaves the **KMS/HSM**. The object is stored with its *encrypted* DEK. To read it, ask the KMS to decrypt the DEK (one small, audited, rate-limited call), then decrypt the data locally. Rotating the KEK means re-wrapping small DEKs, not re-encrypting petabytes. Deleting one user's key makes their data unrecoverable (**crypto-shredding**, useful for GDPR erasure).
+
+```mermaid
+flowchart LR
+    accTitle: Envelope encryption
+    accDescr: To write, the service gets a fresh data key from the KMS in plain and wrapped form, encrypts the object with the plain key, stores the ciphertext with the wrapped key, and discards the plain key. To read, it sends the wrapped key to the KMS, gets the plain key back, and decrypts locally.
+    subgraph kms ["KMS / HSM (the KEK never leaves)"]
+        KEK[("Key-encryption key")]
+    end
+    APP["Service"] -->|"1. generate data key"| KEK
+    KEK -->|"2. plain DEK + wrapped DEK"| APP
+    APP -->|"3. encrypt object with plain DEK,<br/>then forget the plain DEK"| OBJ[("Storage:<br/>ciphertext + wrapped DEK")]
+    OBJ -->|"4. to read: send wrapped DEK"| KEK
+    KEK -->|"5. plain DEK back,<br/>decrypt locally"| APP
+    class APP intermediate;
+    class KEK primary;
+    class OBJ target;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+```
+
+The bulk data never travels to the KMS, only 32-byte keys do. That's why the pattern scales to petabytes, and why stealing the storage alone gets an attacker nothing.
 
 ### 7.5 Supply chain security
 
@@ -1353,7 +1435,7 @@ It's broken object-level authorisation, OWASP A01 (§7.8). **Fix:** check, on th
 | **Utilisation (ρ)** | Fraction of time a server is busy |
 | **Hedged request** | Duplicate request sent after a delay to cut tail latency |
 | **USL** | Universal Scalability Law: contention + coherence costs |
-| **Full jitter** | Random backoff uniformly in [0, cap] |
+| **Full jitter** | Sleep a uniform random time in [0, min(cap, base × 2^attempt)] |
 | **Retry budget** | Limit on retries as a share of traffic |
 | **Circuit breaker** | Stops calls to a failing dependency, then probes |
 | **Bulkhead** | Separate resource pools per dependency |
@@ -1370,7 +1452,6 @@ It's broken object-level authorisation, OWASP A01 (§7.8). **Fix:** check, on th
 | **OpenTelemetry** | Vendor-neutral standard for traces, metrics and logs |
 | **RED / USE** | Rate-Errors-Duration / Utilisation-Saturation-Errors |
 | **Zero trust** | Verify every request; no implicit network trust |
-| **PKCE** | OAuth proof key that stops authorisation-code interception |
 | **Passkey** | Phishing-resistant public-key credential (WebAuthn) |
 | **ReBAC / Zanzibar** | Relationship-based authorisation / Google's system for it |
 | **Envelope encryption** | Data keys wrapped by a master key in a KMS |

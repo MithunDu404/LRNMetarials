@@ -1,9 +1,9 @@
 # System Design 4: Worked Case Studies
 
 > **Series:** [Part 1: Foundations, Building Blocks and Storage](System%20Design%201%20-%20Foundations%20Building%20Blocks%20and%20Storage.md) · [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md) · [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md) · **Part 4 (this file)**
-> **Source:** built from research (references at the end) and from the theory in Parts 1–3, which every design links back to. Every estimate was recomputed with Python. Code from [system_design_theory.py](code/system_design_theory.py).
+> **Source:** built from research (references at the end) and from the theory in Parts 1–3, which every design links back to. Every estimate was recomputed with Python. Figures from [make_figs.py](images/make_figs.py); code from [system_design_theory.py](code/system_design_theory.py).
 > **Self-contained:** the four parts in this folder need nothing else. Part 1 §2.5 explains the decision method used throughout.
-> **Facts re-checked:** 22 October 2026.
+> **Facts re-checked:** 24 October 2026 (full audit; new token-bucket figure and contention/payment-timeout diagrams).
 
 **The big picture:** theory only counts when you can use it on a blank page. This part works through eight more systems with the same 8-step method from [Part 3 §11](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md). Part 3 already did the URL shortener, news feed and chat. Each design here is chosen because it tests a *different* hard idea.
 
@@ -144,6 +144,10 @@ $$
 $$
 
 *Assume the previous window's requests were spread evenly, and count only the part of it still inside the sliding window.* Here $t$ is the time elapsed in the current window and $W$ is the window length. **Example:** previous minute 80, current minute 30, 15 s (25%) into the current minute: $80 \times 0.75 + 30 = 90$. That's under a limit of 100, so allow.
+
+![Fig 16 – Token bucket and window edges (fig16_token_bucket.png): left, the token level over 8.5 seconds for bursts and a steady 8 requests per second against a 5 per second refill, with allowed and rejected requests marked; right, requests allowed when 10 arrive just before and 10 just after a window boundary: fixed window 20, sliding window counter 10, token bucket 10.](images/fig16_token_bucket.png)
+
+*Fig 16 (fig16_token_bucket.png). Computed with the same `TokenBucket` logic as the code above. **Left:** the burst of 12 empties the full bucket (2 rejected). During the steady 8 requests/s, the bucket drains at 8 − 5 = 3 tokens per second from its 4.5 tokens, so it runs dry after about 1.2 s, and from then on roughly 3 of every 8 requests are rejected: the client is held to the 5/s refill rate. After a rest, the bucket is full again and absorbs a whole burst. **Right:** the fixed-window flaw in numbers. 10 requests at 0.95 s and 10 at 1.00 s all pass a fixed "10 per second" window, because the counter resets at 1.00 s. That's 20 requests in 50 ms. The sliding window counter and the token bucket both hold it to 10.*
 
 ### High-level design
 
@@ -332,6 +336,25 @@ stateDiagram-v2
 
 1. **Never charge twice.** The client sends an **idempotency key** per checkout attempt (Part 2 §8.5), stored with a unique constraint. Our call to the PSP passes *our* payment ID as the PSP's idempotency key too, so even our own retries are safe end to end.
 2. **The UNKNOWN state is the important one.** A timeout to the PSP doesn't mean failure (Part 2 §2.1: no reply ≠ not done). **Never** mark it failed and retry blindly. Hold it as UNKNOWN, query the PSP's status API with backoff, and accept the webhook. Webhooks arrive at-least-once and out of order, so handle them idempotently and only allow valid state transitions.
+
+   ```mermaid
+   sequenceDiagram
+       participant PS as Payment service
+       participant DB as Payments DB
+       participant PSP as PSP
+       PS->>DB: payment 77: PROCESSING
+       PS->>PSP: charge USD 100 (idempotency key = payment 77)
+       Note over PSP: the PSP charges the card, but the reply is lost
+       PSP--xPS: reply lost: timeout after 10 s
+       PS->>DB: payment 77: UNKNOWN (not FAILED!)
+       PS->>PSP: GET status of payment 77 (with backoff)
+       PSP->>PS: succeeded
+       PS->>DB: SUCCEEDED + ledger entries + outbox, one transaction
+       PSP-->>PS: webhook "succeeded" arrives later
+       Note over PS: already SUCCEEDED: ignore the duplicate, reply 200
+   ```
+
+   If the service had marked payment 77 FAILED and let the customer try again, the card would have been charged twice. Retrying with the **same** idempotency key is also safe here, because the PSP returns the original result instead of charging again.
 3. **Events without dual writes.** The status change, the ledger entries and the outbox event are written in **one local transaction** (Part 2 §8.4). Downstream (emails, fulfilment) consumes `PaymentSucceeded` events idempotently.
 4. **Reconciliation** is the safety net that catches everything else. Every day, compare our ledger with the PSP's and bank's settlement reports, line by line. Mismatches go to an investigation queue. Real payment systems *expect* some mismatches (delayed settlements, chargebacks), so reconciliation is a core feature, not an afterthought.
 5. **Multi-step flows** (charge → reserve inventory → ship) are a **saga** (Part 2 §8.3): a failed step triggers compensations such as a refund.
@@ -393,6 +416,19 @@ flowchart LR
    SET status = 'HELD', hold_owner = :order_id, hold_expires_at = now() + interval '10 minutes'
    WHERE seat_id = :seat AND event_id = :event
      AND (status = 'AVAILABLE' OR (status = 'HELD' AND hold_expires_at < now()));
+   ```
+
+   ```mermaid
+   sequenceDiagram
+       participant A as Alice
+       participant DB as seats row 14C<br/>status = AVAILABLE
+       participant B as Bob
+       A->>DB: UPDATE … SET HELD, owner = A WHERE status = 'AVAILABLE'
+       B->>DB: UPDATE … SET HELD, owner = B WHERE status = 'AVAILABLE'
+       Note over DB: The row lock queues Bob's update behind Alice's
+       DB->>A: 1 row updated: seat is yours
+       Note over DB: Bob's update re-checks the WHERE: status is now HELD
+       DB->>B: 0 rows updated: pick another seat
    ```
 
    If 1 row changed, you got the seat. If 0, someone else did. This is **compare-and-set** (Part 1 §8.5): the database row is the single point of truth, and the condition makes the check-and-claim atomic. Holding several seats happens in one transaction, all or nothing. Confirming after payment is another conditional update: `HELD → SOLD` only if `hold_owner` still matches.
