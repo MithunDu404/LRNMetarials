@@ -2,7 +2,7 @@
 
 > **Series (AI engineering):** [0 Start Here](AI%20Engineering%200%20-%20Start%20Here.md) · [1 How LLMs Work](AI%20Engineering%201%20-%20How%20LLMs%20Work.md) · [2 Prompting and Context Engineering](AI%20Engineering%202%20-%20Prompting%20and%20Context%20Engineering.md) · [3 Evals and Quality](AI%20Engineering%203%20-%20Evals%20and%20Quality.md) · [4 Retrieval and RAG](AI%20Engineering%204%20-%20Retrieval%20and%20RAG.md) · **5 Agents** · [6 Production LLM Engineering](AI%20Engineering%206%20-%20Production%20LLM%20Engineering.md) · [7 Safety, Security and Governance](AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) · [8 Serving and GPU Infrastructure](AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) · [9 Customising Models](AI%20Engineering%209%20-%20Customising%20Models.md)
 > **Source:** built from research: papers, protocol specifications and engineering write-ups listed in [References](#18-references). Every number recomputed with Python. Figures: [make_figs.py](../../figures/ai_engineering/make_figs.py). Code: [ai_agent_loop.py](../../code/ai_agent_loop.py).
-> **Facts re-checked:** 22 October 2026. Agent protocols and tooling change fast; the version facts here (MCP's 2026-07-28 specification, A2A's governance) were checked on this date.
+> **Facts re-checked:** 24 October 2026. Agent protocols and tooling change fast; the version facts here (MCP's 2026-07-28 specification, A2A's governance) were checked on this date.
 
 **The big picture:** an **agent** is a model running in a loop: it decides on an action, calls a tool, reads the result, and decides again, until the goal is reached. That turns a text generator into something that can *do* work: fix code, research a question, process a refund. The hard parts aren't the loop itself. They're tool design, context management, reliability over many steps, safety around real actions, and knowing when you don't need an agent at all.
 
@@ -194,6 +194,22 @@ The formula is pessimistic in one way (good agents **notice and fix** mistakes, 
 3. **Your code** validates and executes it. The model never runs anything itself.
 4. You send the result back as a tool-result message, and the loop continues. Models can request **several independent calls in parallel** in one turn.
 
+```mermaid
+sequenceDiagram
+    accTitle: One tool call, step by step
+    accDescr: The app sends the question and tool definitions to the model API; the model replies with a tool call instead of text; the app validates and runs the tool against its own system; the app sends the result back; the model writes the final answer.
+    participant App as Your app (harness)
+    participant LLM as Model API
+    participant Sys as Your order system
+    App->>LLM: messages + tool definitions (name, description, JSON Schema)
+    LLM-->>App: tool call: get_order({"order_id": "4411"})
+    Note over App: Validate arguments and permissions.<br/>The model never touches your systems.
+    App->>Sys: run get_order("4411")
+    Sys-->>App: {"total": 59.0, ...}
+    App->>LLM: messages + tool result
+    LLM-->>App: final text answer (or another tool call)
+```
+
 **Tool design principles** (think of it as UX for the model, sometimes called the agent–computer interface):
 
 | Principle | Bad | Good |
@@ -207,7 +223,7 @@ The formula is pessimistic in one way (good agents **notice and fix** mistakes, 
 | **Safe by construction** | `run_sql(any_string)` | Read-only views, parameterised queries, explicit write tools with approval |
 | **Idempotent where possible** | `charge(amount)` | `charge(amount, idempotency_key)` (§12) |
 
-**Tool definitions cost context** (Guide 2 §6). Dozens of detailed tools can take thousands of tokens on every request and make choosing harder. Options: load tools on demand (search a tool catalogue first), group them by task, or give the agent a general tool (a shell or code execution in a sandbox) instead of 50 narrow ones.
+**Tool definitions cost context** (Guide 2 §6). Dozens of detailed tools can take thousands of tokens on every request and make choosing harder. Options: load tools on demand (search a tool catalogue first), group them by task, or give the agent a general tool (a shell or code execution in a sandbox) instead of 50 narrow ones. A 2025 pattern combines the last two: expose tools as **code functions** the agent calls from a script in its sandbox. Large intermediate results (a 10,000-row export) then stay inside the sandbox, and only the filtered answer comes back into the context. Anthropic reported one such workflow falling from about 150,000 to 2,000 tokens.
 
 **Code execution as a tool.** Letting the agent write and run code in a **sandbox** (an isolated container with no access to secrets) is very powerful: it can do maths, transform data, call APIs and process files without a dedicated tool for each. It's how coding and data agents work, and why sandboxing is a core agent-infrastructure skill (Guide 7 §4).
 
@@ -247,6 +263,8 @@ The formula is pessimistic in one way (good agents **notice and fix** mistakes, 
 - **Write memory deliberately:** decide *what* gets saved (stable facts and preferences, not every message), and **update or delete** facts that change. Stale memories cause confident errors ("you live in Berlin", two moves ago).
 - **Retrieve memory like RAG** (Guide 4): search for relevant memories each turn instead of loading them all.
 - **Give users control:** let them view and delete what's remembered. Memory is personal data (Guide 7 §7).
+
+**Skills: procedural memory with progressive disclosure.** A **skill** is a folder of instructions (and optionally scripts and reference files) for one kind of job: "fill in our expense form", "write a release note in our style". Its `SKILL.md` file starts with a short name and description. Only those one-line descriptions sit in the agent's context. When a task matches one, the agent reads the full instructions, and opens the extra files only if it needs them. A hundred skills therefore cost a few thousand tokens of context, not hundreds of thousands. Anthropic introduced Agent Skills in October 2025 and published the format as an open standard in December 2025, and other agent tools adopted it. The idea matters more than the format: **keep detailed know-how out of the context until the task needs it.**
 
 ---
 
@@ -515,6 +533,7 @@ Code has fast, objective verification (tests, compilers), so agents can self-cor
 | **Plan / to-do list** | Explicit task breakdown the agent maintains |
 | **Working / long-term memory** | Context window / external stores retrieved when needed |
 | **Procedural memory** | Stored instructions on how to do things (instruction files, skills) |
+| **Skill** | A packaged folder of instructions loaded only when its short description matches the task |
 | **MCP** | Model Context Protocol: standard for connecting AI apps to tools, resources and prompts |
 | **Host / client / server (MCP)** | AI application / its connector / the capability provider |
 | **Elicitation** | An MCP server asking the user for more input mid-task |
@@ -545,7 +564,7 @@ Code has fast, objective verification (tests, compilers), so agents can self-cor
 
 - Shunyu Yao et al., "ReAct: Synergizing Reasoning and Acting in Language Models", 2022.
 - Timo Schick et al., "Toolformer: Language Models Can Teach Themselves to Use Tools", 2023.
-- Anthropic, "Building effective agents", December 2024; "How we built our multi-agent research system", June 2025; "Writing effective tools for agents", 2025.
+- Anthropic, "Building effective agents", December 2024; "How we built our multi-agent research system", June 2025; "Writing effective tools for agents", 2025; "Equipping agents for the real world with Agent Skills", October 2025; "Code execution with MCP: building more efficient agents", November 2025.
 - Model Context Protocol specification, revision 2026-07-28 (modelcontextprotocol.io/specification), accessed 22 October 2026. Governance: O'Reilly Radar and the MCP project on the December 2025 donation to the Agentic AI Foundation (Linux Foundation).
 - Linux Foundation, A2A protocol announcements (June 2025 contribution; 2026 one-year update reporting 150+ supporting organisations).
 - Carlos E. Jimenez et al., "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?", 2023. John Yang et al., "SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering", 2024.

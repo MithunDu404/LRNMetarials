@@ -305,7 +305,97 @@ def f15_kv_cache():
     save(fig, OUT, "f15_kv_cache.png")
 
 
+# ------------------------------------------------------------ added in the October 2026 audit
+def f16_hnsw():
+    """HNSW: a real greedy search over a small 3-layer graph built from random 2-D points."""
+    r = np.random.default_rng(5)
+    P = r.uniform(0, 10, size=(40, 2))
+    lvl = np.zeros(40, int); lvl[:10] = 1; lvl[:3] = 2          # nested layers: 40 -> 10 -> 3 nodes
+    q = np.array([8.3, 2.1])
+    def nbrs(ids, m):
+        E = {}
+        for i in ids:
+            d = np.linalg.norm(P[ids] - P[i], axis=1)
+            E[i] = [ids[j] for j in np.argsort(d)[1:m + 1]]
+        for i in list(E):                                       # make links two-way
+            for j in E[i]:
+                if i not in E[j]: E[j].append(i)
+        return E
+    layers = [(2, 2), (1, 3), (0, 4)]
+    cur = 0; fig, axes = plt.subplots(1, 3, figsize=(12, 4.2))
+    total_visits = 0
+    for ax, (L, m) in zip(axes, layers):
+        ids = list(np.flatnonzero(lvl >= L)); E = nbrs(ids, m)
+        for i in ids:
+            for j in E[i]:
+                ax.plot(*zip(P[i], P[j]), color=LIGHT, lw=1, zorder=1)
+        ax.scatter(P[ids, 0], P[ids, 1], s=28, color=GRAY, zorder=2)
+        path = [cur]
+        while True:                                             # greedy: move to the neighbour closest to q
+            best = min(E[cur], key=lambda j: np.linalg.norm(P[j] - q))
+            if np.linalg.norm(P[best] - q) >= np.linalg.norm(P[cur] - q): break
+            cur = best; path.append(cur)
+        total_visits += len(path)
+        ax.plot(P[path, 0], P[path, 1], "-o", color=BLUE, lw=2, ms=6, zorder=3)
+        ax.scatter(*P[path[0]], s=90, color=AMBER, zorder=4, label="entry point")
+        ax.scatter(*q, marker="*", s=220, color=RED, zorder=5, label="query")
+        ax.set_title(f"Layer {L}: {len(ids)} nodes" + ("  (sparse 'highway')" if L == 2 else "  (all vectors)" if L == 0 else ""), fontsize=10)
+        ax.set_xlim(-0.3, 10.3); ax.set_ylim(-0.3, 10.3); ax.set_xticks([]); ax.set_yticks([])
+        ax.set_aspect("equal")
+    axes[0].legend(fontsize=8, loc="upper left")
+    exact = int(np.argmin(np.linalg.norm(P - q, axis=1)))
+    fig.suptitle("HNSW search: greedy hops on a sparse top layer, then drop down and refine", fontweight="bold")
+    fig.text(0.5, -0.02, f"Toy graph: 40 random 2-D points. The blue path visits {total_visits} nodes in total and ends at the true nearest neighbour: {cur == exact}. "
+             "Real indexes keep a candidate list (ef_search) instead of one path, which protects recall.", ha="center", fontsize=8, color=GRAY)
+    save(fig, OUT, "f16_hnsw_layers.png")
+    return total_visits, cur == exact
+
+
+def f17_paged_kv():
+    """Contiguous KV reservation vs paged blocks with a shared prefix (block = 4 tokens, toy sizes)."""
+    fig, (a1, a2) = plt.subplots(2, 1, figsize=(10, 5.6), gridspec_kw={"height_ratios": [1, 1.35]})
+    for ax in (a1, a2): ax.set_xlim(0, 24); ax.axis("off")
+    # --- top: old contiguous reservation, sized for max length (8 blocks) each
+    a1.set_ylim(0, 3); a1.set_title("Before: each request reserves memory for its maximum length", loc="left", fontsize=10)
+    used = {"A": 5, "B": 3}
+    for row, (name, u) in enumerate(used.items()):
+        y = 1.7 - row * 1.1
+        a1.text(0.2, y + 0.35, f"Request {name}", fontsize=9, va="center")
+        for k in range(8):
+            c = (BLUE if name == "A" else PURPLE) if k < u else "white"
+            a1.add_patch(Rectangle((3 + k * 1.2, y), 1.1, 0.7, fc=c, ec=GRAY, hatch=None if k < u else "///"))
+        a1.text(13, y + 0.35, f"{u} of 8 blocks used, {8 - u} reserved but empty", fontsize=8.5, va="center", color=GRAY)
+    # --- bottom: paged
+    a2.set_ylim(0, 4.6); a2.set_title("PagedAttention: small blocks allocated on demand; a shared prompt prefix is stored once", loc="left", fontsize=10)
+    seqs = {"A": ["P0", "P1", "A2", "A3", "A4"], "B": ["P0", "P1", "B2"]}
+    phys = ["A3", "P1", "free", "B2", "A2", "free", "P0", "A4", "free", "free"]
+    col = lambda t: GREEN if t.startswith("P") else BLUE if t.startswith("A") else PURPLE if t.startswith("B") else "white"
+    pos = {}
+    for k, t in enumerate(phys):
+        x = 12.2 + (k % 5) * 2.2; y = 2.6 - (k // 5) * 1.5
+        a2.add_patch(Rectangle((x, y), 1.9, 0.9, fc=col(t), ec=GRAY, alpha=0.9 if t != "free" else 1))
+        a2.text(x + 0.95, y + 0.45, t if t != "free" else "free", ha="center", va="center", fontsize=8,
+                color="white" if t != "free" else GRAY)
+        if t != "free": pos[t] = (x + 0.95, y + 0.45)
+    a2.text(16.6, 4.0, "Physical GPU memory (any order)", ha="center", fontsize=9)
+    for row, (name, blocks) in enumerate(seqs.items()):
+        y = 3.0 - row * 1.8
+        a2.text(0.2, y + 0.45, f"Request {name}\nblock table", fontsize=8.5, va="center")
+        for k, t in enumerate(blocks):
+            x = 2.6 + k * 1.75
+            a2.add_patch(Rectangle((x, y), 1.55, 0.9, fc=col(t), ec=GRAY))
+            a2.text(x + 0.78, y + 0.45, t, ha="center", va="center", fontsize=8, color="white")
+        last = blocks[-1]; xl = 2.6 + (len(blocks) - 1) * 1.75
+        arrow(a2, xl + 1.55, y + 0.45, pos[last][0] - 0.95, pos[last][1], color=GRAY, lw=1, rad=-0.15)
+    a2.text(0.2, 0.15, "Green P0, P1 = the shared system prompt: computed once, used by both requests (prefix caching).  "
+            "Waste is at most one part-filled block per request.", fontsize=8, color=GRAY)
+    save(fig, OUT, "f17_paged_kv_blocks.png")
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1:                       # run only the named figures, e.g. f16_hnsw
+        for name in sys.argv[1:]: print(name, globals()[name]())
+        sys.exit()
     f15_kv_cache()
     f01_temperature(); f02_attention(); f03_context_budget(); f04_eval_ci(); f05_ab_sample()
     print("IVF", f06_ivf())

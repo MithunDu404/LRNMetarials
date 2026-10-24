@@ -2,7 +2,7 @@
 
 > **Series (AI engineering):** [0 Start Here](AI%20Engineering%200%20-%20Start%20Here.md) · [1 How LLMs Work](AI%20Engineering%201%20-%20How%20LLMs%20Work.md) · [2 Prompting and Context Engineering](AI%20Engineering%202%20-%20Prompting%20and%20Context%20Engineering.md) · [3 Evals and Quality](AI%20Engineering%203%20-%20Evals%20and%20Quality.md) · **4 Retrieval and RAG** · [5 Agents](AI%20Engineering%205%20-%20Agents.md) · [6 Production LLM Engineering](AI%20Engineering%206%20-%20Production%20LLM%20Engineering.md) · [7 Safety, Security and Governance](AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) · [8 Serving and GPU Infrastructure](AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) · [9 Customising Models](AI%20Engineering%209%20-%20Customising%20Models.md)
 > **Source:** built from research: papers, engineering write-ups and docs listed in [References](#18-references). Every number recomputed with Python. Figures: [make_figs.py](../../figures/ai_engineering/make_figs.py). Code: [ai_hybrid_retrieval.py](../../code/ai_hybrid_retrieval.py).
-> **Facts re-checked:** 22 October 2026.
+> **Facts re-checked:** 24 October 2026.
 
 **The big picture:** models don't know your private data, recent events, or anything after their training cutoff, and they hallucinate when they guess. **Retrieval-augmented generation (RAG)** fixes that by finding the relevant pieces of your documents at question time and putting them in the context, so the model answers *from evidence* and can cite it. Most of the quality of a RAG system is decided before the model writes a word: in parsing, chunking, search and ranking.
 
@@ -198,6 +198,10 @@ flowchart LR
 
 - **IVF (inverted file index):** group all vectors into, say, 1,000 clusters of similar vectors (using **k-means**, which repeatedly assigns each vector to its nearest cluster centre, then moves each centre to the average of its members), and keep one list per cluster. At query time, find the few nearest cluster centres and search only those lists. The parameter **nprobe** (lists searched) trades speed for recall.
 - **HNSW (hierarchical navigable small world)** (Malkov and Yashunin, 2016): a layered graph where each vector links to its near neighbours. The top layers are sparse "highways", the bottom layer is dense. Search starts at the top, greedily walks toward the query, and drops down a layer at a time. Cost grows roughly logarithmically with corpus size, and recall is high. **The default in most vector databases.** The cost is memory (graph links), and slower inserts.
+
+![Fig 16 – HNSW layers (f16_hnsw_layers.png): three panels of the same toy graph. Layer 2 has 3 nodes, layer 1 has 10, layer 0 has all 40. A blue path starts at the entry point, hops greedily towards the red query star on each layer, and drops down, ending at the true nearest neighbour after visiting 6 nodes.](../../figures/ai_engineering/f16_hnsw_layers.png)
+
+*Fig 16 (f16_hnsw_layers.png). A real greedy search on a toy graph of 40 points. Long hops on the sparse top layer get close fast; the dense bottom layer refines. Six nodes visited instead of 40. Real indexes keep a list of the best `ef_search` candidates instead of a single path, which is how they avoid getting stuck in a local dead end.*
 - **PQ (product quantisation):** compress each vector by splitting it into sub-vectors and replacing each with the ID of its nearest centroid. 1,024 floats become, say, 64 bytes. Distances are approximated from the codes. Often combined with IVF (IVF-PQ), with exact re-scoring of the top candidates.
 
 ![Fig 6 – ANN recall vs work (f06_ann_recall_vs_work.png): recall@10 against the share of the database scanned, for an IVF index with nprobe from 1 to 100. Recall rises from 41% scanning 1.3% of the data to 82% at 8.5%, 92% at 16.5% and 98% at 32%.](../../figures/ai_engineering/f06_ann_recall_vs_work.png)
@@ -321,6 +325,8 @@ Read it query by query:
 | Precompute chunks? | Yes, once | No: runs per (query, chunk) pair |
 | Speed | Milliseconds over millions | Tens to hundreds of ms for ~100 candidates |
 | Accuracy | Good recall | Much better precision |
+
+**A middle option: late interaction.** Models such as **ColBERT** (Khattab and Zaharia, 2020) store one small vector *per token* of each chunk, not one per chunk. At query time, each query token finds its best-matching chunk token, and the scores are summed. That captures word-level matches like a cross-encoder, while chunk vectors can still be computed in advance like a bi-encoder. The price is storage: dozens to hundreds of vectors per chunk. **ColPali** (Faysse et al., 2024) applies the same idea to *images of pages*, so PDFs with tables and charts can be searched without parsing them to text first (§3).
 
 Rerankers are available as hosted APIs and as open models. An LLM can also rerank, at higher cost. In Anthropic's contextual-retrieval experiments, adding a reranker took the retrieval failure reduction from 49% to **67%**. Rerankers also let you set a **relevance threshold** and pass *nothing* when nothing is relevant, which helps the model say "not found" (§11).
 
@@ -543,6 +549,7 @@ When important questions concern relationships, themes or aggregation across man
 | **Contextual retrieval** | Prepending LLM-written context to each chunk before indexing |
 | **Small-to-big** | Search small chunks, return their larger parent sections |
 | **Bi-encoder** | Encodes query and document separately (embedding search) |
+| **Late interaction (ColBERT)** | One vector per token; query tokens matched to their best chunk tokens |
 | **Cross-encoder / reranker** | Scores a (query, document) pair jointly; more accurate, slower |
 | **ANN** | Approximate nearest-neighbour search |
 | **HNSW** | Layered proximity-graph ANN index |
@@ -573,6 +580,7 @@ When important questions concern relationships, themes or aggregation across man
 - Stephen Robertson and Hugo Zaragoza, "The Probabilistic Relevance Framework: BM25 and Beyond", 2009.
 - Gordon V. Cormack, Charles L. A. Clarke, Stefan Büttcher, "Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods", SIGIR 2009.
 - Rodrigo Nogueira and Kyunghyun Cho, "Passage Re-ranking with BERT", 2019.
+- Omar Khattab and Matei Zaharia, "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT", SIGIR 2020. Manuel Faysse et al., "ColPali: Efficient Document Retrieval with Vision Language Models", 2024.
 - Luyu Gao et al., "Precise Zero-Shot Dense Retrieval without Relevance Labels" (HyDE), 2022.
 - Darren Edge et al., "From Local to Global: A Graph RAG Approach to Query-Focused Summarization", Microsoft Research, 2024.
 - Niklas Muennighoff et al., "MTEB: Massive Text Embedding Benchmark", 2022, and its multilingual extension MMTEB, 2025.

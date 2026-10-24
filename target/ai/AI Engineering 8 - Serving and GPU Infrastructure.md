@@ -2,7 +2,7 @@
 
 > **Series (AI engineering):** [0 Start Here](AI%20Engineering%200%20-%20Start%20Here.md) · [1 How LLMs Work](AI%20Engineering%201%20-%20How%20LLMs%20Work.md) · [2 Prompting and Context Engineering](AI%20Engineering%202%20-%20Prompting%20and%20Context%20Engineering.md) · [3 Evals and Quality](AI%20Engineering%203%20-%20Evals%20and%20Quality.md) · [4 Retrieval and RAG](AI%20Engineering%204%20-%20Retrieval%20and%20RAG.md) · [5 Agents](AI%20Engineering%205%20-%20Agents.md) · [6 Production LLM Engineering](AI%20Engineering%206%20-%20Production%20LLM%20Engineering.md) · [7 Safety, Security and Governance](AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) · **8 Serving and GPU Infrastructure** · [9 Customising Models](AI%20Engineering%209%20-%20Customising%20Models.md)
 > **Source:** built from research: papers, hardware specifications and serving-engine documentation listed in [References](#17-references). Every number recomputed with Python. Figures: [make_figs.py](../../figures/ai_engineering/make_figs.py).
-> **Facts re-checked:** 22 October 2026. GPU specifications differ between sources (dense vs sparse figures, usable vs nominal memory); the values here are dense figures from vendor-level listings, rounded. Throughput numbers are **back-of-envelope models**, not benchmarks.
+> **Facts re-checked:** 24 October 2026. GPU specifications differ between sources (dense vs sparse figures, usable vs nominal memory); the values here are dense figures from vendor-level listings, rounded. Throughput numbers are **back-of-envelope models**, not benchmarks.
 
 **The big picture:** if you run open-weight models yourself, you meet a different physics from ordinary web services. Generating each token means reading the **entire model** from GPU memory, so single-user generation is limited by **memory bandwidth**, not compute. The whole art of LLM serving (batching, the KV cache, paged memory, quantisation, speculative decoding, parallelism, disaggregation) is about using expensive GPUs fully while keeping latency acceptable. This guide gives you the numbers to reason about it.
 
@@ -84,10 +84,11 @@ But each customer also has a growing pile of notes about their order so far (the
 | NVIDIA H200 | 141 GB HBM3e | 4.8 TB/s | ~989 TFLOP/s | ~1,979 TFLOP/s | — |
 | NVIDIA B200 (Blackwell) | ~180–192 GB HBM3e | 8 TB/s | — | ~4.5 PFLOP/s | ~9 PFLOP/s |
 | NVIDIA B300 (Blackwell Ultra) | ~268–288 GB HBM3e | 8 TB/s | — | ~4.5 PFLOP/s | ~13.5 PFLOP/s |
+| NVIDIA Rubin (first deployments late 2026) | 288 GB HBM4 | up to ~22 TB/s (announced) | — | — | ~50 PFLOP/s (announced, NVFP4) |
 
-*Rounded vendor-level figures, dense (not sparse). Sources disagree on B200/B300 memory (usable vs nominal). AMD (MI300-series and later) and Google TPUs are real alternatives, with their own software stacks.*
+*Rounded vendor-level figures, dense (not sparse) for H100–B300. Sources disagree on B200/B300 memory (usable vs nominal). Rubin figures are NVIDIA's announced targets: early reports suggest first parts may ship with lower memory bandwidth, so treat them as provisional. AMD (MI300-series and later) and Google TPUs are real alternatives, with their own software stacks.*
 
-Notice the trend: compute grew much faster than bandwidth (H100 → B300: FP4 compute arrived, while bandwidth roughly doubled). That's why techniques that **save memory traffic** matter so much.
+Notice the trend: compute grew much faster than bandwidth (H100 → B300: FP4 compute arrived, while bandwidth only roughly doubled). Rubin's HBM4 is a big bandwidth jump, but its announced compute jumps even more, so the ridge point keeps moving right. That's why techniques that **save memory traffic** matter so much.
 
 **Interconnect** matters once a model spans several GPUs: **NVLink** inside a server (hundreds of GB/s to over a TB/s per GPU), and InfiniBand or Ethernet between servers (much slower). It decides which parallelism strategies are practical (§9).
 
@@ -104,6 +105,8 @@ $$
 *Fig 10 (f10_roofline.png). Decode at batch 1 reaches only about 3 TFLOP/s of a 989 TFLOP/s GPU: 0.3% of its compute.*
 
 **Why decode is ~1 FLOP per byte.** Generating one token multiplies the token's vector by every weight matrix: about **2 FLOPs per parameter** (a multiply and an add). With FP16 weights, each parameter is **2 bytes**. So one sequence does about 2 FLOPs per 2 bytes = **1 FLOP per byte**. With a batch of $B$ sequences, the same weights are read *once* and used $B$ times, so intensity ≈ $B$ FLOP/byte. You'd need a batch of about 295 to become compute-bound, and KV-cache reads (§4) push that further away.
+
+**The mixture-of-experts twist.** Many 2026 open models are MoE (Guide 1 §4): for example, a model may hold 120B parameters but route each token through only about 5B of them. Then three different numbers matter. **Memory capacity** follows the *total* parameters, because every expert must be loaded. **Compute per token** follows the *active* parameters. **Bytes read per decode step** fall in between: one sequence touches only its few experts, but a large batch spreads its tokens over almost all experts, so the step reads nearly the whole model again. So MoE makes small-batch decode much faster than a dense model of the same total size, but it doesn't shrink the memory bill, and it adds all-to-all communication when experts are spread over GPUs (§9).
 
 ---
 
@@ -218,6 +221,10 @@ At long context, the **KV cache dominates** memory *and* bandwidth. That's why t
 - Blocks are allocated **on demand** as the sequence grows, and freed the moment it ends.
 - Waste drops to at most one partly-filled block per sequence, so many more sequences fit, and throughput rises.
 
+![Fig 17 – Paged KV cache (f17_paged_kv_blocks.png): top, two requests each reserve 8 contiguous blocks but use only 5 and 3, leaving hatched empty blocks. Bottom, each request has a block table pointing to blocks scattered through physical memory; the two shared prompt blocks P0 and P1 are stored once and used by both requests; unused blocks stay free.](../../figures/ai_engineering/f17_paged_kv_blocks.png)
+
+*Fig 17 (f17_paged_kv_blocks.png). Toy sizes. The old scheme wastes 8 of 16 reserved blocks here. With paging, the same two requests use 6 physical blocks, and 4 stay free for other requests, because the shared prefix (green) is stored once.*
+
 **Prefix caching.** Many requests share a long prefix: the same system prompt, tool definitions or document. With paged blocks, sequences can **share** the physical blocks for an identical prefix (copy-on-write when they diverge). The prefix is computed once, stored once, and reused, which saves both prefill compute and memory. SGLang's **RadixAttention** organises cached prefixes in a radix tree so any shared prefix, not just exact repeats, is found and reused. This is the self-hosted equivalent of API prompt caching (Guide 6 §9), and it rewards the same prompt design: stable content first.
 
 ---
@@ -251,6 +258,19 @@ At long context, the **KV cache dominates** memory *and* bandwidth. That's why t
 1. A cheap **draft** proposes the next $k$ tokens. The draft can be a small model, extra prediction heads on the target model (Medusa, **EAGLE**, multi-token-prediction heads), or n-gram lookups in the prompt.
 2. The large **target** model checks all $k$ tokens in **one forward pass**. That costs about the same as generating one token, because decode is memory-bound and verifying $k$ tokens is extra compute, which is idle anyway.
 3. Accept the longest prefix of draft tokens that the target agrees with, plus one token from the target itself. With the standard acceptance rule, **the output distribution is exactly the target model's**, so there's no quality loss.
+
+```mermaid
+sequenceDiagram
+    accTitle: One step of speculative decoding
+    accDescr: The draft model proposes four tokens; the target model checks all four in one forward pass, accepts the first two, rejects the third, and supplies its own third token; three tokens are produced for the cost of about one target step.
+    participant D as Draft (cheap)
+    participant T as Target (large)
+    Note over D,T: Text so far: "The cat sat"
+    D->>T: proposes "on", "the", "sofa", "and"
+    Note over T: One forward pass scores<br/>all four positions at once
+    T-->>T: "on" ✓  "the" ✓  "sofa" ✗ (target prefers "mat")
+    Note over D,T: Keep "on the", add the target's own "mat":<br/>3 tokens for about the cost of 1 target step
+```
 
 **The maths.** If each draft token is accepted with probability $\alpha$ (independently), the expected number of tokens produced per target step, with $k$ drafted tokens, is:
 
@@ -492,7 +512,7 @@ Tensor parallelism when the model doesn't fit on one GPU, or per-token latency m
 - Samuel Williams, Andrew Waterman, David Patterson, "Roofline: An Insightful Visual Performance Model for Multicore Architectures", CACM 2009.
 - Elias Frantar et al., "GPTQ", 2022. Ji Lin et al., "AWQ: Activation-aware Weight Quantization", 2023.
 - Joshua Ainslie et al., "GQA", 2023. DeepSeek-AI, "DeepSeek-V2" (multi-head latent attention), 2024.
-- GPU figures: NVIDIA H100/H200 datasheets; B200/B300 specifications as summarised by DataCrunch, Runpod and SemiAnalysis InferenceX (2025–2026; values differ between sources).
+- GPU figures: NVIDIA H100/H200 datasheets; B200/B300 specifications as summarised by DataCrunch, Runpod and SemiAnalysis InferenceX (2025–2026; values differ between sources). Rubin: NVIDIA's CES and GTC 2026 announcements, as summarised by Introl and CUDO Compute (accessed October 2026; announced targets).
 - vLLM blog, "Prefill-Decode Disaggregation" (April 2026); NVIDIA Dynamo documentation (SGLang disaggregation). EAGLE-3 speed-up ranges: vLLM deployment write-ups and AWS Neuron tutorial (2025–2026).
 
 **Next:** [Guide 9: Customising Models](AI%20Engineering%209%20-%20Customising%20Models.md), changing the model itself when prompting and retrieval aren't enough.

@@ -2,7 +2,7 @@
 
 > **Series (AI engineering):** [0 Start Here](AI%20Engineering%200%20-%20Start%20Here.md) · [1 How LLMs Work](AI%20Engineering%201%20-%20How%20LLMs%20Work.md) · [2 Prompting and Context Engineering](AI%20Engineering%202%20-%20Prompting%20and%20Context%20Engineering.md) · [3 Evals and Quality](AI%20Engineering%203%20-%20Evals%20and%20Quality.md) · [4 Retrieval and RAG](AI%20Engineering%204%20-%20Retrieval%20and%20RAG.md) · [5 Agents](AI%20Engineering%205%20-%20Agents.md) · [6 Production LLM Engineering](AI%20Engineering%206%20-%20Production%20LLM%20Engineering.md) · [7 Safety, Security and Governance](AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) · [8 Serving and GPU Infrastructure](AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) · **9 Customising Models**
 > **Source:** built from research: papers and documentation listed in [References](#16-references). Every number recomputed with Python. Figures: [make_figs.py](../../figures/ai_engineering/make_figs.py). Code: [ai_lora_dpo_grpo.py](../../code/ai_lora_dpo_grpo.py).
-> **Facts re-checked:** 22 October 2026.
+> **Facts re-checked:** 24 October 2026.
 
 **The big picture:** prompting and retrieval change what the model *sees*. Fine-tuning changes what the model *is*: its weights. That's powerful for teaching a consistent behaviour, format, style or narrow skill, or for making a small, cheap model do what only a big one could. It's the wrong tool for adding knowledge, and it costs data, compute, evals and maintenance. This guide covers when to do it, and how the main methods work: supervised fine-tuning, LoRA, preference tuning (DPO), distillation, synthetic data, and reinforcement learning with verifiable rewards.
 
@@ -170,6 +170,30 @@ $$
 
 *The adapted weight is the frozen original plus a scaled product of two thin matrices: B is d-by-r, A is r-by-k, and the rank r is much smaller than either dimension.* $B$ starts at zero, so training begins exactly at the original model. $\alpha$ is a scaling constant.
 
+In a forward pass, the input takes two routes and the results are added:
+
+```mermaid
+flowchart LR
+    accTitle: How a LoRA adapter sits beside a frozen weight matrix
+    accDescr: The input vector goes through the frozen original weight matrix, and in parallel through a small matrix A that squeezes it down to r numbers and a small matrix B that expands it back; the adapter output is scaled and added to the frozen output.
+    X(["Input x<br/>(k numbers)"]) --> W0["Frozen W₀<br/>d × k<br/>(not trained)"]
+    X --> A["A: r × k<br/>squeeze to r numbers"]
+    A --> B["B: d × r<br/>expand back"]
+    W0 --> SUM(("+"))
+    B -->|"× α / r"| SUM
+    SUM --> Y(["Output<br/>(d numbers)"])
+    class X primary;
+    class W0 warning;
+    class A,B intermediate;
+    class Y target;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef warning fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+```
+
+Only A and B (purple) are trained. Squeezing through only r numbers is what makes the update "low-rank": it can only change the layer's behaviour along r directions. After training you can either keep the adapter separate (to swap adapters per request) or **merge** it, adding $\frac{\alpha}{r} BA$ into $W_0$ once so inference costs nothing extra.
+
 **Worked example: one matrix.** A 4096 × 4096 weight has 16,777,216 parameters. LoRA with $r = 8$ trains $8 \times (4{,}096 + 4{,}096) = 65{,}536$ parameters: **0.39%** of that matrix.
 
 ![Fig 13 – LoRA parameters (f13_lora_params.png): trainable parameters as a percentage of a 4096×4096 matrix against LoRA rank on log axes: 0.39% at rank 8, 3.12% at rank 64.](../../figures/ai_engineering/f13_lora_params.png)
@@ -246,7 +270,7 @@ wrong direction              margin  -4.0 -> loss 0.913
 
 **Reasoning distillation:** DeepSeek showed that small models fine-tuned (SFT only) on a large reasoning model's step-by-step traces gain much of its reasoning ability, far more than they'd get from RL on their own at that size.
 
-**Worked economics** (assumed prices from Guide 6: large model USD 13.50 per 1,000 requests, small USD 1.125). At 10 million requests a month: **USD 135,000** with the teacher vs **USD 11,250** with a distilled student. Generating 10,000 training examples with the teacher costs about **USD 105**. The real costs are the engineering and evaluation work, and only if the student passes your evals on the narrow task.
+**Worked economics** (assumed prices from Guide 6: large model USD 13.50 per 1,000 requests, small USD 1.125). At 10 million requests a month: **USD 135,000** with the teacher vs **USD 11,250** with a distilled student. Generating 10,000 training examples with the teacher (same request shape) costs about $10{,}000 \times 0.0135 =$ **USD 135**. The real costs are the engineering and evaluation work, and only if the student passes your evals on the narrow task.
 
 **Caveats:**
 
@@ -309,6 +333,7 @@ Read the last two rows carefully: when **every** answer in a group succeeds, or 
 **Pitfalls:**
 
 - **Reward hacking:** the model exploits flaws in the checker (special-casing the tests, gaming the format). Make verifiers robust; inspect samples.
+- **GRPO keeps being refined.** Later variants change the details while keeping the group-relative idea: DAPO (2025) drops groups where every answer scored the same and tunes the clipping; Dr. GRPO (2025) removes normalisations that quietly reward longer wrong answers; GSPO (2025) applies the update per whole answer rather than per token, which made training more stable for MoE models. Know the core idea; look up the current variant.
 - **Long, multi-step agent tasks** make credit assignment hard: which of 30 actions earned the reward? Active research area.
 - **Compute:** many samples per prompt, at long lengths. Managed "reinforcement fine-tuning" offerings from providers let application teams use RL with their own graders without running the infrastructure.
 
@@ -501,6 +526,7 @@ You now have the full map of AI engineering in 2026:
 - Long Ouyang et al., "Training language models to follow instructions with human feedback" (InstructGPT, RLHF), 2022. John Schulman et al., "Proximal Policy Optimization Algorithms", 2017.
 - Rafael Rafailov et al., "Direct Preference Optimization: Your Language Model is Secretly a Reward Model", NeurIPS 2023.
 - Zhihong Shao et al., "DeepSeekMath" (GRPO), arXiv:2402.03300, 2024. DeepSeek-AI, "DeepSeek-R1", arXiv:2501.12948, 2025. Youssef Mroueh, "Reinforcement Learning with Verifiable Rewards: GRPO's Effective Loss, Dynamics, and Success Amplification", arXiv:2503.06639, 2025.
+- Qiying Yu et al., "DAPO: An Open-Source LLM Reinforcement Learning System at Scale", 2025. Zichen Liu et al., "Understanding R1-Zero-Like Training: A Critical Perspective" (Dr. GRPO), 2025. Chujie Zheng et al., "Group Sequence Policy Optimization" (GSPO), Qwen team, 2025.
 - Geoffrey Hinton, Oriol Vinyals, Jeff Dean, "Distilling the Knowledge in a Neural Network", 2015.
 - Yizhong Wang et al., "Self-Instruct", 2022. Can Xu et al., "WizardLM" (Evol-Instruct), 2023.
 - Ilia Shumailov et al., "AI models collapse when trained on recursively generated data", *Nature*, 2024.

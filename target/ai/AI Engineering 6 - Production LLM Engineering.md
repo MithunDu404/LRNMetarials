@@ -2,7 +2,7 @@
 
 > **Series (AI engineering):** [0 Start Here](AI%20Engineering%200%20-%20Start%20Here.md) · [1 How LLMs Work](AI%20Engineering%201%20-%20How%20LLMs%20Work.md) · [2 Prompting and Context Engineering](AI%20Engineering%202%20-%20Prompting%20and%20Context%20Engineering.md) · [3 Evals and Quality](AI%20Engineering%203%20-%20Evals%20and%20Quality.md) · [4 Retrieval and RAG](AI%20Engineering%204%20-%20Retrieval%20and%20RAG.md) · [5 Agents](AI%20Engineering%205%20-%20Agents.md) · **6 Production LLM Engineering** · [7 Safety, Security and Governance](AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) · [8 Serving and GPU Infrastructure](AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) · [9 Customising Models](AI%20Engineering%209%20-%20Customising%20Models.md)
 > **Source:** built from research: provider documentation, standards and engineering write-ups listed in [References](#17-references). Every number recomputed with Python. Figures: [make_figs.py](../../figures/ai_engineering/make_figs.py). Code: [ai_llm_router.py](../../code/ai_llm_router.py).
-> **Facts re-checked:** 22 October 2026. Prices and limits change often. Numbers marked *assumed* are illustrative; check your provider's current pricing page.
+> **Facts re-checked:** 24 October 2026. Prices and limits change often. Numbers marked *assumed* are illustrative; check your provider's current pricing page.
 
 **The big picture:** a demo that works once is easy. A product serving thousands of users needs to handle provider outages and rate limits, keep latency low enough that people stay, keep token costs from exploding, see what's happening in production, and ship changes safely. That's the same engineering as any backend service, applied to a dependency that's slow, expensive, rate-limited and non-deterministic.
 
@@ -112,6 +112,29 @@ Imagine your app depends on a brilliant but expensive contractor, reachable only
 | **Rule-based** | Long or complex inputs, certain intents, or premium users → large model | Cheap to run; brittle rules |
 | **Classifier router** | A small model or classifier predicts difficulty and picks the model | Adds a little latency and cost; needs evaluation |
 | **Cascade** | Try the cheap model first; escalate if a check fails (validation error, low confidence, judge fails it) | Saves money when most requests are easy; hard requests pay for two calls |
+
+A cascade is worth drawing, because the check in the middle is the part teams forget to build:
+
+```mermaid
+flowchart LR
+    accTitle: Model cascade
+    accDescr: A request goes to a small cheap model first; a check validates the answer; if it passes, the answer is returned; if it fails, the request is escalated to a large model, whose answer is returned.
+    R(["Request"]) --> S["Small model<br/>(cheap, fast)"]
+    S --> C{"Check passes?<br/>schema, confidence,<br/>judge, rules"}
+    C -->|"yes: most requests"| A(["Answer"])
+    C -->|"no: escalate"| L["Large model<br/>(costly, strong)"]
+    L --> A
+    class R primary;
+    class S,L intermediate;
+    class C warning;
+    class A target;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef warning fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+```
+
+A cascade is only as good as its check. A check that passes wrong answers saves money by shipping errors; one that fails good answers pays for two calls on everything. Measure both error rates, just as for an LLM judge (Guide 3 §6).
 
 **Worked example** (assumed prices; [ai_llm_router.py](../../code/ai_llm_router.py)). A request has 2,000 input and 500 output tokens. Large model: USD 3 / USD 15 per million input / output tokens. Small model: USD 0.25 / USD 1.25.
 
@@ -286,7 +309,7 @@ $$
 | **Exact response caching** | The whole answer, for byte-identical requests | Stale answers if underlying data changes; per-user data leaking across users |
 | **Semantic caching** | A stored answer for a *similar* past question (embedding similarity) | Serving the wrong answer to a subtly different question |
 
-**Prompt caching.** Long system prompts, tool definitions, documents and conversation histories are re-sent on every turn. If the start of the prompt is byte-identical to a recent request, the provider reuses the computation: faster TTFT, and a big discount on those tokens. Providers differ in the details. In late 2026, Anthropic's API uses explicit cache breakpoints, a 5-minute default lifetime (1 hour optional), cache writes at 1.25× the base input price (2× for the 1-hour cache) and cache reads at **0.1×**. Other providers cache automatically with their own discounts. **Design for it:** stable content first, changing content last (Guide 2 §6); don't put timestamps or random IDs at the top of the prompt.
+**Prompt caching.** Long system prompts, tool definitions, documents and conversation histories are re-sent on every turn. If the start of the prompt is byte-identical to a recent request, the provider reuses the computation: faster TTFT, and a big discount on those tokens. Providers differ in the details. In late 2026, Anthropic's API offers an automatic mode (one setting on the request moves the cache point forward as the conversation grows) as well as explicit cache breakpoints. The default lifetime is 5 minutes, refreshed on every hit, with 1 hour optional. Cache writes cost 1.25× the base input price (2× for the 1-hour cache), and cache reads cost **0.1×** on most models, down to 0.05× or less on the newest ones. Other providers cache automatically with their own discounts. Check the current pricing page; these multipliers keep falling. **Design for it:** stable content first, changing content last (Guide 2 §6); don't put timestamps or random IDs at the top of the prompt.
 
 **Worked example** (assumed: a 10,000-token stable prefix, the conversation grows 1,000 tokens per turn plus a 500-token user message; write 1.25×, read 0.1×). Without caching, turn $t$ costs its full input. With caching, each turn reads the previous turn's whole input from the cache at 0.1× and writes only the new tokens at 1.25×.
 
@@ -468,7 +491,7 @@ The output was truncated at the limit, so it's incomplete (and any JSON is proba
 </details>
 
 <details>
-<summary>2. With assumed prices of $3/$15 (large) and $0.25/$1.25 (small) per million input/output tokens, what does routing 50% of 2,000-in/500-out requests to the small model cost per 1,000 requests?</summary>
+<summary>2. With assumed prices of USD 3 / 15 (large) and USD 0.25 / 1.25 (small) per million input/output tokens, what does routing 50% of 2,000-in/500-out requests to the small model cost per 1,000 requests?</summary>
 
 $0.5 \times 13.50 + 0.5 \times 1.125 = 7.31$, so USD 7.31 per 1,000: about 46% cheaper than all-large.
 </details>

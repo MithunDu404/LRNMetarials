@@ -2,7 +2,7 @@
 
 > **Series (AI engineering):** [0 Start Here](AI%20Engineering%200%20-%20Start%20Here.md) · [1 How LLMs Work](AI%20Engineering%201%20-%20How%20LLMs%20Work.md) · **2 Prompting and Context Engineering** · [3 Evals and Quality](AI%20Engineering%203%20-%20Evals%20and%20Quality.md) · [4 Retrieval and RAG](AI%20Engineering%204%20-%20Retrieval%20and%20RAG.md) · [5 Agents](AI%20Engineering%205%20-%20Agents.md) · [6 Production LLM Engineering](AI%20Engineering%206%20-%20Production%20LLM%20Engineering.md) · [7 Safety, Security and Governance](AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) · [8 Serving and GPU Infrastructure](AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) · [9 Customising Models](AI%20Engineering%209%20-%20Customising%20Models.md)
 > **Source:** built from research: provider prompting guides, papers and engineering write-ups listed in [References](#15-references). Every number recomputed with Python. Figures: [make_figs.py](../../figures/ai_engineering/make_figs.py). Code: [ai_structured_output.py](../../code/ai_structured_output.py).
-> **Facts re-checked:** 22 October 2026.
+> **Facts re-checked:** 24 October 2026.
 
 **The big picture:** the model can only act on the tokens you give it. **Prompting** is writing clear instructions. **Context engineering** is the bigger job: deciding *everything* that goes into the context window (instructions, examples, tools, retrieved documents, history, memory), in what order, and what gets left out or compressed. In 2026 it's the core day-to-day skill of AI engineering.
 
@@ -75,7 +75,7 @@ Good prompts aren't magic phrases. They're clear briefs, the same kind you'd wri
 |---|---|---|
 | **System** | Stable instructions: the job, rules, tone, output format, tool-use policy, safety constraints | Models are trained to weight it as the operator's standing instructions, and it stays the same across turns (so it caches well, §6) |
 | **User** | The current task, question and data | What changes from request to request |
-| **Assistant** | The model's earlier replies (and its tool calls) | Gives the conversation memory. You can also *pre-fill* the start of a reply on some APIs to force a format. |
+| **Assistant** | The model's earlier replies (and its tool calls) | Gives the conversation memory. Older APIs let you *pre-fill* the start of the reply to force a format; newer models increasingly reject this, and structured outputs (§5) replace it. |
 | **Tool / tool result** | Results returned from tools the model called | Covered in Guide 5 |
 
 The API turns these into special tokens (Guide 1 §2) in the model's chat template. That's why you should use the roles rather than writing "User: … Assistant: …" into one big text block.
@@ -161,7 +161,7 @@ Tags help in three ways: the model knows exactly where each part begins and ends
 
 1. **Ask for JSON in the prompt.** Works most of the time, but you'll still get stray prose, missing fields and invented values.
 2. **JSON mode**: the API guarantees syntactically valid JSON, but not *your* schema.
-3. **Schema-constrained decoding** ("structured outputs" in most APIs; also tool/function-call schemas): you supply a JSON Schema, and at each generation step the decoder **masks out every token that would break the schema**. The output is then guaranteed to parse and match the structure (Willard and Louf, 2023, describe the grammar-constrained technique). Open-source serving engines offer the same through libraries such as Outlines, XGrammar and llguidance.
+3. **Schema-constrained decoding** ("structured outputs" in most APIs; also tool/function-call schemas): you supply a JSON Schema, and at each generation step the decoder **masks out every token that would break the schema**. For example, once the output so far is `{"category": "`, and the schema says category is one of billing, bug, feature_request or other, the only tokens left with non-zero probability are those that start one of those four words. The model still *chooses* among them, using its logits (Guide 1 §7). It just can't step outside the schema. The output is then guaranteed to parse and match the structure (Willard and Louf, 2023, describe the grammar-constrained technique). Open-source serving engines offer the same through libraries such as Outlines, XGrammar and llguidance.
 
 Even with constrained decoding, **validate anyway**. A schema can guarantee `"priority"` is an integer, but not that the integer is *sensible*, that a quoted text actually appears in the document, or that an ID exists in your database. Those are business rules for your own code.
 
@@ -225,6 +225,7 @@ The catch: failures are often **not** independent. If an input is genuinely ambi
 | **Trim tool outputs** | Return what the model needs, not raw dumps | Return the 20 matching log lines, not 5 MB of logs |
 | **Compaction** | Summarise old conversation turns as the window fills; keep decisions, open issues and key facts | Agents summarise and restart with the summary plus recent turns |
 | **Structured notes / memory** | The model writes durable notes outside the context and reads them back later | A `progress.md` or to-do file in long agent tasks (Guide 5 §6) |
+| **Progressive disclosure (skills)** | Show the model only a one-line description of each instruction pack; load the full instructions when the task needs them | Agent "skills": a folder with a `SKILL.md` whose name and description sit in context, and whose body loads on demand (Guide 5 §6) |
 | **Sub-agents** | Hand a messy sub-task to a fresh context; get back only a short result | Research agent returns a 1-page summary, not 80 pages of search results |
 | **Cache-friendly ordering** | Stable content first (system prompt, tools, fixed documents), changing content last | Enables prompt caching: large discounts on the repeated prefix (Guide 6 §9) |
 
@@ -310,13 +311,13 @@ Chaining is the simplest form of a **workflow**: fixed steps, written by you. Wh
 
 **The problem.** Context windows now hold entire manuals or codebases. Why bother with retrieval (Guide 4) if you can paste everything in?
 
-**Worked example.** A 500-page product manual is about 250,000 tokens. The relevant part for a typical question is about 5,000 tokens. With an assumed price of \$3 per million input tokens, for 1,000 questions a day:
+**Worked example.** A 500-page product manual is about 250,000 tokens. The relevant part for a typical question is about 5,000 tokens. With an assumed price of USD 3 per million input tokens, for 1,000 questions a day:
 
 | Approach | Tokens per question | Daily input cost |
 |---|---|---|
-| Paste the whole manual | 250,000 | 250M tokens → **\$750** |
-| Retrieve the relevant 5k | 5,000 | 5M tokens → **\$15** |
-| Whole manual, served from the prompt cache (cache reads at 0.1× price) | 250,000 | ≈ **\$75**, plus occasional cache writes |
+| Paste the whole manual | 250,000 | 250M tokens → **USD 750** |
+| Retrieve the relevant 5k | 5,000 | 5M tokens → **USD 15** |
+| Whole manual, served from the prompt cache (cache reads at 0.1× price) | 250,000 | ≈ **USD 75**, plus occasional cache writes |
 
 Retrieval is 50× cheaper here, and faster. Caching closes most of the gap, but not the latency or "context rot" problems.
 
@@ -340,7 +341,7 @@ Some famous techniques matter much less with 2026 models. Know them, because you
 | **Role prompting** | "You are a world-class X" | Small effect; real context about the task matters more (§2) |
 | **"Think step by step" (chain-of-thought prompting)** | Asking for reasoning before the answer (Wei et al., 2022) | Built into reasoning models; still useful for *non-reasoning* models on multi-step tasks, and when you need visible reasoning for review |
 | **Self-consistency** | Sample many reasoning paths, take the majority answer (Wang et al., 2022) | Expensive (N× the cost); reasoning models largely do this internally. Still useful for high-stakes answers with a single checkable output. |
-| **Magic words** ("I'll tip \$200", "this is very important to my career") | Emotional or incentive phrases | Unreliable; clear instructions beat them |
+| **Magic words** ("I'll tip you 200 dollars", "this is very important to my career") | Emotional or incentive phrases | Unreliable; clear instructions beat them |
 | **ALL-CAPS and repeated warnings** | "YOU MUST NEVER…" | Modern models follow calm, explicit instructions. Shouting can make them over-apply a rule. |
 
 ---
@@ -354,6 +355,7 @@ Some famous techniques matter much less with 2026 models. Know them, because you
 - **Pin model versions.** Use dated model identifiers in production, and treat a model upgrade like a dependency upgrade: run the evals first.
 - **Change one thing at a time,** so you know what caused an improvement or a regression.
 - **Keep prompts readable.** A clear prompt that a teammate can understand beats a clever one nobody dares to edit.
+- **Automatic prompt optimisation is an option once you have evals.** Tools such as DSPy (Khattab et al., 2023) and GEPA (Agrawal et al., 2025) treat the prompt as something to search over: they propose variants, score each one on your eval set, and keep the best. They can beat hand-tuning on narrow tasks. They also over-fit to the eval set just as easily, so check the winner on held-out cases. Without a good eval set, they optimise noise.
 
 ---
 
@@ -483,5 +485,7 @@ Replace the prescribed steps with the goal, the constraints, the full context an
 - Jason Wei et al., "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models", 2022.
 - Xuezhi Wang et al., "Self-Consistency Improves Chain of Thought Reasoning in Language Models", 2022.
 - Nelson F. Liu et al., "Lost in the Middle: How Language Models Use Long Contexts", 2023.
+- Omar Khattab et al., "DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines", 2023. Lakshya A. Agrawal et al., "GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning", 2025.
+- Anthropic, "Equipping agents for the real world with Agent Skills", October 2025 (progressive disclosure).
 
 **Next:** [Guide 3: Evals and Quality](AI%20Engineering%203%20-%20Evals%20and%20Quality.md), how to know whether a prompt change actually helped.

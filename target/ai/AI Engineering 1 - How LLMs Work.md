@@ -2,7 +2,7 @@
 
 > **Series (AI engineering):** [0 Start Here](AI%20Engineering%200%20-%20Start%20Here.md) · **1 How LLMs Work** · [2 Prompting and Context Engineering](AI%20Engineering%202%20-%20Prompting%20and%20Context%20Engineering.md) · [3 Evals and Quality](AI%20Engineering%203%20-%20Evals%20and%20Quality.md) · [4 Retrieval and RAG](AI%20Engineering%204%20-%20Retrieval%20and%20RAG.md) · [5 Agents](AI%20Engineering%205%20-%20Agents.md) · [6 Production LLM Engineering](AI%20Engineering%206%20-%20Production%20LLM%20Engineering.md) · [7 Safety, Security and Governance](AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) · [8 Serving and GPU Infrastructure](AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) · [9 Customising Models](AI%20Engineering%209%20-%20Customising%20Models.md)
 > **Source:** built from research: papers, official docs and course notes listed in [References](#15-references). Every number recomputed with Python. Figures: [make_figs.py](../../figures/ai_engineering/make_figs.py). Code: [ai_tokens_and_sampling.py](../../code/ai_tokens_and_sampling.py).
-> **Facts re-checked:** 22 October 2026. This field moves monthly, so model names and context sizes here are examples of the state of things in late 2026, not permanent facts. The mechanisms are stable.
+> **Facts re-checked:** 24 October 2026. This field moves monthly, so model names and context sizes here are examples of the state of things in late 2026, not permanent facts. The mechanisms are stable.
 
 **The big picture:** a large language model is a function that reads a sequence of tokens and outputs a probability for every possible next token. Everything an AI engineer does (prompting, retrieval, agents, evals, serving) is shaped by four facts about that function: it works on **tokens**, it can only see its **context window**, it **samples** from probabilities, and it was **trained** to produce plausible text, not true text.
 
@@ -249,7 +249,7 @@ flowchart LR
 
 **Rules that follow:**
 
-- Put the most important instructions at the **start** (system prompt), and the question **after** long documents. Many providers recommend placing long documents *before* the question.
+- Put the most important instructions at the **start** (system prompt). Put long documents *before* the question, so the question sits at the **end**, where models use it most reliably. Providers recommend this order.
 - Give the model **less, more relevant** context instead of everything. That's the whole idea of retrieval (Guide 4) and context engineering (Guide 2).
 - Reserve room for the output. If input fills the window, the answer gets cut off.
 - Conversation history grows every turn. Long-running chats and agents must **compact** it: summarise or drop old turns (Guide 2 §6).
@@ -314,6 +314,29 @@ This stage shapes tone, helpfulness, honesty, and refusing harmful requests.
 ## 7. Sampling: temperature, top-p and logprobs
 
 **The problem.** The model outputs a probability for every token in its vocabulary. Something has to choose one. Always picking the most likely token (**greedy decoding**) is repetitive and can get stuck in loops. Picking completely at random produces nonsense.
+
+**The generation loop.** Sampling sits inside a loop that runs once per output token. This loop is why output length drives latency (Guide 6 §7), and why the KV cache exists (§4):
+
+```mermaid
+flowchart LR
+    accTitle: Autoregressive generation loop
+    accDescr: The tokens so far go through the model, which outputs logits for every vocabulary token; temperature and top-p reshape them into probabilities; one token is sampled and appended, and the loop repeats until a stop token or the output limit.
+    IN(["Tokens so far<br/>(prompt + output)"]) --> M["Model forward pass<br/>(uses the KV cache)"]
+    M --> L["Logits: one score<br/>per vocabulary token"]
+    L --> S["Softmax with temperature<br/>+ top-p filter"]
+    S --> P["Sample one token"]
+    P --> C{"Stop token or<br/>max_tokens?"}
+    C -->|"no: append it"| IN
+    C -->|"yes"| OUT(["Finished output"])
+    class IN primary;
+    class M,L,S,P intermediate;
+    class C warning;
+    class OUT target;
+    classDef primary fill:#EFF6FF,stroke:#2563EB,stroke-width:1.5px,color:#0F172A;
+    classDef intermediate fill:#FAF5FF,stroke:#7C3AED,stroke-width:1.5px,color:#0F172A;
+    classDef warning fill:#FFFBEB,stroke:#D97706,stroke-width:1.5px,color:#92400E;
+    classDef target fill:#F0FDF4,stroke:#059669,stroke-width:2px,color:#0F172A;
+```
 
 **How it works.** The network's raw outputs are **logits** $z_i$, one per token. **Softmax with temperature** $T$ turns them into probabilities:
 

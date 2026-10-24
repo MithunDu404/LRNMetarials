@@ -2,7 +2,7 @@
 
 > **Series (AI engineering):** [0 Start Here](AI%20Engineering%200%20-%20Start%20Here.md) · [1 How LLMs Work](AI%20Engineering%201%20-%20How%20LLMs%20Work.md) · [2 Prompting and Context Engineering](AI%20Engineering%202%20-%20Prompting%20and%20Context%20Engineering.md) · **3 Evals and Quality** · [4 Retrieval and RAG](AI%20Engineering%204%20-%20Retrieval%20and%20RAG.md) · [5 Agents](AI%20Engineering%205%20-%20Agents.md) · [6 Production LLM Engineering](AI%20Engineering%206%20-%20Production%20LLM%20Engineering.md) · [7 Safety, Security and Governance](AI%20Engineering%207%20-%20Safety%20Security%20and%20Governance.md) · [8 Serving and GPU Infrastructure](AI%20Engineering%208%20-%20Serving%20and%20GPU%20Infrastructure.md) · [9 Customising Models](AI%20Engineering%209%20-%20Customising%20Models.md)
 > **Source:** built from research: practitioner guides, papers and statistics references listed in [References](#18-references). Every number recomputed with Python. Figures: [make_figs.py](../../figures/ai_engineering/make_figs.py). Code: [ai_eval_harness.py](../../code/ai_eval_harness.py).
-> **Facts re-checked:** 22 October 2026.
+> **Facts re-checked:** 24 October 2026.
 
 **The big picture:** an LLM app can't be unit-tested like normal code, because the same input gives varied, free-text outputs, and "correct" is often a judgment call. **Evals** are how you measure quality anyway: a dataset of real inputs, a way to grade outputs (code checks, LLM judges, humans), and the statistics to know whether a difference is real. Teams that build evals first improve steadily. Teams that tune prompts by feel go in circles.
 
@@ -152,7 +152,23 @@ $$
 
 *Fig 4 (f04_eval_margin_of_error.png). At an 80% pass rate: 50 examples → ±11.1 points, 100 → ±7.8, 400 → ±3.9. To halve the uncertainty you need 4× the examples.*
 
-**The practical reading:** with 50 examples, a change from 78% to 84% is noise. Use the small set for fast iteration and *catching large regressions*. Use several hundred examples (or a paired comparison, §6) to confirm small improvements. Near 0% or 100%, or with very few examples, use the **Wilson interval** rather than this formula. The demo shows 3 passes out of 6 has a 95% interval of **19%–81%**: almost no information.
+**The practical reading:** with 50 examples, a change from 78% to 84% is noise. Use the small set for fast iteration and *catching large regressions*. Use several hundred examples (or a paired comparison, below) to confirm small improvements. Near 0% or 100%, or with very few examples, use the **Wilson interval** rather than this formula. The demo shows 3 passes out of 6 has a 95% interval of **19%–81%**: almost no information.
+
+**Paired comparison: the cheap way to compare two versions.** The margin above is for *one* pass rate measured on a random sample. When you compare an old and a new version, run both on the **same** cases. Then most cases tell you nothing new: they pass under both versions, or fail under both. All the evidence sits in the cases that **flipped**:
+
+| | New version passes | New version fails |
+|---|---|---|
+| **Old version passes** | no information | **flipped to fail** ($b$) |
+| **Old version fails** | **flipped to pass** ($c$) | no information |
+
+If the change made no real difference, each flipped case is equally likely to go either way, like a coin toss. So the question is just: are $c$ and $b$ more lopsided than coin tosses would be? (This is **McNemar's test**, or equivalently a sign test on the flips.)
+
+**Worked example.** Old 85%, new 88% on the same 200 cases: a net gain of 6 cases. Two very different stories give that same +3 points:
+
+- 14 flipped to pass and 8 flipped to fail. With 22 fair coin tosses, a split at least as lopsided as 14 to 8 (in either direction) happens about 29% of the time ($p \approx 0.29$), so this is weak evidence. The change helped some cases and hurt others.
+- 6 flipped to pass and none flipped to fail. Six tosses all landing the same way happens by chance only $2/2^6 \approx 0.03$ of the time, about 3%, ($p \approx 0.03$). That's fair evidence of a real, consistent improvement.
+
+The habit: always look at the flipped cases, not just the two averages. Reading the cases that flipped to fail also tells you *what* the change broke.
 
 ---
 
@@ -268,7 +284,13 @@ $$
 
 *Kappa is the observed agreement minus the agreement you'd expect by chance, divided by the maximum possible improvement over chance.* 1 means perfect agreement, 0 means no better than chance. Raw agreement alone is misleading when most cases pass: a judge that always says "pass" agrees 90% of the time if 90% of cases pass.
 
-**Worked example** (demo output). 100 traces: both pass 70, both fail 15, judge pass/human fail 10, judge fail/human pass 5.
+**Worked example** (demo output). 100 traces, laid out as a table of who said what:
+
+| | Human: pass | Human: fail | Judge total |
+|---|---|---|---|
+| **Judge: pass** | 70 (agree) | 10 (judge too lenient) | 80 |
+| **Judge: fail** | 5 (judge too strict) | 15 (agree) | 20 |
+| **Human total** | 75 | 25 | 100 |
 
 - Observed agreement $p_o = (70 + 15)/100 = 0.85$.
 - The judge passes 80%, the human 75%. Chance agreement $p_e = 0.80 \times 0.75 + 0.20 \times 0.25 = 0.65$.
@@ -587,6 +609,7 @@ About 1,250 per arm. Halving the effect needs roughly 4× the users: about 5,000
 | **TPR / TNR** | How often the judge passes true passes / fails true failures |
 | **Cohen's kappa** | Agreement between two raters, corrected for chance |
 | **Margin of error** | Uncertainty range on a measured rate (≈ 1.96·√(p(1−p)/n)) |
+| **Paired comparison / McNemar's test** | Comparing two versions on the same cases, using only the cases that flipped |
 | **Wilson interval** | A better confidence interval for proportions with small n or extreme p |
 | **Offline / online eval** | Pre-release on a fixed dataset / on live traffic |
 | **Regression test** | Re-running evals to catch quality drops after a change |
@@ -602,6 +625,7 @@ About 1,250 per arm. Halving the effect needs roughly 4× the users: about 5,000
 ## 18. References
 
 - Hamel Husain, "Your AI Product Needs Evals" (2024) and the LLM Evals FAQ; Hamel Husain and Shreya Shankar's AI evals course material (error analysis, open and axial coding, binary judges). Secondary summary: Langfuse, "Error analysis to evaluate LLM applications", August 2025.
+- Quinn McNemar, "Note on the sampling error of the difference between correlated proportions or percentages", *Psychometrika*, 1947 (the paired test in §3).
 - Shreya Shankar et al., "Who Validates the Validators? Aligning LLM-Assisted Evaluation of LLM Outputs with Human Preferences", UIST 2024.
 - Lianmin Zheng et al., "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena", NeurIPS 2023 (position, verbosity and self-preference biases).
 - Shunyu Yao et al., "τ-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains", 2024 (the pass^k metric).
