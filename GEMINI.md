@@ -31,10 +31,20 @@ When the user asks to **be quizzed, tested, or examined** on a topic or file (e.
 
 ## 2. Formatting & Obsidian Standards
 
-- **Math:** Render all mathematical notation in KaTeX:
+- **Math & LaTeX Standards:**
   - Inline: `$E = mc^2$`
-  - Display: `$$\nabla_\theta \mathcal{L}(\theta)$$`
-- **Diagrams:** Use native Mermaid fenced blocks (```mermaid ... ```). Both Antigravity and Obsidian render Mermaid natively without external dependencies.
+  - Display: Isolated `$$` on its own line at column 0, preceded and followed by an empty blank line:
+    ```markdown
+    $$
+    \nabla_\theta \mathcal{L}(\theta)
+    $$
+    ```
+  - **Decouple Math from Bold:** Never embed math inside bold asterisks (`**Label ($math$):**` is forbidden). Always keep math outside bold: `**Label** ($math$):`.
+  - **Matrix Row Breaks:** In LaTeX environments (`matrix`, `aligned`, `cases`), place `\\` at the end of the line before a newline (never mid-line) to prevent CommonMark from collapsing rows.
+- **Code Fences:** Fenced code blocks strictly require $\ge 3$ backticks (` ``` `). Never use two backticks (` `` `) to open or close blocks; two backticks is parsed by CommonMark as an inline code span that swallows subsequent markdown and hides math from rendering.
+- **Diagrams & Visuals:**
+  - Use native Mermaid fenced blocks (```mermaid ... ```). Both Antigravity and Obsidian render Mermaid natively without external dependencies.
+  - **Zero ASCII Art:** Never generate monospace sketch boxes with `+---+` or `|...|`. Use native Mermaid diagrams or high-resolution Python plots.
 - **Obsidian Live Logging:** When the user specifies a note to log or study into (e.g. `MyTopic.md`), write/append directly to the file on disk. Use native Obsidian callouts:
   - `> [!abstract] Teacher`
   - `> [!question] Question / Quiz`

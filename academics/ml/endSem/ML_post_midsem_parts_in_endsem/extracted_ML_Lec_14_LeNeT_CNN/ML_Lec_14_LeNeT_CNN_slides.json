@@ -1,0 +1,414 @@
+[
+  {
+    "slide_index": 1,
+    "title": "CNN Architecture",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Some popular CNN models are:"
+          ],
+          [
+            0,
+            "LeNet"
+          ],
+          [
+            0,
+            "AlexNet"
+          ],
+          [
+            0,
+            "GoogleNet"
+          ],
+          [
+            0,
+            "VGG"
+          ],
+          [
+            0,
+            "ResNet"
+          ],
+          [
+            0,
+            "DenseNet"
+          ],
+          [
+            0,
+            "ResNeXt"
+          ],
+          [
+            0,
+            "EfficientNet"
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 2,
+    "title": "LeNet",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "LeNet is one of the pioneering convolutional neural network (CNN) architectures, developed by Yann LeCun and his colleagues in the late 1980s and early 1990s."
+          ],
+          [
+            0,
+            "It was primarily designed for handwritten digit recognition, specifically for the MNIST dataset."
+          ],
+          [
+            0,
+            "It was used by many banks for recognition of hand written numbers on cheques."
+          ],
+          [
+            0,
+            "This architecture achieves an error rate as low as 0.95% on test data, i.e., accuracy was more than 99%."
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 3,
+    "title": "LeNet: Architecture",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Input Layer:"
+          ],
+          [
+            1,
+            "Typically accepts 32x32 pixel grayscale images. MNIST images (28x28) are often zero-padded to this size."
+          ],
+          [
+            0,
+            "Convolutional Layer 1 (C1):"
+          ],
+          [
+            1,
+            "Applies 6 convolutional filters of size 5x5, resulting in 6 feature maps of size 28x28."
+          ],
+          [
+            1,
+            "Activation function: typically sigmoid or tanh."
+          ],
+          [
+            0,
+            "Subsampling or Pooling Layer 1 (S2):"
+          ],
+          [
+            1,
+            "Applies average pooling (subsampling) with a 2x2 filter and a stride of 2, reducing the feature map size to 14x14."
+          ],
+          [
+            0,
+            "Convolutional Layer 2 (C3):"
+          ],
+          [
+            0,
+            "-- Applies 16 convolutional filters of size 5x5, producing 16 feature maps of size 10x10."
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 4,
+    "title": "LeNet: Architecture",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Subsampling Layer 2 (S4):"
+          ],
+          [
+            0,
+            "-- Similar to S2, it uses average pooling to reduce the feature map size to 5x5."
+          ],
+          [
+            0,
+            "Fully Connected Layer (C5):"
+          ],
+          [
+            0,
+            "-- Flattens the output from S4 and connects to 120 neurons."
+          ],
+          [
+            0,
+            "Fully Connected Layer (F6):"
+          ],
+          [
+            0,
+            "-- Connects to 84 neurons."
+          ],
+          [
+            0,
+            "Output Layer:"
+          ],
+          [
+            0,
+            "-- Outputs 10 neurons corresponding to the 10 digit classes (0-9)."
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 5,
+    "title": "LeNeT5",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "There are many versions of LeNet architecture."
+          ],
+          [
+            0,
+            "Following is the LeNet5 CNN"
+          ]
+        ]
+      },
+      {
+        "kind": "image",
+        "file": "image1.png",
+        "alt": ""
+      }
+    ],
+    "images": [
+      "image1.png"
+    ],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 6,
+    "title": "LeNeT5",
+    "blocks": [
+      {
+        "kind": "image",
+        "file": "image2.png",
+        "alt": ""
+      },
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "After first convolutional layer, the input image is convoluted to the size of 28x28."
+          ],
+          [
+            0,
+            "There are 6 kernels, so the output feature map is of depth 6."
+          ]
+        ]
+      }
+    ],
+    "images": [
+      "image2.png"
+    ],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 7,
+    "title": "LeNeT5",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Second layer is the pooling layer where the size is reduced to half, i.e., 14 × 14, by 2 × 2 filter with stride 2."
+          ]
+        ]
+      },
+      {
+        "kind": "image",
+        "file": "image3.png",
+        "alt": ""
+      }
+    ],
+    "images": [
+      "image3.png"
+    ],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 8,
+    "title": "LeNet5",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "In the third layer, convolution occurs again, but this time with 16 filters of 5x5 size, default pad=0 and stride=1"
+          ],
+          [
+            0,
+            "After this layer, the size of the input image is reduced to 10x10x16."
+          ]
+        ]
+      },
+      {
+        "kind": "image",
+        "file": "image4.png",
+        "alt": ""
+      }
+    ],
+    "images": [
+      "image4.png"
+    ],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 9,
+    "title": "LeNet5",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "In fourth layer, the subsampling takes place, and the image size 10x10x16 is reduced to 5x5x16, by 2 × 2 filter with stride 2."
+          ],
+          [
+            0,
+            "The feature map of fourth layer is flattened into a vector of 400 values."
+          ]
+        ]
+      },
+      {
+        "kind": "image",
+        "file": "image5.png",
+        "alt": ""
+      }
+    ],
+    "images": [
+      "image5.png"
+    ],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 10,
+    "title": "LeNeT5",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Finally, the flattened vector passes through 3 fully connected layer for classification, where 1<sup>st</sup> FC layer consists of 120 nodes, 2<sup>nd</sup> of 84 nodes, and the 3<sup>rd</sup> one which is the output layer consists of 10 nodes, one for each class (here, digit 0 to 9)."
+          ]
+        ]
+      },
+      {
+        "kind": "image",
+        "file": "image6.png",
+        "alt": ""
+      }
+    ],
+    "images": [
+      "image6.png"
+    ],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 11,
+    "title": "Summary of LeNeT5 Architecture",
+    "blocks": [
+      {
+        "kind": "image",
+        "file": "image7.png",
+        "alt": ""
+      }
+    ],
+    "images": [
+      "image7.png"
+    ],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 12,
+    "title": "LeNet: Key Characteristics",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Activation Functions: Originally used sigmoid or tanh, but modern adaptations often use ReLU."
+          ],
+          [
+            0,
+            "Pooling: Utilizes average pooling, which was common at the time. Max pooling has since become more popular in later architectures."
+          ],
+          [
+            0,
+            "Backpropagation: LeNet was one of the first networks to use backpropagation for training."
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 13,
+    "title": "LeNET",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Impact and Applications"
+          ],
+          [
+            0,
+            "(i) Legacy: LeNet laid the groundwork for more complex CNN architectures, influencing subsequent developments in computer vision."
+          ],
+          [
+            0,
+            "(ii) Use Cases: Beyond digit recognition, variations of LeNet have been adapted for various image classification tasks."
+          ],
+          [
+            0,
+            "Summary:"
+          ],
+          [
+            0,
+            "-- LeNet's architecture introduced key concepts in deep learning, such as convolutional layers, pooling, and end-to-end training, and remains a foundational model in the study of neural networks and computer vision."
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 14,
+    "title": "Thank You!",
+    "blocks": [],
+    "images": [],
+    "speaker_notes": ""
+  }
+]
