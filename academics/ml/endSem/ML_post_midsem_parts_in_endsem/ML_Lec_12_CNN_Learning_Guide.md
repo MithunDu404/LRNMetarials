@@ -1,797 +1,720 @@
-# Comprehensive Learning Guide: Convolutional Neural Networks (CNN)
+# Convolutional Neural Networks (CNN) — Learning Guide
 
-> **Source Material:** `ML_Lec_12_CNN.pptx` (108 Slides)  
-> **Topic Domain:** Machine Learning / Deep Learning — Convolutional Neural Networks  
-> **Structure:** 4-Part Concept Anatomy (Problem & Intuition $\to$ Technical Mechanism & Architecture $\to$ Visual Anchor $\to$ Verified Formulas, Trade-offs & Calculations)
+Source: `ML_Lec_12_CNN.pptx`, Slides 1–108.
+
+**Who this is for:** a beginner studying this lecture. After reading, you can run a convolution by hand, work out the output size of a layer, and explain padding, stride, pooling and flatten.
+
+**How to read this guide:** Read the sections in order. Each section first says why the idea exists, then how it works, then shows a picture, then gives the exact numbers. Every fact comes from the slides.
+
+```mermaid
+flowchart TD
+    A["1. What convolution is"] --> B["2. Padding"]
+    A --> C["3. Kernels made by hand"]
+    A --> D["4. Convolution in 1D and on 3D inputs"]
+    B --> E["5. Output size and stride"]
+    D --> E
+    E --> F["6. Two worked examples"]
+    C --> G["7. How a CNN learns its kernels"]
+    D --> G
+    G --> H["8. Pooling"]
+    E --> H
+    H --> I["9. Flatten"]
+```
+
+## Contents
+
+1. [What convolution is](#1-what-convolution-is)
+2. [Padding: keeping the edges and the size](#2-padding-keeping-the-edges-and-the-size)
+3. [Kernels made by hand](#3-kernels-made-by-hand)
+4. [Convolution in 1D and on 3D inputs](#4-convolution-in-1d-and-on-3d-inputs)
+5. [Output size and stride](#5-output-size-and-stride)
+6. [Two worked examples](#6-two-worked-examples)
+7. [How a CNN learns its kernels](#7-how-a-cnn-learns-its-kernels)
+8. [Pooling: making feature maps smaller](#8-pooling-making-feature-maps-smaller)
+9. [Flatten: from feature maps to the classifier](#9-flatten-from-feature-maps-to-the-classifier)
 
 ---
 
-## 1. Foundations of Discrete Convolution & Feature Maps
+## 1. What convolution is
 
-### 1. The Engineering Problem & Intuition
-Standard machine learning architectures treat inputs as flat, unorganized vectors of independent features. In natural imagery, however, spatial structure is paramount: adjacent pixels exhibit extreme mutual covariance (local correlation), whereas distant pixels are relatively independent. Flattening an image and feeding it directly to a standard fully connected network destroys this spatial geometry and discards topological relationships.
+### 1.1 The Problem & Intuition
 
-Discrete 2D convolution addresses this by treating the image as a 2D spatial grid and sliding a small parameterized weight template (a filter or kernel) across the coordinate space. Rather than evaluating every pixel in isolation, convolution computes localized weighted sums that quantify how well local image patches match the template's pattern.
+An image is a grid of numbers. We want to find small patterns in it, such as edges and textures. Convolution does this. It takes a small grid of numbers and slides it over the image. At each place it gives one number that says how strongly the pattern shows up there.
 
-### 2. Technical Mechanism & Architecture
-In the context of Convolutional Neural Networks (CNNs), convolution is defined as an affine transformation applied locally across a grid-structured topology.
+The slides give the general definition first (Slide 1). **Convolution** is a mathematical operation that combines two functions to produce a third function. The third function shows how one function modifies the other. In a **convolutional neural network (CNN)**, convolution is used on data with a grid-like shape, such as images.
+
+### 1.2 Mechanism & Architecture
+
+Think of the image as a 2D matrix. We use a 2D filter of size $m \times n$ (Slide 2). Convolution has four key parts (Slide 3).
 
 ![The four elements of convolution](figures/cnn/l12_01_conv_elements.jpg)
-*Figure: The four elements of every convolution: a kernel, a sliding window, a dot product at each position, and the feature map it builds (illustration).*
+*Figure: The four parts of every convolution: a kernel, a sliding window, a dot product at each position, and the feature map it builds (illustration).*
 
-The operation consists of four core elements:
-1. **Kernel / Filter:** A small matrix of real-valued weights (e.g., $2 \times 2$, $3 \times 3$, or $5 \times 5$). It serves as a specialized feature extractor tuned to detect specific localized patterns such as vertical edges, color transitions, or textures.
-2. **Sliding Window:** The kernel systematically sweeps across the input matrix from top-left to bottom-right at discrete spatial intervals (strides).
-3. **Dot Product (Frobenius Inner Product):** At every discrete position, the kernel performs an element-wise multiplication with the overlapping patch of the input image, followed by a summation of all products into a single scalar value.
-4. **Output Feature Map:** As the kernel completes its sweep across all valid positions, the accumulated scalar responses form a 2D matrix called a **feature map** (or activation map). This map spatially organizes the detection strength of the kernel's target pattern.
+1. **Kernel / filter.** A small matrix, for example 3×3 or 5×5. It slides over the input. Its job is to extract features like edges, textures or patterns. "Kernel" and "filter" mean the same thing.
+2. **Sliding window.** The kernel moves across the image in small steps. The step size is called the **stride**.
+3. **Dot product.** At each position, multiply each kernel number by the pixel under it. Then add all the results. This gives one output value. It captures the local pattern at that spot.
+4. **Output feature map.** Doing this over the whole image gives a new matrix. It is called a **feature map**. It highlights where the kernel found its feature.
 
-#### Discrete 2D Walk-Through (Slides 2–9)
-Consider a $3 \times 4$ grayscale input matrix $I$ convolved with a $2 \times 2$ kernel $K$:
+**Walk-through (Slides 2–9).** The slides use a 3×4 input and a 2×2 kernel, written with letters:
 
 ```math
-I = \begin{bmatrix} I_{11} & I_{12} & I_{13} & I_{14} \\ I_{21} & I_{22} & I_{23} & I_{24} \\ I_{31} & I_{32} & I_{33} & I_{34} \end{bmatrix}, \quad K = \begin{bmatrix} K_{11} & K_{12} \\ K_{21} & K_{22} \end{bmatrix}
+\text{Input} = \begin{bmatrix} a & b & c & d \\ e & f & g & h \\ i & j & k & \ell \end{bmatrix}, \quad \text{Kernel} = \begin{bmatrix} w & x \\ y & z \end{bmatrix}
 ```
 
-The sliding window proceeds through 6 discrete steps:
-1. **Position (1, 1):** Overlaps top-left $2 \times 2$ subgrid $\begin{bmatrix} I_{11} & I_{12} \\ I_{21} & I_{22} \end{bmatrix}$. Output $O_{11} = I_{11}K_{11} + I_{12}K_{12} + I_{21}K_{21} + I_{22}K_{22}$.
-2. **Position (1, 2):** Shifts right by 1 pixel to overlap $\begin{bmatrix} I_{12} & I_{13} \\ I_{22} & I_{23} \end{bmatrix}$. Output $O_{12} = I_{12}K_{11} + I_{13}K_{12} + I_{22}K_{21} + I_{23}K_{22}$.
-3. **Position (1, 3):** Shifts right to overlap $\begin{bmatrix} I_{13} & I_{14} \\ I_{23} & I_{24} \end{bmatrix}$. Output $O_{13} = I_{13}K_{11} + I_{14}K_{12} + I_{23}K_{21} + I_{24}K_{22}$.
-4. **Position (2, 1):** Shifts down to row 2, left column $\begin{bmatrix} I_{21} & I_{22} \\ I_{31} & I_{32} \end{bmatrix}$. Output $O_{21} = I_{21}K_{11} + I_{22}K_{12} + I_{31}K_{21} + I_{32}K_{22}$.
-5. **Position (2, 2):** Overlaps $\begin{bmatrix} I_{22} & I_{23} \\ I_{32} & I_{33} \end{bmatrix}$. Output $O_{22} = I_{22}K_{11} + I_{23}K_{12} + I_{32}K_{21} + I_{33}K_{22}$.
-6. **Position (2, 3):** Overlaps $\begin{bmatrix} I_{23} & I_{24} \\ I_{33} & I_{34} \end{bmatrix}$. Output $O_{23} = I_{23}K_{11} + I_{24}K_{12} + I_{33}K_{21} + I_{34}K_{22}$.
+The kernel fits in six positions. Each position gives one output value:
 
-The resulting output feature map $O$ has shape $2 \times 3$.
+1. Top-left, on a, b, e, f: $aw + bx + ey + fz$
+2. One step right, on b, c, f, g: $bw + cx + fy + gz$
+3. One more step right, on c, d, g, h: $cw + dx + gy + hz$
+4. Down one row, back to the left, on e, f, i, j: $ew + fx + iy + jz$
+5. One step right, on f, g, j, k: $fw + gx + jy + kz$
+6. One more step right, on g, h, k, ℓ: $gw + hx + ky + \ell z$
 
-### 3. Visual Anchor
+The output is (Slide 9):
+
+```math
+\text{Output} = \begin{bmatrix} aw+bx+ey+fz & bw+cx+fy+gz & cw+dx+gy+hz \\ ew+fx+iy+jz & fw+gx+jy+kz & gw+hx+ky+\ell z \end{bmatrix}
+```
+
+So a 3×4 image gives a 2×3 feature map (Slide 9). The output is smaller than the input.
+
+The same idea in short (Slides 32–37): we just slide the kernel over the input image. Each time we slide it, we get one value in the output. The full output is the feature map. We can use many filters to get many feature maps.
+
+### 1.3 Visual Anchor
 
 ![3x4 input convolved with a 2x2 kernel gives a 2x3 output](figures/cnn/l12_02_conv_walkthrough.jpg)
-*Figure: The Slides 2–9 walk-through: the 2x2 kernel K over the top-left block of the 3x4 input I produces O11; sliding with stride 1 and no padding fills the 2x3 output O (illustration).*
+*Figure: The Slides 2–9 walk-through. The 2x2 kernel K sits on the top-left block of the 3x4 input I and gives the first output value, O11. In the slide's letters this is aw + bx + ey + fz. Sliding one step at a time, with no padding, fills the 2x3 output O (illustration).*
 
-### 4. Verified Formulas, Trade-offs & Calculations
-The discrete 2D cross-correlation (commonly termed convolution in deep learning) for input $I$ and kernel $K$ of spatial dimensions $M \times N$ is:
+### 1.4 Verified Formulas, Trade-offs & Calculations
 
-```math
-S(i, j) = (I * K)(i, j) = \sum_{m=0}^{M-1} \sum_{n=0}^{N-1} I(i + m, j + n) K(m, n)
-```
-
-*Plain reading:* The scalar response at output location $(i, j)$ is the sum of products of kernel weights and the corresponding input pixels over the spatial extent $M \times N$.
-
-#### Boundary Shrinkage Calculation (Slide 9)
-For an input of height $H_1$ and width $W_1$ convolved with a filter of size $F \times F$ under unit stride ($S = 1$) without padding ($P = 0$):
-- Height: $H_2 = H_1 - F + 1 = 3 - 2 + 1 = 2$
-- Width: $W_2 = W_1 - F + 1 = 4 - 2 + 1 = 3$
-- Feature map dimensions: $2 \times 3$.
-
----
-
-## 2. Spatial Shrinking, Boundary Constraints & Padding Mechanics
-
-### 1. The Engineering Problem & Intuition
-When a kernel of spatial extent $F \times F$ is convolved across an image, its center cannot be placed on boundary pixels without the edges of the filter protruding beyond the boundaries of the image grid. If convolution is restricted solely to positions where the kernel fits entirely inside the image, two critical engineering problems arise:
-
-1. **Cumulative Spatial Shrinkage:** Each convolutional layer with filter extent $F$ reduces spatial height and width by $F - 1$ pixels. In deep networks containing dozens of sequential convolutional layers, the feature map quickly collapses to $1 \times 1$, terminating spatial representation before deep hierarchical abstraction can occur.
-2. **Edge Information Loss:** Pixels located along the image perimeter participate in far fewer convolution windows than central pixels. A corner pixel is sampled only once by a $3 \times 3$ kernel, whereas a central pixel is sampled 9 times. Border features are systematically under-represented.
-
-Padding resolves this by synthetically expanding the input array with surrounding border values (typically zeros) before convolution.
-
-### 2. Technical Mechanism & Architecture
-Padding wraps the boundary of the input tensor with $P$ rows/columns of constant values (zero-padding).
-
-```mermaid
-flowchart TD
-    subgraph PaddingChoices["Padding Strategies"]
-        direction TB
-        V["Valid Padding (P = 0)"]
-        S["Same Padding (P = (F - 1) / 2)"]
-    end
-
-    subgraph ValidBehavior["Valid Padding Behavior"]
-        direction TB
-        V1["Kernel fits strictly inside image boundaries"]
-        V2["Output dimensions shrink: W2 = W1 - F + 1"]
-        V3["Border pixels under-sampled"]
-    end
-
-    subgraph SameBehavior["Same Padding Behavior"]
-        direction TB
-        S1["Zeros appended symmetrically around borders"]
-        S2["Output dimensions preserved: W2 = W1"]
-        S3["Border pixels sampled equally to interior pixels"]
-    end
-
-    V --> ValidBehavior
-    S --> SameBehavior
-```
-
-#### Four Engineering Rationales for Padding (Slide 12)
-1. **Preserving Dimensions:** Guarantees that output feature maps match input resolution ($W_2 = W_1, H_2 = H_1$), essential when chaining deep convolutional stacks or performing dense pixel prediction (e.g., semantic segmentation, autoencoders).
-2. **Edge Feature Extraction:** Centers the filter directly over perimeter and corner pixels, capturing boundary structures that would otherwise be discarded.
-3. **Mitigating Spatial Shrinkage:** Decouples network depth from spatial resolution decay, allowing networks to grow arbitrarily deep.
-4. **Stabilizing Learning Performance:** Prevents erratic spatial size mismatch across residual skip connections and ensures consistent contextual representation.
-
-### 3. Visual Anchor
-
-![Valid vs same padding on a 5x5 input](figures/cnn/l12_03_padding.jpg)
-*Figure: Valid (P = 0): a 3x3 window fits in 3x3 positions of the 5x5 input, so the output is 3x3. Same (P = 1): one ring of zeros makes a 7x7 grid, the window can centre on every original pixel, and the output stays 5x5 (illustration).*
-
-The padded array structure for $P = 1$ on an inner $7 \times 7$ grid (producing a $9 \times 9$ padded tensor, Slide 73):
+**The convolution formula (Slide 2).**
 
 ```math
-I_{\text{padded}} = \begin{bmatrix}
-0 & 0 & 0 & \dots & 0 & 0 \\
-0 & I_{11} & I_{12} & \dots & I_{1N} & 0 \\
-\vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
-0 & I_{M1} & I_{M2} & \dots & I_{MN} & 0 \\
-0 & 0 & 0 & \dots & 0 & 0
-\end{bmatrix}
+S_{ij} = (I * K)_{ij} = \sum_{a=0}^{m-1} \sum_{b=0}^{n-1} I_{i+a,\,j+b} \, K_{a,b}
 ```
 
-### 4. Verified Formulas, Trade-offs & Calculations
+- $I$: the image.
+- $K$: the kernel, of size $m \times n$.
+- $S_{ij}$: the output value at row $i$ and column $j$.
+- $a$ and $b$: the row and column inside the kernel.
 
-#### Mathematical Derivation of Same Padding
-To enforce that the output dimension $W_2$ equals the input dimension $W_1$ under unit stride ($S = 1$):
+In plain words: put the kernel with its top-left corner on pixel $(i, j)$. Multiply each kernel value by the pixel under it. Add all the products.
 
-```math
-W_2 = W_1 - F + 2P + 1
-```
+Check with the walk-through. The kernel is 2×2, so $a$ and $b$ are 0 or 1. For the first output, the four products are $aw$, $bx$, $ey$ and $fz$. Their sum is $aw + bx + ey + fz$, as on the slide.
 
-Setting $W_2 = W_1$:
-
-```math
-W_1 = W_1 - F + 2P + 1 \implies 0 = -F + 2P + 1 \implies 2P = F - 1 \implies P = \frac{F - 1}{2}
-```
-
-*Plain reading:* To preserve spatial dimensions with unit stride, the padding width $P$ must equal half of the filter extent minus one.
-
-> **Constraint:** For symmetric integer padding $P$, the filter extent $F$ must be an **odd integer** ($F \in \lbrace 1, 3, 5, 7, \dots \rbrace$). An even filter size (e.g., $F = 4$) requires asymmetric padding ($P_{\text{left}} \neq P_{\text{right}}$), which introduces coordinate bias.
-
-#### Audited Numerical Examples (Slides 10, 70–74)
-- **Valid Padding** ($P = 0$): Input $5 \times 5$, Kernel $3 \times 3$, $S = 1$:
-
-```math
-W_2 = 5 - 3 + 2(0) + 1 = 3 \implies 3 \times 3 \text{ output (shrinks by 2 pixels per axis)}
-```
-
-- **Same Padding** ($P = 1$): Input $5 \times 5$, Kernel $3 \times 3$, $S = 1$:
-
-```math
-W_2 = 5 - 3 + 2(1) + 1 = 5 \implies 5 \times 5 \text{ output (preserves exact spatial dimension)}
-```
-
-- $5 \times 5$ **Kernel Same Padding** ($P = 2$): Input $W_1$, Kernel $F = 5$, $S = 1$:
-
-```math
-P = \frac{5 - 1}{2} = 2 \implies \text{Add 2 rows/columns of zeros on all sides}
-```
-
----
-
-## 3. Classical Image Processing Kernels & Analytical Filters
-
-### 1. The Engineering Problem & Intuition
-Before deep learning enabled networks to discover optimal representation filters via gradient descent, computer vision relied on mathematically designed spatial convolution kernels. Engineers derived specialized matrices to solve specific signal processing tasks:
-- **Gradient estimation:** Identifying rapid shifts in luminance to delineate object boundaries.
-- **Noise suppression (blurring):** Attenuating high-frequency spatial sensor noise before numerical differentiation.
-- **Sharpening:** Boosting high-frequency transitions to restore crispness and accentuate textural boundaries.
-
-Understanding these analytical kernels establishes the theoretical baseline for what convolutional layers autonomously learn during training.
-
-### 2. Technical Mechanism & Architecture
-
-#### 1. Directional Edge Detection: Sobel Kernels (Slide 15)
-The Sobel operator estimates the first spatial derivative of image intensity along orthogonal axes:
-- **Horizontal Gradient** ($G_x$): Emphasizes vertical edges by calculating the difference between right and left columns, with Gaussian-like smoothing ($[1, 2, 1]^T$) along the vertical axis.
-- **Vertical Gradient** ($G_y$): Emphasizes horizontal edges by calculating the difference between top and bottom rows, with smoothing along the horizontal axis.
-
-```math
-G_x = \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix}, \quad G_y = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}
-```
-
-The net edge magnitude and gradient orientation are:
-
-```math
-G = \sqrt{G_x^2 + G_y^2}, \quad \theta = \arctan\left(\frac{G_y}{G_x}\right)
-```
-
-#### 2. The Canny Edge Detection Pipeline (Slides 16–17)
-The Canny detector is not a single filter, but a 4-stage pipeline that eliminates noise and false responses:
-
-![Canny edge detection pipeline](figures/cnn/l12_04_canny.jpg)
-*Figure: The Canny pipeline on one image: smoothing, Sobel gradients, non-maximum suppression, hysteresis thresholds, final binary edge map (illustration).*
-
-1. **Gaussian Smoothing:** Suppresses high-frequency camera noise that causes spurious gradient spikes.
-2. **Gradient Computation:** Evaluates $G = \sqrt{G_x^2 + G_y^2}$ and directional angle $\theta$.
-3. **Non-Maximum Suppression (NMS):** Scans along the gradient vector $\theta$; suppresses any pixel that is not a local maximum, thinning wide edge responses into 1-pixel wide ridges.
-4. **Hysteresis Thresholding:** Applies two thresholds ($T_{\text{high}}$ and $T_{\text{low}}$):
-   - Pixels with $G \ge T_{\text{high}}$ are marked as strong edges.
-   - Pixels with $T_{\text{low}} \le G < T_{\text{high}}$ are marked as weak edges and retained **only** if connected to a strong edge.
-   - Pixels with $G < T_{\text{low}}$ are discarded.
-
-#### 3. Blurring & Smoothing Filters (Slides 18–21)
-Blurring suppresses noise by replacing each pixel with a weighted neighborhood average:
-- **Gaussian Kernel:** Samples the 2D Gaussian density function:
-
-```math
-G(x, y) = \frac{1}{2\pi \sigma^2} e^{-\frac{x^2 + y^2}{2\sigma^2}}
-```
-
-  Weights decay exponentially with squared Euclidean distance from the center. $\sigma$ controls blur radius.
-  - Normalized $3 \times 3$ Gaussian kernel (sum = 16):
-
-```math
-\frac{1}{16} \begin{bmatrix} 1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 1 \end{bmatrix}
-```
-
-  - Normalized $5 \times 5$ Gaussian kernel (outer product of binomial vector $[1, 4, 6, 4, 1]^T [1, 4, 6, 4, 1]$, sum = 256):
-
-```math
-\frac{1}{256} \begin{bmatrix} 1 & 4 & 6 & 4 & 1 \\ 4 & 16 & 24 & 16 & 4 \\ 6 & 24 & 36 & 24 & 6 \\ 4 & 16 & 24 & 16 & 4 \\ 1 & 4 & 6 & 4 & 1 \end{bmatrix}
-```
-
-- **Average / Box Filter:** Replaces each pixel with the unweighted arithmetic mean of its neighborhood:
-  - $3 \times 3$ Box filter: $\frac{1}{9} \begin{bmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{bmatrix}$
-  - $5 \times 5$ Box filter: $\frac{1}{25} J_{5 \times 5}$ (all entries equal $1/25$).
-
-> **Slide Discrepancy Note (Slide 21):** Slide 21 is titled *"Blurring Kernels: Average Kernel"*, but the slide text labels the matrices as *"A 3 x 3 Gaussian Kernel"* and *"A 5 x 5 Gaussian Kernel"* while displaying uniform $1/9$ and $1/25$ coefficients. Those matrices are mathematically **Average (Box) Kernels**, not Gaussian kernels. Gaussian kernels possess distance-weighted coefficients (as shown correctly on Slide 19).
-
-#### 4. Sharpening & Second Derivative Operators (Slides 22–26, 29–31)
-- **Laplacian Kernel (Second Derivative):** Measures the divergence of the gradient ($\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}$). Detects rapid rate-of-change transitions:
-  - 4-neighbor standard Laplacian: $\begin{bmatrix} 0 & -1 & 0 \\ -1 & 4 & -1 \\ 0 & -1 & 0 \end{bmatrix}$ (center = 4, neighbors = $-1$, sum = 0).
-  - 8-neighbor inverted Laplacian (Slide 31 Taj Mahal, media/image27.png): $\begin{bmatrix} 1 & 1 & 1 \\ 1 & -8 & 1 \\ 1 & 1 & 1 \end{bmatrix}$ (center = $-8$, neighbors = $1$, sum = 0).
-- **Unsharp Masking Kernel:** Enhances fine detail by subtracting a blurred version of the image from the original, then scaling and adding back the high-frequency residue: $I_{\text{sharp}} = I + \alpha(I - I_{\text{blur}})$.
-  - $3 \times 3$ Unsharp Mask kernel: $\begin{bmatrix} 0 & -1 & 0 \\ -1 & 5 & -1 \\ 0 & -1 & 0 \end{bmatrix}$ (center = 5, sum = 1).
-
-```math
-\text{Laplacian vs. Unsharp Mask Mathematical Structural Difference:} \\
-K_{\text{unsharp}} = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0 \end{bmatrix} + \begin{bmatrix} 0 & -1 & 0 \\ -1 & 4 & -1 \\ 0 & -1 & 0 \end{bmatrix} = \begin{bmatrix} 0 & -1 & 0 \\ -1 & 5 & -1 \\ 0 & -1 & 0 \end{bmatrix} = I_{\text{identity}} + \nabla^2
-```
-
-- **Core Difference:** The Laplacian has a center value of 4 (or $-8$) and sums to 0. It eliminates uniform luminance (DC gain = 0), leaving uniform regions completely black. The Unsharp Mask has a center value of 5 and sums to 1 (DC gain = 1). It preserves the underlying image brightness while boosting high-frequency edge contrast.
-
-#### 5. Dilated / Atrous Convolutions & Learned Embeddings (Slides 27–28)
-- **Dilated (Atrous) Convolution:** Inserts spaces (zeros) between kernel elements according to dilation rate $r$.
-  - Dilation rate $r = 1$: Standard dense convolution.
-  - Dilation rate $r = 2$: Inserts 1 zero between adjacent filter taps, expanding a $3 \times 3$ kernel to cover a $5 \times 5$ receptive field without increasing parameter count (remains 9 weights).
-  - **Benefits:** Expands receptive field exponentially across layers while preserving native spatial resolution (avoids downsampling artifacts in dense segmentation).
-![Dilation rate 1 vs 2 on a 3x3 kernel](figures/cnn/l12_07_dilated.jpg)
-*Figure: Dilation: the same 9 weights cover a 3x3 field at r = 1 and a 5x5 field at r = 2, with one skipped pixel between taps (illustration).*
-
-- **Embeddings / Learned Kernels:** In CNNs, kernels are not hand-engineered; their weights are freely parameterized variables learned directly from data via backpropagation.
-
-### 3. Visual Anchor
-
-![Classical kernel families by DC gain](figures/cnn/l12_05_kernel_families.jpg)
-*Figure: Kernel families by DC gain: smoothing kernels (Gaussian, Box / Average) keep brightness (gain 1), edge kernels (Sobel, Laplacian) remove it (gain 0), and the unsharp mask (Identity + Laplacian) sharpens while keeping it (gain 1) (illustration).*
-
-![Fig 1 – Taj Mahal edge detection via 8-neighbor Laplacian high-pass filter (media/image27.png)](extracted_ML_Lec_12_CNN/media/image27.png)
-
-### 4. Verified Formulas, Trade-offs & Calculations
-
-| Filter Name | Spatial Size | Kernel Matrix Form | Kernel Sum (DC Gain) | Signal Processing Function |
-| :--- | :---: | :---: | :---: | :--- |
-| **Sobel Horizontal** ($G_x$) | $3 \times 3$ | $\begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix}$ | 0 | Vertical edge detector; directional derivative $\partial I / \partial x$ |
-| **Sobel Vertical** ($G_y$) | $3 \times 3$ | $\begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}$ | 0 | Horizontal edge detector; directional derivative $\partial I / \partial y$ |
-| **Gaussian Blur** ($3 \times 3$) | $3 \times 3$ | $\frac{1}{16}\begin{bmatrix} 1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 1 \end{bmatrix}$ | 1 | Low-pass filter; isotropic distance-weighted noise smoothing |
-| **Gaussian Blur** ($5 \times 5$) | $5 \times 5$ | $\frac{1}{256}\begin{bmatrix} 1 & 4 & 6 & 4 & 1 \\ 4 & 16 & 24 & 16 & 4 \\ 6 & 24 & 36 & 24 & 6 \\ 4 & 16 & 24 & 16 & 4 \\ 1 & 4 & 6 & 4 & 1 \end{bmatrix}$ | 1 | Broad low-pass filter; binomial approximation to $\sigma \approx 1$ |
-| **Average / Box** ($3 \times 3$) | $3 \times 3$ | $\frac{1}{9}\begin{bmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{bmatrix}$ | 1 | Unweighted neighborhood mean; blurs edges heavily |
-| **Laplacian (4-neighbor)** | $3 \times 3$ | $\begin{bmatrix} 0 & -1 & 0 \\ -1 & 4 & -1 \\ 0 & -1 & 0 \end{bmatrix}$ | 0 | Second derivative $\nabla^2 I$; zero response on uniform regions |
-| **Inverted Laplacian (8-neighbor)** | $3 \times 3$ | $\begin{bmatrix} 1 & 1 & 1 \\ 1 & -8 & 1 \\ 1 & 1 & 1 \end{bmatrix}$ | 0 | High-pass edge highlighting across all orientations |
-| **Unsharp Mask** | $3 \times 3$ | $\begin{bmatrix} 0 & -1 & 0 \\ -1 & 5 & -1 \\ 0 & -1 & 0 \end{bmatrix}$ | 1 | Detail enhancement; adds edge curvature back to baseline luminance |
-
-#### Dilated Receptive Field Formula
-For a kernel of native size $F$ and dilation rate $r$:
-
-```math
-F_{\text{eff}} = F + (F - 1)(r - 1) = r(F - 1) + 1
-```
-
-- For $F = 3$ and $r = 1$: $F_{\text{eff}} = 1(3 - 1) + 1 = 3 \times 3$.
-- For $F = 3$ and $r = 2$: $F_{\text{eff}} = 2(3 - 1) + 1 = 5 \times 5$ (covers $5 \times 5$ region using only 9 non-zero weights).
-
----
-
-## 4. Dimensionality Extension: 1D Sequences vs 3D Multi-Channel Image Volumes
-
-### 1. The Engineering Problem & Intuition
-Real-world perceptual inputs rarely conform to single 2D matrices:
-- Sequential data (audio waveforms, text token sequences) exists in 1D.
-- Color images possess 3 spectral channels: Red, Green, and Blue (RGB).
-- Latent representations in intermediate CNN layers span dozens or hundreds of stacked feature channels ($D_1$).
-
-How must convolution operate when the input has volume ($W_1 \times H_1 \times D_1$)? If we applied independent 2D filters separately to each channel, we would produce multiple disconnected outputs without fusing cross-channel relationships (e.g., combining red and green edge cues). The convolution operator must natively process 3D volumes.
-
-### 2. Technical Mechanism & Architecture
-
-```mermaid
-flowchart LR
-    subgraph InputVol["Input Tensor Volume"]
-        direction TB
-        IN["Dimensions: W1 x H1 x D1 (e.g., 227 x 227 x 3)"]
-    end
-
-    subgraph FilterBank["Filter Bank (K Filters)"]
-        direction TB
-        FB["Each Filter: F x F x D1 (Depth MUST equal D1)"]
-    end
-
-    subgraph OutputVol["Output Tensor Volume"]
-        direction TB
-        OUT["Dimensions: W2 x H2 x D2 (Where D2 = K)"]
-    end
-
-    InputVol -->|"3D Inner Product along H and W"| OutputVol
-    FilterBank -->|"Each filter yields 1 channel slice"| OutputVol
-```
-
-#### Dimensionality Hierarchy (Slides 38–52)
-1. **1D Convolution (Slides 38–42):** A 1D kernel slides along a single vector dimension (e.g., an input array $[A, B, C, B, C, A, B]$ convolved with a 1D filter of length 3).
-2. **3D Volume Convolution (Slides 43–52):**
-   - **Input:** Tensor of shape $W_1 \times H_1 \times D_1$.
-   - **Filter Shape:** Every individual filter is a 3D volume of size $F \times F \times D_1$.
-   - **The Inviolable Depth Rule:** The depth of every convolutional kernel must strictly equal the depth of the input volume ($D_{\text{filter}} \equiv D_1$).
-   - **Movement Dynamics:** The 3D filter slides along the horizontal ($W$) and vertical ($H$) spatial axes **only**. It does **not** slide along the depth axis.
-   - **3D Dot Product:** At each spatial position $(x, y)$, the filter multiplies all $F \times F \times D_1$ weights against all overlapping $F \times F \times D_1$ input values. These products are summed into a single scalar value:
-
-```math
-\text{Scalar at } (x, y) = b + \sum_{c=1}^{D_1} \sum_{m=0}^{F-1} \sum_{n=0}^{F-1} I(x + m, y + n, c) \cdot K(m, n, c)
-```
-
-   - **Output Dimensionality:** Because the filter spans the full input depth, **one 3D filter produces one 2D spatial feature map slice** ($W_2 \times H_2 \times 1$).
-   - **Forming Multi-Channel Outputs:** To produce an output volume with depth $D_2$, we apply a bank of $K$ distinct 3D filters. The resulting 2D slices are stacked along the depth axis: $D_2 = K$.
-
-### 3. Visual Anchor
-
-![Volume convolution: each filter spans the full input depth](figures/cnn/l12_06_volume_conv.jpg)
-*Figure: Volume convolution: each F x F x D1 filter spans the full depth of the input and gives one 2D slice; K filters give an output of depth K (illustration, after Slide 43).*
-
-### 4. Verified Formulas, Trade-offs & Calculations
-
-#### Multi-Channel Convolution Formulation
-For an input volume $I \in \mathbb{R}^{W_1 \times H_1 \times D_1}$ and a set of $K$ filters $\lbrace K_1, K_2, \dots, K_K \rbrace$ where each $K_k \in \mathbb{R}^{F \times F \times D_1}$ with scalar bias $b_k$:
-
-```math
-O(i, j, k) = b_k + \sum_{c=1}^{D_1} \sum_{m=0}^{F-1} \sum_{n=0}^{F-1} I(i + m, j + n, c) \cdot K_k(m, n, c)
-```
-
-*Plain reading:* The output activation at spatial coordinate $(i, j)$ in channel slice $k$ is obtained by taking the sum of products across all spatial taps $(m, n)$ and all input channels $c$, plus the filter's scalar bias $b_k$.
-
-#### Parameter Budget for Multi-Channel Layers
-For a layer with $K$ filters of spatial extent $F \times F$ processing an input volume of depth $D_1$:
-- Weights per filter: $F \times F \times D_1$
-- Biases per filter: $1$
-- Total learnable parameters:
-
-```math
-\text{Total Parameters} = K \cdot (F^2 \cdot D_1 + 1)
-```
-
-- Total parameters without bias: $K \cdot F^2 \cdot D_1$.
-
----
-
-## 5. Output Spatial Dimensions & Strided Convolutions
-
-### 1. The Engineering Problem & Intuition
-When deploying convolutional neural networks, we must compute the exact spatial geometry of the output tensor produced by every layer. If the spatial footprint cannot be predicted analytically, downstream layers cannot be configured. Furthermore, we need a mechanism to systematically control spatial downsampling: sliding the kernel by 1 pixel preserves fine spatial resolution but is computationally intensive, whereas advancing by multiple pixels skips intermediate positions, rapidly reducing feature map size.
-
-### 2. Technical Mechanism & Architecture
-
-```mermaid
-flowchart TD
-    subgraph StrideMechanics["Stride Parameter (S)"]
-        direction TB
-        S1["S = 1: Dense sampling (advances 1 pixel per step)"]
-        S2["S = 2: Subsampling (advances 2 pixels, skips every 2nd pixel)"]
-        S3["S > 2: Aggressive spatial decimation"]
-    end
-
-    subgraph Derivation["Spatial Dimension Derivation"]
-        direction TB
-        D1["Total padded span: W1 + 2P"]
-        D2["Effective kernel travel distance: (W1 + 2P) - F"]
-        D3["Discrete strides possible: floor((W1 + 2P - F) / S)"]
-        D4["Total output positions (+ initial step): floor((W1 + 2P - F) / S) + 1"]
-    end
-
-    StrideMechanics --> Derivation
-```
-
-#### Step-by-Step Derivation of Output Spatial Dimensions
-1. **Total Padded Width:** The input width $W_1$ is padded with $P$ zeros on both the left and right borders, yielding a total available span of $W_1 + 2P$.
-2. **Kernel Footprint:** The filter occupies $F$ contiguous pixels. When the filter is placed at the far left ($x = 0$), its trailing edge reaches index $F - 1$.
-3. **Maximum Shifting Distance:** The kernel can shift across the remaining distance before its right edge crosses the boundary:
-
-```math
-\Delta_{\text{max}} = (W_1 + 2P) - F
-```
-
-4. **Step Discretization via Stride** ($S$): The filter advances in discrete increments of $S$ pixels. The number of non-overlapping jumps it can execute is:
-
-```math
-\text{Steps} = \left\lfloor \frac{W_1 - F + 2P}{S} \right\rfloor
-```
-
-5. **Initial Position Offset:** Accounting for the initial starting placement at step 0, the total count of valid output coordinates is:
-
-```math
-W_2 = \left\lfloor \frac{W_1 - F + 2P}{S} \right\rfloor + 1
-```
-
-### 3. Visual Anchor
-
-![Stride 1 vs stride 2 on a 7-pixel row](figures/cnn/l12_08_stride.jpg)
-*Figure: Stride on a 7-pixel row with a 3-wide window: S = 1 gives 5 window positions, S = 2 gives 3, matching W2 = floor((W1 - F + 2P) / S) + 1 (drawn with Python for exact counts).*
-
-### 4. Verified Formulas, Trade-offs & Calculations
-
-#### General Spatial Dimension Equations
-For any convolutional layer parameterized by filter extent $F$, padding $P$, stride $S$, and filter count $K$:
-
-```math
-W_2 = \left\lfloor \frac{W_1 - F + 2P}{S} \right\rfloor + 1
-```
-
-```math
-H_2 = \left\lfloor \frac{H_1 - F + 2P}{S} \right\rfloor + 1
-```
-
-```math
-D_2 = K
-```
-
-*Plain reading:* The output spatial dimension equals the floor of the quotient of total available shifting distance divided by the stride, plus one; the output depth is strictly determined by the number of filters.
-
-#### Evolution Across Slide Deck Variations
-- **Slide 69 (Unpadded, Unit Stride):**
+**The output size.** With no padding and a step of 1, the output size is (Slide 69):
 
 ```math
 W_2 = W_1 - F + 1, \quad H_2 = H_1 - F + 1
 ```
 
-- **Slide 74 (Padded, Unit Stride):**
+Here $W_1$ and $H_1$ are the width and height of the input. $F$ is the size of the kernel. $W_2$ and $H_2$ are the width and height of the output. The formula counts how many places the kernel can sit along each side.
+
+Check with the walk-through ($W_1 = 4$, $H_1 = 3$, $F = 2$):
+
+- Width: $W_2 = 4 - 2 + 1 = 3$
+- Height: $H_2 = 3 - 2 + 1 = 2$
+
+The feature map is 2×3, as on Slide 9. To get a feature map of the same size as the image, Slide 9 adds one extra row and one extra column to the image. This is called **padding**, and Section 2 explains it.
+
+---
+
+## 2. Padding: keeping the edges and the size
+
+### 2.1 The Problem & Intuition
+
+The kernel must fit inside the image. So it cannot be centred on a corner or border pixel. Part of it would cross the input boundary (Slides 61–62). Two things go wrong:
+
+- The output is smaller than the input.
+- Features near the edges are used less, so the network can miss them.
+
+A bigger kernel makes this worse. With a 5×5 kernel, even more pixels cannot be used as a centre (Slides 63–68).
+
+**Padding** fixes this. It adds extra pixels, usually zeros, around the edges of the input before the convolution (Slide 11). Now the kernel can also sit on the corners.
+
+### 2.2 Mechanism & Architecture
+
+Padding lets us control the output size and keep important features at the edges (Slide 11). The right type depends on the network and the task. There are two types (Slide 10).
+
+1. **Valid padding.** No padding is applied. The kernel is used only at valid positions, where it fits inside the input. Effect: the output gets smaller. A 5×5 input with a 3×3 kernel gives a 3×3 output.
+2. **Same padding.** Enough zeros are added around the input so that the output has the same size as the input. Effect: the size is kept. A 5×5 input with a 3×3 kernel gives a 5×5 output.
+
+If the top-left pixel is the pixel of interest, the filter must be centred on it. Then padding is necessary (Slide 10).
+
+**When padding is required (Slide 12):**
+
+1. **Preserving dimensions.** We want the output size to match the input size. This matters in tasks like segmentation, and when we stack many convolution layers.
+2. **Edge features.** We want to capture features near the edges. Without padding, convolutions near the edges can miss relevant information.
+3. **Reducing spatial shrinkage.** In deeper networks, each convolution without padding makes the map smaller. After many layers the map is too small to hold a meaningful representation.
+4. **Improving network performance.** Padding gives more context around the edges. This can help to stabilize learning and improve the overall performance of the model.
+
+**How to pad (Slides 72–73).** Pad the input with the right number of 0 inputs, so you can apply the kernel at the corners. With pad $P = 1$ and a 3×3 kernel, add one row of zeros at the top and one at the bottom. Also add one column of zeros at the left and one at the right. On Slide 73 a 7×7 input becomes a 9×9 grid.
+
+### 2.3 Visual Anchor
+
+![Valid vs same padding on a 5x5 input](figures/cnn/l12_03_padding.jpg)
+*Figure: Valid (P = 0): a 3x3 window fits in 3x3 positions of the 5x5 input, so the output is 3x3. Same (P = 1): one ring of zeros makes a 7x7 grid, the window can sit on every original pixel, and the output stays 5x5 (illustration).*
+
+### 2.4 Verified Formulas, Trade-offs & Calculations
+
+With padding $P$ and a step of 1 (Slide 74):
 
 ```math
 W_2 = W_1 - F + 2P + 1, \quad H_2 = H_1 - F + 2P + 1
 ```
 
-- **Slide 78** (Padded, Arbitrary Stride $S$):
+$P$ is the number of rows or columns of zeros added on each side. Padding adds $P$ on both sides, so the input grows by $2P$. The formula again counts the places where the kernel fits.
 
-```math
-W_2 = \left\lfloor \frac{W_1 - F + 2P}{S} \right\rfloor + 1, \quad H_2 = \left\lfloor \frac{H_1 - F + 2P}{S} \right\rfloor + 1
-```
+Check with the numbers of Slide 10 (input 5×5, kernel 3×3):
+
+- Valid padding, $P = 0$: $W_2 = 5 - 3 + 0 + 1 = 3$. The output is 3×3.
+- Same padding, $P = 1$: $W_2 = 5 - 3 + 2 + 1 = 5$. The output is 5×5.
+
+Check with Slide 73 (input 7×7, kernel 3×3, $P = 1$): $W_2 = 7 - 3 + 2 + 1 = 7$. The size is kept.
+
+> **Background (not in the slides):** Put $W_2 = W_1$ in the formula and you get $P = (F - 1)/2$. A 3×3 kernel needs $P = 1$, as the slides use.
 
 ---
 
-## 6. Audited Numerical Case Studies: AlexNet Conv1 & LeNet-5 Conv1
+## 3. Kernels made by hand
 
-### 1. The Engineering Problem & Intuition
-In competitive examinations and engineering deployments, volume sizing and parameter budgeting must be calculated flawlessly. The first convolutional layers of AlexNet (2012) and LeNet-5 (1998) serve as canonical benchmarks for multi-channel RGB strided convolution and single-channel grayscale unit-stride convolution, respectively.
+### 3.1 The Problem & Intuition
 
-### 2. Technical Mechanism & Architecture
+Different kernels do different jobs. One kernel finds edges. Another blurs the image. Another makes it sharper. The numbers inside the kernel decide the job. This section lists the kernel types from the slides. Section 7 shows that a CNN does not use these fixed kernels. It learns its own.
 
-#### Case Study A: AlexNet First Convolutional Layer (Slides 79–80)
-- **Input Volume:** $227 \times 227 \times 3$ (ImageNet RGB image: $W_1 = 227, H_1 = 227, D_1 = 3$).
-- **Layer Hyperparameters:**
-  - Spatial filter size: $F = 11$
-  - Number of filters: $K = 96$
-  - Stride: $S = 4$
-  - Padding: $P = 0$ (Valid padding)
-- **Output Volume Calculation:**
+### 3.2 Mechanism & Architecture
+
+**What every kernel has (Slides 13–14).** A kernel, also called a filter, is a small matrix. It scans over the input to detect features.
+
+- **Size.** Kernels are usually smaller than the input. Common sizes are 3×3, 5×5 or 7×7 pixels.
+- **Feature detection.** Different kernels can be trained to detect different features, such as edges, textures or patterns. Early layers in a CNN learn simple features. Deeper layers learn more complex representations.
+- **Stride.** How many pixels the kernel moves after each operation. A larger stride gives a smaller output.
+- **Padding.** Zeros added around the input to control the output size. It keeps the dimensions and stops the loss of information at the borders.
+- **Multiple kernels.** Each convolutional layer can have many kernels. So the layer can learn many features from the input.
+
+Kernels are how a CNN processes data. They let it learn hierarchical representations, which means simple features first and complex ones built on top.
+
+#### Type 1: Edge detection kernels (Slides 15–17)
+
+The **Sobel kernel** detects edges in the horizontal and vertical directions. It computes gradients in these two directions (Slide 15). A **gradient** is how fast the brightness changes from one pixel to the next.
+
+```math
+\text{Horizontal: } \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix}, \quad \text{Vertical: } \begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}
+```
+
+The **Canny edge detector** does not rely on a single kernel like the Sobel operator (Slide 16). It is a multi-stage algorithm that detects edges more robustly. It uses a series of steps:
+
+1. **Gaussian filter for smoothing.** This blurs the image a little to reduce noise before edge detection.
+2. **Gradient computation.** After smoothing, the gradient is calculated using derivative kernels. These can be similar to the Sobel kernels. The slides show the same two matrices as above for the horizontal and vertical gradient (Slide 17).
+3. **Non-maximum suppression.** Keep a pixel only if it is the strongest along the direction of its gradient. This makes the edges thin.
+4. **Hysteresis thresholding.** Use two limits, a high one and a low one. Strong edge pixels are kept. Weak ones are kept only if they touch a strong one.
+
+In summary, Canny does not use one kernel. It uses Gaussian smoothing and gradient kernels to identify edges (Slide 17).
+
+![Canny edge detection pipeline](figures/cnn/l12_04_canny.jpg)
+*Figure: The Canny steps on one image: smoothing, Sobel gradients, non-maximum suppression, hysteresis thresholds, final edge map (illustration).*
+
+#### Type 2: Blurring kernels (Slides 18–21)
+
+Examples are the Gaussian kernel and the average (mean) kernel.
+
+**Gaussian kernel.** A filter for smoothing or blurring images. It applies the Gaussian function. It reduces noise and detail by averaging pixel values. Pixels near the central pixel count more than pixels far away. The Gaussian function is (Slide 18):
+
+```math
+G(x, y) = \frac{1}{2\pi \sigma^2} e^{-\frac{x^2 + y^2}{2\sigma^2}}
+```
+
+Here $x$ and $y$ are the distances from the central pixel. $\sigma$ (sigma) controls the width of the Gaussian curve. A larger sigma gives more blurring. A smaller sigma keeps more detail. The formula gives a large weight near the centre and a small weight far from it.
+
+**Kernel size.** The kernel is a square matrix, such as 3×3, 5×5 or 7×7, derived from the Gaussian function. The size is often odd, so that there is a centre pixel.
+
+The normalized 3×3 and 5×5 Gaussian kernels are (Slide 19):
+
+```math
+\frac{1}{16} \begin{bmatrix} 1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 1 \end{bmatrix}, \quad \frac{1}{256} \begin{bmatrix} 1 & 4 & 6 & 4 & 1 \\ 4 & 16 & 24 & 16 & 4 \\ 6 & 24 & 36 & 24 & 6 \\ 4 & 16 & 24 & 16 & 4 \\ 1 & 4 & 6 & 4 & 1 \end{bmatrix}
+```
+
+**Average kernel.** Also called a **box filter** or **mean filter** (Slide 20). It is a simple smoothing technique. It replaces each pixel's value with the average of the pixel values in its neighborhood. This gives a blur effect and reduces noise.
+
+- **Kernel size.** Commonly 3×3, 5×5 or 7×7. The size sets the area over which the averaging is done.
+- **Normalization.** The values in the kernel are equal and sum to 1. So the output image has a similar brightness to the input image.
+
+```math
+\frac{1}{9} \begin{bmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{bmatrix}, \quad \frac{1}{25} \begin{bmatrix} 1 & 1 & 1 & 1 & 1 \\ 1 & 1 & 1 & 1 & 1 \\ 1 & 1 & 1 & 1 & 1 \\ 1 & 1 & 1 & 1 & 1 \\ 1 & 1 & 1 & 1 & 1 \end{bmatrix}
+```
+
+> **Slide note (Slide 21):** The slide title is "Blurring Kernels: Average Kernel". But its text labels the two matrices "A 3 × 3 Gaussian Kernel" and "A 5 × 5 Gaussian Kernel". The matrices have equal values (1/9 and 1/25), so they are average kernels. The Gaussian kernels are the ones on Slide 19.
+
+#### Type 3: Sharpening kernels (Slides 22–26)
+
+A **sharpening kernel** enhances the edges and fine details in an image. It emphasizes the differences between adjacent pixel values. This makes the image appear sharper.
+
+Applications (Slide 22):
+
+1. **Detail enhancement.** Emphasizing edges and textures in images.
+2. **Image preprocessing.** Often applied before other processing tasks to improve feature detection.
+3. **Artistic effects.** A stylized look, made by enhancing outlines and details.
+
+The most common sharpening kernels are the Laplacian kernel and the unsharp mask kernel.
+
+**Laplacian kernel (Slides 23–24).** The gradient is the first derivative. The **second derivative** measures the rate of change of the gradient. In an image, a large second derivative means a rapid change in intensity. That is an edge. The Laplacian operator calculates the second derivative in both the x and y directions. When applied to an image, it finds the regions where the intensity changes sharply. The Laplacian of an image $I(x, y)$ is (Slide 23):
+
+```math
+\nabla^2 I = \frac{\partial^2 I}{\partial x^2} + \frac{\partial^2 I}{\partial y^2}
+```
+
+Here $\nabla^2$ is the Laplacian operator. The first term is the second derivative along x. The second term is the second derivative along y. The formula adds the two.
+
+A typical 3×3 Laplacian kernel is (Slide 24):
+
+```math
+\begin{bmatrix} 0 & -1 & 0 \\ -1 & 4 & -1 \\ 0 & -1 & 0 \end{bmatrix}
+```
+
+This kernel subtracts the average of the neighboring pixels from the center pixel. The result highlights edges and suppresses flat regions. The result can be combined with the original image for further enhancement. This technique is often used in unsharp masking.
+
+**Unsharp mask kernel (Slide 25).** Unsharp masking has three steps:
+
+1. **Gaussian blur.** Blur the original image. This reduces noise and fine details.
+2. **Difference calculation.** Subtract the blurred image from the original image. This highlights the edges.
+3. **Combination.** Add the result back to the original image. A scaling factor controls the degree of sharpening.
+
+A common kernel for this technique is:
+
+```math
+\begin{bmatrix} 0 & -1 & 0 \\ -1 & 5 & -1 \\ 0 & -1 & 0 \end{bmatrix}
+```
+
+It is a weighted average where the center pixel gets more weight than its neighbors.
+
+**Difference between the two (Slide 26):**
+
+| | Laplacian kernel | Unsharp mask kernel |
+| :--- | :--- | :--- |
+| Center value | 4 | 5, so more emphasis on the center pixel |
+| How it works | Detects edges from the rate of change. It focuses on curvature, not on enhancing pixel values. | Combines the original pixel value and its neighbors. This sharpens the image. |
+| Second derivative? | Yes | No. It accentuates edges by emphasizing differences in pixel intensity. |
+
+Both are used for edge detection and enhancement, but they work on different principles.
+
+**Three kernels on one photo (Slides 29–31).** The slides apply three kernels to the same photo:
+
+- Slide 29: the 3×3 average kernel (all values 1/9). It blurs the image.
+- Slide 30: the unsharp mask kernel (center 5). It sharpens the image.
+- Slide 31: the kernel below, with center −8. It detects the edges.
+
+```math
+\begin{bmatrix} 1 & 1 & 1 \\ 1 & -8 & 1 \\ 1 & 1 & 1 \end{bmatrix}
+```
+
+- It can be used for edge detection and sharpening. Its form is similar to a **high-pass filter**.
+- **Edge detection.** The kernel weighs the center pixel against its surrounding pixels. The negative center value highlights areas with a large change in intensity.
+- **High-pass filter.** It takes the difference between the center pixel and a weighted average of its neighbors. This removes low-frequency components (smooth areas). It enhances high-frequency components (edges).
+- **Sharpening effect.** When convolved with an image, it makes edges more pronounced.
+
+![Fig 1 – Slide 31 photo before and after the kernel with center -8 (media/image27.png)](extracted_ML_Lec_12_CNN/media/image27.png)
+
+#### Type 4: Embeddings kernels (Slide 27)
+
+These are **feature extraction kernels**. In CNNs, they are learned during training. They can capture complex features at various levels of abstraction, such as edges, textures and shapes.
+
+#### Type 5: Dilated kernels (Slides 27–28)
+
+A **dilated kernel** has gaps between its elements. It is also called an **atrous convolution** kernel. The **receptive field** is the area of the input that the kernel sees. A dilated kernel makes the receptive field bigger. It does not add parameters or computation. So the network captures a larger context and keeps the spatial resolution.
+
+- **Dilation rate.** A rate of 2 means there is one pixel of space between the kernel elements. This holds in both the horizontal and vertical directions.
+
+Slide 28 shows a standard 3×3 kernel and a dilated 3×3 kernel with dilation rate 2. The zeros are the gaps:
+
+```math
+\text{Standard: } \begin{bmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{bmatrix}, \quad \text{Dilated, rate 2: } \begin{bmatrix} 1 & 0 & 1 \\ 0 & 0 & 0 \\ 1 & 0 & 1 \end{bmatrix}
+```
+
+- **Application.** The dilated kernel covers a larger area of the input. The output still has the same size as with a regular convolutional layer. This is useful for tasks like segmentation and dense prediction.
+
+Benefits:
+
+1. **Larger receptive field.** The network captures wider context without downsampling.
+2. **Preserves spatial resolution.** Useful where the original resolution matters, as in semantic segmentation.
+
+![Dilation rate 1 vs 2 on a 3x3 kernel](figures/cnn/l12_07_dilated.jpg)
+*Figure: Dilation with all 9 weights kept. They cover a 3x3 area at rate 1 and a 5x5 area at rate 2, with one skipped pixel between elements (illustration, not from the slides).*
+
+#### Type 6: Custom kernels (Slide 28)
+
+Users can design their own kernels for specific tasks or datasets. Examples are kernels that detect specific patterns, textures or other features relevant to their application.
+
+### 3.3 Visual Anchor
+
+The figures above carry this section: the Canny steps, the Slide 31 photo and the dilated kernel.
+
+### 3.4 Verified Formulas, Trade-offs & Calculations
+
+Add up the numbers in each kernel. The sum tells you what the kernel does to a flat area, where all pixels are equal.
+
+| Kernel | Sum of its numbers | Effect on a flat area |
+| :--- | :--- | :--- |
+| Sobel, horizontal or vertical | $-1 - 2 - 1 + 1 + 2 + 1 = 0$ | Output is 0. Only changes show up. |
+| Gaussian 3×3 | $16 / 16 = 1$ | Brightness is kept. |
+| Gaussian 5×5 | $256 / 256 = 1$ | Brightness is kept. |
+| Average 3×3 | $9 / 9 = 1$ | Brightness is kept. |
+| Average 5×5 | $25 / 25 = 1$ | Brightness is kept. |
+| Laplacian | $4 - 4 = 0$ | Output is 0. Flat regions are suppressed. |
+| Unsharp mask | $5 - 4 = 1$ | Brightness is kept, edges are stronger. |
+| Slide 31 kernel | $8 - 8 = 0$ | Output is 0. Smooth areas are removed. |
+
+This matches the slides. Blurring kernels "sum to 1" so the brightness stays similar (Slide 20). The Laplacian suppresses flat regions (Slide 24).
+
+Dilation check for the figure: a 3×3 kernel has 3 elements in a row. With rate 2 there is one gap between each pair, so 2 gaps. The row covers $3 + 2 = 5$ pixels. So 9 weights cover a 5×5 area. In the matrix on Slide 28 the same rule shows as 1, 0, 1: two elements with one gap between them.
+
+---
+
+## 4. Convolution in 1D and on 3D inputs
+
+### 4.1 The Problem & Intuition
+
+Not all inputs are flat 2D grids. Some data is a single row of values. A colour image has three layers: red, green and blue. So we need convolution for 1D inputs and for 3D inputs. The idea stays the same: slide a filter and take one value at each step.
+
+### 4.2 Mechanism & Architecture
+
+**1D convolution (Slides 38–42).** In the 1D case, we slide a one dimensional filter over a one dimensional input. The slides use the input row A, B, C, B, C, A, B. The filter moves along the row one step at a time.
+
+**Convolution on a 3D input (Slides 43–48).** What would a 3D filter look like?
+
+1. The filter is also 3D. We call it a **volume**.
+2. We slide the volume over the 3D input and compute the convolution operation.
+3. The filter moves along the height and the width. It does not move along the depth.
+4. So in effect we are doing a 2D convolution on a 3D input.
+5. As a result the output is 2D. It has only width and height, no depth.
+6. We can apply many filters to get many feature maps.
+
+**The names of the sizes (Slides 49–52):**
+
+- $W_1$, $H_1$, $D_1$: the width, height and depth of the original input.
+- $K$: the number of filters.
+- $F$: the spatial extent of each filter. This is its width and height.
+- The depth of each filter is the same as the depth of the input.
+- So an RGB image is $W_1 \times H_1 \times D_1$ and a kernel is $F \times F \times D_1$.
+- The output is $W_2 \times H_2 \times D_2$. Section 5 gives the formula.
+
+### 4.3 Visual Anchor
+
+![Volume convolution: each filter spans the full input depth](figures/cnn/l12_06_volume_conv.jpg)
+*Figure: Each F x F x D1 filter covers the full depth of the input and gives one 2D map. K filters give an output of depth K (illustration, after Slide 43).*
+
+### 4.4 Verified Formulas, Trade-offs & Calculations
+
+Each filter gives one 2D feature map. With $K$ filters we stack $K$ maps. So the depth of the output equals the number of filters:
+
+```math
+D_2 = K
+```
+
+Check with Slide 79: the layer has 96 filters, so the output depth is 96. Check with Slide 81: 6 filters give depth 6. Section 6 works both examples in full.
+
+---
+
+## 5. Output size and stride
+
+### 5.1 The Problem & Intuition
+
+Before we build a network, we must know the size of each layer's output. The next layer needs that size. The output size depends on four things: the input size, the kernel size, the padding and the stride. This section builds one formula from them.
+
+### 5.2 Mechanism & Architecture
+
+The slides build the formula in three steps.
+
+**Step 1: no padding (Slides 53–69).** We cannot place the kernel at the corners, because it would cross the input boundary. This is true for all the border pixels. So the output is smaller than the input. As the kernel gets bigger, this is true for even more pixels. In general:
+
+```math
+W_2 = W_1 - F + 1, \quad H_2 = H_1 - F + 1
+```
+
+**Step 2: add padding (Slides 70–74).** What if we want the output to be the same size as the input? We use padding (Section 2). With pad $P$:
+
+```math
+W_2 = W_1 - F + 2P + 1, \quad H_2 = H_1 - F + 2P + 1
+```
+
+**Step 3: add stride (Slides 75–78).** The **stride** $S$ is how many pixels the kernel moves after each operation. It defines the intervals at which the filter is applied. $S = 2$ means the kernel moves 2 pixels each time. In effect we skip every 2nd pixel. This again gives a smaller output. A larger stride gives a smaller output size.
+
+### 5.3 Visual Anchor
+
+![Stride 1 vs stride 2 on a 7-pixel row](figures/cnn/l12_08_stride.jpg)
+*Figure: Stride on a 7-pixel row with a 3-wide window. S = 1 gives 5 window positions. S = 2 gives 3. Both match the formula below (drawn with Python for exact counts).*
+
+### 5.4 Verified Formulas, Trade-offs & Calculations
+
+The full formula (Slide 78):
+
+```math
+W_2 = \frac{W_1 - F + 2P}{S} + 1, \quad H_2 = \frac{H_1 - F + 2P}{S} + 1
+```
+
+- $W_1$, $H_1$: width and height of the input.
+- $F$: size of the kernel.
+- $P$: padding on each side.
+- $S$: stride.
+- $W_2$, $H_2$: width and height of the output.
+
+In plain words: take the room the kernel has to move in, divide it by the step size, and add 1 for the starting position.
+
+The output size must be a whole number. So we usually **floor** the result, which means we round it down (Slide 78).
+
+Checks with the figure (row of 7, window of 3, no padding):
+
+- $S = 1$: $(7 - 3 + 0)/1 + 1 = 5$
+- $S = 2$: $(7 - 3 + 0)/2 + 1 = 3$
+
+Check with the padded grid of Slides 75–77 (7×7 input, 3×3 kernel, $P = 1$, $S = 2$): $(7 - 3 + 2)/2 + 1 = 4$. The output is 4×4. With $S = 1$ it was 7×7, so the stride made it smaller.
+
+An example where the floor matters: input 8, kernel 3, $P = 0$, $S = 2$. The division gives $5/2 = 2.5$. Round down to 2, then add 1. The output is 3.
+
+---
+
+## 6. Two worked examples
+
+### 6.1 The Problem & Intuition
+
+The slides ask two questions (Slides 79–82). Each gives an input volume and a set of filters. You must find $W_2$, $H_2$ and $D_2$. These are good practice for the formula of Section 5.
+
+### 6.2 Mechanism & Architecture
+
+Use the same three steps each time:
+
+1. Read $W_1$, $H_1$, $D_1$, $F$, $K$, $S$ and $P$ from the question.
+2. Put them into the formula for $W_2$ and $H_2$.
+3. Set $D_2 = K$.
+
+### 6.3 Visual Anchor
+
+![Fig 2 – Example A: 227x227x3 input, 96 filters of 11x11x3, stride 4, padding 0 (media/image48.png)](extracted_ML_Lec_12_CNN/media/image48.png)
+
+![Fig 3 – Example B: 32x32x1 input, 6 filters of 5x5x1, stride 1, padding 0 (media/image50.png)](extracted_ML_Lec_12_CNN/media/image50.png)
+
+### 6.4 Verified Formulas, Trade-offs & Calculations
+
+**Example A (Slides 79–80).** Input 227×227×3. 96 filters of size 11×11×3. Stride 4. Padding 0.
 
 ```math
 W_2 = \frac{227 - 11 + 2(0)}{4} + 1 = \frac{216}{4} + 1 = 54 + 1 = 55
 ```
 
-```math
-H_2 = \frac{227 - 11 + 2(0)}{4} + 1 = \frac{216}{4} + 1 = 54 + 1 = 55
-```
+$H_2$ is the same, because the input is square: $H_2 = 55$. The depth is $D_2 = K = 96$. The output is **55×55×96**.
+
+**Example B (Slides 81–82).** Input 32×32×1. 6 filters of size 5×5×1. Stride 1. Padding 0.
 
 ```math
-D_2 = K = 96 \implies \text{Output Tensor Dimensions} = 55 \times 55 \times 96
+W_2 = \frac{32 - 5 + 2(0)}{1} + 1 = 27 + 1 = 28
 ```
 
-#### Case Study B: LeNet-5 First Convolutional Layer (Slides 81–82)
-- **Input Volume:** $32 \times 32 \times 1$ (Grayscale digit image: $W_1 = 32, H_1 = 32, D_1 = 1$).
-- **Layer Hyperparameters:**
-  - Spatial filter size: $F = 5$
-  - Number of filters: $K = 6$
-  - Stride: $S = 1$
-  - Padding: $P = 0$ (Valid padding)
-- **Output Volume Calculation:**
+$H_2 = 28$ as well. The depth is $D_2 = K = 6$. The output is **28×28×6**.
 
-```math
-W_2 = \frac{32 - 5 + 2(0)}{1} + 1 = \frac{27}{1} + 1 = 27 + 1 = 28
-```
+| | Input | Filter | $K$ | $S$ | $P$ | Output |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| Example A | 227×227×3 | 11×11×3 | 96 | 4 | 0 | 55×55×96 |
+| Example B | 32×32×1 | 5×5×1 | 6 | 1 | 0 | 28×28×6 |
 
-```math
-H_2 = \frac{32 - 5 + 2(0)}{1} + 1 = \frac{27}{1} + 1 = 28
-```
-
-```math
-D_2 = K = 6 \implies \text{Output Tensor Dimensions} = 28 \times 28 \times 6
-```
-
-### 3. Visual Anchor
-
-![Fig 3 – AlexNet Conv1 tensor mapping: 227x227x3 convolved with 96 filters (11x11x3, S=4, P=0) yielding 55x55x96 (media/image48.png)](extracted_ML_Lec_12_CNN/media/image48.png)
-
-![Fig 4 – LeNet-5 Conv1 tensor mapping: 32x32x1 convolved with 6 filters (5x5x1, S=1, P=0) yielding 28x28x6 (media/image50.png)](extracted_ML_Lec_12_CNN/media/image50.png)
-
-### 4. Verified Formulas, Trade-offs & Calculations
-
-#### Parameter & Volume Comparison Table
-
-| Architecture | Input Shape ($W_1 \times H_1 \times D_1$) | Filter Extent ($F \times F \times D_1$) | Filters ($K$) | Stride ($S$) | Padding ($P$) | Output Volume ($W_2 \times H_2 \times D_2$) | Weights Only: $K \cdot F^2 \cdot D_1$ | Total Params with Bias: $K \cdot (F^2 D_1 + 1)$ |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **AlexNet Conv1** | $227 \times 227 \times 3$ | $11 \times 11 \times 3$ | $96$ | $4$ | $0$ | $55 \times 55 \times 96$ | $96 \times 363 = 34,848$ | $96 \times 364 = \mathbf{34,944}$ |
-| **LeNet-5 Conv1** | $32 \times 32 \times 1$ | $5 \times 5 \times 1$ | $6$ | $1$ | $0$ | $28 \times 28 \times 6$ | $6 \times 25 = 150$ | $6 \times 26 = \mathbf{156}$ |
-
-#### Audited Calculation Proofs
-1. **AlexNet Conv1:**
-   - Single filter weight count: $11 \times 11 \times 3 = 363$ weights.
-   - Adding 1 scalar bias per filter: $363 + 1 = 364$ parameters per filter.
-   - Layer total: $96 \times 364 = 34,944$ learnable parameters.
-   - Activations produced: $55 \times 55 \times 96 = 290,400$ scalar outputs.
-2. **LeNet-5 Conv1:**
-   - Single filter weight count: $5 \times 5 \times 1 = 25$ weights.
-   - Adding 1 scalar bias per filter: $25 + 1 = 26$ parameters per filter.
-   - Layer total: $6 \times 26 = 156$ learnable parameters.
-   - Activations produced: $28 \times 28 \times 6 = 4,704$ scalar outputs.
+In both examples the filter depth equals the input depth (3 and 1), as Section 4 requires.
 
 ---
 
-## 7. CNN Representation Learning Philosophy & Inductive Biases vs. Dense ANNs
+## 7. How a CNN learns its kernels
 
-### 1. The Engineering Problem & Intuition
-Why cannot standard fully connected Multi-Layer Perceptrons (MLPs / ANNs) scale to computer vision?
-1. **Parameter Explosion:** In a fully connected layer, every input unit connects to every hidden neuron. Consider an ImageNet photograph ($1000 \times 1000 \times 3 = 3,000,000$ inputs). Connecting this image to a modest hidden layer of 1,000 neurons requires:
+### 7.1 The Problem & Intuition
 
-```math
-3 \times 10^6 \times 10^3 = 3 \times 10^9 \text{ weights (3 billion parameters)}
-```
+The kernels of Section 3 were designed by people. A CNN does something better. It treats the kernel numbers as unknowns and learns them from data. This section also explains why a CNN needs far fewer weights than a regular network. Two ideas do this: **sparsity of connections** and **weight sharing**.
 
-   This causes catastrophic overfitting and makes hardware memory allocation impossible.
-2. **Destruction of 2D Topology:** An MLP requires flattening the 2D grid into a 1D vector. This strips all spatial locality: pixel $(1, 2)$ is treated as having no closer relationship to $(1, 3)$ than to $(1000, 1000)$.
-3. **Lack of Translation Equivariance:** If an object shifts by 3 pixels to the right, a fully connected network activates completely different weight pathways. It must re-learn the appearance of objects at every individual pixel coordinate across the entire canvas.
+### 7.2 Mechanism & Architecture
 
-### 2. Technical Mechanism & Architecture
+**From fixed features to learned features (Slides 83–85).** The slides use one task: decide if a photo shows a car, a bus, a monument or a flower. The part that decides is the **classifier**. They show four ways to feed it.
 
-#### Core Inductive Biases of CNNs (Slides 87–90)
-CNNs replace unrestricted dense matrix multiplication with two spatial inductive biases:
-1. **Sparsity of Connections (Local Receptive Fields):** Rather than connecting to the entire input space, each hidden unit connects only to a localized spatial subgrid of size $F \times F$.
-   - **Slide 87–89 Walk-Through:** An image of size $4 \times 4$ contains 16 pixels.
-   - In a dense feed-forward network (Slide 87), computing hidden activation $h_{11}$ requires connections to all 16 input pixels.
-   - In a CNN with a $2 \times 2$ kernel (Slide 88), computing $h_{11}$ requires connections only to local pixels $\lbrace 1, 2, 5, 6 \rbrace$.
-   - Computing $h_{12}$ (Slide 89) requires connections only to local pixels $\lbrace 3, 4, 7, 8 \rbrace$.
-   - Connections are sparse, reflecting the real-world statistical property that neighboring pixels interact strongly, while distant pixels interact weakly.
-2. **Weight Sharing (Parameter Tying):** The exact same kernel weights are reused across every receptive field of the input.
-   - Instead of learning separate weights for detecting a vertical edge at coordinate $(0, 0)$ and coordinate $(50, 50)$, one set of kernel parameters scans the entire image.
-   - This enforces **translation equivariance**: shifting the input image shifts the resulting feature map by an identical amount without altering feature representation.
+1. **Raw pixels.** Give the pixels of the image directly to the classifier as features.
+2. **Edge detector.** First apply an edge detector to the image. Give the edge image to the classifier.
+3. **SIFT / HOG.** First apply one of these hand-made feature methods. Give its output to the classifier.
+4. **Learned kernels.** Let the network learn the kernels too.
 
-#### Representation Learning & Initialization Philosophy (Slides 83–86)
-- **End-to-End Representation Learning:** Instead of relying on hand-crafted analytical kernels (Sobel, Gaussian), the kernel coefficients are treated as learnable parameters optimized automatically via backpropagation.
-- **Random Initialization:** Kernels are initialized with small, zero-centered random weights using **Xavier (Glorot)** or **He (Kaiming)** initialization:
-  - Prevents vanishing/exploding activations and gradient collapse.
-  - Breaks symmetry so distinct filters specialize into different detectors.
-  - Early layers autonomously discover low-level primitives (Gabor-like edge detectors, color blobs), intermediate layers assemble them into textural patterns, and deep layers form high-level semantic representations (faces, wheels, text).
+In ways 1 to 3 the slides mark two parts. The first part is "static feature extraction (no learning)". The second part is "learning weights of classifier". So only the classifier learns. The features are fixed by a person.
 
-#### The Six Core Architectural Advantages of CNNs (Slides 91–92)
-1. **Reduced Parameter Footprint:** Weight sharing decouples parameter count from image resolution. Filter parameters depend only on kernel size $F$ and depth $D_1$, not image dimensions $W_1 \times H_1$.
-2. **Computational & Memory Efficiency:** Sparse arithmetic reduces memory bandwidth and floating-point operations (FLOPs), enabling training on large image datasets.
-3. **Translation Invariance / Equivariance:** Enables the network to detect patterns regardless of where they appear on the image grid.
-4. **Hierarchical Feature Learning:** Layers compose features hierarchically: low layers extract edges $\to$ mid layers extract textures/shapes $\to$ high layers extract complete object semantics.
-5. **Superior Generalization:** Constraining the hypothesis space through weight sharing acts as strong structural regularization, preventing overfitting.
-6. **Robustness to Noise & Variability:** Local receptive pooling and shared templates grant resilience against sensor noise, illumination shifts, and subtle viewpoint distortions.
+Slide 84 then asks for more. The picture is Input, then Features, then Classifier. Under the features it shows a kernel of numbers (center −8, with 1s around it) and the note "Learn these weights". So the kernel does not have to be fixed. It can be learned. The last picture has several feature maps after the input, and more feature maps after those. These are many layers of learned kernels.
 
-### 3. Visual Anchor
+**Learning the kernels (Slide 85).** We can learn many layers of meaningful kernels, in addition to learning the weights of the classifier. We simply treat the kernels as parameters. We learn them together with the classifier weights, using **backpropagation**. Backpropagation is the usual training method that adjusts each weight to reduce the error.
+
+**How the kernels start (Slide 86).**
+
+- **Random initialization.** When a CNN model is first created, the kernel weights are set randomly, often with small values.
+- These random kernels are not useful at first. They evolve during training. They are learned from the data via backpropagation.
+- **Why random?** Random kernels have no bias toward specific patterns. So the network can learn a wide variety of features from the data.
+- Common initialization techniques are **Xavier initialization** and **He initialization**. They are designed so that the starting weights let the network learn effectively.
+- Predefined kernels are generally not used in deep learning. Learned kernels are more effective for complex tasks.
+
+**A regular network has dense connections (Slide 87).** This is what a regular feed-forward neural network looks like. The slide draws one for a 4×4 image of a digit: 16 input neurons at the bottom and 10 outputs at the top, one for each of the 10 classes (digits). There are many dense connections. Every input connects to every neuron in the next layer. For example, all 16 input neurons contribute to the computation of $h_{11}$. Here $h_{11}$ is the first value in the next layer. Contrast this with what happens in a convolution.
+
+**Sparsity of connections (Slides 88–89).** Write the 4×4 image as a vector of pixels numbered 1 to 16. In a convolution, only a few local neurons take part in computing $h_{11}$.
+
+- Only pixels 1, 2, 5, 6 contribute to $h_{11}$.
+- Only pixels 3, 4, 7, 8 contribute to $h_{12}$.
+
+The connections are much sparser, which means there are far fewer of them. We take advantage of the structure of the image. Interactions between neighboring pixels are more interesting than interactions between far pixels. This sparse connectivity reduces the number of parameters in the model.
+
+**Weight sharing (Slide 90).** We do not learn only one kernel. We can have many kernels. But each kernel is shared by all locations in the image. The same numbers are used at every position. This is called **weight sharing**.
+
+The slide shows this with colors. In the first picture, two outputs at different places are joined to their inputs by lines of the same color. Same color means the same kernel weights. In the second picture there are three colors at each place. These are three different kernels. Each one is again reused at every place.
+
+**Advantages over a traditional ANN (Slides 91–92).** An ANN here means a regular network with fully connected layers.
+
+1. **Reduced parameters.** The same filter is applied across different regions of the input. A fully connected layer needs a unique weight for every connection. So a CNN has far fewer parameters.
+2. **Computational efficiency.** Fewer parameters need less memory and less computation. CNNs are faster to train and easier to deploy. This matters most for large datasets and high-dimensional inputs like images.
+3. **Translation invariance.** The model can recognize a pattern wherever it appears in the input. This is very useful in image processing.
+4. **Hierarchical feature learning.** Lower layers capture simple features like edges. Higher layers capture more complex patterns like shapes and objects. The localized connections and weight sharing make this possible.
+5. **Better generalization.** With fewer parameters and shared features, the model is less likely to overfit than a fully connected ANN. So it works better on unseen data.
+6. **Robustness to noise and variability.** The model learns from local patterns and uses shared weights. So it copes better with noise and with changes in lighting, scale and rotation.
+
+Overall, these advantages make CNNs well suited for image recognition, object detection and other tasks with spatial data.
+
+### 7.3 Visual Anchor
 
 ![Fully connected vs convolutional connectivity](figures/cnn/l12_11_dense_vs_sparse.jpg)
-*Figure: Computing h11 from a 4x4 image: a dense layer needs all 16 connections, a 2x2 convolution only 4 (75% fewer) (illustration, after Slides 87–88).*
+*Figure: Computing h11 from a 4x4 image. A dense layer needs all 16 connections. A 2x2 convolution needs only 4 (illustration, after Slides 87–88).*
 
-![Fig 5 – Sparsity of connections: local receptive field mapping pixels 1, 2, 5, 6 to activation h11 (media/image60.png)](extracted_ML_Lec_12_CNN/media/image60.png)
+![Fig 4 – Sparsity of connections: only pixels 1, 2, 5, 6 feed h11 (media/image60.png)](extracted_ML_Lec_12_CNN/media/image60.png)
 
-### 4. Verified Formulas, Trade-offs & Calculations
+![Fig 5 – Three ways with fixed features: raw pixels, edge detector, SIFT / HOG (media/image53.png)](extracted_ML_Lec_12_CNN/media/image53.png)
 
-#### Mathematical Proof of Connection Reduction (Slides 87–89)
-For an input grid of $N_{\text{in}} = W_1 \times H_1$ units connected to a single hidden unit:
-- Dense ANN connection count: $C_{\text{dense}} = W_1 \times H_1$
-- CNN connection count with $F \times F$ kernel: $C_{\text{CNN}} = F \times F$
-- Percentage reduction in fan-in per neuron:
+![Fig 6 – Weight sharing: several kernels, each one reused at every place (media/image63.png)](extracted_ML_Lec_12_CNN/media/image63.png)
 
-```math
-\text{Reduction} = \left( 1 - \frac{F^2}{W_1 \cdot H_1} \right) \times 100\%
-```
+### 7.4 Verified Formulas, Trade-offs & Calculations
 
-- For the slide example ($W_1 = 4, H_1 = 4, F = 2$):
+Count the connections into $h_{11}$ for the 4×4 image:
 
-```math
-C_{\text{dense}} = 16, \quad C_{\text{CNN}} = 4 \implies \text{Reduction} = \left(1 - \frac{4}{16}\right) \times 100\% = 75\%
-```
+- Dense layer: $4 \times 4 = 16$ connections.
+- Convolution with a 2×2 kernel: $2 \times 2 = 4$ connections.
 
-- Each hidden unit requires 75% fewer incoming synaptic connections.
+That is $16 - 4 = 12$ fewer connections, or 75% fewer, for each output value.
+
+Now count the weights. The 2×2 kernel gives a 3×3 output, so there are 9 output values. A dense layer with 9 outputs needs $16 \times 9 = 144$ weights. With weight sharing, the convolution needs only the 4 kernel weights for all 9 outputs.
 
 ---
 
-## 8. Downsampling & Pooling Mechanics
+## 8. Pooling: making feature maps smaller
 
-### 1. The Engineering Problem & Intuition
-As convolutional layers extract feature maps, the spatial resolution remains high. This imposes two engineering bottlenecks:
-1. **Computational & Memory Overhead:** Retaining high spatial dimensions throughout deep networks demands unsustainable GPU memory for activations during backpropagation.
-2. **Receptive Field Limitations:** If spatial resolution is never reduced, high-level filters with small kernel sizes ($3 \times 3$) can only observe tiny local patches of the original input, never gaining a holistic scene-level receptive field.
-3. **Sensitivity to Precise Coordinates:** For recognition, knowing that an eye or nose is present is critical; knowing its position down to the exact sub-pixel coordinate is unnecessary and brittle.
+### 8.1 The Problem & Intuition
 
-Pooling addresses this by downsampling feature maps, compressing spatial dimensions while retaining essential feature activations.
+Feature maps are large. Large maps mean more parameters and more computation in the layers that follow. A **pooling layer** makes each feature map smaller. It looks at a small window and keeps one number for it. Then it moves to the next window.
 
-### 2. Technical Mechanism & Architecture
+### 8.2 Mechanism & Architecture
+
+**Pooling layer (Slide 93).** It reduces the spatial dimensions of the feature maps. This decreases the number of parameters and the computation in the network.
 
 ![Four pooling types](figures/cnn/l12_12_pooling_types.jpg)
-*Figure: The four pooling types on the same 4x4 map: max and average pooling shrink it to 2x2, global average and global max pooling reduce it to one value. None has learnable parameters, and depth is unchanged (illustration).*
+*Figure: The four pooling types on the same 4x4 map. Max and average pooling shrink it to 2x2. Global average and global max pooling reduce it to one value (illustration).*
 
-#### Taxonomy of Pooling Layers (Slides 93, 95)
-1. **Max Pooling:** Selects the maximum value within a spatial window of size $F_p \times F_p$. Retains the strongest activation (prominent edges, distinct textural points) while discarding non-maximal background signals.
-2. **Average Pooling:** Computes the arithmetic mean over window $F_p \times F_p$. Produces a smoother feature representation, preventing dominant spikes from eclipsing surrounding context.
-3. **Global Average Pooling (GAP):** Computes the mean over the entire spatial grid ($W \times H$) for each channel independently, reducing a tensor of shape $W \times H \times D$ to a $1 \times 1 \times D$ vector. Frequently used to replace heavy fully connected classifier layers in modern architectures (e.g., ResNet).
-4. **Global Max Pooling (GMP):** Takes the single maximum activation over the entire $W \times H$ spatial grid for each channel, signaling whether a target feature exists anywhere in the image.
+**Types (Slides 93, 95):**
 
-#### Pooling Hyperparameters (Slide 96)
-- **Window Size** ($F_p$): Spatial extent of the pooling window (commonly $2 \times 2$ or $3 \times 3$).
-- **Stride** ($S_p$): Step size between window placements (commonly $S_p = 2$, yielding a 50% spatial reduction).
-- **Padding** ($P_p$): Typically $P_p = 0$.
+1. **Max pooling.** Takes the maximum value from a defined window. It retains the most prominent features. This makes it effective for detecting edges and textures.
+2. **Average pooling.** Takes the average value from a defined window. It gives a smoother feature map. It can be less sensitive to noise than max pooling. It is sometimes used where we want to keep more contextual information.
+3. **Global average pooling.** Takes the average of the entire feature map. It gives a single output for each feature map. It helps to reduce the size of feature maps and can be effective in classification tasks. It is generally used in the final layers of a CNN, before the output layer.
+4. **Global max pooling.** Takes the maximum value from the entire feature map. Like global average pooling, it reduces the size of feature maps. But it keeps the most significant feature. It is also used before the output layer, especially when spatial resolution is less important.
 
-#### Architectural Trade-offs (Slide 97)
-- **Pooling vs. Strided Convolutions:** Modern networks often replace deterministic pooling with strided convolutions ($S \ge 2$), allowing the network to learn its downsampling operator directly via gradient descent.
-- **Information Loss:** Pooling discards exact spatial coordinate references. While advantageous for image classification, this loss of spatial fidelity can be detrimental for dense prediction tasks like semantic segmentation, where precise pixel boundaries are required.
+**Pooling parameters (Slide 96).** Max pooling and average pooling generally reduce spatial resolution. How much depends on the settings:
 
-### 3. Visual Anchor
+1. **Window size.** The size of the pooling filter, for example 2×2 or 3×3.
+2. **Stride.** The number of pixels the filter moves after each operation. A larger stride reduces the output size more.
+3. **Padding.** Extra pixels around the input feature map before pooling. Pooling layers typically do not use padding, but it can be useful in certain architectures.
 
-![Fig 6 – 2x2 pooling with stride 2: Max pooling vs Average pooling on a 4x4 feature map (media/image64.png)](extracted_ML_Lec_12_CNN/media/image64.png)
+**Trade-offs (Slide 97):**
 
-### 4. Verified Formulas, Trade-offs & Calculations
+- Some architectures do not use pooling. They use convolutions with a stride greater than one. This makes the map smaller (**downsampling**) and learns features at the same time.
+- Pooling can lose spatial information. This can be critical for some tasks, such as image segmentation.
+- The choice between max pooling, average pooling and other techniques depends on the task and the desired outcome.
 
-#### Output Dimension Formula for Pooling
-Because pooling processes each channel slice independently without altering depth:
+### 8.3 Visual Anchor
 
-```math
-W_2 = \left\lfloor \frac{W_1 - F_p + 2P_p}{S_p} \right\rfloor + 1, \quad H_2 = \left\lfloor \frac{H_1 - F_p + 2P_p}{S_p} \right\rfloor + 1, \quad D_2 = D_1
-```
+![Fig 7 – 2x2 pooling with stride 2: max pooling and average pooling on a 4x4 feature map (media/image64.png)](extracted_ML_Lec_12_CNN/media/image64.png)
 
-#### Worked Numerical Case 1: Max vs. Average Pooling ($S = 2$, Slide 94)
-Given the $4 \times 4$ feature map from Slide 94:
+### 8.4 Verified Formulas, Trade-offs & Calculations
+
+**Example 1: max and average pooling, 2×2 window, stride 2 (Slide 94).**
 
 ```math
-I = \begin{bmatrix}
-8 & 7 & 5 & 3 \\
-12 & 9 & 5 & 7 \\
-13 & 2 & 10 & 3 \\
-9 & 4 & 5 & 14
-\end{bmatrix}
+\begin{bmatrix} 8 & 7 & 5 & 3 \\ 12 & 9 & 5 & 7 \\ 13 & 2 & 10 & 3 \\ 9 & 4 & 5 & 14 \end{bmatrix}
 ```
 
-Applying $2 \times 2$ pooling with stride $S = 2$ partitions the matrix into four non-overlapping $2 \times 2$ quadrants:
-- **Top-Left Quadrant** $\begin{bmatrix} 8 & 7 \\ 12 & 9 \end{bmatrix}$:
+Stride 2 with a 2×2 window cuts the map into four blocks that do not overlap.
+
+| Block | Values | Max | Average |
+| :--- | :--- | :--- | :--- |
+| Top-left | 8, 7, 12, 9 | 12 | $36 / 4 = 9$ |
+| Top-right | 5, 3, 5, 7 | 7 | $20 / 4 = 5$ |
+| Bottom-left | 13, 2, 9, 4 | 13 | $28 / 4 = 7$ |
+| Bottom-right | 10, 3, 5, 14 | 14 | $32 / 4 = 8$ |
 
 ```math
-\text{Max} = \max(8, 7, 12, 9) = 12, \quad \text{Avg} = \frac{8 + 7 + 12 + 9}{4} = \frac{36}{4} = 9.0
+\text{Max pooling: } \begin{bmatrix} 12 & 7 \\ 13 & 14 \end{bmatrix}, \quad \text{Average pooling: } \begin{bmatrix} 9 & 5 \\ 7 & 8 \end{bmatrix}
 ```
 
-- **Top-Right Quadrant** $\begin{bmatrix} 5 & 3 \\ 5 & 7 \end{bmatrix}$:
+Both match Slide 94.
+
+**Example 2: max pooling with stride 2 and with stride 1 (Slides 98–106).** The slides apply one filter to the input to get this feature map. Then they max-pool it with 2×2 filters, first with stride 2 and then with stride 1.
 
 ```math
-\text{Max} = \max(5, 3, 5, 7) = 7, \quad \text{Avg} = \frac{5 + 3 + 5 + 7}{4} = \frac{20}{4} = 5.0
+\begin{bmatrix} 1 & 4 & 2 & 1 \\ 5 & 8 & 3 & 4 \\ 7 & 6 & 4 & 5 \\ 1 & 3 & 1 & 2 \end{bmatrix}
 ```
 
-- **Bottom-Left Quadrant** $\begin{bmatrix} 13 & 2 \\ 9 & 4 \end{bmatrix}$:
+*Stride 2 (Slides 98–102).* Four blocks that do not overlap:
+
+- Top-left: max of 1, 4, 5, 8 is 8.
+- Top-right: max of 2, 1, 3, 4 is 4.
+- Bottom-left: max of 7, 6, 1, 3 is 7.
+- Bottom-right: max of 4, 5, 1, 2 is 5.
 
 ```math
-\text{Max} = \max(13, 2, 9, 4) = 13, \quad \text{Avg} = \frac{13 + 2 + 9 + 4}{4} = \frac{28}{4} = 7.0
+\begin{bmatrix} 8 & 4 \\ 7 & 5 \end{bmatrix}
 ```
 
-- **Bottom-Right Quadrant** $\begin{bmatrix} 10 & 3 \\ 5 & 14 \end{bmatrix}$:
+*Stride 1 (Slides 103–106).* The window moves one pixel at a time, so the windows overlap. The size formula of Section 5 gives $(4 - 2)/1 + 1 = 3$, so the output is 3×3.
+
+- Row 1: max of (1, 4, 5, 8) is 8. Max of (4, 2, 8, 3) is 8. Max of (2, 1, 3, 4) is 4.
+- Row 2: max of (5, 8, 7, 6) is 8. Max of (8, 3, 6, 4) is 8. Max of (3, 4, 4, 5) is 5.
+- Row 3: max of (7, 6, 1, 3) is 7. Max of (6, 4, 3, 1) is 6. Max of (4, 5, 1, 2) is 5.
 
 ```math
-\text{Max} = \max(10, 3, 5, 14) = 14, \quad \text{Avg} = \frac{10 + 3 + 5 + 14}{4} = \frac{32}{4} = 8.0
+\begin{bmatrix} 8 & 8 & 4 \\ 8 & 8 & 5 \\ 7 & 6 & 5 \end{bmatrix}
 ```
 
-```math
-O_{\text{Max Pooling}} = \begin{bmatrix} 12 & 7 \\ 13 & 14 \end{bmatrix}, \quad O_{\text{Average Pooling}} = \begin{bmatrix} 9 & 5 \\ 7 & 8 \end{bmatrix}
-```
-
-#### Worked Numerical Case 2: Max Pooling Stride 2 vs. Stride 1 (Slides 98–106)
-Given the feature map from Slides 98–106:
-
-```math
-I = \begin{bmatrix}
-1 & 4 & 2 & 1 \\
-5 & 8 & 3 & 4 \\
-7 & 6 & 4 & 5 \\
-1 & 3 & 1 & 2
-\end{bmatrix}
-```
-
-- **Stride** $S = 2$ **(Non-overlapping, Slides 98–102):**
-  - Quadrant (1, 1): $\max(1, 4, 5, 8) = 8$
-  - Quadrant (1, 2): $\max(2, 1, 3, 4) = 4$
-  - Quadrant (2, 1): $\max(7, 6, 1, 3) = 7$
-  - Quadrant (2, 2): $\max(4, 5, 1, 2) = 5$
-
-```math
-\text{Output Shape: } 2 \times 2 = \begin{bmatrix} 8 & 4 \\ 7 & 5 \end{bmatrix}
-```
-
-- **Stride** $S = 1$ **(Overlapping, Slides 103–106):**
-  - Output size: $W_2 = \lfloor \frac{4 - 2}{1} \rfloor + 1 = 3 \implies 3 \times 3$ output.
-  - Row 1: $\max\begin{bmatrix}1&4\\5&8\end{bmatrix}=8$, $\max\begin{bmatrix}4&2\\8&3\end{bmatrix}=8$, $\max\begin{bmatrix}2&1\\3&4\end{bmatrix}=4$
-  - Row 2: $\max\begin{bmatrix}5&8\\7&6\end{bmatrix}=8$, $\max\begin{bmatrix}8&3\\6&4\end{bmatrix}=8$, $\max\begin{bmatrix}3&4\\4&5\end{bmatrix}=5$
-  - Row 3: $\max\begin{bmatrix}7&6\\1&3\end{bmatrix}=7$, $\max\begin{bmatrix}6&4\\3&1\end{bmatrix}=6$, $\max\begin{bmatrix}4&5\\1&2\end{bmatrix}=5$
-
-```math
-\text{Output Shape: } 3 \times 3 = \begin{bmatrix} 8 & 8 & 4 \\ 8 & 8 & 5 \\ 7 & 6 & 5 \end{bmatrix}
-```
+Both results match the slides. The larger stride gave the smaller output: 2×2 against 3×3.
 
 ---
 
-## 9. Classifier Interface: The Flatten Layer
+## 9. Flatten: from feature maps to the classifier
 
-### 1. The Engineering Problem & Intuition
-The convolutional and pooling backbone of a CNN functions as a localized spatial feature extractor, producing a 3D tensor of shape $W \times H \times C$. However, the downstream decision-making classification head (a Multi-Layer Perceptron culminating in a Softmax activation) requires a 1D vector of independent feature logits. How is this dimensional boundary bridged?
+### 9.1 The Problem & Intuition
 
-The network must linearize the 3D spatial tensor into a 1D vector while preserving all numerical activations.
+After convolution and pooling we have 2D feature maps. The last part of the network is a **fully connected layer**. It classifies the image, and it needs one long row of numbers as input. **Flattening** turns the 2D maps into that row.
 
-### 2. Technical Mechanism & Architecture
-The Flatten layer is an unparameterized topological reshaping operation:
+### 9.2 Mechanism & Architecture
+
+Flattening converts all the 2D arrays from the pooled feature maps into a single long continuous linear vector (Slide 107). This flattened vector is fed as input to the fully connected layer, which classifies the image.
 
 ![From convolution to classifier](figures/cnn/l12_13_cnn_to_classifier.jpg)
-*Figure: Where Flatten sits: conv and pool layers extract features, Flatten unrolls them into a vector, fully connected layers and softmax turn it into class probabilities (illustration).*
+*Figure: Where flatten sits. Convolution and pooling layers extract features. Flatten unrolls them into a vector. The fully connected layer uses the vector to classify the image (illustration).*
 
-- **Topological Boundary:** Separates translation-equivariant spatial representation learning from position-sensitive global classification.
-- **Serialization Order:** Unrolls values along a deterministic coordinate hierarchy (typically row-major order: row by row, channel by channel).
-- **Slide 107 Walk-Through:** A single-channel pooled feature map of shape $3 \times 3$:
+### 9.3 Visual Anchor
 
-```math
-M_{\text{pooled}} = \begin{bmatrix}
-1 & 1 & 0 \\
-4 & 2 & 1 \\
-0 & 2 & 1
-\end{bmatrix}
-```
+![Fig 8 – Flattening a 3x3 pooled feature map into a vector of 9 values (media/image68.png)](extracted_ML_Lec_12_CNN/media/image68.png)
 
-Unrolling row by row produces a 9-element 1D vector:
+### 9.4 Verified Formulas, Trade-offs & Calculations
+
+Slide 107 flattens this 3×3 pooled feature map:
 
 ```math
-\mathbf{v}_{\text{flattened}} = [1, 1, 0, 4, 2, 1, 0, 2, 1]^T \in \mathbb{R}^9
+\begin{bmatrix} 1 & 1 & 0 \\ 4 & 2 & 1 \\ 0 & 2 & 1 \end{bmatrix}
 ```
 
-### 3. Visual Anchor
-
-![Fig 7 – Flatten layer linearizing a 3x3 pooled feature map into a 9-element continuous vector (media/image68.png)](extracted_ML_Lec_12_CNN/media/image68.png)
-
-### 4. Verified Formulas, Trade-offs & Calculations
-
-#### Dimensional Serialization Formulas
-For an incoming tensor of width $W$, height $H$, and channel depth $C$:
+Read it row by row, from top to bottom. The vector is:
 
 ```math
-L_{\text{vector}} = W \cdot H \cdot C
+[1, 1, 0, 4, 2, 1, 0, 2, 1]
 ```
 
-*Plain reading:* The length of the flattened vector is the exact product of width, height, and depth of the terminal feature map.
-
-#### Classifier Head Parameter Calculation
-If this flattened vector feeds into a fully connected layer with $N_{\text{dense}}$ neurons:
-
-```math
-\text{Weights} = L_{\text{vector}} \cdot N_{\text{dense}} = (W \cdot H \cdot C) \cdot N_{\text{dense}}
-```
-
-```math
-\text{Total Parameters (with Bias)} = (L_{\text{vector}} + 1) \cdot N_{\text{dense}}
-```
-
-- For the Slide 107 single-channel $3 \times 3$ map ($L = 9$):
-  - Connecting to an MLP hidden layer of $N = 10$ neurons:
-
-```math
-\text{Weights} = 9 \times 10 = 90, \quad \text{Biases} = 10 \implies 100 \text{ Parameters}
-```
-
-- **Trade-off:** Because $L_{\text{vector}}$ directly scales the weight matrix of the first dense layer, excessive spatial resolution at the flatten boundary triggers parameter bloat. Pooling layers and Global Average Pooling are critical in controlling $W \times H$ prior to the flatten boundary.
+The vector has $3 \times 3 = 9$ values. No value is changed or lost. Only the shape changes.
