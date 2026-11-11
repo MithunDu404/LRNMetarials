@@ -61,6 +61,9 @@ To systematically address and benchmark this challenge, Yann LeCun and his resea
 
 ---
 
+![From a handwritten cheque to MNIST](figures/cnn/l14_01_cheque_mnist.jpg)
+*Figure: The problem LeNet solved: read each handwritten digit on a cheque as a 28x28 image; MNIST collects 70,000 such digits (illustration).*
+
 ### 2. Mechanism & Architecture
 
 The response to this fundamental challenge was **LeNet**, a revolutionary convolutional neural network architecture developed by **Yann LeCun** and his colleagues at AT&T Bell Laboratories between the late 1980s and early 1990s. 
@@ -177,6 +180,9 @@ flowchart LR
 #### Why Zero-Pad 28x28 to 32x32?
 The LeNet input layer typically accepts 32x32 pixel grayscale images, with 28x28 MNIST images zero-padded to this size. Adding two pixels of zero-padding on all four borders ($\text{top} = 2, \text{bottom} = 2, \text{left} = 2, \text{right} = 2$) transforms the raw $28 \times 28$ digit into a $32 \times 32 \times 1$ tensor.
 
+![Zero-padding 28x28 MNIST to 32x32](figures/cnn/l14_02_zero_padding.jpg)
+*Figure: Two pixels of zeros on every side turn the 28x28 MNIST digit into LeNet's 32x32 input (drawn with Python for exact counts).*
+
 This padding satisfies two crucial design principles:
 1. **Edge Feature Preservation:** In a $5 \times 5$ convolution without padding, a border pixel is only sampled once by the filter corner, whereas a central pixel is sampled up to 25 times. Centering the $28 \times 28$ digit inside a $32 \times 32$ canvas ensures that stroke endpoints, loops, and diacritical marks touching the boundaries of the $28 \times 28$ region can be squarely centered under the $5 \times 5$ kernel window.
 2. **Clean Spatial Downsampling Arithmetic:** Propagating a $32 \times 32$ input through two stages of $5 \times 5$ convolutions and $2 \times 2$ downsampling produces integer dimensions at every transition: $32 \to 28 \to 14 \to 10 \to 5$. This produces a clean $5 \times 5 \times 16$ tensor containing 400 activations before flattening.
@@ -271,25 +277,10 @@ The classic LeNet-5 architecture pipeline integrates convolutional feature extra
 
 ![Classic LeNet-5 Architecture (Slide 5)](extracted_ML_Lec_14_LeNeT_CNN/media/image1.png)
 
-The complete dataflow through the network layers is illustrated below:
+The same dataflow, drawn as feature-map volumes:
 
-```mermaid
-flowchart LR
-    subgraph Feature_Extraction ["Feature Extraction Backbone"]
-        direction LR
-        IN["Input<br/>32x32x1"] -->|"5x5 Conv<br/>stride 1, pad 0"| C1["C1 Maps<br/>28x28x6"]
-        C1 -->|"2x2 AvgPool<br/>stride 2"| S2["S2 Maps<br/>14x14x6"]
-        S2 -->|"5x5 Conv<br/>stride 1, pad 0"| C3["C3 Maps<br/>10x10x16"]
-        C3 -->|"2x2 AvgPool<br/>stride 2"| S4["S4 Maps<br/>5x5x16"]
-    end
-    subgraph Classification_Head ["Classification Head"]
-        direction LR
-        S4 -->|"Flatten"| FL["Vector<br/>400"]
-        FL -->|"Dense / Conv"| C5["C5 Layer<br/>120 units"]
-        C5 -->|"Dense"| F6["F6 Layer<br/>84 units"]
-        F6 -->|"Euclidean / Softmax"| OUT["Output<br/>10 digits"]
-    end
-```
+![LeNet-5 dataflow](figures/cnn/l13_05_lenet5.jpg)
+*Figure: LeNet-5 dataflow: 32x32x1 → C1 6@28x28 → S2 6@14x14 → C3 16@10x10 → S4 16@5x5 → C5 120 → F6 84 → 10 outputs (illustration).*
 
 The progressive dimensional reduction is summarized in the following structural progression:
 
@@ -830,42 +821,8 @@ By proving that multi-layer convolutional networks could be trained end-to-end u
 
 The following diagram contrasts the classical 1998 LeNet-5 architectural paradigm with modern deep convolutional neural network designs, illustrating the historical evolution across input processing, layer depth, activation dynamics, subsampling methods, and classification heads.
 
-```mermaid
-flowchart TD
-    subgraph Classical ["Classical 1998 LeNet-5 Architectural Paradigm"]
-        direction TB
-        C1["Input: 32x32 Grayscale Digit<br/>Zero-padded from 28x28 MNIST"]
-        C2["Convolutional Layers: 5x5 Kernels<br/>Hand-crafted sparse connectivity in C3 (60 kernels)"]
-        C3["Activation: Scaled Tanh / Sigmoid<br/>Saturating non-linearities: d/dz vanishes as |z| grows"]
-        C4["Subsampling: 2x2 Average Pooling (Stride 2)<br/>Low-pass arithmetic averaging (trainable w and b)"]
-        C5["Classification Head: Dense Flattening<br/>400 -> C5 (120) -> F6 (84) neurons"]
-        C6["Output Layer: Euclidean RBF Units<br/>10 classes with fixed 84-dimensional ASCII bitmaps"]
-        C7["Optimization: End-to-End Backpropagation<br/>SGD on raw pixels; 60,000 trainable parameters"]
-
-        C1 --> C2 --> C3 --> C4 --> C5 --> C6 --> C7
-    end
-
-    subgraph Modern ["Modern Deep CNN Paradigm (Post-2012 / ResNet Era)"]
-        direction TB
-        M1["Input: High-Resolution Multi-Channel RGB<br/>Standardized 224x224x3 natural images"]
-        M2["Convolutional Stacks: Small 3x3 Kernels<br/>Full channel connectivity, residual shortcuts, 1x1 projections"]
-        M3["Activation: Rectified Linear Unit (ReLU)<br/>Non-saturating: d/dz = 1 for z > 0; avoids vanishing gradients"]
-        M4["Subsampling: 2x2 Max Pooling or Strided Convolutions<br/>Salient peak preservation; parameter-free operation"]
-        M5["Classification Head: Global Average Pooling (GAP)<br/>Eliminates dense parameter bloat; Dropout and BatchNorm"]
-        M6["Output Layer: Dense Linear Layer + Softmax<br/>Normalized probability distribution over C classes"]
-        M7["Optimization: GPU-Accelerated Backpropagation<br/>AdamW / SGD with Momentum and Cosine Annealing"]
-
-        M1 --> M2 --> M3 --> M4 --> M5 --> M6 --> M7
-    end
-
-    C3 -.->|"Evolution: Eliminating Gradient Decay"| M3
-    C4 -.->|"Evolution: Preserving Salient Extrema"| M4
-    C2 -.->|"Evolution: Deeper Factorized Convolutions"| M2
-    C6 -.->|"Evolution: Probabilistic Cross-Entropy"| M6
-
-    style Classical fill:#f8fafc,stroke:#94a3b8,stroke-width:1px
-    style Modern fill:#eff6ff,stroke:#3b82f6,stroke-width:2px
-```
+![LeNet-5 vs a modern CNN](figures/cnn/l14_03_lenet_vs_modern.jpg)
+*Figure: LeNet-5 (1998) vs a modern CNN, part by part: input, kernels, activation, pooling, head and output (illustration). The full trade-off matrix is in §4.*
 
 ---
 

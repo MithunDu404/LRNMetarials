@@ -22,30 +22,8 @@ $$
 
 Convolutional Neural Networks (CNNs) resolve these fundamental limitations by encoding spatial structure directly into the network architecture through three foundational inductive biases: **local receptive fields**, **parameter sharing**, and **spatial subsampling**. Inspired by biological vision (Hubel and Wiesel's discovery of orientation-selective receptive fields in the mammalian visual cortex), CNNs construct a hierarchy of visual abstractions directly from raw pixel arrays.
 
-![Biological vs Artificial Visual Processing](extracted_ML_Lec_13_CNN/media/fig_bio_vs_cnn_hierarchy.png)
-*Figure 2: Comparison between biological visual cortex hierarchies and deep convolutional feature extraction stages, highlighting the three foundational inductive biases.*
-
-```mermaid
-flowchart TD
-    subgraph Bio["Mammalian Visual Cortex Hierarchy"]
-        direction LR
-        B1["Retinal Photoreceptors<br/>Point light sensors"] --> B2["LGN Thalamus<br/>Center-surround contrast"]
-        B2 --> B3["V1 Cortex (Simple)<br/>Oriented edge filters"]
-        B3 --> B4["V2 / V4 (Complex)<br/>Motifs & textures"]
-        B4 --> B5["IT Cortex<br/>Invariant object categories"]
-    end
-
-    subgraph Artificial["CNN Artificial Hierarchy"]
-        direction LR
-        A1["Raw Pixels<br/>RGB intensity grid"] --> A2["Early Conv Layers<br/>Gabor-like edge detectors"]
-        A2 --> A3["Mid Conv Layers<br/>Parts & motifs"]
-        A3 --> A4["Deep Conv Layers<br/>High-level abstractions"]
-        A4 --> A5["Classification Head<br/>Softmax probabilities"]
-    end
-
-    Bio -.->|"Biological Inductive Bias"| Artificial
-```
-
+![Visual cortex hierarchy vs CNN layer hierarchy](figures/cnn/l13_01_bio_vs_cnn.jpg)
+*Figure: The visual cortex (retina → LGN → V1 → V2/V4 → IT) and a CNN (pixels → early, mid, deep conv → classifier) both build objects from edges, textures and parts (illustration).*
 
 #### Canonical Computer Vision Application Domains (Slide 2)
 The automatic hierarchical feature extraction capability of CNNs underpins core visual perception tasks:
@@ -92,40 +70,8 @@ As visual activations propagate through successive convolutional blocks, their r
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart TD
-    subgraph InputVolume["Input Image Volume (28 x 28 x 1)"]
-        direction TB
-        IMG["MNIST Digit Image<br/>Shape: 28 x 28 x 1"]
-    end
-
-    subgraph Block1["Stage 1: Conv + Pool Block"]
-        direction TB
-        C1["Conv-1 Layer: 5x5 Kernel, Valid Pad<br/>Output: 24 x 24 x n1"]
-        P1["Max-Pooling: 2x2 Window, Stride 2<br/>Output: 12 x 12 x n1"]
-        C1 --> P1
-    end
-
-    subgraph Block2["Stage 2: Conv + Pool Block"]
-        direction TB
-        C2["Conv-2 Layer: 5x5 Kernel, Valid Pad<br/>Output: 8 x 8 x n2"]
-        P2["Max-Pooling: 2x2 Window, Stride 2<br/>Output: 4 x 4 x n2"]
-        C2 --> P2
-    end
-
-    subgraph Head["Stage 3: Classifier Head"]
-        direction TB
-        FL["Flatten Layer<br/>Vector Length: 4 x 4 x n2"]
-        FC3["FC-3 Dense Layer: ReLU Activation<br/>Units: n3"]
-        FC4["FC-4 Dense Layer with Dropout<br/>Units: 10"]
-        SOFT["Softmax Output Layer<br/>Probabilities: Classes 0 to 9"]
-        FL --> FC3 --> FC4 --> SOFT
-    end
-
-    InputVolume --> Block1
-    Block1 --> Block2
-    Block2 --> Head
-```
+![MNIST CNN: two conv-pool blocks and a dense head](figures/cnn/l13_02_mnist_cnn.jpg)
+*Figure: The Slide 3 MNIST network: 28x28x1 → conv 5x5 (24x24xn1) → max pool (12x12xn1) → conv 5x5 (8x8xn2) → max pool (4x4xn2) → flatten → fully connected → 10 outputs (illustration).*
 
 ![Canonical CNN Architecture Diagram](extracted_ML_Lec_13_CNN/media/image1.png)
 *Figure 1: Canonical Convolutional Neural Network architecture illustrating sequential feature extraction through convolutional and pooling layers, followed by tensor flattening and dense classification with dropout regularization (Slide 3).*
@@ -283,7 +229,6 @@ $$
 W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} - F + 2P}{S} \right\rfloor + 1, \quad H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} - F + 2P}{S} \right\rfloor + 1
 $$
 
-
 *Verification on Slide 5:*
 - $W_{\text{in}} = 6, H_{\text{in}} = 6, F = 3, P = 0, S = 1$
 - $W_{\text{out}} = \lfloor \frac{6 - 3 + 0}{1} \rfloor + 1 = 3 + 1 = 4$
@@ -296,7 +241,6 @@ Let $K$ be the number of filters, $F_w \times F_h$ be the filter spatial footpri
 $$
 \text{Params}_{\text{conv}} = K \times (F_w \times F_h \times C_{\text{in}} + 1)
 $$
-
 
 *Key Architectural Invariant:* The number of parameters in a convolutional layer is **entirely independent** of the input image spatial dimensions ($H_{\text{in}}, W_{\text{in}}$). An identical $3 \times 3 \times 3$ filter operates on a $32 \times 32$ image or a $4096 \times 4096$ image with exactly 28 parameters ($3 \times 3 \times 3 + 1$).
 
@@ -405,13 +349,11 @@ $$
 W_{\text{out}} = \left\lfloor \frac{W_{\text{in}} - F_p + 2P}{S_p} \right\rfloor + 1, \quad H_{\text{out}} = \left\lfloor \frac{H_{\text{in}} - F_p + 2P}{S_p} \right\rfloor + 1, \quad C_{\text{out}} = C_{\text{in}}
 $$
 
-
 *Zero-Parameter Law:* Standard pooling operations contain **zero learnable weights and zero biases**:
 
 $$
 \text{Params}_{\text{pool}} \equiv 0
 $$
-
 
 #### Numerical Walk-Through: Slide 10 Verification
 Input matrix $X \in \mathbb{R}^{4 \times 4}$, divided into four non-overlapping quadrants ($F_p = 2, S_p = 2, P = 0$):
@@ -554,7 +496,6 @@ $$
 \text{Params}_{\text{FC}} = (N_{\text{in}} + 1) \times N_{\text{out}} = N_{\text{in}} \cdot N_{\text{out}} + N_{\text{out}}
 $$
 
-
 - **Weight Matrix** $\mathbf{W}$: $N_{\text{in}} \times N_{\text{out}}$ parameters.
 - **Bias Vector** $\mathbf{b}$: $N_{\text{out}}$ parameters.
 
@@ -606,20 +547,17 @@ $$
 r_j \sim \text{Bernoulli}(1 - p)
 $$
 
-
 where $p \in [0, 1]$ is the **dropout rate** (the probability of dropping a neuron, typically set between $0.2$ and $0.5$). In standard implementation, **Inverted Dropout** is applied to preserve activation magnitude:
 
 $$
 \tilde{y}_j = \frac{r_j}{1 - p} \cdot y_j
 $$
 
-
 Dividing by $(1 - p)$ scales the remaining active neurons upward during training, guaranteeing that the mathematical expectation of the activations remains identical to the unregularized activations:
 
 $$
 \mathbb{E}[\tilde{y}_j] = \frac{\mathbb{E}[r_j]}{1 - p} \cdot y_j = \frac{1 - p}{1 - p} \cdot y_j = y_j
 $$
-
 
 #### 2. Inference / Testing Phase Mechanics (Slide 17)
 Because Inverted Dropout rescales activations during training, the testing phase operates deterministically:
@@ -634,21 +572,8 @@ Because Inverted Dropout rescales activations during training, the testing phase
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart TD
-    subgraph WithoutDropout["Network Without Dropout (Dense Co-adaptation)"]
-        direction TB
-        IN1["Input Units"] --> H_ALL["All Hidden Units Fully Connected"]
-        H_ALL --> OUT1["Output Classes"]
-    end
-
-    subgraph WithDropout["Network With Dropout (Subnetwork Sampling)"]
-        direction TB
-        IN2["Input Units"] --> H_ACT["Active Hidden Units (50%)"]
-        H_DRP["Deactivated Units (Crossed Out)"]
-        H_ACT --> OUT2["Output Classes"]
-    end
-```
+![Dropout in training vs inference](figures/cnn/l13_03_dropout.jpg)
+*Figure: Dropout with p = 0.5: in training, dropped units and all their connections vanish and kept units are scaled by 1/(1 - p); at inference every unit is used with no scaling (drawn with Python).*
 
 ![Dropout Mask Visualization](extracted_ML_Lec_13_CNN/media/image4.png)
 *Figure 5: Schematic comparison between a standard fully connected network and a thinned network generated by applying a stochastic dropout mask during training (Slide 15).*
@@ -682,18 +607,8 @@ Downstream layers face a moving target: their incoming weight updates must const
 ### 2. Technical Mechanism & Architecture
 Batch Normalization applies a four-step transformation to a mini-batch of activations $\mathcal{B} = \lbrace x_1, x_2, \dots, x_m \rbrace$ of size $m$ along each channel dimension independently:
 
-```mermaid
-flowchart TD
-    subgraph BNTransformation["Batch Normalization Computational Pipeline"]
-        direction TB
-        STEP1["1. Compute Mini-Batch Mean:<br/>mu_B = (1/m) * sum(x_i)"]
-        STEP2["2. Compute Mini-Batch Variance:<br/>sigma_B^2 = (1/m) * sum((x_i - mu_B)^2)"]
-        STEP3["3. Standardize Activations:<br/>x_hat_i = (x_i - mu_B) / sqrt(sigma_B^2 + epsilon)"]
-        STEP4["4. Scale and Shift (Learnable):<br/>y_i = gamma * x_hat_i + beta"]
-
-        STEP1 --> STEP2 --> STEP3 --> STEP4
-    end
-```
+![Batch normalization in four steps](figures/cnn/l13_04_batchnorm.jpg)
+*Figure: Batch normalization on one feature: take the mini-batch, compute its mean and variance, normalize to zero mean and unit variance, then scale by γ and shift by β (illustration).*
 
 #### Step 1: Mini-Batch Statistics Calculation (Slide 20)
 For each mini-batch $\mathcal{B}$, evaluate the sample mean $\mu_{\mathcal{B}}$ and sample variance $\sigma_{\mathcal{B}}^2$:
@@ -702,7 +617,6 @@ $$
 \mu_{\mathcal{B}} = \frac{1}{m} \sum_{i=1}^m x_i, \quad \sigma_{\mathcal{B}}^2 = \frac{1}{m} \sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2
 $$
 
-
 #### Step 2: Zero-Mean, Unit-Variance Standardization (Slide 20)
 Every activation is normalized to zero mean and unit variance, where $\epsilon > 0$ is a small constant (e.g., $10^{-5}$) added for numerical stability to avoid division by zero:
 
@@ -710,14 +624,12 @@ $$
 \hat{x}_i = \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}
 $$
 
-
 #### Step 3: Affine Scaling and Shifting (Slide 21)
 Standardizing activations directly to zero mean and unit variance can constrain inputs to the linear regime of activations (e.g., around zero for Sigmoid or Tanh), limiting the network's expressive capacity. To preserve representational flexibility, BN introduces two learnable parameters per channel: a scale parameter $\gamma$ and a shift parameter $\beta$:
 
 $$
 y_i = \gamma \hat{x}_i + \beta \equiv \text{BN}_{\gamma, \beta}(x_i)
 $$
-
 
 *Identity Recovery Property:* If the optimal representation requires unnormalized distributions, the optimization algorithm can learn:
 
@@ -736,18 +648,15 @@ $$
 \mu_{\text{run}} \leftarrow \alpha \cdot \mu_{\text{run}} + (1 - \alpha) \cdot \mu_{\mathcal{B}}
 $$
 
-
 $$
 \sigma^2_{\text{run}} \leftarrow \alpha \cdot \sigma^2_{\text{run}} + (1 - \alpha) \cdot \sigma_{\mathcal{B}}^2
 $$
-
 
 During inference, these fixed running statistics replace the mini-batch statistics:
 
 $$
 \hat{x}_{\text{inf}} = \frac{x - \mu_{\text{run}}}{\sqrt{\sigma^2_{\text{run}} + \epsilon}}, \quad y_{\text{inf}} = \gamma \hat{x}_{\text{inf}} + \beta
 $$
-
 
 ### 3. Visual Anchor
 
@@ -784,7 +693,6 @@ $$
 \text{Params}_{\text{BN}} = 2 \times C
 $$
 
-
 - $\gamma \in \mathbb{R}^C$: Channel-wise scale vector.
 - $\beta \in \mathbb{R}^C$: Channel-wise shift vector.
 - *Non-Trainable State Buffers:* The running mean $\mu_{\text{run}} \in \mathbb{R}^C$ and running variance $\sigma^2_{\text{run}} \in \mathbb{R}^C$ are tracked via moving averages and updated during forward passes, but they require zero gradient computation.
@@ -794,7 +702,6 @@ $$
 $$
 \text{Params}_{\text{BN}} = 2 \times 64 = 128 \text{ learnable parameters}
 $$
-
 
 #### Four Core Engineering Benefits (Slides 18–19)
 1. **Accelerated Convergence & Higher Learning Rates:** Stabilizing intermediate distributions allows learning rates to be increased by an order of magnitude without divergence risks.
@@ -814,16 +721,8 @@ The **LeNet-5 architecture** (Yann LeCun et al., 1998; Slides 25–30), designed
 ### 2. Technical Mechanism & Architecture
 LeNet-5 ingests a $32 \times 32 \times 1$ grayscale image and processes it through two Convolution-Pooling stages followed by three Fully Connected layers:
 
-```mermaid
-flowchart LR
-    IN["Input Image<br/>32 x 32 x 1"] --> C1["Conv-1<br/>6 @ 28 x 28<br/>K=5x5"]
-    C1 --> S2["Pool-1<br/>6 @ 14 x 14<br/>AvgPool 2x2"]
-    S2 --> C3["Conv-2<br/>16 @ 10 x 10<br/>K=5x5"]
-    C3 --> S4["Pool-2<br/>16 @ 5 x 5<br/>AvgPool 2x2"]
-    S4 --> C5["FC-1 (C5)<br/>120 Units<br/>Input: 400"]
-    C5 --> F6["FC-2 (F6)<br/>84 Units"]
-    F6 --> OUT["Output Layer<br/>10 Units"]
-```
+![LeNet-5 layer by layer](figures/cnn/l13_05_lenet5.jpg)
+*Figure: LeNet-5: 32x32x1 → C1 6@28x28 → S2 6@14x14 → C3 16@10x10 → S4 16@5x5 → C5 120 → F6 84 → 10 outputs (illustration).*
 
 #### Layer 1: Conv-1 (Slide 26)
 - **Input Dimensions:** $32 \times 32 \times 1$ ($H_{\text{in}} = 32, W_{\text{in}} = 32, D_{\text{in}} = 1$).
@@ -844,7 +743,6 @@ $$
 \text{Params}_{\text{Conv1}} = 6 \times (5 \times 5 \times 1 + 1) = 6 \times 26 = 156
 $$
 
-
 #### Layer 2: Pool-1 (Slide 26)
 - **Input Dimensions:** $28 \times 28 \times 6$.
 - **Hyperparameters:** Subsampling window $F_p = 2$, stride $S_p = 2$, padding $P = 0$.
@@ -859,7 +757,6 @@ $$
 $$
 \text{Params}_{\text{Pool1}} \equiv 0
 $$
-
 
 #### Layer 3: Conv-2 (Slide 27)
 - **Input Dimensions:** $14 \times 14 \times 6$ ($D_{\text{in}} = 6$).
@@ -880,7 +777,6 @@ $$
 \text{Params}_{\text{Conv2}} = 16 \times (5 \times 5 \times 6 + 1) = 16 \times 151 = 2416
 $$
 
-
 #### Layer 4: Pool-2 (Slide 27)
 - **Input Dimensions:** $10 \times 10 \times 16$.
 - **Hyperparameters:** Subsampling window $F_p = 2$, stride $S_p = 2$, padding $P = 0$.
@@ -895,7 +791,6 @@ $$
 $$
 \text{Params}_{\text{Pool2}} \equiv 0
 $$
-
 
 #### Layer 5: FC-1 / Layer C5 (Slide 28)
 - **Input Dimensions:** Flattened feature map from Pool-2:
@@ -914,7 +809,6 @@ $$
 \text{Params}_{\text{FC1}} = (400 + 1) \times 120 = 48,120
 $$
 
-
 #### Layer 6: FC-2 / Layer F6 (Slide 29)
 - **Input Dimensions:** $N_{\text{in}} = 120$ nodes.
 - **Output Units:** $N_{\text{out}} = 84$ nodes.
@@ -927,7 +821,6 @@ $$
 \text{Params}_{\text{FC2}} = (120 + 1) \times 84 = 10,164
 $$
 
-
 #### Layer 7: Output Layer (Slide 30)
 - **Input Dimensions:** $N_{\text{in}} = 84$ nodes.
 - **Output Units:** $N_{\text{out}} = 10$ nodes (representing handwritten digits 0 through 9).
@@ -939,7 +832,6 @@ $$
 $$
 \text{Params}_{\text{Output}} = (84 + 1) \times 10 = 850
 $$
-
 
 ### 3. Visual Anchor
 
@@ -982,7 +874,6 @@ The layer-by-layer audit verified by our standalone Python suite is summarized b
 $$
 \text{Total Parameters}_{\text{LeNet-5}} = 156 + 0 + 2416 + 0 + 48,120 + 10,164 + 850 = 61,706
 $$
-
 
 *Historical Note:* In LeCun's original 1998 implementation, Conv-2 was not fully connected to all 6 input maps (using a custom sparse connection scheme yielding 1,516 parameters), and subsampling layers used 2 learnable parameters per map. However, in the standard deep learning curriculum and as formulated in Slides 25–30, the standard modern definitions derived above are universally examined.
 
@@ -1082,23 +973,8 @@ flowchart TD
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart TD
-    subgraph AlexNetPipeline["AlexNet End-to-End Computational Pipeline"]
-        direction TB
-        IN["Input: 227 x 227 x 3"] --> C1["Conv-1: 11x11, s=4<br/>34,944 params"]
-        C1 --> M1["MaxPool-1: 3x3, s=2<br/>0 params"]
-        M1 --> C2["Conv-2: 5x5, p=2<br/>614,656 params"]
-        C2 --> M2["MaxPool-2: 3x3, s=2<br/>0 params"]
-        M2 --> C3["Conv-3: 3x3, p=1<br/>885,120 params"]
-        C3 --> C4["Conv-4: 3x3, p=1<br/>1,327,488 params"]
-        C4 --> C5["Conv-5: 3x3, p=1<br/>884,992 params"]
-        C5 --> M3["MaxPool-3: 3x3, s=2<br/>0 params"]
-        M3 --> FC1["FC-1: 9,216 -> 4,096<br/>37,752,832 params"]
-        FC1 --> FC2["FC-2: 4,096 -> 4,096<br/>16,781,312 params"]
-        FC2 --> FC3["FC-3: 4,096 -> 1,000<br/>4,097,000 params"]
-    end
-```
+![AlexNet feature-map sizes](figures/cnn/l13_06_alexnet.jpg)
+*Figure: AlexNet's tensor sizes from 227x227x3 to the 1000-way output; parameter counts are in the corrected table below (illustration).*
 
 ![AlexNet Layer Stack](extracted_ML_Lec_13_CNN/media/image19.png)
 *Figure 9: Vertical architectural stack of AlexNet showing sequential convolutional blocks, overlapping pooling operations, and high-dimensional fully connected classification layers (Slides 32, 36).*
@@ -1110,29 +986,8 @@ Slide 36 provides a table and states: *"By default, assume pad=0 and stride=1. T
 
 Our audit identifies the underlying mathematical errors across tensor shapes and parameters:
 
-![Slide 36 Mathematical Inconsistency and Resolution](extracted_ML_Lec_13_CNN/media/fig_slide36_dimension_conflict.png)
-*Figure 9: Quantitative audit and resolution of the mathematical dimension conflict in Slide 36, proving that canonical Path B dimensions validate the 37.7M FC-1 parameter count.*
-
-```mermaid
-flowchart TD
-    subgraph PathA["Path A: Literal Slide 36 Floor Division (Input 224 x 224, P=0)"]
-        direction TB
-        A1["Conv-1: (224-11)/4 + 1 = 54"] --> A2["MaxPool-1: (54-3)/2 + 1 = 26"]
-        A2 --> A3["Conv-2: (26+4-5)/1 + 1 = 26"]
-        A3 --> A4["MaxPool-2: (26-3)/2 + 1 = 12 x 12"]
-        A4 -.->|"CONTRADICTION!"| A_ERR["Slide 36 mistakenly wrote 13x13!"]
-    end
-
-    subgraph PathB["Path B: Canonical AlexNet Formulation (Input 227 x 227)"]
-        direction TB
-        B1["Conv-1: (227-11)/4 + 1 = 55"] --> B2["MaxPool-1: (55-3)/2 + 1 = 27"]
-        B2 --> B3["Conv-2: (27+4-5)/1 + 1 = 27"]
-        B3 --> B4["MaxPool-2: (27-3)/2 + 1 = 13 x 13"]
-        B4 --> B5["Conv 3, 4, 5: 13 x 13 -> MaxPool-3: 6 x 6"]
-        B5 --> B_OK["6 x 6 x 256 = 9,216 nodes<br/>Validates 37.7M FC-1 params!"]
-    end
-```
-
+![Slide 36: input 224 vs 227](figures/cnn/l13_07_slide36_paths.jpg)
+*Figure: Following the layer formulas from a 224 input reaches 12x12 after Pool2, not the 13x13 Slide 36 states; a 227 input reaches 13x13 and matches the table (illustration).*
 
 #### Reconciling with the Canonical 227x227 Resolution
 In original AlexNet implementations (such as Caffe and torchvision), the input image is sized to $227 \times 227 \times 3$ (or padded by 2 pixels if nominally $224 \times 224$). When evaluated with $227 \times 227$:
@@ -1174,8 +1029,6 @@ $$
 $$
 
 (Dense fully connected layers account for 58,631,144 parameters, or 93.99% of the entire model).
-
-
 
 ---
 
@@ -1322,7 +1175,6 @@ $$
 \frac{\partial \mathcal{L}}{\partial w} = \sum_{k \in \lbrace l, m, n, o \rbrace} \frac{\partial \mathcal{L}}{\partial k} \cdot \frac{\partial k}{\partial w} = \frac{\partial \mathcal{L}}{\partial l} \cdot b + \frac{\partial \mathcal{L}}{\partial m} \cdot c + \frac{\partial \mathcal{L}}{\partial n} \cdot e + \frac{\partial \mathcal{L}}{\partial o} \cdot f
 $$
 
-
 This confirms that training a CNN via backpropagation is mathematically equivalent to training an MLP where gradients from tied weights are accumulated across spatial steps before applying parameter updates.
 
 ---
@@ -1334,27 +1186,8 @@ Training modern deep convolutional architectures from scratch requires massive c
 
 Training a deep network with tens of millions of parameters on a tiny dataset inevitably results in catastrophic overfitting. **Transfer Learning** (Slides 43–49) addresses this limitation by repurposing the representations learned by a model trained on an extensive source dataset (e.g., ImageNet with 1.2 million images across 1,000 classes) to solve a distinct target task.
 
-![Transfer Learning Architecture and Knowledge Transfer](extracted_ML_Lec_13_CNN/media/fig_transfer_learning_philosophy.png)
-*Figure 11: Architectural adaptation in transfer learning, illustrating pre-trained feature backbone reuse and task-specific classification head replacement.*
-
-```mermaid
-flowchart LR
-    subgraph Source["Source Domain (ImageNet)"]
-        direction TB
-        S_DATA["1.2M Images, 1000 Classes"] --> S_FEAT["Pre-trained Convolutional Base<br/>(Low-level edges, textures, shapes)"]
-        S_FEAT --> S_HEAD["Original 1000-way Head<br/>(Discarded)"]
-    end
-
-    subgraph Target["Target Domain (Downstream Task)"]
-        direction TB
-        T_FEAT["Reused Feature Backbone<br/>(Frozen or Low Learning Rate)"] --> T_HEAD["New Task Head<br/>(Initialized from scratch)"]
-        T_DATA["Small Dataset (e.g. 500 Medical Scans)"] --> T_FEAT
-        T_HEAD --> T_OUT["Target Predictions<br/>(e.g., 2 Diagnostic Classes)"]
-    end
-
-    S_FEAT ==>|"Knowledge Transfer<br/>(Weights locked)"| T_FEAT
-```
-
+![Transfer learning: reuse the backbone, replace the head](figures/cnn/l13_08_transfer.jpg)
+*Figure: Transfer learning: a CNN trained on ImageNet (1.2M images, 1000 classes) keeps its backbone, frozen; its old head is discarded and a new head is trained on a small dataset, e.g. 500 scans for 2 classes (illustration).*
 
 ### 2. Technical Mechanism & Architecture
 Transfer learning operates under two foundational engineering paradigms based on target dataset size and domain similarity (Slides 44–45):
@@ -1415,23 +1248,8 @@ $$
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart TD
-    subgraph DecisionMatrix["Transfer Learning Decision Matrix"]
-        direction TB
-        D_SIZE{"Target Dataset Size?"}
-        D_SIM{"Target Domain Similarity?"}
-
-        D_SIZE -- Small (<2k samples) --> D_SIM
-        D_SIZE -- Large (>10k samples) --> D_SIM_L{"Target Domain Similarity?"}
-
-        D_SIM -- High Similarity --> Q1["Quadrant 1: Fixed Feature Extractor<br/>Freeze entire Conv backbone.<br/>Train linear classifier head only."]
-        D_SIM -- Low Similarity --> Q2["Quadrant 2: Early Feature Extractor<br/>Freeze early Conv blocks only.<br/>Train mid-to-high layers + head."]
-
-        D_SIM_L -- High Similarity --> Q3["Quadrant 3: Selective Fine-Tuning<br/>Fine-tune top Conv blocks + head.<br/>Keep early Conv blocks frozen."]
-        D_SIM_L -- Low Similarity --> Q4["Quadrant 4: Full Network Fine-Tuning<br/>Initialize with pre-trained weights.<br/>Fine-tune entire network with small learning rate."]
-    end
-```
+![Transfer learning decision matrix](figures/cnn/l13_09_transfer_matrix.jpg)
+*Figure: Choosing a strategy by dataset size and domain similarity; blue blocks are frozen layers, orange are trained (illustration).*
 
 ### 4. Verified Formulas, Trade-offs & Calculations
 

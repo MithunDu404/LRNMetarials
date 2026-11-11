@@ -13,34 +13,11 @@ Standard machine learning architectures treat inputs as flat, unorganized vector
 
 Discrete 2D convolution addresses this by treating the image as a 2D spatial grid and sliding a small parameterized weight template (a filter or kernel) across the coordinate space. Rather than evaluating every pixel in isolation, convolution computes localized weighted sums that quantify how well local image patches match the template's pattern.
 
-![Continuous vs Discrete Convolution and Stencil Model](extracted_ML_Lec_12_CNN/media/fig_conv_continuous_discrete.png)
-*Figure: Mathematical formulation and 4-step stencil mental model comparing continuous integral convolution with discrete 2D cross-correlation.*
-
 ### 2. Technical Mechanism & Architecture
 In the context of Convolutional Neural Networks (CNNs), convolution is defined as an affine transformation applied locally across a grid-structured topology.
 
-```mermaid
-flowchart LR
-    subgraph S1["1. Local Image Patch"]
-        direction TB
-        P["Input Region (m x n)"]
-    end
-    subgraph S2["2. Convolution Operation"]
-        direction TB
-        K["Kernel / Filter Weights (m x n)"]
-        DOT["Frobenius Inner Product (Element-wise Multiply)"]
-        SUM["Scalar Accumulation (Summation + Bias)"]
-    end
-    subgraph S3["3. Feature Representation"]
-        direction TB
-        FM["Feature Map Cell (i, j)"]
-    end
-
-    P --> DOT
-    K --> DOT
-    DOT --> SUM
-    SUM --> FM
-```
+![The four elements of convolution](figures/cnn/l12_01_conv_elements.jpg)
+*Figure: The four elements of every convolution: a kernel, a sliding window, a dot product at each position, and the feature map it builds (illustration).*
 
 The operation consists of four core elements:
 1. **Kernel / Filter:** A small matrix of real-valued weights (e.g., $2 \times 2$, $3 \times 3$, or $5 \times 5$). It serves as a specialized feature extractor tuned to detect specific localized patterns such as vertical edges, color transitions, or textures.
@@ -67,30 +44,8 @@ The resulting output feature map $O$ has shape $2 \times 3$.
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart TD
-    subgraph InputMatrix["Input Image Matrix (3 x 4)"]
-        direction TB
-        R1["[ I11  I12  I13  I14 ]"]
-        R2["[ I21  I22  I23  I24 ]"]
-        R3["[ I31  I32  I33  I34 ]"]
-    end
-
-    subgraph KernelMatrix["Kernel / Filter (2 x 2)"]
-        direction TB
-        K1["[ K11  K12 ]"]
-        K2["[ K21  K22 ]"]
-    end
-
-    subgraph FeatureMap["Output Feature Map (2 x 3)"]
-        direction TB
-        O1["[ O11  O12  O13 ]"]
-        O2["[ O21  O22  O23 ]"]
-    end
-
-    InputMatrix -->|"Sliding Window (Stride=1, Pad=0)"| FeatureMap
-    KernelMatrix -->|"Element-wise Multiply & Sum"| FeatureMap
-```
+![3x4 input convolved with a 2x2 kernel gives a 2x3 output](figures/cnn/l12_02_conv_walkthrough.jpg)
+*Figure: The Slides 2–9 walk-through: the 2x2 kernel K over the top-left block of the 3x4 input I produces O11; sliding with stride 1 and no padding fills the 2x3 output O (illustration).*
 
 ### 4. Verified Formulas, Trade-offs & Calculations
 The discrete 2D cross-correlation (commonly termed convolution in deep learning) for input $I$ and kernel $K$ of spatial dimensions $M \times N$ is:
@@ -156,24 +111,8 @@ flowchart TD
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart LR
-    subgraph Unpadded["Unpadded Input (5 x 5)"]
-        direction TB
-        U1["5 x 5 Image Matrix"]
-        K1["3 x 3 Filter (P = 0)"]
-        U1 --> K1
-        K1 --> O1["Output: 3 x 3 Matrix (Valid)"]
-    end
-
-    subgraph Padded["Padded Input (P = 1)"]
-        direction TB
-        P1["7 x 7 Padded Image (1 layer of zeros)"]
-        K2["3 x 3 Filter (P = 1)"]
-        P1 --> K2
-        K2 --> O2["Output: 5 x 5 Matrix (Same)"]
-    end
-```
+![Valid vs same padding on a 5x5 input](figures/cnn/l12_03_padding.jpg)
+*Figure: Valid (P = 0): a 3x3 window fits in 3x3 positions of the 5x5 input, so the output is 3x3. Same (P = 1): one ring of zeros makes a 7x7 grid, the window can centre on every original pixel, and the output stays 5x5 (illustration).*
 
 The padded array structure for $P = 1$ on an inner $7 \times 7$ grid (producing a $9 \times 9$ padded tensor, Slide 73):
 
@@ -257,14 +196,8 @@ G = \sqrt{G_x^2 + G_y^2}, \quad \theta = \arctan\left(\frac{G_y}{G_x}\right)
 #### 2. The Canny Edge Detection Pipeline (Slides 16–17)
 The Canny detector is not a single filter, but a 4-stage pipeline that eliminates noise and false responses:
 
-```mermaid
-flowchart TD
-    A["Raw Input Image"] --> B["Stage 1: Gaussian Smoothing (Noise Reduction)"]
-    B --> C["Stage 2: Gradient Computation (Sobel Kernels Gx, Gy)"]
-    C --> D["Stage 3: Non-Maximum Suppression (Thinning to 1-pixel width)"]
-    D --> E["Stage 4: Hysteresis Thresholding (Dual Thresholds Thigh, Tlow)"]
-    E --> F["Clean Binary Edge Map"]
-```
+![Canny edge detection pipeline](figures/cnn/l12_04_canny.jpg)
+*Figure: The Canny pipeline on one image: smoothing, Sobel gradients, non-maximum suppression, hysteresis thresholds, final binary edge map (illustration).*
 
 1. **Gaussian Smoothing:** Suppresses high-frequency camera noise that causes spurious gradient spikes.
 2. **Gradient Computation:** Evaluates $G = \sqrt{G_x^2 + G_y^2}$ and directional angle $\theta$.
@@ -320,27 +253,15 @@ K_{\text{unsharp}} = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0 \end{bm
   - Dilation rate $r = 1$: Standard dense convolution.
   - Dilation rate $r = 2$: Inserts 1 zero between adjacent filter taps, expanding a $3 \times 3$ kernel to cover a $5 \times 5$ receptive field without increasing parameter count (remains 9 weights).
   - **Benefits:** Expands receptive field exponentially across layers while preserving native spatial resolution (avoids downsampling artifacts in dense segmentation).
+![Dilation rate 1 vs 2 on a 3x3 kernel](figures/cnn/l12_07_dilated.jpg)
+*Figure: Dilation: the same 9 weights cover a 3x3 field at r = 1 and a 5x5 field at r = 2, with one skipped pixel between taps (illustration).*
+
 - **Embeddings / Learned Kernels:** In CNNs, kernels are not hand-engineered; their weights are freely parameterized variables learned directly from data via backpropagation.
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart TD
-    subgraph ClassicalKernels["Classical Image Processing Kernels"]
-        direction TB
-        subgraph Smoothing["Smoothing (DC Gain = 1)"]
-            G["Gaussian Kernel (Distance-Weighted)"]
-            B["Box/Average Kernel (Uniform Mean)"]
-        end
-        subgraph EdgeExtraction["Edge Extraction (DC Gain = 0)"]
-            S["Sobel Kernel (1st Derivative Gradients)"]
-            L["Laplacian Kernel (2nd Derivative Curvature)"]
-        end
-        subgraph Sharpening["Sharpening (DC Gain = 1)"]
-            U["Unsharp Mask = Identity + Laplacian"]
-        end
-    end
-```
+![Classical kernel families by DC gain](figures/cnn/l12_05_kernel_families.jpg)
+*Figure: Kernel families by DC gain: smoothing kernels (Gaussian, Box / Average) keep brightness (gain 1), edge kernels (Sobel, Laplacian) remove it (gain 0), and the unsharp mask (Identity + Laplacian) sharpens while keeping it (gain 1) (illustration).*
 
 ![Fig 1 – Taj Mahal edge detection via 8-neighbor Laplacian high-pass filter (media/image27.png)](extracted_ML_Lec_12_CNN/media/image27.png)
 
@@ -420,7 +341,8 @@ flowchart LR
 
 ### 3. Visual Anchor
 
-![Fig 2 – Multi-channel 3D volume convolution mapping input volume to multi-filter output feature maps (media/image43.png)](extracted_ML_Lec_12_CNN/media/image43.png)
+![Volume convolution: each filter spans the full input depth](figures/cnn/l12_06_volume_conv.jpg)
+*Figure: Volume convolution: each F x F x D1 filter spans the full depth of the input and gives one 2D slice; K filters give an output of depth K (illustration, after Slide 43).*
 
 ### 4. Verified Formulas, Trade-offs & Calculations
 
@@ -497,21 +419,8 @@ W_2 = \left\lfloor \frac{W_1 - F + 2P}{S} \right\rfloor + 1
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart LR
-    subgraph SpatialTransform["Spatial Transformation Mapping"]
-        direction LR
-        IN["Input: W1 x H1 x D1"] --> CONV["Conv Layer: (F, P, S, K)"]
-        CONV --> OUT["Output: W2 x H2 x D2"]
-    end
-
-    subgraph FormulaBox["Analytical Mapping Formulas"]
-        direction TB
-        F1["W2 = floor((W1 - F + 2P) / S) + 1"]
-        F2["H2 = floor((H1 - F + 2P) / S) + 1"]
-        F3["D2 = K (Number of Filters)"]
-    end
-```
+![Stride 1 vs stride 2 on a 7-pixel row](figures/cnn/l12_08_stride.jpg)
+*Figure: Stride on a 7-pixel row with a 3-wide window: S = 1 gives 5 window positions, S = 2 gives 3, matching W2 = floor((W1 - F + 2P) / S) + 1 (drawn with Python for exact counts).*
 
 ### 4. Verified Formulas, Trade-offs & Calculations
 
@@ -645,9 +554,6 @@ Why cannot standard fully connected Multi-Layer Perceptrons (MLPs / ANNs) scale 
 2. **Destruction of 2D Topology:** An MLP requires flattening the 2D grid into a 1D vector. This strips all spatial locality: pixel $(1, 2)$ is treated as having no closer relationship to $(1, 3)$ than to $(1000, 1000)$.
 3. **Lack of Translation Equivariance:** If an object shifts by 3 pixels to the right, a fully connected network activates completely different weight pathways. It must re-learn the appearance of objects at every individual pixel coordinate across the entire canvas.
 
-![Dense MLP vs Sparse CNN Connectivity](extracted_ML_Lec_12_CNN/media/fig_dense_vs_cnn_connectivity.png)
-*Figure: Structural connectivity comparison between dense Multilayer Perceptrons (global unstructured fan-in) and Convolutional Layers (sparse localized receptive fields with weight tying).*
-
 ### 2. Technical Mechanism & Architecture
 
 #### Core Inductive Biases of CNNs (Slides 87–90)
@@ -679,24 +585,8 @@ CNNs replace unrestricted dense matrix multiplication with two spatial inductive
 
 ### 3. Visual Anchor
 
-```mermaid
-flowchart TD
-    subgraph FC["Fully Connected Layer (Dense ANN)"]
-        direction TB
-        FC_IN["16 Input Neurons (4x4 Image)"]
-        FC_OUT["Hidden Neuron h11"]
-        FC_IN -->|"16 Dense Connections (All-to-one)"| FC_OUT
-    end
-
-    subgraph CNN_Sparse["Convolutional Layer (Sparse CNN)"]
-        direction TB
-        CNN_IN["16 Input Pixels"]
-        CNN_SUB["Local Receptive Field (Pixels 1, 2, 5, 6)"]
-        CNN_OUT["Feature Map Cell h11"]
-        CNN_IN -.-> CNN_SUB
-        CNN_SUB -->|"4 Sparse Connections (2x2 Kernel)"| CNN_OUT
-    end
-```
+![Fully connected vs convolutional connectivity](figures/cnn/l12_11_dense_vs_sparse.jpg)
+*Figure: Computing h11 from a 4x4 image: a dense layer needs all 16 connections, a 2x2 convolution only 4 (75% fewer) (illustration, after Slides 87–88).*
 
 ![Fig 5 – Sparsity of connections: local receptive field mapping pixels 1, 2, 5, 6 to activation h11 (media/image60.png)](extracted_ML_Lec_12_CNN/media/image60.png)
 
@@ -734,25 +624,8 @@ Pooling addresses this by downsampling feature maps, compressing spatial dimensi
 
 ### 2. Technical Mechanism & Architecture
 
-```mermaid
-flowchart TD
-    subgraph PoolingTypes["Four Types of Pooling Operations"]
-        direction TB
-        MP["1. Max Pooling: Extracts maximum value in window (Dominant features)"]
-        AP["2. Average Pooling: Extracts arithmetic mean in window (Contextual background)"]
-        GAP["3. Global Average Pooling: Averages entire feature map to 1 scalar"]
-        GMP["4. Global Max Pooling: Extracts absolute maximum over entire feature map"]
-    end
-
-    subgraph PoolingProperties["Invariable Mathematical Properties"]
-        direction TB
-        P1["Zero Learnable Parameters (Pure non-parametric function)"]
-        P2["Depth Invariance: Operates channel-by-channel (D_out = D_in)"]
-        P3["Induces Local Translation Invariance"]
-    end
-
-    PoolingTypes --> PoolingProperties
-```
+![Four pooling types](figures/cnn/l12_12_pooling_types.jpg)
+*Figure: The four pooling types on the same 4x4 map: max and average pooling shrink it to 2x2, global average and global max pooling reduce it to one value. None has learnable parameters, and depth is unchanged (illustration).*
 
 #### Taxonomy of Pooling Layers (Slides 93, 95)
 1. **Max Pooling:** Selects the maximum value within a spatial window of size $F_p \times F_p$. Retains the strongest activation (prominent edges, distinct textural points) while discarding non-maximal background signals.
@@ -867,30 +740,8 @@ The network must linearize the 3D spatial tensor into a 1D vector while preservi
 ### 2. Technical Mechanism & Architecture
 The Flatten layer is an unparameterized topological reshaping operation:
 
-```mermaid
-flowchart LR
-    subgraph FeatureExtractor["Feature Extractor Backbone"]
-        direction TB
-        C["Conv Layers (Spatial Filtering)"]
-        P["Pooling Layers (Spatial Downsampling)"]
-        C --> P
-    end
-
-    subgraph Interface["Interface Layer"]
-        direction TB
-        FL["Flatten Layer: Reshapes (W x H x C) tensor into (W*H*C x 1) vector"]
-    end
-
-    subgraph ClassifierHead["Classifier Head (MLP)"]
-        direction TB
-        FC1["Fully Connected Hidden Layer (Dense Weights)"]
-        SM["Softmax Output Layer (Class Probabilities)"]
-        FC1 --> SM
-    end
-
-    FeatureExtractor --> Interface
-    Interface --> ClassifierHead
-```
+![From convolution to classifier](figures/cnn/l12_13_cnn_to_classifier.jpg)
+*Figure: Where Flatten sits: conv and pool layers extract features, Flatten unrolls them into a vector, fully connected layers and softmax turn it into class probabilities (illustration).*
 
 - **Topological Boundary:** Separates translation-equivariant spatial representation learning from position-sensitive global classification.
 - **Serialization Order:** Unrolls values along a deterministic coordinate hierarchy (typically row-major order: row by row, channel by channel).
