@@ -198,11 +198,11 @@ flowchart LR
 
 - **IVF (inverted file index):** group all vectors into, say, 1,000 clusters of similar vectors (using **k-means**, which repeatedly assigns each vector to its nearest cluster centre, then moves each centre to the average of its members), and keep one list per cluster. At query time, find the few nearest cluster centres and search only those lists. The parameter **nprobe** (lists searched) trades speed for recall.
 - **HNSW (hierarchical navigable small world)** (Malkov and Yashunin, 2016): a layered graph where each vector links to its near neighbours. The top layers are sparse "highways", the bottom layer is dense. Search starts at the top, greedily walks toward the query, and drops down a layer at a time. Cost grows roughly logarithmically with corpus size, and recall is high. **The default in most vector databases.** The cost is memory (graph links), and slower inserts.
+- **PQ (product quantisation):** compress each vector by splitting it into sub-vectors and replacing each with the ID of its nearest centroid. 1,024 floats become, say, 64 bytes. Distances are approximated from the codes. Often combined with IVF (IVF-PQ), with exact re-scoring of the top candidates.
 
 ![Fig 16 – HNSW layers (f16_hnsw_layers.png): three panels of the same toy graph. Layer 2 has 3 nodes, layer 1 has 10, layer 0 has all 40. A blue path starts at the entry point, hops greedily towards the red query star on each layer, and drops down, ending at the true nearest neighbour after visiting 6 nodes.](../../figures/ai_engineering/f16_hnsw_layers.png)
 
 *Fig 16 (f16_hnsw_layers.png). A real greedy search on a toy graph of 40 points. Long hops on the sparse top layer get close fast; the dense bottom layer refines. Six nodes visited instead of 40. Real indexes keep a list of the best `ef_search` candidates instead of a single path, which is how they avoid getting stuck in a local dead end.*
-- **PQ (product quantisation):** compress each vector by splitting it into sub-vectors and replacing each with the ID of its nearest centroid. 1,024 floats become, say, 64 bytes. Distances are approximated from the codes. Often combined with IVF (IVF-PQ), with exact re-scoring of the top candidates.
 
 ![Fig 6 – ANN recall vs work (f06_ann_recall_vs_work.png): recall@10 against the share of the database scanned, for an IVF index with nprobe from 1 to 100. Recall rises from 41% scanning 1.3% of the data to 82% at 8.5%, 92% at 16.5% and 98% at 32%.](../../figures/ai_engineering/f06_ann_recall_vs_work.png)
 

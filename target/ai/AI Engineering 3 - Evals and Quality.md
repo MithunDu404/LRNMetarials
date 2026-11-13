@@ -130,7 +130,7 @@ Two principles make it work:
 | Difficulty | answer in docs, answer needs two docs combined, not answerable |
 | Style | terse, rambling, non-native English |
 
-3 × 3 × 3 × 4 = **108 combinations**, each a targeted test. Review a sample by hand. Discard unrealistic ones.
+3 × 3 × 3 × 3 = **81 combinations**, each a targeted test. Review a sample by hand. Discard unrealistic ones.
 
 > **Four statistics ideas you need (no prior stats assumed).**
 > 1. **Noise.** A pass rate measured on a sample isn't the true pass rate, just as 10 coin flips rarely give exactly 5 heads. Run the same eval on a *different* 100 cases and you'd get a slightly different number.
@@ -166,7 +166,7 @@ If the change made no real difference, each flipped case is equally likely to go
 **Worked example.** Old 85%, new 88% on the same 200 cases: a net gain of 6 cases. Two very different stories give that same +3 points:
 
 - 14 flipped to pass and 8 flipped to fail. With 22 fair coin tosses, a split at least as lopsided as 14 to 8 (in either direction) happens about 29% of the time ($p \approx 0.29$), so this is weak evidence. The change helped some cases and hurt others.
-- 6 flipped to pass and none flipped to fail. Six tosses all landing the same way happens by chance only $2/2^6 \approx 0.03$ of the time, about 3%, ($p \approx 0.03$). That's fair evidence of a real, consistent improvement.
+- 6 flipped to pass and none flipped to fail. Six tosses all landing the same way happens by chance only $2/2^6 \approx 0.03$ of the time, about 3% ($p \approx 0.03$). That's fair evidence of a real, consistent improvement.
 
 The habit: always look at the flipped cases, not just the two averages. Reading the cases that flipped to fail also tells you *what* the change broke.
 
@@ -472,7 +472,7 @@ Each turn makes the eval set more representative and the product better. Over ti
 | Small model + better retrieval | 91% | low | fast |
 | Small model, no retrieval | 78% | lowest | fastest |
 
-*Illustrative.* If the quality bar is 90%, the third row may be the best product, even though it's not the "best model". Look for the **Pareto frontier**: configurations where nothing else is better on all three dimensions. Then pick from it using the product's needs. Routing easy requests to cheap models and hard ones to expensive models (Guide 6 §3) often beats any single configuration.
+*Illustrative.* If the quality bar is 90%, the third row may be the best product, even though it's not the "best model". Look for the **Pareto frontier**: the configurations that no other configuration beats on all three dimensions at once. (Row 4 is on it too, because nothing is cheaper or faster; it just fails the quality bar.) Then pick from it using the product's needs. Routing easy requests to cheap models and hard ones to expensive models (Guide 6 §3) often beats any single configuration.
 
 ---
 

@@ -443,7 +443,7 @@ For each one: **write down your prediction first**, then run `py -3.12 -m pytest
 2. **Make `get_session` commit after `yield`** and remove the commits from the services. Run the trace: when does `COMMIT` happen relative to "middleware: done"? What does that mean if the commit fails? (§4.3)
 3. **Swap the two routes** in `routers/users.py`. Which test fails, and with what status code?
 4. **Remove `response_model=UserOut`** from `register`. What does the response contain now? (Answer in §5.4. Predict first. Most people guess "an error"; it isn't.)
-5. **Add `time.sleep(0.5)`** inside `create_order`. Run two requests at once with `uvicorn` and a tool like `hey` or two terminals. Then change the endpoint to `def`. Explain the difference using Part 1 Figure 1.
+5. **Add `time.sleep(0.5)`** inside `create_order`. Run two requests at once with `uvicorn` and a tool like `hey` or two terminals. Then change the endpoint to `def`. Explain the difference using Part 1 Figure 2 (the blocked event loop).
 6. **Loop over `user.orders`** in a new endpoint without `selectinload`. What error do you get in this async app, and why does a sync app give you N+1 queries instead?
 
 ---

@@ -1,7 +1,7 @@
 # Handling 1 Million Requests per Second
 
 > **Source:** [Let's Handle 1 Million Requests per Second, It's Scarier Than You Think!](https://youtu.be/W4EwfEU8CGA?si=wK15t9A7NYiBW5aB) by Cododev
-> **Related notes:** [System Design Explained](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) · [8 API Laws](REST%20API%20Design%20-%20The%208%20Laws.md) · [Atlassian platform engineering](Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md)
+> **Related notes:** [System Design Explained](System%20Design%20-%20APIs%20Databases%20Caching%20CDNs%20and%20Scaling.md) · [8 API Laws](../Theory/REST%20API%20Design%20-%20The%208%20Laws.md) · [Atlassian platform engineering](../Theory/Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md)
 > **What's in this version:** 11 figures, most of them **computed from the underlying arithmetic** (the bandwidth wall, Little's Law, CPU budget per request, a measured O(n)-vs-index benchmark, the birthday paradox, RAM burn-down, rare-event frequency); the four laws that decide every result in the video; runnable code that reproduces the maths; a unit correction (the video's notes mix **bits and bytes**); a quiz and a glossary.
 
 > **One correction up front.** The original notes describe the "beast" machine as having **600 GB/s** of network. That's **600 Gbit/s** (= 75 GB/s). The same bit/byte confusion appears in a few other places ("the earlier machine capped around 50 GB/s" should be 50 Gbit/s ≈ 6.25 GB/s). This distinction is the single most important unit in the whole video, so this guide states bits and bytes explicitly everywhere.
@@ -42,7 +42,7 @@ The single most important finding, and the one that transfers to your job: **the
 
 ## 1. TL;DR in 10 lines
 
-1. The goal: sustain **1,000,000 HTTP requests per second** on real hardware. (For scale, AWS's WAF reportedly handled 400M+ req/s globally a few years ago.)
+1. The goal: sustain **1,000,000 HTTP requests per second** on real hardware. (For scale: in 2023 Google reported absorbing a DDoS attack that peaked at 398 million req/s.)
 2. At this scale, **"it works, ship it" becomes a financial event**. An O(n) query instead of an index lookup can cost tens of thousands of dollars a month.
 3. **Four hard limits decide everything:** network bandwidth, CPU time per request, concurrency (Little's Law) and memory.
 4. **Payload size is the boss.** 1M req/s × 30 KB = **246 Gbit/s**. No language or framework beats that arithmetic. Shrinking the response from 32 KB to ~1 KB took the same machine from 100K to 3M req/s.

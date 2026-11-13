@@ -98,7 +98,7 @@ This part teaches the ground floor: how to reason about requirements and numbers
 
 Two habits separate strong designers:
 
-1. **Use percentiles, not averages.** "p99 = 200 ms" means 99% of requests finish within 200 ms. Averages hide the slow requests, and slow requests are the ones users remember. (Part 3 §3 shows why tails get worse at scale.)
+1. **Use percentiles, not averages.** "p99 = 200 ms" means 99% of requests finish within 200 ms. Averages hide the slow requests, and slow requests are the ones users remember. (Part 3 §4.3 shows why tails get worse at scale.)
 2. **Requirements can differ inside one system.** In a shopping site, the payment path needs strong consistency and zero data loss. The "recommended for you" path can be stale, lossy and approximate. Design each path for its own needs.
 
 ### 2.2 Trade-offs are the job
@@ -116,7 +116,7 @@ The classic trade-offs you will meet again and again:
 | Availability | Possible conflicts to merge | Multi-leader and leaderless replication (Part 2) |
 | Simplicity | Scale ceiling | One big database vs sharding |
 | Flexibility | Performance | Generic JSON documents vs typed columns |
-| Cost savings | Headroom | Running servers hot (Part 3 §3: latency explodes near 100%) |
+| Cost savings | Headroom | Running servers hot (Part 3 §4.2: latency explodes near 100%) |
 
 A good design document names each trade-off and says *why* this side was chosen for this requirement.
 
@@ -341,7 +341,7 @@ So every durable database faces a trade-off: **fsync on every commit** (safe, sl
 
 When threads share data, they need **synchronisation**:
 
-- A **mutex (lock)** lets one thread at a time into a critical section. Under heavy **contention**, threads queue on the lock and adding cores stops helping (this is the serial fraction in Amdahl's law, Part 3 §3).
+- A **mutex (lock)** lets one thread at a time into a critical section. Under heavy **contention**, threads queue on the lock and adding cores stops helping (this is the serial fraction in Amdahl's law, Part 3 §4.4).
 - A **deadlock** happens when two threads each hold a lock the other needs. The standard prevention is to always take locks in the same global order.
 - **Lock-free** structures use atomic CPU instructions such as compare-and-swap (CAS): "set X to new only if it still equals old". The same CAS idea reappears in distributed systems as conditional writes and optimistic concurrency (§8.5).
 
@@ -430,7 +430,7 @@ UDP sends independent datagrams with no handshake, no ordering, no retransmissio
 
 Reading the figure: TCP (1 RTT) + TLS 1.2 (2 RTT) + request (1 RTT) = 4 RTT = 400 ms. TLS 1.3 cuts its handshake to 1 RTT, giving 300 ms. QUIC merges the transport and TLS handshakes into 1 RTT, giving 200 ms. On a repeat visit, **0-RTT** sends the request with the very first packet, giving 100 ms.
 
-> **0-RTT has a catch.** Data in the first flight can be *replayed* by an attacker. Only use it for idempotent requests, such as a GET with no side effects. Idempotency comes back in Part 2 §7.
+> **0-RTT has a catch.** Data in the first flight can be *replayed* by an attacker. Only use it for idempotent requests, such as a GET with no side effects. Idempotency comes back in Part 2 §8.5.
 
 ### 4.5 TLS 1.3 in one paragraph (and the post-quantum change)
 
@@ -557,7 +557,7 @@ flowchart LR
 | **Power of two choices** | Pick 2 servers at random, send to the less loaded one | Large fleets. Close to the best possible, with no global state. |
 | Consistent hashing on a key | The same key always goes to the same server | You need cache affinity or sticky sessions (Part 2 §4.2) |
 
-**Why the choice matters more than it looks.** Round robin is *blind*: it keeps sending a slow server its full share. Suppose one of four servers slows to half speed (a noisy neighbour, a long GC pause). Round robin still gives it 25% of the traffic, but it can only finish about 12.5%. Its queue grows without limit, and every request that lands there waits longer and longer. Part 3 §4.2 shows the maths: waiting time explodes as utilisation nears 100%. **Load-aware** algorithms (least outstanding requests, power of two choices) notice the queue and route around it.
+**Why the choice matters more than it looks.** Round robin is *blind*: it keeps sending a slow server its full share. Suppose one of four servers slows to half speed (a noisy neighbour, a long GC pause). Round robin still gives it 25% of the traffic. If the servers were already running near capacity, it can now finish only about half of that (12.5%). Its queue grows without limit, and every request that lands there waits longer and longer. Part 3 §4.2 shows the maths: waiting time explodes as utilisation nears 100%. **Load-aware** algorithms (least outstanding requests, power of two choices) notice the queue and route around it.
 
 Power of two choices is the surprising one. Picking the less-loaded of just *two* random servers is dramatically better than picking one at random. With $n$ servers and random placement, the busiest server's excess load grows like $\log n / \log \log n$; with two choices it grows only like $\log \log n$ (Mitzenmacher, 2001). It needs no global view of the fleet, so many independent load balancers can use it at once without coordinating. That's why it's common in large systems such as Envoy and Nginx's `random two` mode.
 
@@ -915,7 +915,7 @@ Two traps:
 
 ### 7.1 Relational (SQL)
 
-Data lives in tables of rows and columns with a fixed **schema**. Relations are expressed with foreign keys and combined with **joins**. **Normalisation** stores each fact once, which avoids update anomalies but needs joins to reassemble data. Relational databases give you powerful ad-hoc queries (SQL), strong transactions (§8) and decades of tooling. **PostgreSQL** is the default choice for new systems in 2026 for good reason: with extensions it also covers JSON documents (`jsonb`), full-text search, geospatial data (PostGIS) and vectors (`pgvector`). (Versions: PostgreSQL 18, released in September 2025, added asynchronous I/O and native `uuidv7()`. **PostgreSQL 19** reached release candidate 1 on 15 October 2026, with general availability expected within weeks. Its headline features include SQL/PGQ property-graph queries in standard SQL, a `WAIT FOR LSN` command that makes read-your-writes on replicas easy (Part 2 §3.2), parallel autovacuum and a non-blocking `REPACK` command.)
+Data lives in tables of rows and columns with a fixed **schema**. Relations are expressed with foreign keys and combined with **joins**. **Normalisation** stores each fact once, which avoids update anomalies but needs joins to reassemble data. Relational databases give you powerful ad-hoc queries (SQL), strong transactions (§8) and decades of tooling. **PostgreSQL** is the default choice for new systems in 2026 for good reason: with extensions it also covers JSON documents (`jsonb`), full-text search, geospatial data (PostGIS) and vectors (`pgvector`). (Versions: PostgreSQL 18, released in September 2025, added asynchronous I/O and native `uuidv7()`. **PostgreSQL 19** reached release candidate 1 on 15 October 2026; general availability is planned for 19 November 2026, after a delay from the original October target. Its headline features include SQL/PGQ property-graph queries in standard SQL, a `WAIT FOR LSN` command that makes read-your-writes on replicas easy (Part 2 §3.2), parallel autovacuum and a non-blocking `REPACK` command.)
 
 ### 7.2 Document
 
@@ -1158,7 +1158,7 @@ Compare it with the lost update above. There, both transactions wrote the **same
 - **Unique constraints**: let the database reject the second booking.
 - Or simply use **serializable** and retry on abort.
 
-The distributed version of all this (transactions across machines: 2PC, Sagas) is in [Part 2 §7](System%20Design%202%20-%20Distributed%20Systems%20Theory.md).
+The distributed version of all this (transactions across machines: 2PC, Sagas) is in [Part 2 §8](System%20Design%202%20-%20Distributed%20Systems%20Theory.md).
 
 ---
 
@@ -1448,6 +1448,6 @@ Heavy scans compete with user transactions for CPU, I/O and the buffer cache. Lo
 - Rajesh Nishtala et al., "Scaling Memcache at Facebook", NSDI 2013 (leases against stale sets and stampedes, §5.3).
 - Stephen Robertson and Hugo Zaragoza, "The Probabilistic Relevance Framework: BM25 and Beyond", 2009.
 - RFC 9562 (UUIDs, including UUIDv7), 2024. RFC 7519 (JSON Web Token).
-- Redis 8 relicensing under AGPLv3: [The Register, May 2025](https://www.theregister.com/2025/05/01/redis_returns_to_open_source/); PostgreSQL 19 beta notes: [postgresql.org](https://postgresql.org/about/news/postgresql-19-beta-1-released-3313/); PostgreSQL 19 RC 1 announced 15 October 2026 ([news archive](https://www.postgresql.org/about/newsarchive/)).
+- Redis 8 relicensing under AGPLv3: [The Register, May 2025](https://www.theregister.com/2025/05/01/redis_returns_to_open_source/); PostgreSQL 19 beta notes: [postgresql.org](https://postgresql.org/about/news/postgresql-19-beta-1-released-3313/); PostgreSQL 19 RC 1 announced 15 October 2026, with general availability planned for 19 November 2026 ([RC 1 announcement](https://www.postgresql.org/about/news/postgresql-19-rc-1-released-3409/)).
 
 **Next:** [Part 2: Distributed Systems Theory](System%20Design%202%20-%20Distributed%20Systems%20Theory.md), where many machines must agree on what is true.
