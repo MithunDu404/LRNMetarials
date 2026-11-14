@@ -116,7 +116,7 @@ The KL loss uses only $\mu$ and $\sigma^2$, not $z$ or the decoder, which is why
 
 At $\beta = 4$ the optimiser mostly shrinks the KL. Real reconstruction losses are summed over all pixels (784 for MNIST), so the balance is less extreme.
 
-> 📘 **Beyond the slides — where the loss comes from.** It is the negative **evidence lower bound (ELBO)** (Kingma and Welling, 2014): $\log p(x) \ge \mathbb{E}_{q(z \mid x)}[\log p(x \mid z)] - \text{KL}(q(z \mid x) \Vert p(z))$. Minimising $L$ raises a lower bound on how likely the model finds real data. Large $\beta$ is the **β-VAE** (Higgins et al., 2017), known for disentangled latents.
+> 📘 **Beyond the slides — where the loss comes from.** It is the negative **evidence lower bound (ELBO)** (Kingma and Welling, 2014): $\log p(x) \ge \mathbb{E}_{q(z \mid x)}[\log p(x \mid z)] - \text{KL}(q(z \mid x) \Vert p(z))$. Minimising $L$ raises a lower bound on how likely the model finds real data. In plain words: we cannot compute "how likely is this image under my model" directly, so we push up a number that is guaranteed to sit below it (rebuild well, keep codes near the bell curve). Large $\beta$ is the **β-VAE** (Higgins et al., 2017), known for disentangled latents.
 
 ---
 
@@ -124,7 +124,7 @@ At $\beta = 4$ the optimiser mostly shrinks the KL. Real reconstruction losses a
 
 **The idea.** Each cloud $q(z \mid x)$ should stay near $\mathcal{N}(0, 1)$. Clouds that drift away or shrink to dots bring the gaps back. KL measures that distance; for two Gaussians it has a closed form.
 
-**The formula (Slides 14–15).** $q(z \mid x)$ is the **approximate posterior** the encoder outputs; $p(z)$ is the **prior**, usually $\mathcal{N}(0, I)$. With $d$ latent dimensions:
+**The formula (Slides 14–15).** $q(z \mid x)$ is the **approximate posterior** the encoder outputs; $p(z)$ is the **prior**, usually $\mathcal{N}(0, I)$. In plain words: the **prior** is where we *want* codes to live before seeing any input (a standard bell curve); the **posterior** is where the codes for this particular $x$ really are; "approximate" because the encoder only estimates it with a Gaussian. With $d$ latent dimensions:
 
 ```math
 \text{KL}(q(z \mid x) \Vert p(z)) = -\frac{1}{2} \sum_{j=1}^{d} \left( 1 + \log \sigma_j^2 - \mu_j^2 - \sigma_j^2 \right)
@@ -188,7 +188,7 @@ What it punishes: $\mu_j^2$ punishes means away from 0; $\sigma_j^2 - 1 - \log \
 
 A key technique for training VAEs (Slide 25): it handles the random latent variables during backpropagation, so gradient methods like SGD can optimise the VAE.
 
-**The problem (Slides 24, 26–27).** The encoder outputs a **mean vector** $\mu(x)$ (centre) and a **log-variance vector** $\log \sigma^2(x)$ (spread), and $z \sim \mathcal{N}(\mu(x), \sigma^2(x))$ is a random variable. Backpropagation must send gradients through the whole graph to the encoder, but random sampling is **non-differentiable**: the gradient stops at the random node and training is blocked.
+**The problem (Slides 24, 26–27).** The encoder outputs a **mean vector** $\mu(x)$ (centre) and a **log-variance vector** $\log \sigma^2(x)$ (spread), and $z \sim \mathcal{N}(\mu(x), \sigma^2(x))$ is a random variable. Backpropagation must send gradients through the whole graph to the encoder, but random sampling is **non-differentiable**: the gradient stops at the random node and training is blocked. Why: backpropagation needs to ask "if $\mu$ grows a little, how much does $z$ change?". A dice roll has no formula connecting $\mu$ to the number that comes out, so there is no slope to answer that question.
 
 **The solution (Slides 28–30).** Move the randomness out of the way: write $z$ as a deterministic function of a fixed random variable.
 

@@ -37,7 +37,7 @@ The 5 conv and 3 FC layers have weights; pooling has none. So AlexNet is an **8-
 
 **The idea.** A 227×227 photo is big, so Conv1 shrinks it fast with large 11×11 filters that jump 4 pixels. Conv2 then keeps the size (stride 1, padding) but uses many more filters. Conv3–5 stack small 3×3 filters with no pooling between them, building object parts. FC layers combine all that evidence into one of 1000 classes.
 
-**The layers (Slides 3–7).** Every conv and FC layer except the last uses **ReLU**, $\max(0, x)$: keep positives, zero negatives. Every pool is **max pooling**, keeping the largest value in each window.
+**The layers (Slides 3–7).** Every conv and FC layer except the last uses **ReLU** (Rectified Linear Unit), $\max(0, x)$: keep positives, zero negatives. Every pool is **max pooling**, keeping the largest value in each window.
 
 | Layer (slide) | Filters / neurons | Kernel | Stride | Padding | Output |
 | :--- | :--- | :---: | :---: | :---: | :--- |

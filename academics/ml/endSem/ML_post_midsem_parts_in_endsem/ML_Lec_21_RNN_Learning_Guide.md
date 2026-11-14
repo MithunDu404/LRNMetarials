@@ -129,6 +129,8 @@ L(y, \hat{y}) = \frac{1}{t} \sum_{i=1}^{t} (\hat{y}_i - y_i)^2 = \frac{1}{t} \su
 
 ($\partial a_k / \partial W$ is only the **direct** effect at step $k$, holding $a_{k-1}$ fixed.)
 
+Read it as four paths, one per step that used $W$. Term 1: $W$'s effect at step 4 itself. Term 2: $W$ changed $a_3$, and $a_3$ changed $a_4$. Term 3: through $a_2$, then $a_3$, then $a_4$. Term 4: all the way from step 1. Each step further back adds one more $\partial a_j / \partial a_{j-1}$ factor, and that growing chain of multiplications is exactly what causes vanishing or exploding gradients (section 4).
+
 - **$U$ (Slide 20):** the same pattern:
 
 ```math
@@ -182,7 +184,7 @@ flowchart RL
 > | after 10 steps | 0.00098 | 0.349 | 1 | 57.7 |
 > | after 50 steps | $8.9 \times 10^{-16}$ | 0.0052 | 1 | $6.4 \times 10^{8}$ |
 >
-> Staying at exactly 1 is a knife edge. Sigmoid is worse: slope at most 0.25, so ten steps with $W = 1$ give at most $0.25^{10} \approx 9.5 \times 10^{-7}$. For vectors, $\gamma$ is the size (largest singular value) of $W$ times the slopes. **Gradient clipping** (scale the gradient down to a maximum length) fixes exploding; vanishing needs a new architecture: the LSTM.
+> Staying at exactly 1 is a knife edge. Sigmoid is worse: slope at most 0.25, so ten steps with $W = 1$ give at most $0.25^{10} \approx 9.5 \times 10^{-7}$. For vectors, $\gamma$ is roughly "how much $W$ can stretch a vector" (its largest singular value) times the slopes. **Gradient clipping** (scale the gradient down to a maximum length) fixes exploding; vanishing needs a new architecture: the LSTM.
 
 ![Fig 9 – The BPTT gradient factor after k steps for per-step factors 0.5 to 1.5, on a log scale (figures/plots/fig_rnn_gradient.png)](figures/plots/fig_rnn_gradient.png)
 *Figure: Factor 0.5 leaves about a billionth of the gradient after 30 steps; 1.5 multiplies it by over 600 million after 50.*
