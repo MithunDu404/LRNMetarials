@@ -79,7 +79,7 @@ old income."* In other words, it counts **how many doublings** you made.
 | 50,000 → 100,000 | 1 | 1 |
 | 100,000 → 110,000 | 0.14 | 0.14 |
 
-![Fig 1 – Equal steps for each doubling (images/fig_log_income.png)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/fig_log_income.png)
+![Fig 1 – Equal steps for each doubling (images/fig_log_income.png)](images/fig_log_income.png)
 
 *Fig 1 – Equal steps for each doubling (images/fig_log_income.png). An illustration of the log model, not the
 study's data. Going from 20k to 40k and from 50k to 100k climbs the same height; 100k to 110k barely moves.*
@@ -182,7 +182,7 @@ Ravi put in two-thirds as much money as Asha but ends with **less than half** he
 invests **double** (200 a month) for his 20 years, he reaches only about **104,200**, still behind Asha.
 Those 10 early years are worth more than doubling his effort later.
 
-![Fig 2 – Asha vs Ravi (images/fig_compounding.png)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/fig_compounding.png)
+![Fig 2 – Asha vs Ravi (images/fig_compounding.png)](images/fig_compounding.png)
 
 *Fig 2 – Asha vs Ravi (images/fig_compounding.png). Same habit, same return; the only difference is a 10-year
 head start. Asha's curve pulls away from the grey "money put in" line because growth earns growth.*
@@ -201,7 +201,7 @@ yearly return in percent:
 
 The exact time is $\ln 2 / \ln(1 + \text{rate})$; the shortcut is within a few months for normal rates.
 
-![Fig 3 – From seed to banyan (images/img_banyan.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_banyan.jpg)
+![Fig 3 – From seed to banyan (images/img_banyan.jpg)](images/img_banyan.jpg)
 
 *Fig 3 – From seed to banyan (images/img_banyan.jpg). Generated with Google Flow for this guide. A seed you
 can hold in your palm becomes a tree that shelters a village, but only with decades. Compounding is a banyan,
@@ -233,7 +233,7 @@ Read the first row again: paying 30 a month on this debt **pays exactly the inte
 falls. You could pay forever. Paying a little more than the minimum turns a lifelong trap into a 13-month
 problem.
 
-![Fig 4 – The minimum-payment trap (images/fig_debt.png)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/fig_debt.png)
+![Fig 4 – The minimum-payment trap (images/fig_debt.png)](images/fig_debt.png)
 
 *Fig 4 – The minimum-payment trap (images/fig_debt.png). The red line never moves: 30 a month only covers the
 interest. Ten more a month (orange) ends it in about 4 years; 100 a month (green) in 13 months.*
@@ -271,7 +271,7 @@ treat them, will matter more to how your life actually feels at 50 and 80. Relat
 **investment that compounds**, exactly like money: small deposits of attention, honesty and help, made
 consistently over decades.
 
-![Fig 5 – Friends at eighty (images/img_oldfriends.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_oldfriends.jpg)
+![Fig 5 – Friends at eighty (images/img_oldfriends.jpg)](images/img_oldfriends.jpg)
 
 *Fig 5 – Friends at eighty (images/img_oldfriends.jpg). Generated with Google Flow for this guide. The
 Harvard study's picture of a good old age: not the richest men, but the most connected ones.*
@@ -379,7 +379,7 @@ still repeat:
 > "Treat your **mother** as divine. Treat your **father** as divine. Treat your **teacher** as divine. Treat
 > your **guest** as divine."
 
-![Fig 6 – Passing the flame (images/img_diyas.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_diyas.jpg)
+![Fig 6 – Passing the flame (images/img_diyas.jpg)](images/img_diyas.jpg)
 
 *Fig 6 – Passing the flame (images/img_diyas.jpg). Generated with Google Flow for this guide. Lighting
 another lamp from yours costs your flame nothing, and the whole room grows brighter. Respect and care work

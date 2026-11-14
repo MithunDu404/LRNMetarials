@@ -84,7 +84,7 @@ flowchart TD
 - **No thought of moksha:** everything depends on outside events, so every loss feels like the end of the
   world.
 
-![Fig 1 – Four pillars, one roof (images/img_pillars.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_pillars.jpg)
+![Fig 1 – Four pillars, one roof (images/img_pillars.jpg)](images/img_pillars.jpg)
 
 *Fig 1 – Four pillars, one roof (images/img_pillars.jpg). Generated with Google Flow for this guide. The
 pillars carry motifs for balance, wealth, enjoyment and freedom; the family lives safely because all four
@@ -155,7 +155,7 @@ Why "another's dharma is full of fear": when you live someone else's path, you a
 doesn't fit your nature and you are always measuring yourself against people built for it. On your own path
 you can be imperfect and still at peace.
 
-![Fig 2 – The crowded road and your own path (images/img_ownpath.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_ownpath.jpg)
+![Fig 2 – The crowded road and your own path (images/img_ownpath.jpg)](images/img_ownpath.jpg)
 
 *Fig 2 – The crowded road and your own path (images/img_ownpath.jpg). Generated with Google Flow for this
 guide. The crowd copies each other down one road. One man walks the narrower path that fits him, toward the
@@ -200,7 +200,7 @@ It has four parts, and people usually remember only the first. Read all four:
 The next verse (2.48) gives the attitude: *samatvaṁ yoga ucyate*, **"Evenness of mind is called yoga."**
 Work fully; meet success and failure with the same steadiness.
 
-![Fig 3 – The archer controls the shot, not the wind (images/img_archer.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_archer.jpg)
+![Fig 3 – The archer controls the shot, not the wind (images/img_archer.jpg)](images/img_archer.jpg)
 
 *Fig 3 – The archer controls the shot, not the wind (images/img_archer.jpg). Generated with Google Flow for
 this guide. Stance, aim and release are his; the wind and the distance are not.*

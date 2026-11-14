@@ -39,7 +39,7 @@ precise models of self-control:
 > "Know the Self as the rider, the body as the chariot, the intellect as the charioteer, and the mind as the
 > reins. The senses are the horses, and the objects of the senses are the roads they run on."
 
-![Fig 1 – The chariot of the self (images/img_chariot.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_chariot.jpg)
+![Fig 1 – The chariot of the self (images/img_chariot.jpg)](images/img_chariot.jpg)
 
 *Fig 1 – The chariot of the self (images/img_chariot.jpg). Generated with Google Flow for this guide.*
 
@@ -196,7 +196,7 @@ Read out loud: *"`k` is the natural log of 20 divided by 66, about 0.045 per day
 | 66 | 0.95 | Automatic; skipping feels strange |
 | 90 | 0.98 | Part of who you are |
 
-![Fig 2 – Habit growth curve (images/fig_habit_curve.png)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/fig_habit_curve.png)
+![Fig 2 – Habit growth curve (images/fig_habit_curve.png)](images/fig_habit_curve.png)
 
 *Fig 2 – Habit growth curve (images/fig_habit_curve.png). Three habits of different difficulty. At day 21 the
 median habit is only about 61% of the way there. Drawn from the model above, not from the study's raw data.*
@@ -208,7 +208,7 @@ Two lessons sit inside that curve:
 2. **The middle is where people quit.** Around weeks 3–6 the habit is half-automatic: no longer exciting, not
    yet easy. Expect this dip, and keep going.
 
-![Fig 3 – A path made by walking (images/img_footpath.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_footpath.jpg)
+![Fig 3 – A path made by walking (images/img_footpath.jpg)](images/img_footpath.jpg)
 
 *Fig 3 – A path made by walking (images/img_footpath.jpg). Generated with Google Flow for this guide. Behind
 you the path is deep; ahead it is faint. Each walk makes the next one easier.*
@@ -337,7 +337,7 @@ stateDiagram-v2
 >
 > "As a lamp in a windless place does not flicker": that is the image used for the disciplined mind.
 
-![Fig 4 – A lamp in a windless place (images/img_lamp.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_lamp.jpg)
+![Fig 4 – A lamp in a windless place (images/img_lamp.jpg)](images/img_lamp.jpg)
 
 *Fig 4 – A lamp in a windless place (images/img_lamp.jpg). Generated with Google Flow for this guide. Outside,
 the storm still blows; inside, the flame stands straight. Abhyasa builds the shelter, vairagya keeps the
@@ -378,7 +378,7 @@ muscle-strengthening part. That is less time than most people spend on short vid
 3. Morning light: get outside within an hour of waking.
 4. Caffeine before early afternoon only.
 
-![Fig 5 – A morning that builds the base (images/img_morning.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_morning.jpg)
+![Fig 5 – A morning that builds the base (images/img_morning.jpg)](images/img_morning.jpg)
 
 *Fig 5 – A morning that builds the base (images/img_morning.jpg). Generated with Google Flow for this guide.
 Movement in the morning light, simple food and water, and the phone left charging in another room.*
@@ -420,7 +420,7 @@ about 0.03."* Tiny daily differences, repeated, end a year apart by a factor of 
 > Honest caveat: real life doesn't compound this neatly; skills plateau and you can't measure "1% better".
 > Take it as a picture of direction, not a prediction. The real lesson is **direction plus repetition**.
 
-![Fig 6 – 1% better vs 1% worse (images/fig_one_percent.png)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/fig_one_percent.png)
+![Fig 6 – 1% better vs 1% worse (images/fig_one_percent.png)](images/fig_one_percent.png)
 
 *Fig 6 – 1% better vs 1% worse (images/fig_one_percent.png). On a log scale both lines are straight. At day 30
 the gap (1.35 vs 0.74) is easy to ignore; by day 365 it is 37.8 vs 0.026. This is why the first month feels

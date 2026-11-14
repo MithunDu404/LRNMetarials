@@ -103,7 +103,7 @@ The earliest link is the weakest, so it is the easiest to cut. Modern psychology
 depression and anger. By step 4 your body is flooded and every step is harder to stop. So the skill is
 **catching yourself at step 1 or 2**: "I'm replaying this again. Stop. Do something else."
 
-![Fig 1 – One wave vs a restarted wave (images/fig_emotion_wave.png)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/fig_emotion_wave.png)
+![Fig 1 – One wave vs a restarted wave (images/fig_emotion_wave.png)](images/fig_emotion_wave.png)
 
 *Fig 1 – One wave vs a restarted wave (images/fig_emotion_wave.png). An illustration, not measured data. A
 feeling that is felt and then let go fades on its own (green). Each time you replay the event, you restart
@@ -146,7 +146,7 @@ flowchart LR
     classDef error fill:#FEF2F2,stroke:#DC2626,stroke-width:1.5px,color:#991B1B;
 ```
 
-![Fig 2 – Three gates, one way out (images/img_gates.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_gates.jpg)
+![Fig 2 – Three gates, one way out (images/img_gates.jpg)](images/img_gates.jpg)
 
 *Fig 2 – Three gates, one way out (images/img_gates.jpg). Generated with Google Flow for this guide. The vines
 and honey stand for desire, the flames for anger, the heap of gold for greed. The way out is to turn and walk
@@ -170,7 +170,7 @@ Then the Gita gives two images worth remembering.
 from their objects when he needs to. The tortoise still has legs and uses them; it simply pulls them in when
 there is danger. That is the skill: not losing your senses, but **choosing when to engage them**.
 
-![Fig 3 – The tortoise withdraws its limbs (images/img_tortoise.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_tortoise.jpg)
+![Fig 3 – The tortoise withdraws its limbs (images/img_tortoise.jpg)](images/img_tortoise.jpg)
 
 *Fig 3 – The tortoise withdraws its limbs (images/img_tortoise.jpg). Generated with Google Flow for this guide.
 Bees, birds, sweets and coins all around; the tortoise stays closed and safe.*
@@ -179,7 +179,7 @@ Bees, birds, sweets and coins all around; the tortoise stays closed and safe.*
 In the same way, desires keep flowing into the steady man, but he stays at peace; the one who chases every
 desire does not.
 
-![Fig 4 – The ocean that rivers cannot disturb (images/img_ocean.jpg)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/img_ocean.jpg)
+![Fig 4 – The ocean that rivers cannot disturb (images/img_ocean.jpg)](images/img_ocean.jpg)
 
 *Fig 4 – The ocean that rivers cannot disturb (images/img_ocean.jpg). Generated with Google Flow for this
 guide. Many rivers, some muddy and some stormy, enter; the ocean's level stays the same.*
@@ -260,7 +260,7 @@ rate **more than mindfulness meditation** did over the same time.
 3. Exhale **slowly and completely** through the mouth, longer than the inhale.
 4. Repeat for 5 minutes.
 
-![Fig 5 – The shape of one cyclic sigh (images/fig_cyclic_sigh.png)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/fig_cyclic_sigh.png)
+![Fig 5 – The shape of one cyclic sigh (images/fig_cyclic_sigh.png)](images/fig_cyclic_sigh.png)
 
 *Fig 5 – The shape of one cyclic sigh (images/fig_cyclic_sigh.png). The exact seconds are illustrative; go
 at a pace that is comfortable. What matters is the shape: a full inhale, a small top-up, then an exhale that
@@ -283,7 +283,7 @@ not supported.
 > In plain English: `g` is a standardised effect size like `d`. Minus 0.63 means anger dropped by about
 > two-thirds of a standard deviation, which is a meaningful change. Minus 0.02 means essentially nothing.
 
-![Fig 6 – What the 154 studies found (images/fig_anger_meta.png)](file:///C:/PROJECTS/Learning-and-Experiments/Learnmat/target/life/images/fig_anger_meta.png)
+![Fig 6 – What the 154 studies found (images/fig_anger_meta.png)](images/fig_anger_meta.png)
 
 *Fig 6 – What the 154 studies found (images/fig_anger_meta.png). Dots are the pooled effects; bars are 95%
 confidence intervals, from Kjærvik and Bushman (2024). The calming interval sits wholly left of zero; the
