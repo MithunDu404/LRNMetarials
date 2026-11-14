@@ -461,6 +461,9 @@ Reduction in strength means replacing an expensive operation with a cheaper one.
 
 ### 6.3 Visual Anchor
 
+![Illustration: a magnifying glass slides along a row of instructions and swaps one instruction inside its small window for a better one](figures/flow/cd07_peephole.jpg)
+*Figure (illustration, not from the slides): The peephole optimizer slides a small window along the target code. Inside the window it replaces a short sequence with a shorter or faster one. It never sees beyond the window, which is why it is local.*
+
 ![Slide 25: where performance can be improved](figures/codegen/p25_better_performance.png)
 *Figure: Slide 25. The user improves the source; the compiler improves the intermediate code and the target code.*
 

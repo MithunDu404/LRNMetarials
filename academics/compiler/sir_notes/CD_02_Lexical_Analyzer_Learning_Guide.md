@@ -49,6 +49,9 @@ A source file is just a long row of characters: letters, digits, spaces, symbols
 
 ### 1.3 Visual Anchor
 
+![Illustration: a machine reads a ribbon of characters, drops blanks into a bin and emits the tokens position, =, initial, +, rate](figures/flow/cd02_lexer_machine.jpg)
+*Figure (illustration, not from the slides): The lexical analyser reads the source one character at a time, throws away white space and comments, and hands out whole tokens: `position`, `=`, `initial`, `+`, `rate`.*
+
 ![Slide 5: the lexical analyser and syntax analyser exchanging tokens](figures/lexical/s05_lexer_parser_interaction.png)
 *Figure: Slide 5. Source program → lexical analyser. The syntax analyser sends getNextToken; the lexical analyser answers with a token. Both use the symbol table.*
 

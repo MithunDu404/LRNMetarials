@@ -138,6 +138,9 @@ The compiler discards all following tokens until it meets a semicolon.
 
 ### 3.3 Visual Anchor
 
+![Illustration: a hiker skips through fog along footprints until reaching a trail marker, then continues on the clear path](figures/flow/cd03_panic_mode.jpg)
+*Figure (illustration, not from the slides): Panic mode is like a hiker lost in fog. They stop trying to follow every step and walk on until they reach a known trail marker (the synchronizing token, such as `;`), then carry on normally. Whatever lay in the fog is skipped.*
+
 ```mermaid
 flowchart LR
     A["Panic mode: skip to a synchronizing token"] --> B["Phrase level: local fix, e.g. insert a token"]

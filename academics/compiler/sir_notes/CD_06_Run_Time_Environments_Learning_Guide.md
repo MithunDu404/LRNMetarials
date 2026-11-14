@@ -245,6 +245,9 @@ In the tree beside each snapshot, dashed lines mark activations that have alread
 
 ### 4.3 Visual Anchor
 
+![Illustration: a spring-loaded tray dispenser with trays main, quicksort(1,9), quicksort(1,3), partition(1,3); call = push, return = pop](figures/flow/cd06_call_stack.jpg)
+*Figure (illustration, not from the slides): The control stack works like a cafeteria tray dispenser. Each call pushes a new tray (activation record) on top; each return lifts the top tray off. Only the top tray, the running procedure, can be used.*
+
 ![Slide 12: the fields of a general activation record](figures/runtime/p12_activation_record.png)
 *Figure: Slide 12. From top to bottom: actual parameters, returned values, control link, access link, saved machine status, local data, temporaries.*
 

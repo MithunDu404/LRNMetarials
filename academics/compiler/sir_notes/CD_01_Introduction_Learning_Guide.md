@@ -184,6 +184,9 @@ Translating a whole program first is not the only way to run it. Another way is 
 
 ### 3.3 Visual Anchor
 
+![Illustration: a translator who finishes a whole book before anyone reads it, beside a live interpreter who relays a speech sentence by sentence](figures/flow/cd01_compiler_vs_interpreter.jpg)
+*Figure (illustration, not from the slides): A compiler is like a book translator. The whole text is translated first, then read as often as you like. An interpreter is like a live interpreter at a talk: each sentence is translated as it is spoken, every time.*
+
 ![Slide 10: the interpreter takes the source program and the input together](figures/intro/s10_interpreter.png)
 *Figure: Slide 10. The interpreter receives the source program and the input at the same time and produces the output directly.*
 
