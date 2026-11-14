@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # Ensure output directory exists
-OUT_DIR = r"c:\PROJECTS\Learnmat\academics\mpc\images"
+OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "images")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 # Set high-quality styling
@@ -185,7 +185,7 @@ def generate_fig3_sir_curve():
     val_12_k3 = 10 * np.log10((1/6) * (36)**1.5)
     ax.scatter([12], [val_12_k3], color='#DC2626', s=130, edgecolors='#7F1D1D', linewidth=2, zorder=6)
     
-    ax.annotate(r'$\mathbf{Minimum\ Valid\ N = 12}$ for $k=3$' + '\n' + r'$(S/I = 15.38\ \mathrm{dB} \geq 15\ \mathrm{dB})$',
+    ax.annotate(r'$\mathbf{Minimum\ Valid\ N = 12}$ for $k=3$' + '\n' + r'$(S/I = 15.56\ \mathrm{dB} \geq 15\ \mathrm{dB})$',
                 xy=(12, val_12_k3), xytext=(12.5, 7.5),
                 arrowprops=dict(facecolor='#DC2626', shrink=0.08, width=1.5, headwidth=7),
                 bbox=dict(boxstyle="round,pad=0.45", facecolor='#FEE2E2', edgecolor='#DC2626', linewidth=1.2),
