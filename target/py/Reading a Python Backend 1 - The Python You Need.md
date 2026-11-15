@@ -263,8 +263,8 @@ There are two kinds of decorator. Learn to tell them apart, because they behave 
 
 | Kind | What it returns | Examples |
 |---|---|---|
-| **Registering** | The original function, unchanged; it records it somewhere | `@app.get`, `@router.post`, `@celery_app.task`, `@pytest.fixture`, `@app.exception_handler` |
-| **Wrapping** | A new function that calls the original with extra behaviour around it | `@lru_cache`, `@timed`, `@retry`, `@login_required` (Flask/Django), `@field_validator` |
+| **Registering** | The original function, unchanged; it records it somewhere | `@app.get`, `@router.post`, `@celery_app.task`, `@pytest.fixture`, `@app.exception_handler`, Pydantic's `@field_validator` |
+| **Wrapping** | A new function that calls the original with extra behaviour around it | `@lru_cache`, `@timed`, `@retry`, `@login_required` (Flask/Django) |
 
 **Why `@functools.wraps` matters in backends.** FastAPI builds the request handling from the endpoint's **signature**. A wrapper written as `def wrapper(*args, **kwargs)` without `@wraps` hides that signature. FastAPI then sees the wrapper's own parameters instead, and reads `args` and `kwargs` as **two required query parameters**. Measured on FastAPI 0.162, an endpoint `limit: int = 5` wrapped this way answered `GET /a?limit=7` with:
 
@@ -514,7 +514,7 @@ A web request spends almost all its time **waiting**: for the database, a cache,
 
 ![Two timelines of the same three awaited calls (0.3 s, 0.1 s, 0.2 s). Awaited one after another they finish at 0.62 s; started together in a TaskGroup they all begin at 0 and finish at 0.31 s, the length of the longest call.](images/fig10_async_timeline.png)
 
-*Figure 1 (measured). The same three waits, two ways. With `await` one after another, each starts only when the previous one ends, so the total is the **sum** (0.62 s). In a `TaskGroup` they all start at once, and the event loop switches between them while each waits, so the total is the **longest one** (0.31 s). There's still only one thread: the overlap comes purely from waiting at the same time.*
+*Figure 1 (measured, a separate run with waits of 0.3 s, 0.1 s and 0.2 s). The same three waits, two ways. With `await` one after another, each starts only when the previous one ends, so the total is the **sum** (0.62 s). In a `TaskGroup` they all start at once, and the event loop switches between them while each waits, so the total is the **longest one** (0.31 s). There's still only one thread: the overlap comes purely from waiting at the same time.*
 
 Reading tip: in code review, `x = await a(); y = await b()` means *one after another*. If `a` and `b` don't depend on each other, `gather` or a `TaskGroup` would make them concurrent. And a call to an `async def` function **without** `await` does nothing at all. Python warns "coroutine was never awaited", which is easy to miss in logs.
 
@@ -667,7 +667,7 @@ The Pydantic v2 vocabulary you'll read:
 | "If an exception is raised, cleanup is skipped." | `finally:`, `with` and `yield` dependencies run cleanup on the way out. |
 | "Module-level variables are per request." | They're per **process**: shared by every request in that worker, and *not* shared across workers. |
 | "Pydantic models and ORM models are the same thing." | One validates API data, the other maps table rows. Keeping them separate is a security feature. |
-| "Threads give Python parallelism." | Only for waiting (I/O). For CPU work, use processes, while the standard build has a GIL. |
+| "Threads give Python parallelism." | Only for waiting (I/O). On the standard build, which has a GIL, CPU work needs processes instead. |
 
 ---
 

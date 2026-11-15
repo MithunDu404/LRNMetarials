@@ -1,7 +1,7 @@
 # System Design Explained: APIs, Databases, Caching, CDNs, Load Balancing & Production Infra
 
 > **Source:** [System Design Explained](https://youtu.be/oYxTTirKY8M?si=-LRByScCPEBB1Y4T) by Hayk Simonyan
-> **Related notes:** [8 API Laws](REST%20API%20Design%20-%20The%208%20Laws.md) · [1 Million Requests per Second](Scaling%20to%201%20Million%20Requests%20per%20Second.md) · [Atlassian platform engineering](Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md)
+> **Related notes:** [8 API Laws](../Theory/REST%20API%20Design%20-%20The%208%20Laws.md) · [1 Million Requests per Second](Scaling%20to%201%20Million%20Requests%20per%20Second.md) · [Atlassian platform engineering](../Theory/Platform%20Engineering%20-%20Lessons%20from%208%20Years%20at%20Atlassian.md)
 > **Facts re-checked:** 18 September 2026. Two things to know: the security priorities were revised — **OWASP Top 10:2025** is the current edition (§12.1) — and PostgreSQL 18's arrival changes a couple of the database defaults (§3.3). The architecture material is long-lived and unchanged.
 > **What's in this version:** 16 figures, many of them **computed** (a load-balancer queueing simulation, consistent-hashing measurements, availability math, LRU cache simulation, CDN latency from physics, rate-limiter burst simulation); the **caching and CDN chapters that the title promises but the notes never covered**; database replication and sharding; a few corrections (CORS is not a CSRF defence, gRPC-in-the-browser, JWT trade-offs); runnable demo code; an interview playbook; a quiz and a glossary.
 
@@ -122,7 +122,7 @@ Tables with rows and columns, queried with SQL: **PostgreSQL, MySQL, Oracle, SQL
 
 > **Modern reality (checked September 2026):** the line has blurred. PostgreSQL has excellent JSON support and can act as a document store; DynamoDB and MongoDB support transactions. Most companies start with Postgres and add specialized stores (Redis, Elasticsearch, a queue) as needs appear.
 >
-> Worth knowing if you're choosing today: **PostgreSQL 18** (September 2025; 18.6 is current, 19 is in beta) added an asynchronous I/O subsystem reporting up to **3× faster reads from storage**, "skip scan" on multi-column indexes, virtual generated columns, built-in **OAuth 2.0 authentication**, and a native **`uuidv7()`** function — which matters more than it sounds, because it gives you globally unique ids that are *also* time-ordered, so they don't wreck index locality (see the [1M requests/s note](Scaling%20to%201%20Million%20Requests%20per%20Second.md) §6.5). "Just use Postgres" has become a stronger default, not a weaker one.
+> Worth knowing if you're choosing today: **PostgreSQL 18** (released September 2025; PostgreSQL 19 is at release-candidate stage, with general availability planned for 19 November 2026) added an asynchronous I/O subsystem reporting up to **3× faster reads from storage**, "skip scan" on multi-column indexes, virtual generated columns, built-in **OAuth 2.0 authentication**, and a native **`uuidv7()`** function — which matters more than it sounds, because it gives you globally unique ids that are *also* time-ordered, so they don't wreck index locality (see the [1M requests/s note](Scaling%20to%201%20Million%20Requests%20per%20Second.md) §6.5). "Just use Postgres" has become a stronger default, not a weaker one.
 
 ### 3.4 Scaling the data tier *(expanded: the video's SPOF section defers this)*
 
@@ -239,7 +239,7 @@ An **API is a contract**: which requests are allowed, and what responses look li
 - **Approach**: top-down (from requirements), bottom-up (from existing models), or **contract-first** (write the OpenAPI/proto schema first — best for teams).
 - **Lifecycle**: design → build → deploy & monitor → maintain → **deprecate and retire** (with a sunset timeline).
 
-*(For resource modelling, status codes, idempotency and versioning in depth, see the [8 API Laws](REST%20API%20Design%20-%20The%208%20Laws.md) note, which covers the same ground with worked examples.)*
+*(For resource modelling, status codes, idempotency and versioning in depth, see the [8 API Laws](../Theory/REST%20API%20Design%20-%20The%208%20Laws.md) note, which covers the same ground with worked examples.)*
 
 ---
 
@@ -489,11 +489,11 @@ Everything in §12 above still applies — the 2025 revision reorganized categor
 |---|---|
 | L1 cache reference | ~1 ns |
 | Main memory | ~100 ns |
-| SSD random read | ~100 µs |
+| SSD random read | ~20–100 µs (NVMe at the fast end) |
 | Redis GET (same datacentre) | ~0.5–1 ms |
 | Database query (indexed) | ~1–10 ms |
 | Same-datacentre round trip | ~0.5 ms |
-| Cross-continent round trip | ~100–150 ms |
+| Cross-continent round trip | ~80–200 ms |
 
 **Say the trade-off out loud.** "I'd add a cache here, accepting up to 60 seconds of staleness on product prices, because read volume is 100× write volume" beats naming technologies.
 

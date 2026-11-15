@@ -221,7 +221,7 @@ full fine-tune memory, ~16 bytes/param (weights+grads+Adam states): 128 GB
 
 ## 6. Preference tuning: RLHF and DPO
 
-**The problem.** SFT teaches "produce this answer". But many qualities are easier to express as comparisons: "this answer is better than that one": more helpful, more concise, safer, a better tone. And SFT can't easily teach the model what *not* to do.
+**The problem.** SFT teaches "produce this answer". But many qualities are easier to express as comparisons ("this answer is better than that one"): more helpful, more concise, safer, a better tone. And SFT can't easily teach the model what *not* to do.
 
 **RLHF (reinforcement learning from human feedback)** (Ouyang et al., 2022):
 
@@ -270,7 +270,7 @@ wrong direction              margin  -4.0 -> loss 0.913
 
 **Reasoning distillation:** DeepSeek showed that small models fine-tuned (SFT only) on a large reasoning model's step-by-step traces gain much of its reasoning ability, far more than they'd get from RL on their own at that size.
 
-**Worked economics** (assumed prices from Guide 6: large model USD 13.50 per 1,000 requests, small USD 1.125). At 10 million requests a month: **USD 135,000** with the teacher vs **USD 11,250** with a distilled student. Generating 10,000 training examples with the teacher (same request shape) costs about $10{,}000 \times 0.0135 =$ **USD 135**. The real costs are the engineering and evaluation work, and only if the student passes your evals on the narrow task.
+**Worked economics** (assumed prices from Guide 6: large model USD 13.50 per 1,000 requests, small USD 1.125). At 10 million requests a month: **USD 135,000** with the teacher vs **USD 11,250** with a distilled student. Generating 10,000 training examples with the teacher (same request shape) costs about $10{,}000 \times 0.0135 =$ **USD 135**. So generating the data is cheap. The real cost is the engineering and evaluation work, and the saving only counts if the student passes your evals on the narrow task.
 
 **Caveats:**
 

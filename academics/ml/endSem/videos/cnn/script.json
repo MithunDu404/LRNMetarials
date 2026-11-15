@@ -1,0 +1,976 @@
+{
+  "p1_s01_intro": [
+    {
+      "id": "l01",
+      "text": "How does a computer look at a picture and find an edge, a corner, or a face?"
+    },
+    {
+      "id": "l02",
+      "text": "To a computer, a picture is a grid of numbers. Each number is the brightness of one pixel."
+    },
+    {
+      "id": "l03",
+      "text": "A standard neural network wants its input as one long list, so we would have to flatten the grid, row after row."
+    },
+    {
+      "id": "l04",
+      "text": "But look what that does. Pixels that were neighbours end up far apart. In a real image, nearby pixels are strongly related, and distant pixels are almost independent. Flattening throws that structure away."
+    },
+    {
+      "id": "l05",
+      "text": "Convolution keeps the grid as it is. It takes a small template of weights, called a filter or a kernel, and slides it across the image."
+    },
+    {
+      "id": "l06",
+      "text": "At every stop it computes one weighted sum, which says how well that small patch matches the kernel's pattern."
+    },
+    {
+      "id": "l07",
+      "text": "This is Part 1: convolution, padding, the classic kernels, and images with depth."
+    }
+  ],
+  "p1_s02_sliding": [
+    {
+      "id": "l01",
+      "text": "Here is a small image, 3 rows and 4 columns. Call the pixel in row 1, column 1, I one one, and so on."
+    },
+    {
+      "id": "l02",
+      "text": "And here is the kernel: a small grid of real-valued weights. This one is 2 by 2. Kernels are often 3 by 3 or 5 by 5."
+    },
+    {
+      "id": "l03",
+      "text": "A kernel is a feature extractor. Its weights are tuned to respond to one local pattern, such as a vertical edge, a colour change, or a texture."
+    },
+    {
+      "id": "l04",
+      "text": "Place the kernel on the top-left corner. It covers four pixels."
+    },
+    {
+      "id": "l05",
+      "text": "Multiply each pixel by the weight sitting on top of it, and add the four products. I one one times K one one, plus I one two times K one two, plus I two one times K two one, plus I two two times K two two."
+    },
+    {
+      "id": "l06",
+      "text": "This multiply-and-add is a dot product. For two grids, its full name is the Frobenius inner product. It gives one single number."
+    },
+    {
+      "id": "l07",
+      "text": "That number is the first output, O one one."
+    },
+    {
+      "id": "l08",
+      "text": "Now shift the kernel one pixel to the right. Same weights, new patch: I one two, I one three, I two two, I two three. That gives O one two."
+    },
+    {
+      "id": "l09",
+      "text": "One more step right gives O one three. The kernel has reached the edge."
+    },
+    {
+      "id": "l10",
+      "text": "So it drops down one row and starts again from the left: O two one, O two two, and O two three."
+    },
+    {
+      "id": "l11",
+      "text": "Six positions, six numbers. This way of moving, from top-left to bottom-right in fixed steps, is called the sliding window, and the step size is called the stride. Here the stride is 1."
+    },
+    {
+      "id": "l12",
+      "text": "The grid of outputs is called a feature map, or activation map. Each cell tells you how strongly the kernel's pattern showed up at that place in the image."
+    },
+    {
+      "id": "l13",
+      "text": "In a CNN a bias is added to each sum as well, so convolution is a local affine transformation: the same weights and bias, applied patch by patch across the grid."
+    },
+    {
+      "id": "l14",
+      "text": "Let us try it with numbers. These are example values."
+    },
+    {
+      "id": "l15",
+      "text": "Top-left patch: 1 times 1, plus 2 times 0, plus 0 times 0, plus 1 times 1. That is 2."
+    },
+    {
+      "id": "l16",
+      "text": "Slide right: 2 times 1, plus 0, plus 0, plus 3 times 1. That is 5. The rest follow the same way: 1, then 1, 1 and 3."
+    },
+    {
+      "id": "l17",
+      "text": "Notice the size. A 3 by 4 image went in, and a 2 by 3 map came out."
+    },
+    {
+      "id": "l18",
+      "text": "With stride 1 and no padding, each side loses F minus 1, where F is the kernel size. Height: 3 minus 2 plus 1 is 2. Width: 4 minus 2 plus 1 is 3."
+    }
+  ],
+  "p1_s03_formula": [
+    {
+      "id": "l01",
+      "text": "Now we can write the rule once, for every position."
+    },
+    {
+      "id": "l02",
+      "text": "S of i, j is the output at row i, column j."
+    },
+    {
+      "id": "l03",
+      "text": "It is a double sum over the kernel's rows m and columns n,"
+    },
+    {
+      "id": "l04",
+      "text": "of the image pixel at i plus m, j plus n, times the kernel weight at m, n."
+    },
+    {
+      "id": "l05",
+      "text": "In plain words: the response at a position is the sum of kernel weights times the pixels underneath them."
+    },
+    {
+      "id": "l06",
+      "text": "A word about the name. In signal processing, convolution is this integral: f of tau times g of t minus tau, added up over all tau."
+    },
+    {
+      "id": "l07",
+      "text": "The minus tau means the kernel is flipped, t shifts it along the axis, and the integral measures the area of overlap."
+    },
+    {
+      "id": "l08",
+      "text": "A CNN does not flip the kernel. It shifts it across pixels in whole steps and sums the products. Strictly, that is cross-correlation. Deep learning simply calls it convolution, and so will we."
+    },
+    {
+      "id": "l09",
+      "text": "A useful mental model is a stencil with four steps. One: align the stencil over a patch. Two: multiply each pixel by the weight above it. Three: sum the products and add the bias. Four: write the result into the feature map."
+    }
+  ],
+  "p1_s04_padding_why": [
+    {
+      "id": "l01",
+      "text": "There is a problem at the borders."
+    },
+    {
+      "id": "l02",
+      "text": "A 3 by 3 kernel cannot be centred on a border pixel. Part of it would stick out of the image."
+    },
+    {
+      "id": "l03",
+      "text": "If we only allow positions where the kernel fits completely inside, two things go wrong."
+    },
+    {
+      "id": "l04",
+      "text": "First, shrinkage. Every layer with kernel size F removes F minus 1 pixels from the height and from the width."
+    },
+    {
+      "id": "l05",
+      "text": "Stack many layers and the map keeps shrinking, 5 by 5, 3 by 3, 1 by 1, and the network runs out of image before it can build deep features."
+    },
+    {
+      "id": "l06",
+      "text": "Second, the edges are under-used. Count how many windows each pixel takes part in."
+    },
+    {
+      "id": "l07",
+      "text": "With a 3 by 3 kernel, a corner pixel is seen once. A pixel in the middle is seen 9 times. Features near the border are under-represented."
+    },
+    {
+      "id": "l08",
+      "text": "The fix is padding. Before convolving, we surround the image with P extra rows and columns of border values, usually zeros."
+    }
+  ],
+  "p1_s05_padding_math": [
+    {
+      "id": "l01",
+      "text": "There are two standard choices."
+    },
+    {
+      "id": "l02",
+      "text": "Valid padding means no padding at all: P equals 0. The kernel stays strictly inside, the output shrinks to W 1 minus F plus 1, and the border pixels stay under-sampled."
+    },
+    {
+      "id": "l03",
+      "text": "Example: a 5 by 5 image with a 3 by 3 kernel. 5 minus 3 plus 1 is 3. The output is 3 by 3, two pixels smaller along each axis."
+    },
+    {
+      "id": "l04",
+      "text": "Same padding adds just enough zeros, symmetrically on all sides, for the output to keep the input's size, and border pixels get sampled as often as interior ones."
+    },
+    {
+      "id": "l05",
+      "text": "Pad the 5 by 5 image with one ring of zeros and it becomes 7 by 7. The 3 by 3 kernel now gives a 5 by 5 output."
+    },
+    {
+      "id": "l06",
+      "text": "In the same way, one ring of zeros around a 7 by 7 grid makes a 9 by 9 padded grid."
+    },
+    {
+      "id": "l07",
+      "text": "How much padding is just enough? With padding P on both sides and stride 1, the output width is W 1 minus F plus 2 P plus 1."
+    },
+    {
+      "id": "l08",
+      "text": "Set that equal to W 1. The W 1 cancels, leaving 2 P equals F minus 1. So P equals F minus 1, over 2."
+    },
+    {
+      "id": "l09",
+      "text": "Check: 5 minus 3, plus 2 times 1, plus 1, is 5. The size is preserved."
+    },
+    {
+      "id": "l10",
+      "text": "For a 5 by 5 kernel, P is 5 minus 1 over 2, which is 2: two rows and columns of zeros on every side."
+    },
+    {
+      "id": "l11",
+      "text": "One caution. F minus 1 over 2 is a whole number only when F is odd: 1, 3, 5, 7. An even kernel such as 4 by 4 needs unequal padding on the left and right, which biases the coordinates."
+    },
+    {
+      "id": "l12",
+      "text": "So why pad? Four reasons."
+    },
+    {
+      "id": "l13",
+      "text": "One: it preserves dimensions. Output width and height equal the input's, which matters when you stack many layers or predict something for every pixel, as in semantic segmentation and autoencoders."
+    },
+    {
+      "id": "l14",
+      "text": "Two: it lets the filter centre on perimeter and corner pixels, so edge features are not thrown away."
+    },
+    {
+      "id": "l15",
+      "text": "Three: it separates depth from resolution. The network can grow deep without the image shrinking away."
+    },
+    {
+      "id": "l16",
+      "text": "Four: it stabilises learning. Sizes stay consistent, for example across residual skip connections, and every position gets consistent context."
+    }
+  ],
+  "p1_s06_edges": [
+    {
+      "id": "l01",
+      "text": "Before deep learning, people designed kernels by hand. Each one did a specific job: estimating gradients to find object boundaries, suppressing noise by blurring, or sharpening detail."
+    },
+    {
+      "id": "l02",
+      "text": "These classic kernels are worth knowing, because they are the baseline for what a CNN later learns on its own."
+    },
+    {
+      "id": "l03",
+      "text": "Start with edges. An edge is a place where brightness changes quickly, so we estimate a derivative."
+    },
+    {
+      "id": "l04",
+      "text": "This is the Sobel kernel G x. Negative weights on the left column, positive on the right, zeros in the middle. It computes right minus left: the horizontal gradient."
+    },
+    {
+      "id": "l05",
+      "text": "It responds to vertical edges. The 1, 2, 1 pattern down each column smooths along the vertical direction, like a small Gaussian."
+    },
+    {
+      "id": "l06",
+      "text": "Turn it on its side and you get G y: top row minus bottom row. That is the vertical gradient, and it responds to horizontal edges."
+    },
+    {
+      "id": "l07",
+      "text": "Both kernels sum to zero, so a flat region gives no response at all."
+    },
+    {
+      "id": "l08",
+      "text": "Here they are on a test image, a bright square on a dark background. These are example values. G x lights up the left and right sides, G y the top and bottom."
+    },
+    {
+      "id": "l09",
+      "text": "Combine the two. The edge strength G is the square root of G x squared plus G y squared, and the edge direction theta is the arc tangent of G y over G x."
+    },
+    {
+      "id": "l10",
+      "text": "The Canny edge detector builds on this. It is not a single filter but a pipeline of four stages."
+    },
+    {
+      "id": "l11",
+      "text": "Stage one: Gaussian smoothing, to remove high-frequency camera noise that would cause false gradient spikes."
+    },
+    {
+      "id": "l12",
+      "text": "Stage two: compute the gradient strength and direction with the Sobel kernels."
+    },
+    {
+      "id": "l13",
+      "text": "Stage three: non-maximum suppression. Looking along the gradient direction, any pixel that is not a local maximum is removed, which thins thick edges down to one pixel."
+    },
+    {
+      "id": "l14",
+      "text": "Stage four: hysteresis thresholding, with two thresholds, T high and T low."
+    },
+    {
+      "id": "l15",
+      "text": "At or above T high, a pixel is a strong edge. Between the two, it is a weak edge, and it is kept only if it connects to a strong one. Below T low, it is discarded. The result is a clean binary edge map."
+    }
+  ],
+  "p1_s07_blur": [
+    {
+      "id": "l01",
+      "text": "Next, blurring. A blur replaces each pixel with a weighted average of its neighbourhood, which suppresses noise."
+    },
+    {
+      "id": "l02",
+      "text": "The Gaussian kernel takes its weights from the two-dimensional Gaussian function: 1 over 2 pi sigma squared, times e to the power minus x squared plus y squared, over 2 sigma squared."
+    },
+    {
+      "id": "l03",
+      "text": "The weights fall off with squared distance from the centre, and sigma controls how wide the blur is."
+    },
+    {
+      "id": "l04",
+      "text": "The 3 by 3 version: 4 in the centre, 2 on the sides, 1 in the corners. They add up to 16, so we divide by 16 and the kernel sums to 1."
+    },
+    {
+      "id": "l05",
+      "text": "It is a low-pass filter: it smooths equally in every direction, weighting near pixels more."
+    },
+    {
+      "id": "l06",
+      "text": "The 5 by 5 version comes from the row 1, 4, 6, 4, 1 multiplied by itself as a column. The entries add up to 256, so we divide by 256."
+    },
+    {
+      "id": "l07",
+      "text": "It is a broader low-pass filter, a binomial approximation to a Gaussian with sigma about 1."
+    },
+    {
+      "id": "l08",
+      "text": "The simplest blur is the average, or box, filter. Every weight is equal: one ninth for 3 by 3, one twenty-fifth for 5 by 5. Each pixel becomes the plain mean of its neighbourhood."
+    },
+    {
+      "id": "l09",
+      "text": "Because it has no distance weighting, it blurs edges heavily."
+    },
+    {
+      "id": "l10",
+      "text": "On the test image, both soften the border of the square. Example values again."
+    },
+    {
+      "id": "l11",
+      "text": "A correction to the slides. Slide 21 is about the average kernel, but it labels these uniform matrices as Gaussian kernels. They are average kernels. A Gaussian kernel always has larger weights near the centre."
+    }
+  ],
+  "p1_s08_sharpen": [
+    {
+      "id": "l01",
+      "text": "The third family sharpens. It is built on the second derivative."
+    },
+    {
+      "id": "l02",
+      "text": "The Laplacian adds the second derivative along x to the second derivative along y. It measures how fast the gradient itself is changing."
+    },
+    {
+      "id": "l03",
+      "text": "The 4-neighbour kernel: 4 in the centre, minus 1 above, below, left and right. The weights sum to zero, so a uniform region gives exactly zero."
+    },
+    {
+      "id": "l04",
+      "text": "The 8-neighbour kernel uses the diagonals too: minus 8 in the centre and 1 all around. It also sums to zero, and it highlights edges in every orientation."
+    },
+    {
+      "id": "l05",
+      "text": "A note on signs. The guide calls the minus 8 kernel inverted. By the usual convention it is the other way round: minus 8 in the centre is the Laplacian with its normal sign, and plus 4 in the centre is its negative. Both find edges; only the sign of the response differs."
+    },
+    {
+      "id": "l06",
+      "text": "Here is the 8-neighbour kernel on a photo of the Taj Mahal, from the lecture slides. Flat sky and marble go black; only the outlines remain."
+    },
+    {
+      "id": "l07",
+      "text": "Now sharpening. Unsharp masking takes the image, subtracts a blurred copy to isolate the fine detail, scales that detail by alpha, and adds it back: I sharp equals I plus alpha times I minus I blur."
+    },
+    {
+      "id": "l08",
+      "text": "Its 3 by 3 kernel has 5 in the centre and minus 1 on the four sides."
+    },
+    {
+      "id": "l09",
+      "text": "Look closely: it is the identity kernel, a single 1 in the centre, plus the 4-neighbour Laplacian."
+    },
+    {
+      "id": "l10",
+      "text": "That one extra 1 is the whole difference. The Laplacian sums to 0: its gain on flat regions is zero, so they turn black. The unsharp mask sums to 1: it keeps the image's brightness and boosts contrast at the edges."
+    },
+    {
+      "id": "l11",
+      "text": "On a flat patch where every pixel is 5, the Laplacian returns 0 and the unsharp mask returns 5. Example values."
+    },
+    {
+      "id": "l12",
+      "text": "So the classic kernels fall into three families. Smoothing kernels, Gaussian and box, sum to 1. Edge kernels, Sobel for the first derivative and Laplacian for the second, sum to 0. And sharpening, the unsharp mask, is identity plus Laplacian and sums to 1."
+    }
+  ],
+  "p1_s09_dilated": [
+    {
+      "id": "l01",
+      "text": "One more trick with kernels: spreading them out."
+    },
+    {
+      "id": "l02",
+      "text": "A dilated, or atrous, convolution inserts gaps between the kernel's weights. The dilation rate r says how far apart they sit."
+    },
+    {
+      "id": "l03",
+      "text": "Rate 1 is the ordinary dense kernel."
+    },
+    {
+      "id": "l04",
+      "text": "Rate 2 leaves one gap, a zero, between neighbouring weights. A 3 by 3 kernel now covers a 5 by 5 area, still with only 9 weights."
+    },
+    {
+      "id": "l05",
+      "text": "The effective size is F plus F minus 1 times r minus 1, which simplifies to r times F minus 1, plus 1."
+    },
+    {
+      "id": "l06",
+      "text": "For F equals 3 and r equals 1: 1 times 2 plus 1 is 3. For r equals 2: 2 times 2 plus 1 is 5."
+    },
+    {
+      "id": "l07",
+      "text": "Stacked across layers, the receptive field expands exponentially, while the feature map keeps its full resolution. That avoids downsampling artefacts in dense tasks such as segmentation."
+    },
+    {
+      "id": "l08",
+      "text": "And now the key idea of a CNN. None of these numbers has to be designed by hand. In a CNN the kernel weights are free parameters, learned directly from data by backpropagation."
+    }
+  ],
+  "p1_s10_volumes": [
+    {
+      "id": "l01",
+      "text": "So far the input was one flat grid. Real inputs come in other shapes."
+    },
+    {
+      "id": "l02",
+      "text": "Audio and text are sequences: one-dimensional. A colour image has three channels, red, green and blue. And inside a CNN, a layer's output can have dozens or hundreds of channels. We call the number of channels the depth, D 1."
+    },
+    {
+      "id": "l03",
+      "text": "In one dimension the idea is the same. Take the sequence A, B, C, B, C, A, B and a filter of length 3. The filter slides along the single axis, one step at a time."
+    },
+    {
+      "id": "l04",
+      "text": "For a colour image, we could run a separate 2D filter on each channel. But then the channels never mix, and we could not combine, say, a red edge with a green edge."
+    },
+    {
+      "id": "l05",
+      "text": "So the filter becomes a volume too. The input is W 1 by H 1 by D 1, and each filter is F by F by D 1."
+    },
+    {
+      "id": "l06",
+      "text": "This is the depth rule: the depth of every filter must equal the depth of its input."
+    },
+    {
+      "id": "l07",
+      "text": "Because it already spans the full depth, the filter slides only along the width and the height. It never moves along the depth."
+    },
+    {
+      "id": "l08",
+      "text": "At each position, all F times F times D 1 weights are multiplied with the values beneath them, and everything is added into one number, plus a bias."
+    },
+    {
+      "id": "l09",
+      "text": "As a formula: the bias b, plus a sum over channels c, rows m and columns n, of the input at x plus m, y plus n, channel c, times the kernel weight at m, n, c."
+    },
+    {
+      "id": "l10",
+      "text": "So one 3D filter produces one flat 2D feature map."
+    },
+    {
+      "id": "l11",
+      "text": "To get an output with depth, use a bank of K different filters. Each gives one map, and the maps are stacked. The output depth D 2 equals K."
+    },
+    {
+      "id": "l12",
+      "text": "The slide's picture shows exactly this: a small block of the input volume, as deep as the input, maps to a single point of the output."
+    },
+    {
+      "id": "l13",
+      "text": "The full formula just adds an index k for the filter: the output at i, j, k equals bias b k plus the same triple sum using filter K k."
+    },
+    {
+      "id": "l14",
+      "text": "How many parameters? Each filter has F times F times D 1 weights and 1 bias. With K filters, the total is K times, F squared D 1 plus 1. Without biases, K times F squared times D 1."
+    }
+  ],
+  "p1_s11_recap": [
+    {
+      "id": "l01",
+      "text": "Let us recap Part 1."
+    },
+    {
+      "id": "l02",
+      "text": "Convolution slides a small kernel over the image and takes a dot product at each stop. In a CNN it is really cross-correlation."
+    },
+    {
+      "id": "l03",
+      "text": "Without padding, the output shrinks by F minus 1. Same padding, F minus 1 over 2, keeps the size."
+    },
+    {
+      "id": "l04",
+      "text": "Smoothing kernels sum to 1, edge kernels sum to 0, and the unsharp mask is identity plus Laplacian."
+    },
+    {
+      "id": "l05",
+      "text": "Dilation widens a kernel's reach without adding weights."
+    },
+    {
+      "id": "l06",
+      "text": "On volumes, filter depth equals input depth, one filter gives one map, and K filters give depth K."
+    },
+    {
+      "id": "l07",
+      "text": "In Part 2: the output size formula, real networks, pooling and flattening."
+    }
+  ],
+  "p2_s01_intro": [
+    {
+      "id": "l01",
+      "text": "A convolution layer takes a volume in and gives a volume out. What size is the output?"
+    },
+    {
+      "id": "l02",
+      "text": "We have to be able to answer that exactly, on paper. If we cannot predict a layer's output size, we cannot configure the layer that comes after it."
+    },
+    {
+      "id": "l03",
+      "text": "We also want control over how fast the image shrinks. Moving the kernel one pixel at a time keeps fine detail but costs a lot of computation. Moving it several pixels at a time skips positions and shrinks the map quickly."
+    },
+    {
+      "id": "l04",
+      "text": "This is Part 2: stride and the output size formula, two real networks, why CNNs beat dense networks on images, pooling, and flattening."
+    }
+  ],
+  "p2_s02_output_size": [
+    {
+      "id": "l01",
+      "text": "The step size of the kernel is called the stride, S."
+    },
+    {
+      "id": "l02",
+      "text": "Stride 1 is dense sampling: the kernel advances one pixel per step."
+    },
+    {
+      "id": "l03",
+      "text": "Stride 2 is subsampling: it advances two pixels and skips every second position. Larger strides shrink the map even more aggressively."
+    },
+    {
+      "id": "l04",
+      "text": "Let us derive the output width along one row, in five steps."
+    },
+    {
+      "id": "l05",
+      "text": "Step one. The input width W 1 gets P zeros on the left and P on the right. The total span is W 1 plus 2 P."
+    },
+    {
+      "id": "l06",
+      "text": "Step two. The filter covers F pixels in a row. Placed at the far left, starting at index 0, its last pixel is at index F minus 1."
+    },
+    {
+      "id": "l07",
+      "text": "Step three. The distance it can still travel before its right edge crosses the boundary is W 1 plus 2 P, minus F."
+    },
+    {
+      "id": "l08",
+      "text": "Step four. It moves S pixels per jump, so the number of whole jumps is that distance divided by S, rounded down. That is the floor."
+    },
+    {
+      "id": "l09",
+      "text": "Step five. Count the starting position as well, so add 1."
+    },
+    {
+      "id": "l10",
+      "text": "W 2 equals the floor of, W 1 minus F plus 2 P, over S, plus 1."
+    },
+    {
+      "id": "l11",
+      "text": "On this strip, with example values: width 7, padding 1, filter 3, stride 2. 7 minus 3 plus 2 is 6. Divided by 2 is 3. Plus 1 is 4 positions."
+    },
+    {
+      "id": "l12",
+      "text": "The height follows the same formula with H 1. And the depth, as before, is just the number of filters: D 2 equals K."
+    },
+    {
+      "id": "l13",
+      "text": "So a convolution layer is described by four numbers: filter size F, padding P, stride S and filter count K."
+    },
+    {
+      "id": "l14",
+      "text": "You have seen this formula grow. With no padding and stride 1, it is W 1 minus F plus 1. Add padding, and it is W 1 minus F plus 2 P plus 1. Add stride, and you divide by S and take the floor."
+    }
+  ],
+  "p2_s03_alexnet_lenet": [
+    {
+      "id": "l01",
+      "text": "Two classic first layers make good practice: AlexNet from 2012 and LeNet-5 from 1998. One is a strided convolution on a colour image, the other a stride-1 convolution on a greyscale image."
+    },
+    {
+      "id": "l02",
+      "text": "AlexNet's first layer takes a 227 by 227 colour image, so the depth is 3."
+    },
+    {
+      "id": "l03",
+      "text": "It uses 96 filters of size 11, with stride 4 and no padding."
+    },
+    {
+      "id": "l04",
+      "text": "Width: 227 minus 11 is 216. Divided by 4 is 54. Plus 1 is 55. The height is the same."
+    },
+    {
+      "id": "l05",
+      "text": "The depth is the number of filters, 96. So the output is 55 by 55 by 96."
+    },
+    {
+      "id": "l06",
+      "text": "Now the parameters. One filter is 11 by 11 by 3, which is 363 weights. Add its bias: 364."
+    },
+    {
+      "id": "l07",
+      "text": "Times 96 filters: 34,944 learnable parameters. Counting weights only, it is 34,848."
+    },
+    {
+      "id": "l08",
+      "text": "And the layer produces 55 times 55 times 96, which is 290,400 output values."
+    },
+    {
+      "id": "l09",
+      "text": "LeNet-5's first layer takes a 32 by 32 greyscale digit, depth 1."
+    },
+    {
+      "id": "l10",
+      "text": "It uses 6 filters of size 5, stride 1, no padding."
+    },
+    {
+      "id": "l11",
+      "text": "32 minus 5 is 27. Divided by 1 is 27. Plus 1 is 28. The output is 28 by 28 by 6."
+    },
+    {
+      "id": "l12",
+      "text": "Parameters: 5 by 5 by 1 is 25 weights, plus a bias is 26. Times 6 filters: 156 parameters, or 150 without biases."
+    },
+    {
+      "id": "l13",
+      "text": "And it produces 28 times 28 times 6, which is 4,704 output values."
+    },
+    {
+      "id": "l14",
+      "text": "Notice what the parameter count depends on: the filter size, the input depth and the number of filters. The image's width and height never appear."
+    }
+  ],
+  "p2_s04_why_not_dense": [
+    {
+      "id": "l01",
+      "text": "Why not use an ordinary fully connected network for images? Three reasons."
+    },
+    {
+      "id": "l02",
+      "text": "First, the parameter count explodes. Take an image of 1000 by 1000 pixels with 3 colour channels: 3 million inputs."
+    },
+    {
+      "id": "l03",
+      "text": "Connect it to a modest hidden layer of 1,000 neurons, and every input needs a weight to every neuron. That is 3 million times 1,000: 3 billion weights. Such a model overfits badly and does not fit in memory."
+    },
+    {
+      "id": "l04",
+      "text": "Second, it destroys the 2D layout. After flattening, the pixel at row 1, column 2 is treated as no closer to its neighbour at column 3 than to a pixel at the far corner."
+    },
+    {
+      "id": "l05",
+      "text": "Third, it has no translation equivariance. Shift an object 3 pixels to the right, and completely different weights are used. The network must learn the same object again at every position."
+    }
+  ],
+  "p2_s05_sparse_shared": [
+    {
+      "id": "l01",
+      "text": "A CNN fixes this with two built-in assumptions about images."
+    },
+    {
+      "id": "l02",
+      "text": "The first is sparse connections, also called local receptive fields. Each hidden unit connects only to a small F by F patch."
+    },
+    {
+      "id": "l03",
+      "text": "Take a 4 by 4 image and number its 16 pixels. In a dense network, the hidden unit h one one is connected to all 16."
+    },
+    {
+      "id": "l04",
+      "text": "With a 2 by 2 kernel, h one one connects only to pixels 1, 2, 5 and 6."
+    },
+    {
+      "id": "l05",
+      "text": "The next unit, h one two, connects to pixels 3, 4, 7 and 8 in the slides. Note that this is the window for stride 2. With stride 1 it would be pixels 2, 3, 6 and 7. The slides do not state the stride."
+    },
+    {
+      "id": "l06",
+      "text": "Sparse connections match how images behave: neighbouring pixels interact strongly, distant ones weakly."
+    },
+    {
+      "id": "l07",
+      "text": "How much do we save? A dense unit has W 1 times H 1 connections. A convolutional unit has F times F. The reduction is 1 minus F squared over W 1 times H 1."
+    },
+    {
+      "id": "l08",
+      "text": "Here that is 1 minus 4 over 16: 75 percent fewer incoming connections for every hidden unit."
+    },
+    {
+      "id": "l09",
+      "text": "The second assumption is weight sharing. The very same kernel weights are used at every position."
+    },
+    {
+      "id": "l10",
+      "text": "We do not learn one vertical-edge detector for the top-left corner and another for the middle of the image. One set of weights scans everything."
+    },
+    {
+      "id": "l11",
+      "text": "The guide's figure counts it out: 16 dense hidden units need 16 times 16, 256 weights. 16 convolutional units share the same 4. That is where its range of 75 to 98 percent reduction comes from. A dense layer's weights grow with inputs times outputs, while a convolution's are bounded by the kernel size."
+    },
+    {
+      "id": "l12",
+      "text": "Weight sharing also gives translation equivariance: shift the input, and the feature map shifts by exactly the same amount, with nothing else changed."
+    },
+    {
+      "id": "l13",
+      "text": "Here is a small check with example values: move the bright spot one pixel right, and the response moves one pixel right."
+    }
+  ],
+  "p2_s06_learning": [
+    {
+      "id": "l01",
+      "text": "Where do the kernel weights come from? Not from Sobel or Gauss. In a CNN the kernel coefficients are learnable parameters, optimised automatically by backpropagation. This is end-to-end representation learning."
+    },
+    {
+      "id": "l02",
+      "text": "Training starts from small random weights centred on zero, using Xavier, also called Glorot, or He, also called Kaiming, initialisation."
+    },
+    {
+      "id": "l03",
+      "text": "A good starting scale prevents activations and gradients from vanishing or exploding. And the randomness breaks symmetry, so different filters can specialise into different detectors."
+    },
+    {
+      "id": "l04",
+      "text": "After training, a hierarchy appears. Early layers discover simple primitives: edge detectors that look like Gabor filters, and colour blobs. Middle layers combine them into textures. Deep layers form high-level parts such as faces, wheels and text."
+    },
+    {
+      "id": "l05",
+      "text": "Put together, CNNs have six advantages."
+    },
+    {
+      "id": "l06",
+      "text": "One: far fewer parameters. With weight sharing, the count depends on the kernel size and the input depth, not on the image's width and height."
+    },
+    {
+      "id": "l07",
+      "text": "Two: computational and memory efficiency. Sparse connections mean fewer operations, which makes training on large image datasets practical."
+    },
+    {
+      "id": "l08",
+      "text": "Three: translation invariance and equivariance. A pattern is detected wherever it appears."
+    },
+    {
+      "id": "l09",
+      "text": "Four: hierarchical feature learning. Edges, then textures and shapes, then whole objects."
+    },
+    {
+      "id": "l10",
+      "text": "Five: better generalisation. Sharing weights restricts what the model can represent, which acts as strong regularisation against overfitting."
+    },
+    {
+      "id": "l11",
+      "text": "Six: robustness. Local pooling and shared templates tolerate sensor noise, lighting changes and small changes of viewpoint."
+    }
+  ],
+  "p2_s07_pooling_idea": [
+    {
+      "id": "l01",
+      "text": "Convolution layers keep the feature maps large. That causes three problems. The guide's text says two, but it lists three."
+    },
+    {
+      "id": "l02",
+      "text": "One: computation and memory. Every activation has to be stored for backpropagation, and large maps through a deep network need too much GPU memory."
+    },
+    {
+      "id": "l03",
+      "text": "Two: a limited receptive field. If the resolution never drops, small 3 by 3 kernels in deep layers still see only a tiny patch of the original image, never the whole scene."
+    },
+    {
+      "id": "l04",
+      "text": "Three: over-sensitivity to position. For recognition, it matters that an eye or a nose is present. Its exact pixel position does not, and depending on it makes the model brittle."
+    },
+    {
+      "id": "l05",
+      "text": "Pooling solves this by downsampling: it shrinks the map while keeping the important activations."
+    },
+    {
+      "id": "l06",
+      "text": "Max pooling slides a window over the map and keeps only the largest value in it. The strongest activation survives; weaker background values are dropped."
+    },
+    {
+      "id": "l07",
+      "text": "Average pooling keeps the mean of the window. The result is smoother, and one large spike cannot hide its surroundings."
+    },
+    {
+      "id": "l08",
+      "text": "Global average pooling uses the whole map as the window. Each channel is averaged down to one number, so a W by H by D volume becomes 1 by 1 by D. Modern networks such as ResNet use it in place of heavy fully connected layers."
+    },
+    {
+      "id": "l09",
+      "text": "Global max pooling takes the single largest value of each channel. It answers one question: does this feature appear anywhere in the image?"
+    },
+    {
+      "id": "l10",
+      "text": "Three properties hold for every kind of pooling. It has no learnable parameters. It works on each channel separately, so the depth does not change. And it gives a little translation invariance: a small shift of the input often leaves the output unchanged."
+    },
+    {
+      "id": "l11",
+      "text": "Pooling has three settings: the window size F p, usually 2 by 2 or 3 by 3; the stride S p, usually 2; and the padding P p, usually 0."
+    },
+    {
+      "id": "l12",
+      "text": "With stride 2, the guide says a 50 percent spatial reduction. To be precise: the width and the height are each halved, so only a quarter of the cells remain."
+    },
+    {
+      "id": "l13",
+      "text": "The output size follows the same formula as convolution, with the pooling window and stride. The only difference is the depth: D 2 equals D 1."
+    },
+    {
+      "id": "l14",
+      "text": "Two trade-offs. First, many modern networks replace pooling with a strided convolution, stride 2 or more, so the network learns how to downsample."
+    },
+    {
+      "id": "l15",
+      "text": "Second, pooling throws away exact positions. That is fine for classification, but it hurts dense prediction tasks such as semantic segmentation, which need precise pixel boundaries."
+    }
+  ],
+  "p2_s08_pooling_examples": [
+    {
+      "id": "l01",
+      "text": "Let us work two examples. Here is a 4 by 4 feature map from the slides."
+    },
+    {
+      "id": "l02",
+      "text": "Use a 2 by 2 window with stride 2. The map splits into four blocks that do not overlap."
+    },
+    {
+      "id": "l03",
+      "text": "Top-left block: 8, 7, 12, 9. The maximum is 12. The sum is 36, so the average is 9."
+    },
+    {
+      "id": "l04",
+      "text": "Top-right: 5, 3, 5, 7. Maximum 7. Sum 20, average 5."
+    },
+    {
+      "id": "l05",
+      "text": "Bottom-left: 13, 2, 9, 4. Maximum 13. Sum 28, average 7."
+    },
+    {
+      "id": "l06",
+      "text": "Bottom-right: 10, 3, 5, 14. Maximum 14. Sum 32, average 8."
+    },
+    {
+      "id": "l07",
+      "text": "So max pooling gives 12, 7, 13, 14, and average pooling gives 9, 5, 7, 8. This matches the slide."
+    },
+    {
+      "id": "l08",
+      "text": "Second example: a new map, max pooling, 2 by 2."
+    },
+    {
+      "id": "l09",
+      "text": "With stride 2: the maximum of 1, 4, 5, 8 is 8. Of 2, 1, 3, 4 is 4. Of 7, 6, 1, 3 is 7. Of 4, 5, 1, 2 is 5. The output is 2 by 2: 8, 4, 7, 5."
+    },
+    {
+      "id": "l10",
+      "text": "Now stride 1. The windows overlap. The output width is 4 minus 2, over 1, plus 1, which is 3: a 3 by 3 output."
+    },
+    {
+      "id": "l11",
+      "text": "First row: the windows give 8, then 8 again, then 4."
+    },
+    {
+      "id": "l12",
+      "text": "Second row: 8, 8 and 5. Third row: 7, 6 and 5."
+    },
+    {
+      "id": "l13",
+      "text": "Notice that the 8 appears four times. With overlapping windows, one strong activation is picked up by every window that contains it."
+    }
+  ],
+  "p2_s09_flatten": [
+    {
+      "id": "l01",
+      "text": "The convolution and pooling layers are the feature extractor. They end with a 3D volume: width, height and channels."
+    },
+    {
+      "id": "l02",
+      "text": "The classifier at the end is an ordinary multi-layer perceptron finishing in a softmax, and it needs a one-dimensional vector."
+    },
+    {
+      "id": "l03",
+      "text": "The flatten layer bridges the two. It has no parameters. It only reshapes: a W by H by C volume becomes a single column of W times H times C numbers, and every value is kept."
+    },
+    {
+      "id": "l04",
+      "text": "So the full pipeline is: convolution layers, pooling layers, flatten, a fully connected hidden layer, and a softmax that outputs class probabilities."
+    },
+    {
+      "id": "l05",
+      "text": "Flatten marks a boundary. Before it, features are spatial and translation-equivariant. After it, classification is global and depends on position."
+    },
+    {
+      "id": "l06",
+      "text": "The values are unrolled in a fixed order, typically row by row, channel by channel."
+    },
+    {
+      "id": "l07",
+      "text": "The slide's example: a pooled 3 by 3 map with rows 1, 1, 0; 4, 2, 1; and 0, 2, 1."
+    },
+    {
+      "id": "l08",
+      "text": "Unrolled row by row, it becomes the 9-element vector 1, 1, 0, 4, 2, 1, 0, 2, 1."
+    },
+    {
+      "id": "l09",
+      "text": "In general, the length of the vector is W times H times C."
+    },
+    {
+      "id": "l10",
+      "text": "Feed it to a dense layer of N neurons, and that layer has W times H times C, times N weights. With biases: the length plus 1, times N."
+    },
+    {
+      "id": "l11",
+      "text": "For our 9 values and 10 neurons: 9 times 10 is 90 weights, plus 10 biases, 100 parameters."
+    },
+    {
+      "id": "l12",
+      "text": "This is the trade-off. The flattened length directly scales the first dense layer. If the maps are still large at this point, the parameter count balloons. Pooling and global average pooling keep width and height small before the flatten."
+    }
+  ],
+  "p2_s10_recap": [
+    {
+      "id": "l01",
+      "text": "Let us recap Part 2."
+    },
+    {
+      "id": "l02",
+      "text": "Output size: W 2 equals the floor of W 1 minus F plus 2 P, over S, plus 1. Depth equals the number of filters."
+    },
+    {
+      "id": "l03",
+      "text": "AlexNet's first layer gives 55 by 55 by 96 with 34,944 parameters. LeNet-5's gives 28 by 28 by 6 with 156."
+    },
+    {
+      "id": "l04",
+      "text": "CNNs beat dense networks on images through sparse connections and weight sharing."
+    },
+    {
+      "id": "l05",
+      "text": "Pooling shrinks width and height, has no parameters, and keeps the depth."
+    },
+    {
+      "id": "l06",
+      "text": "Flatten turns the final volume into a vector of W times H times C values for the classifier."
+    },
+    {
+      "id": "l07",
+      "text": "That is the whole of lecture 12: from a single kernel to a complete convolutional network."
+    }
+  ]
+}

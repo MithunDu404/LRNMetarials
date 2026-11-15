@@ -1,610 +1,302 @@
-# Cellular Networks: Architecture, Frequency Reuse, Handoff, and GSM — Learning Guide
+# Cellular Networks: Architecture, Frequency Reuse, Handoff and GSM — Learning Guide
 
-> **Syllabus & Course Reference:** Strictly derived from [`celluler_network.pdf`](celluler_network.pdf) (Mobile and Pervasive Computing). 
-> This guide covers 100% of the theory, network architectures, mathematical formulations, call flows, and engineering trade-offs presented in the course slides, structured for intuitive understanding and conceptual clarity with zero information loss.
-
----
+Source: `celluler_network.pdf` (43 slides), cited as (Slide 14). Every number recomputed.
+**📘 Beyond the slides** = gap filled from outside the slides. **✏️ Slide discrepancy** = a slide is wrong or unclear.
 
 ## Contents
 
-1. [The Cellular Concept & Foundational Motivation](#1-the-cellular-concept--foundational-motivation)
-2. [Network Architecture & System Terminology](#2-network-architecture--system-terminology)
-3. [Call Procedures: Origination, Paging & In-Call Management](#3-call-procedures-origination-paging--in-call-management)
-4. [Cell Geometry: Why Hexagonal Footprints?](#4-cell-geometry-why-hexagonal-footprints)
-5. [Frequency Reuse & Co-Channel Cell Geometry](#5-frequency-reuse--co-channel-cell-geometry)
-6. [Cell Design & Total System Capacity](#6-cell-design--total-system-capacity)
-7. [Co-Channel Interference & Co-Channel Reuse Ratio ($Q$)](#7-co-channel-interference--co-channel-reuse-ratio-q)
-8. [Handoff Strategies & Signal Threshold Margins](#8-handoff-strategies--signal-threshold-margins)
-9. [Signal Monitoring & Generational Handoff Evolution (1G vs. 2G MAHO)](#9-signal-monitoring--generational-handoff-evolution-1g-vs-2g-maho)
-10. [Roaming & Handoff Prioritization Strategies](#10-roaming--handoff-prioritization-strategies)
-11. [Practical Handoff Constraints: Umbrella Cells & Cell Dragging](#11-practical-handoff-constraints-umbrella-cells--cell-dragging)
-12. [GSM Architecture, Services & Subsystems (BSS, NSS, OSS)](#12-gsm-architecture-services--subsystems-bss-nss-oss)
-13. [GPRS (General Packet Radio Service)](#13-gprs-general-packet-radio-service)
+1. [Why cellular?](#1-why-cellular)
+2. [Architecture and terminology](#2-architecture-and-terminology)
+3. [How a call is made](#3-how-a-call-is-made)
+4. [Cell shape: why hexagons](#4-cell-shape-why-hexagons)
+5. [Frequency reuse and co-channel cells](#5-frequency-reuse-and-co-channel-cells)
+6. [Cell design: capacity vs cluster size](#6-cell-design-capacity-vs-cluster-size)
+7. [Co-channel interference and the reuse ratio Q](#7-co-channel-interference-and-the-reuse-ratio-q)
+8. [Handoff: thresholds and the margin Δ](#8-handoff-thresholds-and-the-margin-δ)
+9. [1G vs 2G handoff, roaming and prioritisation](#9-1g-vs-2g-handoff-roaming-and-prioritisation)
+10. [Practical constraints: umbrella cells and cell dragging](#10-practical-constraints-umbrella-cells-and-cell-dragging)
+11. [GSM](#11-gsm)
+12. [GPRS](#12-gprs)
 
 ---
 
-## 1. The Cellular Concept & Foundational Motivation
+## 1. Why cellular?
 
-### 1.1 The Spectral Bottleneck
-Mobile communication relies on radio frequencies, which are strictly finite natural resources governed by government regulatory agencies (such as the FCC or ITU). As public demand for mobile telephony skyrocketed, regulatory bodies **could not simply allocate new spectrum in proportion to demand**.
+**The problem (Slide 1).** Demand for mobile service grew faster than governments could allocate spectrum: regulators **could not make allocations in proportion to demand**. The radio telephone system had to be restructured to achieve three things at once: **high capacity**, with **limited spectrum**, covering **very large areas**.
 
-Traditional mobile telephone networks suffered from a fundamental engineering bottleneck:
-- They relied on a **single high-power transmitter** mounted on a very tall central tower to cover an entire city (a single cell with a radius of $50\text{ km}$ or more).
-- Because a high-power signal blankets the entire metropolitan region, those frequencies cannot be reused anywhere nearby without causing destructive interference.
-- As a result, the entire city could only support **a few dozen simultaneous conversations** across the entire allocated band.
+📘 The old way was one powerful transmitter on a tall tower for a whole city. Its signal covers everything, so each frequency can carry only **one** conversation in the whole city.
 
-Restructuring the mobile telephone system became an imperative to achieve three simultaneous objectives:
-1. **High system capacity** (supporting tens of thousands of concurrent users).
-2. **Limited radio spectrum** (operating inside narrow, fixed regulatory bands).
-3. **Large coverage area** (blanketing entire metropolitan areas and highway networks).
+**The cellular concept (Slide 2).** **Replace one high-power transmitter (a large cell) with many low-power transmitters (small cells).** Each covers only a small part of the service area. Because a weak signal dies out with distance, the **same frequencies can be reused** in another cell far enough away. This was a major breakthrough against **spectral congestion** and **user capacity** limits.
+
+*The key insight:* to add capacity you do not need more spectrum, only **smaller cells and more reuse** (section 6 shows the numbers).
 
 ---
 
-### 1.2 The Breakthrough: Low-Power Distributed Cells
-The **cellular concept** solved both spectral congestion and user capacity limitations through a simple paradigm shift:
+## 2. Architecture and terminology
 
-$$\text{Replace } \mathbf{1} \text{ high-power transmitter (large cell)} \longrightarrow \text{Deploy } \mathbf{\text{many}} \text{ low-power transmitters (small cells).}$$
+![Fig. 1: A cellular mobile architecture](../../figures/cellular_network/fig1_cellular_mobile_architecture.jpg)
+*Figure: Slide 3. Hexagonal cells C1–C12, each with a base station (BS), wired to the MSC; mobiles talk to the BS over the air.*
 
-```mermaid
-flowchart LR
-    subgraph Traditional["Traditional High-Power Approach"]
-        direction TB
-        T1["Single High-Power Transmitter"] --> T2["Huge Coverage Radius (50+ km)"]
-        T2 --> T3["All Channels Consumed Once<br/>Zero Frequency Reuse"]
-        T3 --> T4["Capacity Capped at ~25-50 Calls"]
-    end
+| Term (slides) | Meaning |
+| :--- | :--- |
+| **Base Station (BS)** (4) | fixed station for radio communication with mobiles; at the **centre or edge** of its cell; consists of radio channels, transmitter, receiver and antennas |
+| **Mobile Switching Centre (MSC)** (5, 7) | also **MTSO** (mobile telephone switching office); coordinates call routing over a large area and connects BSs and mobiles to the **PSTN** (public switched telephone network). A typical MSC handles **100,000 subscribers**, **5,000 simultaneous conversations**, plus **billing and system maintenance** |
+| **Mobile Station (MS)** (6) | contains a transceiver, antenna and control circuitry; vehicle-mounted or hand-held |
+| **Transceiver** (5) | a device that transmits and receives radio signals **simultaneously** |
 
-    subgraph Cellular["The Cellular Breakthrough"]
-        direction TB
-        C1["Many Low-Power Transmitters"] --> C2["Small Cell Footprints (1-5 km)"]
-        C2 --> C3["Systematic Frequency Reuse<br/>Channels Reused Across Cells"]
-        C3 --> C4["Unbounded System Capacity"]
-    end
+**Channels (Slides 6–7).** Forward = BS → MS (downlink); reverse = MS → BS (uplink).
 
-    Traditional -.->|"Architectural Shift"| Cellular
-```
+| Channel | Direction | Job |
+| :--- | :---: | :--- |
+| **FVC**, forward voice | BS → MS | voice |
+| **RVC**, reverse voice | MS → BS | voice |
+| **FCC**, forward control | BS → MS | **beacons**: continuously broadcast all traffic requests (pages) for all mobiles |
+| **RCC**, reverse control | MS → BS | call requests and replies |
 
-**How It Works:**
-- Each base station transmitter transmits at low power, providing coverage to only a **small portion of the total service area** (a cell).
-- Because low-power signals attenuate rapidly over distance due to natural propagation path loss, the same set of radio frequencies can be safely assigned to other cells located a sufficient distance away.
-- **The Key Insight:** To increase capacity in a cellular network, you do not need more spectrum from the government. You simply divide large cells into smaller cells and reuse the same frequencies more times across the geographical area!
+FCC and RCC **initiate** calls and set them up, so they are called **set-up channels**. About **5%** of all channels are control/set-up channels; the other 95% carry voice.
 
 ---
 
-## 2. Network Architecture & System Terminology
+## 3. How a call is made
 
-![Fig. 1: A Cellular Mobile Architecture](../../figures/cellular_network/fig1_cellular_mobile_architecture.jpg)
-*Figure 1: Cellular mobile network architecture showing hexagonal cells ($C_1\text{--}C_{12}$), Base Stations (BS), wired backbone links to Mobile Switching Centers (MSC), overlap coverage regions, and wireless air interfaces to Mobile Stations.*
+**Power-on (Slide 8).** The phone **scans the FCCs**, locks onto the **strongest**, and monitors it until the signal drops below a usable level, then scans again.
 
-### 2.1 Core Network Entities
-
-1. **Base Station (BS):**
-   - A fixed ground station in a mobile radio system dedicated to direct radio communication with Mobile Stations.
-   - Located either at the **centre** of a cell (using omni-directional antennas) or along the **edges/corners** (using directional sector antennas).
-   - Internal hardware consists of:
-     - Radio channels (RF transmitter/receiver channel modules)
-     - Transmitter units
-     - Receiver units
-     - Antennas
-2. **Mobile Switching Centre (MSC):**
-   - Also known as the **Mobile Telephone Switching Office (MTSO)**.
-   - Acts as the central brain and routing coordinator for calls across a large service area.
-   - Interfaces the wireless base station infrastructure with the fixed landline network (**PSTN** - Public Switched Telephone Network).
-   - **Industrial Operational Scale:**
-     - Manages up to **$100,000$ cellular subscribers**.
-     - Handles up to **$5,000$ simultaneous conversations** at a time.
-     - Automates subscriber billing records and executes continuous system diagnostics and maintenance.
-3. **Mobile Station (MS):**
-   - The subscriber unit containing a transceiver, antenna, and control circuitry.
-   - Can be mounted permanently inside a vehicle or operated as a portable, handheld unit.
-4. **Transceiver:**
-   - A unified hardware device capable of simultaneously transmitting and receiving radio signals (enabling full-duplex voice communication).
-
----
-
-### 2.2 Channel Classification: Voice vs. Control Channels
-Channels in a cellular network are categorized by their direction (Forward vs. Reverse) and their function (Voice vs. Control):
-
-| Channel Name | Direction | Primary Function |
-|:---|:---:|:---|
-| **Forward Voice Channel (FVC)** | $\text{BS} \to \text{MS}$ | Carries downlink voice transmission from the base station to the mobile subscriber. |
-| **Reverse Voice Channel (RVC)** | $\text{MS} \to \text{BS}$ | Carries uplink voice transmission from the mobile subscriber to the base station. |
-| **Forward Control Channel (FCC)** | $\text{BS} \to \text{MS}$ | Downlink beacon channel. Continuously broadcasts system parameters, cell identity, and incoming call traffic requests (pages) to all idle mobiles. |
-| **Reverse Control Channel (RCC)** | $\text{MS} \to \text{BS}$ | Uplink signaling channel. Used by mobile stations to initiate calls or acknowledge incoming paging messages. |
-
-**The 5% Setup Rule:**
-- Control channels (FCC and RCC) are often referred to as **setup channels** because they handle call setup, signaling, and channel assignment before an active conversation begins.
-- In a typical cellular deployment, **approximately $5\%$ of all available radio channels** are dedicated as control/setup channels, while the remaining $95\%$ carry actual user voice traffic (FVC/RVC).
-
----
-
-## 3. Call Procedures: Origination, Paging & In-Call Management
-
-### 3.1 Initial Power-On & Beacon Acquisition
-When a mobile handset is first turned on:
-1. It immediately scans the pre-allocated group of **Forward Control Channels (FCC)** to identify the channel delivering the strongest RF signal.
-2. The MS locks onto and continuously monitors this strongest FCC beacon.
-3. It stays tuned to this channel until the signal drops below a usable threshold (indicating the subscriber has moved toward an adjacent cell), at which point it initiates a new scan for a stronger beacon.
-
----
-
-### 3.2 Mobile-Initiated Call Setup Procedure
-When a mobile subscriber dials a telephone number and presses "Send":
+**Call from the mobile (Slide 8).**
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    participant MS as Mobile Station (MS)
-    participant BS as Servicing Base Station (BS)
-    participant MSC as Mobile Switching Centre (MSC)
-    participant PSTN as Landline / PSTN
-
-    MS->>BS: Transmits call initiation request over RCC
-    BS->>MSC: Relays call initiation data over wired link
-    Note over MSC: MSC validates request and subscriber credentials
-    MSC->>PSTN: Establishes connection to called party via PSTN
-    MSC->>BS: Instructs BS to allocate unused FVC and RVC pair
-    BS->>MS: Commands MS to tune to designated voice channel frequencies
-    Note over MS,BS: MS tunes to voice channels -- conversation begins
+    participant MS
+    participant BS
+    participant MSC
+    participant PSTN
+    MS->>BS: Call request on RCC
+    BS->>MSC: Relays the request
+    Note over MSC: Validates the request
+    MSC->>PSTN: Connects to the called party
+    MSC->>BS: Use an unused FVC/RVC pair
+    BS->>MS: Move to that FVC/RVC
 ```
 
-1. **Call Initiation Request:** The MS transmits a call request packet over the **Reverse Control Channel (RCC)** containing its identity (MIN - Mobile Identification Number, ESN) and the dialed digits.
-2. **BS Relay:** The servicing Base Station detects the transmission and relays the data to the MSC via the wired backhaul link.
-3. **Validation & PSTN Routing:** The MSC validates subscriber authorization, checks billing status, and sets up a connection to the called party through the PSTN.
-4. **Voice Channel Reassignment:** The MSC selects an unused voice channel pair and instructs the BS and MS to switch from the control channels to dedicated **Forward Voice (FVC)** and **Reverse Voice (RVC)** channels for conversation.
-
----
-
-### 3.3 Landline-Initiated Call (Paging Procedure)
-When a landline phone dials a mobile subscriber's number:
+**Call from a landline (Slide 9).** The MSC does not know which cell the mobile is in, so it asks everyone.
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    participant PSTN as Landline / PSTN
-    participant MSC as Mobile Switching Centre (MSC)
-    participant AllBS as All Base Stations in System
-    participant MS as Target Mobile Station (MS)
-
-    PSTN->>MSC: Inward call arrives with destination MIN
-    MSC->>AllBS: Dispatches call request to all Base Stations
-    AllBS->>MS: Broadcasts paging message over all FCC beacons
-    Note over MS: MS recognizes its MIN in paging broadcast
-    MS->>AllBS: Identifies itself and transmits ACK over RCC
-    AllBS->>MSC: Servicing BS relays acknowledgement to MSC
-    MSC->>AllBS: Selects unused FVC/RVC pair and instructs BS
-    AllBS->>MS: Signals MS to switch to allocated voice frequencies
-    AllBS->>MS: Transmits Alert Message on FCC commanding handset to ring
-    Note over MS: Phone rings -- user answers -- active call begins
+    participant PSTN
+    participant MSC
+    participant BS as All BSs
+    participant MS
+    PSTN->>MSC: Call for a mobile's MIN
+    MSC->>BS: Dispatch the request to all BSs
+    BS->>MS: Paging message on every FCC
+    MS->>BS: "That's me" on RCC
+    BS->>MSC: Serving BS relays the acknowledgement
+    MSC->>BS: Move the call to an unused voice channel
+    BS->>MS: Change to the FVC/RVC pair
+    BS->>MS: Alert message on FCC: ring
 ```
 
-1. **Paging Dispatch:** The incoming call reaches the MSC via the PSTN. Because the MSC does not know the exact cell the mobile is in, it dispatches the request to **all Base Stations** in the service area.
-2. **FCC Paging Broadcast:** Every Base Station broadcasts a paging message containing the mobile's **Mobile Identification Number (MIN)** across its Forward Control Channel (FCC).
-3. **RCC Identification Response:** The target MS hears its MIN in the broadcast, identifies itself, and responds with an acknowledgement packet over the **Reverse Control Channel (RCC)**.
-4. **Voice Channel Assignment:** The servicing BS that picks up the MS response informs the MSC. The MSC allocates an unused FVC/RVC pair and instructs the BS.
-5. **Frequency Switching & Ringing:** The BS commands the MS to tune to the allocated voice frequencies, and an **Alert Message** is transmitted over the FCC causing the mobile phone to ring.
+The **MIN** (mobile identification number) is the phone's number, used in the page.
+
+**MSC's role during the call (Slide 10).** (1) Sends special **control signals** to the MS through the BS. (2) **Adjusts the mobile's transmit power**. (3) Keeps call quality by **changing the mobile's channel** when needed (handoff, section 8). 📘 Lower power near the BS saves battery and causes less interference in other cells.
 
 ---
 
-### 3.4 Role of the MSC During an Active Call
-The MSC's responsibility continues throughout the conversation. During an active call, the MSC:
-1. **Applies Supervisory Control Signals:** Regulates MS operation via control signals exchanged through the BS.
-2. **Performs Dynamic Power Control:** Monitors uplink signal levels and adjusts the transmitter power of the MS. Lowering power when a mobile is near the BS conserves battery, prevents receiver saturation, and minimizes co-channel interference to other cells.
-3. **Maintains Voice Quality:** If the active channel degrades due to interference or subscriber movement, the MSC reassigns the call to a cleaner channel (in-cell channel reallocation or inter-cell handoff).
+## 4. Cell shape: why hexagons
+
+**Footprints (Slide 11).** A cell's real coverage, its **footprint**, comes from **field measurements** and **propagation prediction models**. Real footprints are **amorphous** (irregular), but a **regular shape** is needed for **systematic design** and **future growth**.
+
+**Which shape (Slide 12).** The slide compares **rectangle, circle and hexagon**. For the same distance $R$ from the centre to the farthest point, the **hexagon has the largest area of the three**, and it closely matches the **circular radiation pattern** of an **omni-directional** BS antenna under **free-space** propagation.
+
+📘 Why not the circle itself? Circles cannot tile a plane: touching circles leave gaps, overlapping ones waste coverage. Only three regular polygons tile without gaps or overlaps: triangle, square, hexagon.
+
+| Shape (radius $R$) | Area | Relative to hexagon |
+| :--- | :--- | ---: |
+| Equilateral triangle | $\frac{3\sqrt{3}}{4} R^2 \approx 1.299 R^2$ | 50% |
+| Square | $2R^2$ | 77% |
+| Regular hexagon | $\frac{3\sqrt{3}}{2} R^2 \approx 2.598 R^2$ | 100% |
+
+![Triangle, square and hexagon drawn inside the same circle of radius R, with their areas 1.299, 2.000 and 2.598 R squared](images/fig_cell_geometry_tessellation.png)
+*Figure: Same reach $R$, different area. Covering a region with hexagons needs half as many base stations as with triangles.*
 
 ---
 
-## 4. Cell Geometry: Why Hexagonal Footprints?
+## 5. Frequency reuse and co-channel cells
 
-### 4.1 Physical Reality vs. Geometric Models
-- The actual radio coverage of a base station is called its **footprint**. It is mapped out using empirical field signal measurements and propagation models.
-- In reality, radio footprints are **amorphous and irregular** because radio waves reflect, diffract, and scatter off hills, buildings, and foliage.
-- However, designing a cellular network with amorphous shapes makes frequency planning and capacity analysis impossible. A **regular geometric shape** is required for systematic design and orderly future growth.
+**Frequency reuse (Slide 13).** Place BSs systematically, give each a **channel group**, spread the groups over the coverage zone, and **reuse channels as many times as necessary**, keeping interference between **co-channel cells** below an acceptable level.
 
----
+**Co-channel cells (Slides 14–15)** use the **same** channel group (all cells marked "A" in Fig. 2). A **cluster** (compact pattern) of $N$ cells uses all channels once; then the pattern repeats.
 
-### 4.2 Geometric Shape Selection
-An ideal omni-directional base station antenna radiates uniformly in all directions, producing a **circular** coverage pattern. However, **circles cannot tessellate a 2D plane**:
-- If circular cells touch edge-to-edge, huge uncovered gaps (dead zones) are left between them.
-- If circles overlap to eliminate gaps, large overlapping regions are created, wasting spectrum.
-
-To cover an area completely without gaps or overlaps (tessellation), only three regular polygons can be used:
-1. **Equilateral Triangle**
-2. **Square**
-3. **Regular Hexagon**
-
-```
-     Triangle              Square                Hexagon
-      ▲                   ┌──────┐               /‾‾‾\
-     / \                  │      │              |     |
-    /   \                 │      │               \___/
-   /_____\                └──────┘
- Area: 1.30 R²          Area: 2.00 R²          Area: 2.60 R²
+```math
+N = i^2 + ij + j^2
 ```
 
-### 4.3 Why the Hexagon is the Optimal Choice
-For a given circumradius $R$ (the distance from the polygon's centre to its farthest vertex):
+$i$ and $j$ are non-negative integers (the "shift" steps). *Slide 14:* $i = 3$, $j = 2$: $N = 9 + 6 + 4 = 19$. 📘 Other valid sizes: $(1, 0) \to 1$, $(1, 1) \to 3$, $(2, 0) \to 4$, $(2, 1) \to 7$, $(3, 0) \to 9$, $(2, 2) \to 12$, $(3, 1) \to 13$. A cluster of, say, 5 or 6 is impossible.
 
-| Geometric Shape | Area Formula in terms of Radius $R$ | Relative Area Efficiency |
-|:---|:---|:---:|
-| **Equilateral Triangle** | $A = \frac{3\sqrt{3}}{4} R^2 \approx 1.299 R^2$ | $50.0\%$ |
-| **Square** | $A = 2 R^2 = 2.000 R^2$ | $77.0\%$ |
-| **Regular Hexagon** | $A = \frac{3\sqrt{3}}{2} R^2 \approx 2.598 R^2$ | **$100.0\%$ (Maximum)** |
+**Finding the nearest co-channel cell (Slide 15).** Move $i$ cells along any chain of hexagons, **turn 60° counter-clockwise**, move $j$ cells. Each cell has **6 equidistant** nearest co-channel neighbours.
 
-**Two Decisive Advantages of the Hexagon:**
-1. **Largest Area per Given Radius:** Among all polygons that tessellate a plane, the regular hexagon encloses the largest coverage area for a specified reach $R$. Consequently, **fewer base stations are required** to cover a given region, drastically lowering capital infrastructure costs.
-2. **Closest Approximation of a Circle:** The hexagon most closely approximates the circular radiation pattern of an omni-directional base station antenna under isotropic free-space propagation.
+![Fig. 2: Calculation of co-channel cells for i = 3, j = 2](../../figures/cellular_network/fig2_cochannel_cells_calculation.jpg)
+*Figure: Slide 14. From the centre "A", 3 steps, turn 60°, 2 steps reaches the next "A"; six such cells surround it.*
+
+**Co-channel interference (Slide 15)** is interference between the signals of a cell and its co-channel cells. 📘 Unlike noise, raising transmit power does not help: the interfering cells' power rises too.
 
 ---
 
-## 5. Frequency Reuse & Co-Channel Cell Geometry
+## 6. Cell design: capacity vs cluster size
 
-![Fig. 2: Calculation of co-channel cells](../../figures/cellular_network/fig2_cochannel_cells_calculation.jpg)
-*Figure 2: Geometric calculation and location of nearest co-channel cells using shift parameters $i=3$ and $j=2$ ($N=19$), showing the 6 equidistant co-channel neighbors oriented at $60^\circ$ increments.*
+**The formulas (Slide 16).** A system has $S$ duplex channels; each cell gets $K$; a cluster has $N$ cells, so
 
-### 5.1 The Frequency Reuse Concept
-- The total allocated radio channels are partitioned into distinct, non-overlapping channel groups.
-- Each cell in a cluster receives a unique channel group.
-- These channel groups are **reused systematically across the coverage zone** in other cells, as long as the physical separation between co-channel cells is large enough to keep mutual interference below an acceptable level.
-
----
-
-### 5.2 Locating Nearest Co-Channel Neighbors
-Cells that use the same group of channels are called **co-channel cells** (e.g., all cells labeled 'A' in Figure 2).
-
-To locate the nearest co-channel cells on a hexagonal grid:
-1. Move $i$ cells along any chain of contiguous hexagons.
-2. Turn **$60^\circ$ counter-clockwise**.
-3. Move $j$ cells along the new hexagonal chain.
-
-Because of the 6-fold rotational symmetry of regular hexagons, every cell has exactly **$6$ equidistant nearest co-channel neighbors** in its first tier.
-
----
-
-### 5.3 Cluster Size Formula ($N$)
-The number of cells per repeating cluster (compact pattern), denoted by $N$, must satisfy the hexagonal tessellation equation:
-
-$$N = i^2 + i \cdot j + j^2 \quad \text{where } i, j \in \{0, 1, 2, 3, \dots\}$$
-
-**Worked Calculation from Slide 14:**
-For shift parameters $i = 3$ and $j = 2$:
-$$N = 3^2 + (3)(2) + 2^2 = 9 + 6 + 4 = 19\text{ cells per cluster}$$
-
-Other valid cluster sizes that tessellate a hexagonal lattice without distortion include $N = 1, 3, 4, 7, 9, 12, 13, 19, \dots$
-
-### 5.4 Co-Channel Interference
-Interference resulting from signals transmitted by other cells operating on the exact same channel frequencies is termed **co-channel interference**. Unlike noise, co-channel interference cannot be solved by simply increasing base station power, because increasing power increases interference across all co-channel cells proportionally!
-
----
-
-## 6. Cell Design & Total System Capacity
-
-### 6.1 Capacity Formulation & Formulas
-Let:
-- $S$ = total number of duplex channels allocated to the entire cellular system.
-- $K$ = number of duplex channels allocated to each individual cell.
-- $N$ = number of cells in a repeating cluster (cluster size).
-- $M$ = number of times the cluster is replicated over the total service area.
-
-Because the total channels $S$ are divided equally among the $N$ cells in a cluster:
-$$S = K \cdot N \implies K = \frac{S}{N}$$
-
-If the cluster is replicated $M$ times over the service area, the **total system capacity $C$** is:
-$$C = M \cdot K \cdot N = M \cdot \left(\frac{S}{N}\right) \cdot N = M \cdot S$$
-
-$$\text{Capacity } C \text{ is directly proportional to } M \text{ (the cluster replication factor).}$$
-
----
-
-### 6.2 Impact of Cluster Size ($N$) on Capacity vs. Interference
-
-```mermaid
-flowchart LR
-    subgraph SmallN["Small Cluster Size (e.g., N = 4)"]
-        direction TB
-        S1["More Channels per Cell: K = S / N ↑"]
-        S2["More Cluster Replications: M ↑"]
-        S3["MAXIMUM SYSTEM CAPACITY: C = M * S ↑"]
-        S4["Co-channel cells closer together (Small D)"]
-        S5["Higher Co-Channel Interference (Lower QoS)"]
-        S1 --> S2 --> S3
-        S3 -.-> S4 -.-> S5
-    end
-
-    subgraph LargeN["Large Cluster Size (e.g., N = 12)"]
-        direction TB
-        L1["Fewer Channels per Cell: K = S / N ↓"]
-        L2["Fewer Cluster Replications: M ↓"]
-        L3["LOW SYSTEM CAPACITY: C = M * S ↓"]
-        L4["Co-channel cells far apart (Large D)"]
-        L5["Negligible Co-Channel Interference (High QoS)"]
-        L1 --> L2 --> L3
-        L3 -.-> L4 -.-> L5
-    end
+```math
+S = KN, \qquad C = MKN = MS
 ```
 
-**The Fundamental Trade-off:**
-- **Large Cluster Size ($N$):** Co-channel cells are spaced far apart ($D/R$ is large). Interference is minimal, delivering pristine voice quality. However, channels per cell $K$ and replications $M$ are low, resulting in **low capacity**.
-- **Small Cluster Size ($N$):** Co-channel cells are located close together. Capacity is maximized, but **co-channel interference is significant**.
+The cluster is replicated $M$ times, so the total capacity $C$ (duplex channels in the whole system) is $M$ copies of all $S$ channels. **Capacity is proportional to $M$**, the number of times the cluster is replicated (Slide 17).
 
-**Design Optimization Dilemma:**
-- To **maximize capacity**: Use the smallest possible value of $N$.
-- To **eliminate interference**: Use the biggest possible value of $N$.
-- Modern system design requires balancing this fundamental trade-off between capacity and quality of service (QoS).
+**Worked example** 📘. $S = 840$ channels; the city needs 84 cells of fixed size. Then $M = 84 / N$ and $K = 840 / N$:
 
----
+| $N$ | $K$ per cell | $M$ | Capacity $C = MS$ |
+| :---: | ---: | ---: | ---: |
+| 4 | 210 | 21 | 17,640 |
+| 7 | 120 | 12 | 10,080 |
+| 12 | 70 | 7 | 5,880 |
 
-## 7. Co-Channel Interference & Co-Channel Reuse Ratio ($Q$)
+Same spectrum, same cells: $N = 4$ carries 3 times as many calls as $N = 12$. **And** shrinking the cells (more of them) raises $M$ further: that is the cellular concept's whole trick.
 
-![Fig. 3: Co-channel reuse geometry](../../figures/cellular_network/fig3_cochannel_reuse_geometry.jpg)
-*Figure 3: Geometric relationship between cell radius $R$ and co-channel distance $D$ for a 7-cell reuse cluster ($K=7$ / $N=7$), showing the reuse ratio $q = D/R = 4.6$.*
+**The catch (Slides 17–18).**
 
-### 7.1 The Co-Channel Reuse Ratio Formula ($Q$)
-To keep co-channel interference below acceptable levels, co-channel cells must be separated by a minimum physical distance $D$.
+| Cluster size | Co-channel cells | Capacity | Interference |
+| :--- | :--- | :--- | :--- |
+| **Large** $N$ | far apart: $D/R$ large | low | low, good quality |
+| **Small** $N$ | much closer | high | **significant** |
 
-The **co-channel reuse ratio $Q$** (or $q$) is defined as the ratio of the distance between centers of nearest co-channel cells ($D$) to the cell radius ($R$):
-
-$$Q = \frac{D}{R} = \sqrt{3N}$$
-
-**Mathematical Audit of Figure 3 (Slide 20):**
-The slide diagram illustrates a 7-cell cluster ($K = 7$, where $K$ represents cluster size $N = 7$):
-$$Q = \sqrt{3 \times 7} = \sqrt{21} \approx 4.5826$$
-The slide prints $q = D/R = 4.6$, which is $4.5826$ rounded to one decimal place.
+Design criteria: to **maximise capacity**, use the **smallest** $N$; for **no interference**, the **biggest** $N$. So design is a **trade-off between capacity and interference (QoS)**.
 
 ---
 
-### 7.2 Operational Trade-Off of $Q$
-- **$Q$ is Too Large ($D \gg R$):** Co-channel cells are located far apart. Transmission quality improves due to high propagation path isolation, but cluster size $N$ must be large, reducing spectral capacity.
-- **$Q$ is Too Small ($D$ approaches $R$):** Cluster size $N$ is small, providing high capacity, but co-channel interference degrades voice quality.
-- **Strategy to Reduce Interference:**
-  1. Separate co-channel cells by a minimum distance $D$.
-  2. Rely on natural RF propagation path loss ($P_r \propto d^{-n}$, where path loss exponent $n \approx 3\text{--}4$) to attenuate interfering signals.
+## 7. Co-channel interference and the reuse ratio Q
 
----
+**The reuse ratio (Slide 19).** $D$ = distance between centres of nearest co-channel cells, $R$ = cell radius:
 
-## 8. Handoff Strategies & Signal Threshold Margins
-
-![Fig. 4: Illustration of a handoff scenario at cell boundary](../../figures/cellular_network/fig4_handoff_scenario_boundary.jpg)
-*Figure 4: Illustration of handoff dynamics at a cell boundary. (a) Improper handoff: delayed execution drops the signal below the minimum acceptable threshold, terminating the call. (b) Proper handoff: handoff executes at threshold $P_{r,\text{handoff}}$, successfully transferring the call to Base Station 2.*
-
-### 8.1 Definition & Requirements
-**Handoff (Hand Off):** The operational process of transferring an active call from one radio channel or base station to another as a mobile subscriber travels across cell boundaries.
-- **Core Process:**
-  1. Identify a candidate new Base Station.
-  2. Allocate voice and control channels associated with the new Base Station.
-- **Three Core Requirements:** A handoff must be performed:
-  1. **Successfully** (the ongoing call must not be dropped).
-  2. **As infrequently as possible** (to avoid overloading network switches with signaling).
-  3. **Imperceptibly to users** (seamlessly, without audible clicks or interruptions).
-
----
-
-### 8.2 Signal Thresholds & The Handoff Margin ($\Delta$)
-To meet these requirements, network designers establish two signal thresholds at the base station receiver:
-1. $P_{r,\text{minimum usable}}$: The absolute minimum acceptable received signal level required to sustain intelligible voice quality.
-2. $P_{r,\text{handoff}}$: A slightly stronger threshold chosen to initiate the handoff process while signal quality is still good.
-
-The safety margin $\Delta$ is defined as:
-
-$$\Delta = P_{r,\text{handoff}} - P_{r,\text{minimum usable}}$$
-
-```mermaid
-flowchart TD
-    ZoneA["Normal Service Zone: Pr > Pr,handoff<br/>(Deep inside serving cell -- excellent call quality)"]
-    ZoneMargin["Handoff Transition Window: Pr,min usable < Pr <= Pr,handoff<br/>Safety Margin: Delta = Pr,handoff - Pr,min usable<br/>(Handoff request triggered, target BS negotiated)"]
-    ZoneDrop["Call Drop Zone: Pr < Pr,min usable<br/>(Signal collapses -- call terminated if handoff incomplete)"]
-
-    ZoneA -->|"Mobile moves toward cell boundary"| ZoneMargin
-    ZoneMargin -->|"Handover completes to Target BS"| ZoneA
-    ZoneMargin -->|"Delay / Target channels busy"| ZoneDrop
+```math
+Q = \frac{D}{R} \qquad \text{📘 and on a hexagonal grid} \qquad Q = \sqrt{3N}
 ```
 
-### 8.3 Margin Optimization Trade-Off
-- **$\Delta$ is Too Large:** Handoff is triggered when the mobile is still well inside the serving cell. This results in **unnecessary handoffs**, generating excessive computational loading on the MSC and wasting channel switching resources.
-- **$\Delta$ is Too Small:** There is **insufficient time** to complete the handoff before the signal drops below $P_{r,\text{minimum usable}}$, causing the call to be lost.
+- $Q$ **too large:** better transmission quality, less capacity.
+- $Q$ **too small:** more capacity, worse quality.
+- A **trade-off** between quality and capacity. To reduce interference: **separate co-channel cells by a minimum distance** and rely on enough **isolation from propagation** (signal loss over distance).
 
-### 8.4 Causes of Dropped Calls During High Traffic
-During heavy traffic conditions, calls may be dropped due to:
-1. **Computational Loading at the MSC:** Processing queues at the central switch cause excessive delays.
-2. **Channel Starvation at Target BSs:** No voice channels are free on any nearby base stations, forcing the MSC to wait. If the signal collapses below $P_{r,\text{minimum usable}}$ during this wait, the call is dropped.
+![Fig: co-channel reuse geometry for a 7-cell cluster, q = D/R = 4.6](../../figures/cellular_network/fig3_cochannel_reuse_geometry.jpg)
+*Figure: Slide 20. For $N = 7$: $Q = \sqrt{21} = 4.5826 \approx 4.6$. With $R = 1$ km, co-channel cells are 4.58 km apart.*
 
----
+> ✏️ **Slide discrepancy (Slide 20).** The figure writes the cluster size as $K = 7$, but Slide 16 uses $K$ for channels **per cell** and $N$ for cluster size. Here it means $N = 7$.
 
-## 9. Signal Monitoring & Generational Handoff Evolution (1G vs. 2G MAHO)
+> 📘 **Beyond the slides — how much interference? (Rappaport).** With the 6 first-tier co-channel cells and received power falling as $d^{-n}$ (path-loss exponent $n$ = 3 to 4), the worst-case signal-to-interference ratio is
+>
+> ```math
+> \frac{S}{I} = \frac{(D/R)^n}{6} = \frac{(\sqrt{3N})^n}{6}
+> ```
+>
+> Your signal travels $R$, each interferer about $D$, so each interferer is $(D/R)^n$ times weaker; there are 6 of them. *Example:* $N = 7$, $n = 4$: $21^2 / 6 = 73.5$, i.e. $10 \log_{10} 73.5 = 18.66$ dB, above the 18 dB analog AMPS needed. With $n = 3$, $N = 7$ gives only 12.05 dB; a 15 dB target then needs $N = 12$ ($36^{1.5} / 6 = 36$, i.e. 15.56 dB).
 
-### 9.1 Verification Rules Before Initiating Handoff
-In a mobile radio environment, signal strength fluctuates rapidly due to momentary multipath fading. Before initiating an expensive handoff, the system must verify:
-1. The drop in signal level is **not due to momentary fading**.
-2. The MS is **actually physically moving away** from the serving Base Station.
-
-**Implementation:**
-- The Base Station monitors the signal level over a **sliding time-averaging window** before triggering a handoff.
-- The averaging duration depends on the velocity of the MS: if the **slope of the short-term average received signal level is steep**, the mobile is moving away rapidly and the handoff must be made quickly.
+![Worst-case S/I against cluster size N for path-loss exponents 3 and 4, with a 15 dB line](images/fig_sir_vs_cluster_size.png)
+*Figure: S/I rises with $N$; a harsher path loss ($n = 4$) helps, because interferers fade faster.*
 
 ---
 
-### 9.2 1st Generation (1G) Handoff: Network-Controlled
-- The Base Station constantly measures the signal strength (SS) of the uplink **Reverse Voice Channels (RVC)**.
-- The **MSC supervises and controls** all handoffs.
-- The MSC polls surrounding BSs to measure the MS's signal and determine its relative location.
-- **Drawback:** Slow execution ($5\text{--}10\text{ seconds}$) and creates an intense computational bottleneck at the central MSC.
+## 8. Handoff: thresholds and the margin Δ
 
----
+**Definition (Slide 21).** **Handoff** is transferring a mobile from one channel or BS to another: identify a new BS, then allocate voice and control channels of the new BS. It must be done **successfully**, **as infrequently as possible**, and **imperceptibly** to users.
 
-### 9.3 2nd Generation (2G) Handoff: Mobile-Assisted Handoff (MAHO)
-In 2G digital networks, handoff decisions are **Mobile-Assisted (MAHO)**:
-- The Mobile Station measures the received power from neighboring Base Station beacons during idle TDMA timeslots.
-- The MS continually reports these measurements back to its serving Base Station.
-- **Trigger Rule:** A handoff is initiated when:
-  $$\text{Power from neighbor BS} > \text{Power from serving BS by a specified threshold/duration}$$
+**Two signal levels (Slide 22)** at the BS receiver: a **minimum usable** level for acceptable voice quality, and a **slightly stronger handoff threshold**. The margin:
 
-| Feature | 1st Generation (1G) Handoff | 2nd Generation (2G) MAHO |
-|:---|:---|:---|
-| **Measurement Entity** | Base Station (uplink RVC measurement) | Mobile Station (downlink beacon measurement) |
-| **Supervision & Control** | Centralized MSC supervises all handoffs | Distributed (MS reports, BS/BSC executes) |
-| **Handover Speed** | Slow ($5\text{--}10\text{ seconds}$) | Much faster (tens of milliseconds) |
-| **MSC Processor Load** | Heavy (MSC must constantly monitor SS) | Relieved (MSC no longer monitors SS) |
-| **Cell Size Capability** | Large macrocells only | Microcells and picocells |
-
----
-
-## 10. Roaming & Handoff Prioritization Strategies
-
-### 10.1 Roaming & Intersystem Handoff
-**Roaming** is the operational mechanism by which an **intersystem handoff** takes place when a subscriber travels outside their service provider's network territory.
-
-- **Trigger Conditions for Roaming:**
-  1. Received signal strength at the MS becomes weak.
-  2. The serving MSC searches its system and **cannot find another cell within its own network** to transfer control of the MS.
-- **Engineering Issues & Constraints in Roaming:**
-  - The MS leaves its registered home system and enters a visited system.
-  - A local call converts dynamically into an intersystem long-distance call with different billing tariffs.
-  - **Compatibility** between the two MSCs (signaling protocols, authentication, cryptographic keys) must be determined before implementing the intersystem handoff.
-
----
-
-### 10.2 Prioritizing Handoff Requests
-From a subscriber satisfaction perspective:
-> **A call abruptly terminated in the middle of an active conversation is far more annoying to a user than being blocked occasionally on a new call attempt.**
-
-Therefore, cellular systems prioritize ongoing handoffs over new call attempts using two techniques:
-
-1. **The Guard Channel Concept:**
-   - A dedicated fraction of total channels in each cell is reserved exclusively for incoming handoff requests.
-   - New call attempts can only use the remaining general channel pool.
-   - If all regular channels are busy, new calls are blocked, but handoffs can still access reserved guard channels.
-2. **Queuing of Handoff Requests:**
-   - Takes advantage of the time window between $P_{r,\text{handoff}}$ and $P_{r,\text{minimum usable}}$.
-   - If no channel is immediately available at the target BS, the handoff request is queued.
-   - As soon as a channel is freed by an exiting or terminated user, it is assigned to the queued handoff before the mobile drops below $P_{r,\text{minimum usable}}$.
-
----
-
-## 11. Practical Handoff Constraints: Umbrella Cells & Cell Dragging
-
-![Fig. 5: The umbrella cell approach](../../figures/cellular_network/fig5_umbrella_cell_approach.jpg)
-*Figure 5: The umbrella cell approach, showing a tall-tower large "umbrella" cell covering high-speed vehicular traffic co-located with multiple low-antenna microcells serving low-speed pedestrian traffic.*
-
-### 11.1 Problem 1: Accommodating Wide Velocity Diversity
-- **The Challenge:** Cellular networks must simultaneously serve slow pedestrians ($3\text{ km/h}$) and high-speed highway motorists ($100\text{ km/h}$).
-- **Failure Mode:** If fast vehicles move through small microcells ($R = 500\text{ m}$), they cross cell boundaries every few seconds, causing continuous handoffs ("handoff storms") that overload the MSC switching fabric and increase dropped calls.
-
-#### The Solution: Umbrella Cell Approach
-By deploying **different antenna heights and transmitter power levels**, engineers co-locate "large" and "small" cells over the exact same area:
-- **Large Umbrella Cell (Macrocell):** Transmits from tall towers at high power, providing broad coverage for **high-speed vehicular traffic** (minimizing handoff frequency).
-- **Small Microcells:** Transmit from low antenna heights at low power, providing localized capacity for **low-speed pedestrian traffic** (maximizing spatial capacity).
-
----
-
-### 11.2 Problem 2: Cell Dragging
-- **Definition:** An anomaly where a handoff is **not made even when it is essential**.
-- **Physical Cause:** Occurs in dense urban environments where pedestrian users maintain an unobstructed **Line-of-Sight (LOS)** radio path to their original base station down street canyons.
-- **Consequence:**
-  - Because of the strong LOS path, the received signal strength remains artificially strong at the receiver, so the handoff threshold is not triggered.
-  - The pedestrian moves deep into the coverage territory of a neighboring cell while still transmitting to the original BS.
-  - This "drags" the signal into the adjacent cell, creating severe, destructive **co-channel interference** for subscribers legitimately operating in that neighbor cell.
-
----
-
-## 12. GSM Architecture, Services & Subsystems (BSS, NSS, OSS)
-
-![Fig. 6: GSM system architecture](../../figures/cellular_network/fig6_gsm_system_architecture.jpg)
-*Figure 6: Complete GSM system architecture showing the three interconnected subsystems: Base Station Subsystem (BSS: BTS, BSC), Network and Switching Subsystem (NSS: MSC, HLR, VLR, AUC), Operation Support Subsystem (OSS: OMC), and interfaces to external Public Networks (PSTN, ISDN, Data).*
-
-### 12.1 Background & Features
-- **GSM (Global System for Mobile Communications):** A 2nd generation (2G) digital cellular standard.
-- **Historical Significance:** World's first cellular system to specify **digital modulation** and complete standardized network-level architectures and services.
-- **The Problem It Solved:** Before GSM, European nations used incompatible analog standards (e.g., TACS in the UK, NMT in Scandinavia), making it impossible for a customer to use a single phone throughout Europe. GSM created a unified continental standard.
-
-### 12.2 GSM Services & Features
-GSM services are classified into two major categories:
-1. **Teleservices:**
-   - Standard Voice Calling (digital telephony)
-   - Facsimile (Fax transmission)
-2. **Data Services:**
-   - Circuit-switched data rates ranging from **$300\text{ bps}$ to $9.6\text{ kbps}$**.
-   - **SMS (Short Message Service):** Alphanumeric messaging carried over signaling channels simultaneously while carrying normal voice traffic.
-
-### 12.3 The SIM (Subscriber Identity Module)
-The SIM card is a smart memory chip that revolutionized mobile hardware by **decoupling the subscriber's identity from the physical terminal**:
-- **Stores:**
-  - Subscriber identification module (IMSI)
-  - Authorized networks
-  - Country code
-  - Privacy and authentication keys ($K_i$)
-  - User-specific information (phonebook, stored SMS)
-- **Modularity:** Without a SIM installed, all GSM mobile handsets are completely identical and non-operational (except for emergency calls). A subscriber can plug their SIM into any suitable GSM terminal and immediately receive their calls.
-
----
-
-### 12.4 The Three Interconnected GSM Subsystems
-
-```mermaid
-flowchart LR
-    subgraph BSS["Base Station Subsystem (BSS)"]
-        direction TB
-        MS["Mobile Station (MS)"] <--> BTS["Base Transceiver Station (BTS)"]
-        BTS --> BSC["Base Station Controller (BSC)"]
-    end
-
-    subgraph NSS["Network & Switching Subsystem (NSS)"]
-        direction TB
-        MSC["Mobile Switching Centre (MSC)"]
-        HLR["HLR"] --- MSC
-        VLR["VLR"] --- MSC
-        AUC["AUC"] --- MSC
-    end
-
-    subgraph OSS["Operation Support Subsystem (OSS)"]
-        OMC["Operations & Maintenance Center (OMC)"]
-    end
-
-    subgraph ExtNet["External Public Networks"]
-        direction TB
-        PSTN["PSTN (Landline)"]
-        ISDN["ISDN (Digital)"]
-        PDN["Data Networks"]
-    end
-
-    BSC <--> MSC
-    OMC -.-> BSC
-    OMC -.-> MSC
-    MSC <--> ExtNet
+```math
+\Delta = P_{r,\text{handoff}} - P_{r,\text{minimum usable}}
 ```
 
-1. **Base Station Subsystem (BSS):**
-   - Provides radio transmission paths between Mobile Stations and the MSC.
-   - Manages the radio interface between Mobile Stations and all other subsystems of GSM.
-   - **Base Transceiver Station (BTS):** Contains radio transceivers and antennas for an individual cell.
-   - **Base Station Controller (BSC):** Controls multiple BTSs and connects them to the NSS via the MSC.
-   - ⭐️ **Critical Architectural Rule (Slide 41):**
-     > **Mobile handoffs between two BTSs under the control of the same BSC are handled directly by the BSC, and not the MSC.**
-2. **Network and Switching Subsystem (NSS):**
-   - Manages the core switching functions of the network.
-   - Connects MSCs to external public networks: **PSTN** (landlines), **ISDN** (digital networks), and **Data Networks**.
-   - Houses critical mobility and security database registers:
-     - **HLR (Home Location Register):** Central permanent database storing subscriber profiles, service entitlements, and current location tracking records.
-     - **VLR (Visitor Location Register):** Dynamic temporary database associated with an MSC that caches subscriber data for visiting roaming subscribers.
-     - **AUC (Authentication Center):** Security vault managing authentication algorithms and secret keys.
-3. **Operation Support Subsystem (OSS):**
-   - Supports operation and maintenance of the GSM system via the **OMC (Operations and Maintenance Center)**.
-   - Allows network engineers to monitor traffic, run diagnostics, and troubleshoot all aspects of the GSM network.
-   - Accessible solely to the technical staff of the GSM operating company.
+The gap between "start handing off" and "the call dies".
+
+| $\Delta$ (Slide 23) | Effect |
+| :--- | :--- |
+| **Too large** | **unnecessary handoffs** that burden the MSC |
+| **Too small** | **not enough time** to finish the handoff before the call is lost to a weak signal |
+
+📘 *E.g.* minimum usable −100 dBm, threshold −90 dBm: $\Delta = 10$ dB of warning.
+
+![Fig. 3: Handoff at a cell boundary, (a) improper and (b) proper](../../figures/cellular_network/fig4_handoff_scenario_boundary.jpg)
+*Figure: Slide 24. (a) The handoff is too late: the signal from BS1 falls below the minimum and the call drops. (b) It happens at the threshold, and the call moves to BS2.*
+
+**Why calls drop (Slide 25).** Excessive delays at high traffic, because of **computational load at the MSC**, or because **no channel is free** in any nearby BS, so the MSC must wait until one frees up.
+
+**Check before handing off (Slide 26).** Make sure (1) the drop is **not momentary fading** and (2) the MS is **really moving away**. So the BS **monitors the signal for a while** first. How long depends on the **mobile's speed**: if the **short-term average signal slopes down steeply**, hand off **quickly**.
 
 ---
 
-## 13. GPRS (General Packet Radio Service)
+## 9. 1G vs 2G handoff, roaming and prioritisation
 
-### 13.1 Overview & Technology
-- **GPRS:** An enhanced 2nd generation (**2.5G**) cellular standard.
-- **Multicast Packet-Switched Technology:** Overlays packet data capabilities directly onto the existing circuit-switched GSM radio infrastructure.
-- **Bursty Traffic Optimization:** Particularly suited for sending and receiving small bursts of data (e.g., email and web browsing), where traffic is discontinuous.
+| | 1st generation (Slide 27) | 2nd generation, **MAHO** (Slides 27–28) |
+| :--- | :--- | :--- |
+| Who measures | each **BS** monitors signal strength of the **RVCs** | the **MS** measures received power from **neighbouring BSs** and reports to the serving BS |
+| Who decides | the **MSC** supervises, finding each mobile's relative location | **mobile-assisted** handoff |
+| Trigger | — | a neighbour's BS power exceeds the current BS's **by a certain level or for a certain time** |
+| Speed and load | slower; the MSC constantly monitors | **much faster**; the MSC **no longer constantly monitors** |
 
-### 13.2 Data Transmission Speeds
-- Operates at speeds **up to $115\text{ kbps}$**, compared with standard GSM's $9.6\text{ kbps}$.
-- Typically supports user data transmission at **$20\text{ to } 30\text{ kbps}$** (with an operational maximum of $50\text{ kbps}$).
-- Has a **theoretical maximum throughput of up to $171.2\text{ kbps}$** (achieved by aggregating multiple TDMA timeslots).
+📘 Rappaport puts 1G handoff at about 10 s and the usable margin at 6–12 dB.
 
-### 13.3 Volume-Based Billing Innovation
-- In traditional circuit-switched GSM, users are billed for the **duration** of the connection, paying for time even during idle silence periods.
-- GPRS introduced **volume-based billing**: subscribers **pay only for the amount of information downloaded/uploaded**, rather than the duration of the connection. This enabled continuous ("always-on") data connectivity.
+**Roaming (Slide 29)** is the mechanism for **intersystem handoff**. *When:* the signal at the MS becomes weak **and** the MSC cannot find another cell **within its own system**. *Issues:* the MS leaves its **home system**; a **local call becomes long-distance**; **compatibility between the two MSCs** must be checked first.
+
+**Prioritising handoffs (Slide 30).** A call **cut off mid-conversation** annoys users more than being **blocked** occasionally on a new call, so handoffs get priority:
+
+1. **Guard channels:** a fraction of each cell's channels is **reserved for handoffs**; new calls cannot use them.
+2. **Queuing handoff requests:** if no channel is free, queue the handoff; the time between the threshold and the minimum usable level (Δ) gives room to wait.
+
+📘 *Trade-off:* with 60 channels and 6 guard channels, new calls can use only 54, so slightly more new calls are blocked, but far fewer calls drop.
+
+---
+
+## 10. Practical constraints: umbrella cells and cell dragging
+
+**Problem 1: very different speeds (Slide 31).** Fast cars cross small cells in seconds and would hand off constantly; pedestrians need capacity. **Solution:** different **antenna heights** and **power levels**, with **large and small cells co-located**: the **umbrella cell approach**. Large cells serve **high-speed** users (few handoffs); small cells serve **low-speed** users.
+
+![Fig. 4: The umbrella cell approach](../../figures/cellular_network/fig5_umbrella_cell_approach.jpg)
+*Figure: Slide 32. One large umbrella cell over several microcells.*
+
+**Problem 2: cell dragging (Slide 33).** A handoff is **not made even when essential**. It happens when a **pedestrian** gives a **very strong signal** to the BS, in an **urban** environment with a **line-of-sight (LOS)** path between MS and BS. 📘 The signal stays above threshold as the user walks deep into the next cell, so the call is "dragged" there and causes interference to that cell's users.
+
+![Cell dragging: a pedestrian with a line-of-sight path to BS A walks into Cell B but is still served by BS A, interfering with Cell B users](images/fig_cell_dragging.jpg)
+*Figure: 📘 illustration (AI-generated). The open street gives a strong line-of-sight signal to BS A, so the handoff threshold is never crossed even inside Cell B.*
+
+---
+
+## 11. GSM
+
+**What and why (Slide 34).** **GSM** (Global System for Mobile) is a **2G** standard, the **world's first** cellular system to specify **digital modulation** and **network-level architectures and services**. Before it, European countries used different standards, so one phone could not work throughout Europe.
+
+**Services (Slide 35).** **Teleservices:** calling, facsimile (fax). **Data services:** **300 bps to 9.6 kbps**; **SMS** while carrying normal voice traffic.
+
+**SIM (Slides 36–37).** A memory device storing the subscriber's **identification**, **networks**, **country**, **privacy key** and other user information. Without a SIM all GSM phones are **identical and non-operational**; a subscriber can plug their SIM into **any suitable terminal**. 📘 That separates *who you are* (SIM) from *which phone you use*.
+
+**Architecture (Slides 38–41)**: three interconnected subsystems.
+
+![Fig. 5: GSM system architecture](../../figures/cellular_network/fig6_gsm_system_architecture.jpg)
+*Figure: Slide 39. BSS (BTS, BSC), NSS (MSC, HLR, VLR, AUC) and OSS (OMC), linked to the PSTN, ISDN and data networks.*
+
+| Subsystem | Role |
+| :--- | :--- |
+| **BSS**, Base Station Subsystem (40) | radio paths between the MS and MSCs; manages the **radio interface** between mobiles and the rest of GSM; **BSCs** connect the MS to the NSS via MSCs |
+| **NSS**, Network and Switching Subsystem (40) | the **switching** functions; lets MSCs talk to other networks (**PSTN, ISDN**) |
+| **OSS**, Operation Support Subsystem (41) | **operation and maintenance**; engineers **monitor, diagnose and troubleshoot** everything; **only for the operator's staff** |
+
+**Handoff rule (Slide 41).** A handoff between two **BTSs under the same BSC** is handled **by the BSC, not the MSC**.
+
+> 📘 **Beyond the slides — boxes in the figure.** **BTS:** the radio equipment of one cell. **BSC:** controls many BTSs. **HLR** (home location register): permanent subscriber records and current location. **VLR** (visitor location register): temporary data on subscribers currently in this MSC's area. **AUC** (authentication centre): keys for checking SIMs. **OMC:** the OSS's operations centre.
+
+---
+
+## 12. GPRS
+
+**What (Slide 42).** **GPRS** (General Packet Radio Service): an **enhanced 2G** (2.5G) system with **packet-switched** data, faster than GSM. Suited to **small bursts of data** such as email and web browsing.
+
+**Speeds (Slide 43).** Up to **115 kbps**, vs GSM's **9.6 kbps**; typically **20–30 kbps** (max 50 kbps) in practice; **theoretical maximum 171.2 kbps**. 📘 That is 8 timeslots × 21.4 kbps = 171.2 kbps.
+
+**Billing (Slide 43).** Pay for **the amount of data downloaded**, not the **duration** of the connection, so the phone can stay connected.
+
+> ✏️ **Slide discrepancy (Slide 42).** It calls GPRS "**multicast** packet switched technology". GPRS is a packet-switched service for ordinary one-to-one (unicast) data; "multicast" is a misprint or overstatement.

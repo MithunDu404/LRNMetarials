@@ -1,0 +1,358 @@
+[
+  {
+    "slide_index": 1,
+    "title": "AlexNet",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "AlexNet, developed by Alex Krizhevsky and his colleagues in 2012, was a groundbreaking convolutional neural network (CNN) that significantly advanced the field of computer vision."
+          ],
+          [
+            0,
+            "AlexNet achieved state-of-the-art performance in the 2012 ImageNet Large Scale Visual Recognition Challenge (ILSVRC), significantly outperforming the competition."
+          ],
+          [
+            0,
+            "Its success demonstrated the power of deep learning in image classification tasks and spurred further research and development in convolutional neural networks."
+          ],
+          [
+            0,
+            "Overall, AlexNet's architecture and techniques laid the groundwork for many subsequent deep learning models, paving the way for advances in various applications, including image and video recognition, object detection, and more."
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 2,
+    "title": "AlexNet",
+    "blocks": [
+      {
+        "kind": "image",
+        "file": "image1.png",
+        "alt": ""
+      }
+    ],
+    "images": [
+      "image1.png"
+    ],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 3,
+    "title": "AlexNet Architecture",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "1. Input Layer:"
+          ],
+          [
+            0,
+            "Input Size: 227x227 pixels (originally designed to accept 224x224, but the extra padding was added for compatibility). Each image has three color channels (RGB)."
+          ],
+          [
+            0,
+            "2. Convolutional Layers:"
+          ],
+          [
+            0,
+            "Conv Layer 1:"
+          ],
+          [
+            1,
+            "Filters: 96"
+          ],
+          [
+            1,
+            "Kernel Size: 11x11"
+          ],
+          [
+            1,
+            "Stride: 4"
+          ],
+          [
+            1,
+            "Activation: ReLU (Rectified Linear Unit)"
+          ],
+          [
+            1,
+            "Output Size: 55x55x96 (after applying padding and the convolution operation)"
+          ],
+          [
+            0,
+            "Pooling Layer 1:"
+          ],
+          [
+            0,
+            "- Type: Max Pooling"
+          ],
+          [
+            0,
+            "- Kernel Size: 3x3"
+          ],
+          [
+            0,
+            "- Stride: 2"
+          ],
+          [
+            0,
+            "- Output Size: 27x27x96"
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 4,
+    "title": "AlexNet Architecture",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Conv Layer 2:"
+          ],
+          [
+            0,
+            "- Filters: 256"
+          ],
+          [
+            0,
+            "- Kernel Size: 5x5"
+          ],
+          [
+            0,
+            "- Stride: 1"
+          ],
+          [
+            0,
+            "- Activation: ReLU"
+          ],
+          [
+            0,
+            "- Output Size: 27x27x256 (after padding)"
+          ],
+          [
+            0,
+            "Pooling Layer 2:"
+          ],
+          [
+            0,
+            "- Type: Max Pooling"
+          ],
+          [
+            0,
+            "- Kernel Size: 3x3"
+          ],
+          [
+            0,
+            "- Stride: 2"
+          ],
+          [
+            0,
+            "- Output Size: 13x13x256"
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 5,
+    "title": "AlexNet Architecture",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Conv Layer 3:"
+          ],
+          [
+            0,
+            "- Filters: 384"
+          ],
+          [
+            0,
+            "- Kernel Size: 3x3"
+          ],
+          [
+            0,
+            "- Stride: 1"
+          ],
+          [
+            0,
+            "- Activation: ReLU"
+          ],
+          [
+            0,
+            "- Output Size: 13x13x384"
+          ],
+          [
+            0,
+            "Conv Layer 4:"
+          ],
+          [
+            0,
+            "- Filters: 384"
+          ],
+          [
+            0,
+            "- Kernel Size: 3x3"
+          ],
+          [
+            0,
+            "- Stride: 1"
+          ],
+          [
+            0,
+            "- Activation: ReLU"
+          ],
+          [
+            0,
+            "- Output Size: 13x13x384"
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 6,
+    "title": "AlexNet Architecture",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "Conv Layer 5:"
+          ],
+          [
+            0,
+            "- Filters: 256"
+          ],
+          [
+            0,
+            "- Kernel Size: 3x3"
+          ],
+          [
+            0,
+            "- Stride: 1"
+          ],
+          [
+            0,
+            "- Activation: ReLU"
+          ],
+          [
+            0,
+            "- Output Size: 13x13x256"
+          ],
+          [
+            0,
+            "Pooling Layer 3:"
+          ],
+          [
+            0,
+            "- Type: Max Pooling"
+          ],
+          [
+            0,
+            "- Kernel Size: 3x3"
+          ],
+          [
+            0,
+            "- Stride: 2"
+          ],
+          [
+            0,
+            "- Output Size: 6x6x256"
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 7,
+    "title": "AlexNet Architecture",
+    "blocks": [
+      {
+        "kind": "text",
+        "paragraphs": [
+          [
+            0,
+            "3. Fully Connected Layers:"
+          ],
+          [
+            0,
+            "FC Layer 1:"
+          ],
+          [
+            1,
+            "Neurons: 4096"
+          ],
+          [
+            1,
+            "Activation: ReLU"
+          ],
+          [
+            1,
+            "Dropout: 50% dropout rate during training for regularization"
+          ],
+          [
+            0,
+            "FC Layer 2:"
+          ],
+          [
+            1,
+            "Neurons: 4096"
+          ],
+          [
+            1,
+            "Activation: ReLU"
+          ],
+          [
+            1,
+            "Dropout: 50% dropout rate during training for regularization"
+          ],
+          [
+            0,
+            "FC Layer 3:"
+          ],
+          [
+            1,
+            "Neurons: 1000 (for 1000 classes in the ImageNet dataset)"
+          ],
+          [
+            1,
+            "Activation: Softmax (to produce class probabilities)"
+          ]
+        ]
+      }
+    ],
+    "images": [],
+    "speaker_notes": ""
+  },
+  {
+    "slide_index": 8,
+    "title": "Thank You",
+    "blocks": [],
+    "images": [],
+    "speaker_notes": ""
+  }
+]

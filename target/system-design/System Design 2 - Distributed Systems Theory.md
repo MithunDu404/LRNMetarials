@@ -353,7 +353,7 @@ Hashing balances *keys*, not *traffic*. If one key is very hot (a celebrity's po
 |---|---|---|
 | Layout | Each partition indexes only its own rows | The index itself is partitioned by the indexed *term* (`color=red` lives on one index partition) |
 | Writes | Fast: one partition | Slower: a write may update index partitions on other nodes (often asynchronously, so the index lags) |
-| Reads | **Scatter/gather**: ask *every* partition and merge, so tail latency suffers (Part 3 §3) | Read one index partition |
+| Reads | **Scatter/gather**: ask *every* partition and merge, so tail latency suffers (Part 3 §4.3) | Read one index partition |
 | Examples | MongoDB, Cassandra, Elasticsearch | DynamoDB global secondary indexes, Riak Search |
 
 ### 4.6 Request routing
@@ -826,7 +826,7 @@ flowchart LR
 
 Two styles:
 
-- **Orchestration**: a central orchestrator (often a durable workflow engine such as Temporal; Part 3 §2) calls each step and decides what's next. It's easy to see and change the flow.
+- **Orchestration**: a central orchestrator (often a durable workflow engine such as Temporal; Part 3 §3.7) calls each step and decides what's next. It's easy to see and change the flow.
 - **Choreography**: each service reacts to events from the previous one. Services are loosely coupled, but the flow is hard to see as a whole.
 
 **The trade-off you accept:** sagas give up **isolation**. Other transactions can see intermediate states (the hotel is reserved but not paid). You handle that with semantic locks (a "PENDING" status), by ordering steps so the riskiest comes last, and by making compensations and retries idempotent.
@@ -1193,7 +1193,7 @@ Hashing balances *keys*, not *load* (§4.4). Options: (1) move the big tenant to
 - Hector Garcia-Molina and Kenneth Salem, "Sagas", SIGMOD 1987.
 - Martin Kleppmann, "How to do distributed locking", 2016 (fencing tokens, the Redlock critique).
 - Martin Kleppmann and Chris Riccomini, *Designing Data-Intensive Applications*, 2nd ed., O'Reilly, 2026 ([author's page](https://martin.kleppmann.com/2026/03/24/designing-data-intensive-applications-2e.html)).
-- AWS, [DynamoDB global tables with multi-Region strong consistency now generally available](https://aws.amazon.com/about-aws/whats-new/2025/06/amazon-dynamo-db-global-tables-multi-region-strong-consistency-generally-available/), 30 June 2025.
+- AWS, [DynamoDB global tables with multi-Region strong consistency now generally available](https://aws.amazon.com/about-aws/whats-new/2025/06/amazon-dynamo-db-global-tables-multi-region-strong-consistency-generally-available/), June 2025.30 June 2025.
 - MIT 6.5840 Distributed Systems, Spring 2026 ([course site](https://pdos.csail.mit.edu/6.824)). The labs (MapReduce, Raft, a fault-tolerant KV store) are the best hands-on follow-up to this guide.
 
 **Next:** [Part 3: Building Real Systems in 2026](System%20Design%203%20-%20Building%20Real%20Systems%20in%202026.md), where all this theory becomes messaging, reliability, infrastructure, security and AI systems.

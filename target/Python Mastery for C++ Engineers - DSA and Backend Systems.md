@@ -119,8 +119,8 @@ In Python, the evaluation strategy is strictly **Call-by-Sharing**:
 
 1. **The Global Interpreter Lock (GIL):**
    - Standard CPython uses a process-level mutex ensuring only one OS thread executes Python bytecode at any moment.
-   - For CPU-bound tasks, multithreading on multiple cores is *slower* than single-threading due to lock contention. CPU parallelism requires `multiprocessing` or native C/C++/Rust extensions releasing the GIL.
-   - **Python 3.13 / 3.14 Free-Threading (PEP 703):** Optional build configuration (`python3.14t`) eliminating the GIL using biased reference counting and mimalloc.
+   - For CPU-bound pure-Python tasks, multithreading is no faster than a single thread, and often a little slower because threads fight over the lock. CPU parallelism requires `multiprocessing` or native C/C++/Rust extensions releasing the GIL.
+   - **Free-threading (PEP 703):** an optional build (`python3.14t`) that removes the GIL using biased reference counting and mimalloc. It was experimental in 3.13 and is officially supported from 3.14 (PEP 779), but it is still not the default build, and C extensions must opt in.
 2. **I/O-Bound Concurrency & Asyncio:**
    - Rather than 10,000 OS threads consuming gigabytes of stack memory, Python backend servers use **cooperative single-threaded multiplexing** via `asyncio` over OS kernel event mechanisms (`epoll` on Linux, `kqueue` on macOS, `IOCP` on Windows).
    - In production (FastAPI / Uvicorn), high throughput is achieved using a **hybrid architecture**: a multi-process pre-fork cluster (e.g. 4–8 Uvicorn worker processes, one per CPU core), where each worker runs an event loop (`uvloop`) managing thousands of concurrent asynchronous network connections.
@@ -131,7 +131,7 @@ In Python, the evaluation strategy is strictly **Call-by-Sharing**:
 
 | C++ STL Container / Algorithm | Python Standard Library | Time Complexity | CPython Mechanics, Gotchas & Critical C++ Divergences |
 |---|---|---|---|
-| `std::vector<T>` | `list` | Access: $O(1)$<br>Append: Amortized $O(1)$<br>Insert/Delete: $O(N)$ | Array of pointers. Over-allocation growth factor $\approx 12.5\%$ (vs C++ 1.5x/2.0x). Slicing `a[i:j]` makes a shallow copy ($O(K)$); use `itertools.islice` for zero-copy views. |
+| `std::vector<T>` | `list` | Access: $O(1)$<br>Append: Amortized $O(1)$<br>Insert/Delete: $O(N)$ | Array of pointers. Over-allocation growth factor $\approx 12.5\%$ (vs C++ 1.5x/2.0x). Slicing `a[i:j]` makes a shallow copy ($O(K)$); use `itertools.islice` to iterate over a range without copying (it's lazy, not a view, and it still steps through the skipped items). |
 | *Contiguous primitive buffer* | `array.array('i')` / `numpy.ndarray` | Access: $O(1)$ | Direct contiguous C memory buffer of raw values (e.g., 4-byte integers), zero `PyObject*` indirection overhead. |
 | `std::deque<T>` | `collections.deque` | Push/Pop ends: $O(1)$<br>**Random access: $O(N)$** | Doubly-linked list of 64-item blocks (`BLOCKLEN = 64`). **DANGER FOR C++ DEVS:** C++ `std::deque` provides $O(1)$ random indexing. In Python, `d[i]` walks block pointers taking $O(N)$ time! Supports `maxlen` for circular ring buffers. |
 | `std::unordered_map<K, V>` | `dict` | Avg: $O(1)$<br>Worst: $O(N)$ | Compact hash table: sparse hash index table + dense array of `(hash, key, value)` preserving insertion order. Missing key raises `KeyError` (unlike C++ `operator[]` auto-insertion). Keys must be hashable (`__hash__` and `__eq__`). |
@@ -143,7 +143,7 @@ In Python, the evaluation strategy is strictly **Call-by-Sharing**:
 | `std::lower_bound` | `bisect.bisect_left` | $O(\log N)$ | Finds first insertion index where item $\ge x$. Supports `key=` transformation callable since Python 3.10. |
 | `std::upper_bound` | `bisect.bisect_right` | $O(\log N)$ | Finds first insertion index where item $> x$. |
 | `std::pair` / `std::tuple` | `tuple`, `namedtuple`, `@dataclass(slots=True)` | $O(1)$ | Standard `tuple` is immutable. `namedtuple` adds named field access. `@dataclass(slots=True)` eliminates `__dict__` ($56 \text{ bytes}$ for 3 fields vs $344 \text{ bytes}$). |
-| `std::string` | `str` | Concat: $O(N)$ | Strings are strictly **immutable**. C++ `s += c` modifies in-place. In Python, repeatedly doing `s += c` creates new strings ($O(N^2)$ time). Idiomatic Python: accumulate in a `list` and call `"".join(lst)`. |
+| `std::string` | `str` | Concat: $O(N)$ | Strings are strictly **immutable**. C++ `s += c` modifies in-place. In Python, `s += c` builds a new string each time, which can cost $O(N^2)$ in total. (CPython often resizes in place when nothing else references the string, so it's usually linear there, but don't rely on it: see Figure 2 in `py/Python DSA`.) Idiomatic Python: accumulate in a `list` and call `"".join(lst)`. |
 
 ---
 
@@ -408,14 +408,14 @@ def require_role(expected_role: str):
         return wrapper
     return decorator
 ```
-*Architectural Insight:* If `wrapper` were defined as synchronous `def`, calling `purge_cache_endpoint` would return an unawaited coroutine object to the HTTP server, bypassing authentication completely and causing downstream serialization crashes.
+*Architectural Insight:* If `wrapper` were a plain `def` that did `return func(...)` without `await`, the role check would still run, but the handler body would not: the caller gets back a coroutine object that was never awaited. A framework that sees a non-async wrapper treats it as a normal function, tries to serialise that coroutine object as the response, and fails. So the wrapper around an `async def` handler must itself be `async def` and must `await` it.
 </details>
 
 ---
 
 #### Paradigm 2: Database Cursor & Chunk Streaming (`yield` and `yield from`)
 - **First Principles:** When exporting 500,000 records from PostgreSQL, materializing the entire list into memory causes Out-Of-Memory (OOM) crashes. Python generators maintain execution state on the heap with $O(1)$ memory, yielding records in batches. `yield from` transparently delegates iteration to an inner sub-generator.
-- **C++ Mental Bridge:** Equivalent to C++20 `std::generator<T>` or forward stream iterators. Calling `yield` suspends the activation frame without destroying local variables.
+- **C++ Mental Bridge:** Equivalent to C++23 `std::generator<T>` or forward stream iterators. Calling `yield` suspends the activation frame without destroying local variables.
 
 ```python
 # --- STARTER CODE ---
@@ -516,7 +516,7 @@ class TransactionManager:
         #   Return False (do NOT suppress the exception; let it bubble up!)
         # Otherwise:
         #   Set self.session.state = "committed"
-        #   Return True
+        #   Return False (there is no exception to suppress)
         raise NotImplementedError("Implement __exit__ transaction logic")
 
 # --- VERIFICATION TEST SUITE ---
@@ -552,7 +552,7 @@ class TransactionManager:
             self.session.state = "rolled_back"
             return False  # Propagate exception
         self.session.state = "committed"
-        return True
+        return False  # Nothing to suppress
 ```
 *Architectural Insight:* Returning `True` from `__exit__` suppresses the exception. In transactional systems, you must return `False` (or `None`) so HTTP controllers can catch the error and translate it to an HTTP 409 Conflict or 500 Internal Error.
 </details>
@@ -560,7 +560,7 @@ class TransactionManager:
 ---
 
 #### Paradigm 5: Asynchronous Context Managers (`__aenter__` / `__aexit__`)
-- **First Principles:** In asynchronous frameworks (SQLAlchemy async, Redis `aioredis`, `asyncpg`), acquiring a pooled socket connection and releasing it back to the pool are asynchronous operations. Synchronous `__enter__` cannot `await`; `__aenter__` and `__aexit__` allow non-blocking resource acquisition and release via `async with`.
+- **First Principles:** In asynchronous frameworks (SQLAlchemy async, `redis.asyncio`, `asyncpg`), acquiring a pooled socket connection and releasing it back to the pool are asynchronous operations. Synchronous `__enter__` cannot `await`; `__aenter__` and `__aexit__` allow non-blocking resource acquisition and release via `async with`.
 - **C++ Mental Bridge:** Asynchronous RAII lock/lease acquisition where both constructor acquisition and destructor release require awaiting OS completion handles.
 
 ```python
@@ -879,16 +879,6 @@ def route_ok(db):
     assert db["status"] == "open"
     return "ok"
 
-sess = None
-def intercepting_dep():
-    global sess
-    gen = get_db_session()
-    sess = next(gen)
-    try:
-        yield sess
-    finally:
-        pass
-
 res = execute_with_di(get_db_session, route_ok)
 assert res == "ok"
 
@@ -932,8 +922,8 @@ def execute_with_di(dep_generator_fn, route_handler):
 #### Paradigm 12: Structured Concurrency & Thread Offloading (`TaskGroup` & `to_thread`)
 - **First Principles:**
   1. `asyncio.TaskGroup` (Python 3.11+): Guarantees structured concurrency. If one concurrent task fails, all other sibling tasks in the group are immediately cancelled, preventing dangling orphan tasks.
-  2. `asyncio.to_thread`: Executes synchronous, CPU-bound, or blocking C++ routines in Python's default `ThreadPoolExecutor` without freezing the async event loop.
-- **C++ Mental Bridge:** `TaskGroup` corresponds to structured task scopes (like C++ `std::experimental::task_group`), and `to_thread` corresponds to dispatching work onto a thread pool via `std::async(std::launch::async, ...)`.
+  2. `asyncio.to_thread`: Runs a blocking function in Python's default `ThreadPoolExecutor` so the event loop stays free. It helps for blocking I/O and for C/C++ code that releases the GIL (password hashing, compression). Pure-Python CPU work in a thread still holds the GIL, so it needs a process pool instead.
+- **C++ Mental Bridge:** `TaskGroup` corresponds to a structured task scope (like oneTBB's `tbb::task_group`, or a block of `std::jthread`s that all join before the scope exits), and `to_thread` corresponds to dispatching work onto a thread pool via `std::async(std::launch::async, ...)`.
 
 ```python
 # --- STARTER CODE ---
@@ -1247,7 +1237,7 @@ print("✓ Mechanic 7 Passed: enumerate(start=N)")
 ```python
 def format_paginated_lines(items: list[str], page_num: int, page_size: int) -> list[str]:
     start_offset = (page_num - 1) * page_size + 1
-    return [f"{idx}. {item}" for idx, line in enumerate(items, start=start_offset)]
+    return [f"{idx}. {item}" for idx, item in enumerate(items, start=start_offset)]
 ```
 </details>
 
@@ -1578,7 +1568,7 @@ def fetch_user_record(raw_db: dict, user_id: int):
 | Function Overloading | `@functools.singledispatch` | Dispatch: $O(1)$ amortized | Polymorphic event handlers, domain message routing. |
 | Variadic Templates (`Args&&...`) | `*args, **kwargs` | Dynamic tuple/dict packing | Middleware wrappers, proxy clients, audit decorators. |
 | Structured Binding (`auto [a, b]`) | Extended Unpacking (`a, *b, c = seq`) | Bytecode unpack | Splitting headers, token parsing, CSV ingest. |
-| Fast Struct POD (`struct Point { ... }`) | `@dataclass(slots=True)` | Direct struct offset access | Eliminates `__dict__`, saves 60% RAM on high-throughput DTOs. |
+| Fast Struct POD (`struct Point { ... }`) | `@dataclass(slots=True)` | Direct struct offset access | Eliminates `__dict__`: a 3-field object drops from 344 to 56 bytes (about 80% less) on high-throughput DTOs. |
 | Interface / Abstract Class | `typing.Protocol` | Compile-time / runtime check | Duck typing contracts (C++20 Concepts equivalent). |
 
 ---
