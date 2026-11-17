@@ -27,7 +27,7 @@ Source: `ML_Lec_14_LeNeT_CNN.pptx`, Slides 1–14. Every number recomputed.
 **Versions (Slide 5).** There are many versions of LeNet; this lecture studies **LeNet5**.
 
 ![Fig 1 – The LeNet5 CNN (media/image1.png)](extracted_ML_Lec_14_LeNeT_CNN/media/image1.png)
-*Figure: Slide 5. INPUT 32×32, C1 (6 maps of 28×28), S2 (6 of 14×14), C3 (16 of 10×10), S4 (16 of 5×5), C5 (120), F6 (84), OUTPUT (10).*
+*Figure: Slide 5. The layer sizes are in the summary table in section 2.*
 
 ---
 
@@ -79,27 +79,15 @@ W_2 = \frac{W_1 - F + 2P}{S} + 1
 
 The depth of a conv output is its number of filters; pooling halves width and height and keeps the depth.
 
-| Layer | Calculation | Output |
-| :--- | :--- | :--- |
-| Input | $28 + 2 + 2$ | 32×32×1 |
-| C1 | $(32 - 5 + 0)/1 + 1 = 28$, 6 filters | 28×28×6 |
-| S2 | $(28 - 2 + 0)/2 + 1 = 14$ | 14×14×6 |
-| C3 | $(14 - 5 + 0)/1 + 1 = 10$, 16 filters | 10×10×16 |
-| S4 | $(10 - 2 + 0)/2 + 1 = 5$ | 5×5×16 |
-| Flatten | $5 \times 5 \times 16$ | 400 |
-| C5, F6, Output | fully connected | 120, 84, 10 |
+**Summary table (Slide 11), with the sizes calculated.** Slide 6 prints the C1 line as $(32 - 5 + 1) \times (32 - 5 + 1) \times 6 = 28 \times 28 \times 6$.
 
-Slide 6 prints the C1 line as $(32 - 5 + 1) \times (32 - 5 + 1) \times 6 = 28 \times 28 \times 6$.
-
-**Summary table (Slide 11).**
-
-| Layer | Also called (Slides 3–5) | Filters | Filter size | Stride | Feature map | Activation |
+| Layer | Also called (Slides 3–5) | Filters | Filter size | Stride | Feature map (calculation) | Activation |
 | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
-| Input | — | — | — | — | 32×32×1 | — |
-| Conv 1 | C1 | 6 | 5×5 | 1 | 28×28×6 | tanh |
-| Pooling 1 | S2 | — | 2×2 | 2 | 14×14×6 | — |
-| Conv 2 | C3 | 16 | 5×5 | 1 | 10×10×16 | tanh |
-| Pooling 2 | S4 | — | 2×2 | 2 | 5×5×16 | — |
+| Input | — | — | — | — | 32×32×1 ($28 + 2 + 2$) | — |
+| Conv 1 | C1 | 6 | 5×5 | 1 | 28×28×6 ($(32 - 5 + 0)/1 + 1 = 28$) | tanh |
+| Pooling 1 | S2 | — | 2×2 | 2 | 14×14×6 ($(28 - 2 + 0)/2 + 1 = 14$) | — |
+| Conv 2 | C3 | 16 | 5×5 | 1 | 10×10×16 ($(14 - 5 + 0)/1 + 1 = 10$) | tanh |
+| Pooling 2 | S4 | — | 2×2 | 2 | 5×5×16 ($(10 - 2 + 0)/2 + 1 = 5$), flattened to $5 \times 5 \times 16 = 400$ | — |
 | Fully Connected 1 | C5 | — | — | — | 120 | tanh |
 | Fully Connected 2 | F6 | — | — | — | 84 | tanh |
 | Fully Connected 3 | Output | — | — | — | 10 | **Softmax** (one probability per digit) |

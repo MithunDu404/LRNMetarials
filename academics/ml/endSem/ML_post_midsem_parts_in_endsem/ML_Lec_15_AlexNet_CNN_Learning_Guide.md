@@ -42,20 +42,20 @@ The 5 conv and 3 FC layers have weights; pooling has none. So AlexNet is an **8-
 | Layer (slide) | Filters / neurons | Kernel | Stride | Padding | Output |
 | :--- | :--- | :---: | :---: | :---: | :--- |
 | Input (3) | — | — | — | — | 227×227×3 (RGB) |
-| Conv1 (3) | 96 | 11×11 | 4 | 0 | 55×55×96 |
-| Pool1 (3) | — | 3×3 | 2 | 0 | 27×27×96 |
-| Conv2 (4) | 256 | 5×5 | 1 | 2 📘 | 27×27×256 |
-| Pool2 (4) | — | 3×3 | 2 | 0 | 13×13×256 |
-| Conv3 (5) | 384 | 3×3 | 1 | 1 📘 | 13×13×384 |
+| Conv1 (3) | 96 | 11×11 | 4 | 0 | 55×55×96: $(227 - 11 + 0)/4 + 1 = 55$ |
+| Pool1 (3) | — | 3×3 | 2 | 0 | 27×27×96: $(55 - 3)/2 + 1 = 27$ |
+| Conv2 (4) | 256 | 5×5 | 1 | 2 📘 | 27×27×256: $27 = (27 - 5 + 2P)/1 + 1 \Rightarrow P = 2$ |
+| Pool2 (4) | — | 3×3 | 2 | 0 | 13×13×256: $(27 - 3)/2 + 1 = 13$ |
+| Conv3 (5) | 384 | 3×3 | 1 | 1 📘 | 13×13×384: keep 13 with $F = 3$, $S = 1$ ⇒ $P = (3 - 1)/2 = 1$ |
 | Conv4 (5) | 384 | 3×3 | 1 | 1 📘 | 13×13×384 |
 | Conv5 (6) | 256 | 3×3 | 1 | 1 📘 | 13×13×256 |
-| Pool3 (6) | — | 3×3 | 2 | 0 | 6×6×256 |
-| Flatten | — | — | — | — | 9216 |
+| Pool3 (6) | — | 3×3 | 2 | 0 | 6×6×256: $(13 - 3)/2 + 1 = 6$ |
+| Flatten | — | — | — | — | $6 \times 6 \times 256 = 9216$ |
 | FC1 (7) | 4096, dropout 50% | — | — | — | 4096 |
 | FC2 (7) | 4096, dropout 50% | — | — | — | 4096 |
 | FC3 (7) | 1000, **softmax** | — | — | — | 1000 class probabilities |
 
-The input was originally designed for 224×224; Slide 3 says the extra size was added "for compatibility". The slides give no padding for Conv2–5; the 📘 values are derived below.
+The input was originally designed for 224×224; Slide 3 says the extra size was added "for compatibility". The slides give no padding for Conv2–5; the 📘 values are derived in the table with the size formula below.
 
 **The size formula (Lecture 12).**
 
@@ -63,23 +63,9 @@ The input was originally designed for 224×224; Slide 3 says the extra size was 
 O = \frac{N - F + 2P}{S} + 1
 ```
 
-Take the input width $N$, subtract the filter width $F$, add padding $P$ on both sides, divide by stride $S$, add 1.
+Take the input width $N$, subtract the filter width $F$, add padding $P$ on both sides, divide by stride $S$, add 1. Depth always equals the number of filters; pooling works per channel, so it keeps the depth. For stride 1, $P = (F - 1)/2$ is "same" padding: the size does not change.
 
-| Step | Calculation | Result |
-| :--- | :--- | :--- |
-| Conv1 | $(227 - 11 + 0)/4 + 1 = 54 + 1$ | 55 |
-| Pool1 | $(55 - 3)/2 + 1 = 26 + 1$ | 27 |
-| Conv2 padding | $27 = (27 - 5 + 2P)/1 + 1 \Rightarrow 2P = 4$ | $P = 2$ |
-| Pool2 | $(27 - 3)/2 + 1 = 12 + 1$ | 13 |
-| Conv3–5 padding | keep 13 with $F = 3$, $S = 1$: $P = (3 - 1)/2$ | $P = 1$ |
-| Pool3 | $(13 - 3)/2 + 1 = 5 + 1$ | 6 |
-| Flatten | $6 \times 6 \times 256$ | 9216 |
-
-Depth always equals the number of filters; pooling works per channel, so it keeps the depth. For stride 1, $P = (F - 1)/2$ is "same" padding: the size does not change.
-
-**Why 227, not 224.** With 224: $(224 - 11)/4 + 1 = 54.25$, not a whole number, so the filter does not fit evenly. With 227 the division is exact. That is the "compatibility".
-
-> ✏️ **Slide discrepancy (Slide 3).** The slide says Conv1's 55×55×96 comes "after applying padding". No padding is used: $P = 0$ gives exactly 55. The 3 extra pixels are already in the 227×227 input.
+**Why 227, not 224.** With 224: $(224 - 11)/4 + 1 = 54.25$, not a whole number, so the filter does not fit evenly. With 227 the division is exact with $P = 0$. That is the "compatibility". ✏️ **Slide discrepancy (Slide 3):** so the slide's "after applying padding" for Conv1's 55×55×96 is wrong; the 3 extra pixels are already in the 227×227 input.
 
 **Overlapping pooling.** The pool window (3) is bigger than the stride (2), so neighbouring windows share one row and one column.
 

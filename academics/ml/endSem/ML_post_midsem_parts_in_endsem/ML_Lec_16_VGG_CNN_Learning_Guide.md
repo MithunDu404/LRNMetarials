@@ -147,17 +147,15 @@ The surprise: convolutions do almost all the computing but hold only about 11% o
 
 **Advantages of VGG16 (Slides 13–18).**
 
-1. **Deeper:** 16 weight layers against AlexNet's 8 (5 conv + 3 FC), so it models more complex patterns and is more accurate.
-2. **Smaller filters:** 3×3 everywhere against 11×11 and 5×5; more layers for the same receptive field (section 4).
-3. **Uniform:** same filter size, stride and padding everywhere; easier to understand, implement and extend.
+1. **Deeper** (16 vs 8 weight layers, table below): models more complex patterns, more accurate.
+2. **Smaller filters** (3×3 only): more layers for the same receptive field (section 4).
+3. **Uniform** (same filter size, stride and padding everywhere): easier to understand, implement and extend.
 4. **Better generalization:** richer, more general features; often better on unseen data.
 5. **Improved accuracy:** top-5 error about 7.4% against AlexNet's about 16.4%, less than half ($7.4 / 16.4 \approx 0.45$).
-6. **Regularization via depth:** the slide says each layer must pass on only the most relevant features.
+6. **Regularization via depth:** the slide says each layer must pass on only the most relevant features. 📘 The VGG paper says it more precisely: three stacked 3×3 layers are a 7×7 filter forced into three steps with ReLUs between, and that restriction regularizes because the stack has fewer free weights ($27C^2$ against $49C^2$, section 4).
 7. **Wider adoption:** pre-trained weights transfer well to other tasks (transfer learning, Lecture 13); AlexNet is used less today.
 
-**Trade-offs (Slide 19).** More computation: 138M parameters against 60M ($138/60 = 2.3$ times), so more memory. Slower training and inference.
-
-**Conclusion (Slide 20).** VGG16 beats AlexNet in accuracy, depth and feature extraction, at a higher computing cost.
+**Trade-offs and conclusion (Slides 19–20).** 138M parameters against 60M ($138/60 = 2.3$ times): more computation and memory, slower training and inference. VGG16 beats AlexNet in accuracy, depth and feature extraction, at that higher computing cost.
 
 | | AlexNet (2012) | VGG16 (2014) |
 | :--- | :--- | :--- |
@@ -171,9 +169,6 @@ The surprise: convolutions do almost all the computing but hold only about 11% o
 | ILSVRC | 1st, 2012 | 2nd classification, 1st localization, 2014 |
 
 > 📘 **Beyond the slides — the error numbers.** 7.32% (Slide 11), about 7.3% (from 92.7%, Slide 2) and about 7.4% (Slide 17) do not contradict each other. 7.32% was the contest entry, combining 7 networks; about 7.4% is a single VGG16. AlexNet's 16.4% is its 5-network entry; its best entry, with extra pre-training, reached 15.3% (Lecture 15).
-
-> 📘 **Beyond the slides — "regularization via depth".** The VGG paper says it more precisely: three stacked 3×3 layers are like a 7×7 filter forced to split into three steps with ReLUs between. That restriction regularizes, because the stack has fewer free weights ($27C^2$ against $49C^2$).
-
 ---
 
 ## 7. Why no K-fold cross-validation

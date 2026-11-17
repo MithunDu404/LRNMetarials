@@ -27,7 +27,7 @@ Source: `ML_Lec_22_GRU.pptx`, Slides 1–18. Every number recomputed. Read Lectu
 - Very similar: both use gates to control information flow.
 - **No separate cell state** $C_t$, only $h_t$: simpler, faster to train, fewer parameters, more efficient.
 - Main difference is memory handling: the LSTM keeps a separate cell state updated by three gates (forget, input, output); the GRU replaces it with a **candidate activation vector** updated by two gates (reset, update).
-- At each step $t$ the GRU takes $x_t$ and $h_{t-1}$ and outputs $h_t$, passed to the next step. The reset gate decides how much of $h_{t-1}$ to forget; the update gate how much of the candidate goes into $h_t$.
+- At each step $t$ the GRU takes $x_t$ and $h_{t-1}$ and outputs $h_t$, passed to the next step; the update gate sets how much of the candidate goes into $h_t$.
 - Popular where computing resources are limited or a simpler architecture is wanted.
 
 > ✏️ **Slide discrepancy (Slide 2).** "Relatively new as compared to LSTM. This is the reason they offer some improvement" — newer is not a reason to be better. The GRU is simpler and cheaper and often matches the LSTM, but neither wins on every task (Chung et al., 2014). Slide 15 itself says the LSTM may do better on very long dependencies.
@@ -90,8 +90,8 @@ About 68% of the past entered the candidate; the new state keeps 62% of the old 
 
 **Functionality (Slides 11–13).** The GRU captures short- and long-term dependencies.
 
-1. **Reset gate:** forgets irrelevant past information; useful when recent information matters more, as in sentence parsing or real-time sensor data.
-2. **Update gate:** balances keeping old against taking new, so information can be tracked over long periods. *Example:* a language model remembers the subject across a long clause. In "The **keys** to the old wooden cabinet **are** on the table", the "plural" slot must survive 6 words; with $z = 0.95$ per step it keeps $0.95^6 \approx 0.735$, enough to pick "are".
+1. **Reset gate:** forgets irrelevant past information; useful when recent information matters more (sentence parsing, real-time sensor data).
+2. **Update gate:** tracks information over long periods. *Example:* a language model remembers the subject across a long clause. In "The **keys** to the old wooden cabinet **are** on the table", the "plural" slot must survive 6 words; with $z = 0.95$ per step it keeps $0.95^6 \approx 0.735$, enough to pick "are".
 3. **Single hidden state:** one state serves as both **memory and output**, cutting parameters while still handling long sequences.
 
 > 📘 **Beyond the slides — mapping onto the LSTM.**
@@ -110,19 +110,19 @@ About 68% of the past entered the candidate; the new state keeps 62% of the old 
 
 ## 4. GRU vs LSTM: advantages, trade-offs and uses
 
-**Key advantages (Slide 14).**
+**Key advantages (Slides 14–15).**
 
-- **Reduced complexity:** fewer gates, no cell state; simpler, faster to train, efficient where resources are limited.
-- **Similar performance, fewer parameters:** comparable to the LSTM on many tasks not needing fine-grained memory control, such as machine translation, text generation, speech recognition.
+- **Reduced complexity:** fewer gates, no cell state; simpler, faster to train, efficient where resources are limited; cheaper, so preferred for real-time use or limited hardware (Slide 15).
+- **Similar performance, fewer parameters:** comparable to the LSTM on many tasks not needing fine-grained memory control, such as machine translation, text generation, speech recognition. Fewer parameters also mean less overfitting, especially on small datasets (Slide 15).
 - **Effective long-term memory:** the update gate keeps important information over time, addressing plain RNNs' vanishing gradient problem.
 
 > ✏️ **Slide discrepancy (Slide 14).** "Solving the vanishing gradient problem" is too strong. The GRU greatly **reduces** it through its near-identity path when $z_t \approx 1$; if $z_t$ stays well below 1, the product of many $z_t$ still shrinks (Fig 3).
 
-**Comparison with the LSTM (Slide 15).** **Parameter efficiency:** fewer parameters, faster training, less overfitting, especially on small datasets. **Longer dependencies:** LSTMs may win on very long ones, since the separate cell state gives finer control. **Computational cost:** GRUs are cheaper, preferred for real-time use or limited hardware.
+**Where the LSTM wins (Slide 15).** On very long dependencies, since the separate cell state gives finer control over retention.
 
 **Use cases (Slide 16).** Speech recognition (audio sequences to words or phrases); language modelling and machine translation; time series (stock prices, weather, sensor data) with short- and long-term patterns.
 
-**Summary (Slide 17).** A powerful, efficient alternative to plain RNNs and even LSTMs, simpler and faster. Reset and update gates give selective memory and controlled forgetting without a cell state, which suits fast sequence processing and has led to wide use in ML and NLP.
+**Summary (Slide 17).** A simpler, faster alternative to plain RNNs and even LSTMs: reset and update gates give selective memory and controlled forgetting without a cell state, which suits fast sequence processing and has led to wide use in ML and NLP.
 
 | | Plain RNN | LSTM | GRU |
 | :--- | :--- | :--- | :--- |

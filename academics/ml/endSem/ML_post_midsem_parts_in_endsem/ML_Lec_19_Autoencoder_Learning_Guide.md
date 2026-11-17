@@ -54,7 +54,7 @@ Encode $X$ with $f$, decode with $g$; the output $\hat{x}$ should be (almost) id
 
 *Toy case.* If $x = (a, b, a + b)$, then $(a, b)$ rebuilds all three: store $(2, 5)$ for $(2, 5, 7)$ and recompute $2 + 5 = 7$. If the features were independent, like $(2, 5, 9)$, any 2-number code loses one of them.
 
-**Base architecture (Slide 8).** Encoder half + decoder half; one input layer, one output layer, one or more hidden layers including the bottleneck, which has far fewer nodes than the input and holds the compressed knowledge. The error between $X$ and $\hat{x}$ should be as small as possible.
+**Base architecture (Slide 8).** One input, one output and one or more hidden layers; the bottleneck has far fewer nodes than the input and holds the compressed knowledge; the error between $X$ and $\hat{x}$ should be minimal.
 
 **Counting nodes (Slide 9).**
 
@@ -139,7 +139,7 @@ $\mathcal{L}_{\text{rec}}$ is MSE or BCE; $\lambda$ is the strength (a hyperpara
 
 **Limitations (Slide 25).** Too small a code loses needed information. A too-powerful non-linear network (many layers or neurons) can still find a way to memorise; extra regularization or a simpler model helps.
 
-**Applications (Slide 26).** Dimensionality reduction for faster later processing; **anomaly detection** (trained on normal data, it rebuilds unusual inputs badly); **pre-training** deep networks with the learned code as starting features (transfer learning).
+**Applications (Slide 26).** Dimensionality reduction for faster later processing; **anomaly detection** (trained on normal data, it rebuilds unusual inputs badly); **pre-training** deep networks with the learned code as starting features (transfer learning). **Summary (Slide 26):** by restricting the latent size, it achieves dimensionality reduction, feature extraction and noise reduction, which makes it effective when the goal is to capture the essential structure of the data.
 
 ![Fig 3 – Undercomplete autoencoder: input, encoder, a small latent code, decoder, reconstruction (media/image10.png)](extracted_ML_Lec_19_Autoencoder/media/image10.png)
 *Figure: Slide 21.*
@@ -245,7 +245,7 @@ Step 2 (Slide 46): add it to the loss weighted by $\lambda$: $\text{Total Loss} 
 ![Fig 7 – The sparsity penalty KL(0.05 ‖ ρ̂): zero at the target, rising as the neuron fires more (figures/plots/fig_kl_sparsity.png)](figures/plots/fig_kl_sparsity.png)
 *Figure: Red point = the slide's $\hat{\rho} = 0.1$. Firing half the time costs about 30 times more than firing 10%. Firing less than the target is penalised too, but gently.*
 
-**Implementation (Slide 48).** Choose the sparsity level by experiment; tune $\lambda$. **Applications (Slide 48):** image denoising with few active features; anomaly detection from unusual activation patterns; NLP features that ignore noise. **Benefits (Slide 49):** interpretable features, efficient dimensionality reduction, robustness to noise and irrelevant variation.
+**Implementation (Slide 48).** Choose the sparsity level by experiment; tune $\lambda$. **Applications (Slide 48):** image denoising with few active features; anomaly detection from unusual activation patterns; NLP features. **Benefits (Slide 49):** interpretable features, efficient dimensionality reduction, robustness to noise and irrelevant variation.
 
 ---
 
@@ -268,11 +268,9 @@ The noise already regularizes; extra help: **dropout** in the network (stops co-
 
 *Worked example.* Clean $x = (1, 0, 1)$; noise $(+0.3, +0.2, -0.4)$ gives $\tilde{x} = (1.3, 0.2, 0.6)$; output $\hat{x} = (0.95, 0.1, 0.9)$. Error against clean: $(0.0025 + 0.01 + 0.01)/3 = 0.0075$. The noisy input's own error: $(0.09 + 0.04 + 0.16)/3 \approx 0.0967$, about 13 times worse. Scoring against $\tilde{x}$ instead would reward copying the noise.
 
-**Benefits (Slide 54):** robust features, built-in regularization, better data quality (images, speech, signals). **Applications (Slide 55):** image denoising, speech enhancement, anomaly detection by reconstruction error, data augmentation with clean generated data.
+**Benefits (Slides 54, 58):** robust features, better generalisation, built-in regularization against overfitting, better data quality (images, speech, signals). **Applications (Slide 55):** image denoising, speech enhancement, anomaly detection by reconstruction error, data augmentation with clean generated data.
 
 **Implementation (Slide 56).** (1) Choose and apply a corruption. (2) Train: noisy input in, **clean** target out, compute loss, backpropagate. (3) Evaluate on clean and noisy data.
-
-**Summary (Slide 58).** Reconstructing clean from corrupted data gives robust representations, better generalisation, less overfitting and better data quality.
 
 ---
 

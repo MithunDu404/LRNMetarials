@@ -6,21 +6,6 @@ Source: `ML_Lec_12_CNN.pptx`, Slides 1–108.
 
 **How to read this guide:** Read the sections in order. Each section first says why the idea exists, then how it works, then shows a picture, then gives the exact numbers. Every fact comes from the slides.
 
-```mermaid
-flowchart TD
-    A["1. What convolution is"] --> B["2. Padding"]
-    A --> C["3. Kernels made by hand"]
-    A --> D["4. Convolution in 1D and on 3D inputs"]
-    B --> E["5. Output size and stride"]
-    D --> E
-    E --> F["6. Two worked examples"]
-    C --> G["7. How a CNN learns its kernels"]
-    D --> G
-    G --> H["8. Pooling"]
-    E --> H
-    H --> I["9. Flatten"]
-```
-
 ## Contents
 
 1. [What convolution is](#1-what-convolution-is)
@@ -37,15 +22,11 @@ flowchart TD
 
 ## 1. What convolution is
 
-### 1.1 The Problem & Intuition
-
-An image is a grid of numbers. We want to find small patterns in it, such as edges and textures. Convolution does this. It takes a small grid of numbers and slides it over the image. At each place it gives one number that says how strongly the pattern shows up there.
+**The idea.** An image is a grid of numbers. We want to find small patterns in it, such as edges and textures. Convolution does this. It takes a small grid of numbers and slides it over the image. At each place it gives one number that says how strongly the pattern shows up there.
 
 The slides give the general definition first (Slide 1). **Convolution** is a mathematical operation that combines two functions to produce a third function. The third function shows how one function modifies the other. In a **convolutional neural network (CNN)**, convolution is used on data with a grid-like shape, such as images.
 
-### 1.2 Mechanism & Architecture
-
-Think of the image as a 2D matrix. We use a 2D filter of size $m \times n$ (Slide 2). Convolution has four key parts (Slide 3).
+**How it works.** Think of the image as a 2D matrix. We use a 2D filter of size $m \times n$ (Slide 2). Convolution has four key parts (Slide 3).
 
 ![The four elements of convolution](figures/cnn/l12_01_conv_elements.jpg)
 *Figure: The four parts of every convolution: a kernel, a sliding window, a dot product at each position, and the feature map it builds (illustration).*
@@ -53,7 +34,7 @@ Think of the image as a 2D matrix. We use a 2D filter of size $m \times n$ (Slid
 1. **Kernel / filter.** A small matrix, for example 3×3 or 5×5. It slides over the input. Its job is to extract features like edges, textures or patterns. "Kernel" and "filter" mean the same thing.
 2. **Sliding window.** The kernel moves across the image in small steps. The step size is called the **stride**.
 3. **Dot product.** At each position, multiply each kernel number by the pixel under it. Then add all the results. This gives one output value. It captures the local pattern at that spot.
-4. **Output feature map.** Doing this over the whole image gives a new matrix. It is called a **feature map**. It highlights where the kernel found its feature.
+4. **Output feature map.** Doing this over the whole image gives a new matrix. It is called a **feature map**. It highlights where the kernel found its feature. Each slide of the kernel gives one output value, and many filters give many feature maps (Slides 32–37).
 
 **Walk-through (Slides 2–9).** The slides use a 3×4 input and a 2×2 kernel, written with letters:
 
@@ -61,16 +42,7 @@ Think of the image as a 2D matrix. We use a 2D filter of size $m \times n$ (Slid
 \text{Input} = \begin{bmatrix} a & b & c & d \\ e & f & g & h \\ i & j & k & \ell \end{bmatrix}, \quad \text{Kernel} = \begin{bmatrix} w & x \\ y & z \end{bmatrix}
 ```
 
-The kernel fits in six positions. Each position gives one output value:
-
-1. Top-left, on a, b, e, f: $aw + bx + ey + fz$
-2. One step right, on b, c, f, g: $bw + cx + fy + gz$
-3. One more step right, on c, d, g, h: $cw + dx + gy + hz$
-4. Down one row, back to the left, on e, f, i, j: $ew + fx + iy + jz$
-5. One step right, on f, g, j, k: $fw + gx + jy + kz$
-6. One more step right, on g, h, k, ℓ: $gw + hx + ky + \ell z$
-
-The output is (Slide 9):
+The kernel fits in six positions, each giving one output value: three along rows 1–2, then, down one row and back to the left, three along rows 2–3. Position 1 covers a, b, e, f and gives $aw + bx + ey + fz$; each step right shifts every letter by one column. The output is (Slide 9):
 
 ```math
 \text{Output} = \begin{bmatrix} aw+bx+ey+fz & bw+cx+fy+gz & cw+dx+gy+hz \\ ew+fx+iy+jz & fw+gx+jy+kz & gw+hx+ky+\ell z \end{bmatrix}
@@ -78,14 +50,8 @@ The output is (Slide 9):
 
 So a 3×4 image gives a 2×3 feature map (Slide 9). The output is smaller than the input.
 
-The same idea in short (Slides 32–37): we just slide the kernel over the input image. Each time we slide it, we get one value in the output. The full output is the feature map. We can use many filters to get many feature maps.
-
-### 1.3 Visual Anchor
-
 ![3x4 input convolved with a 2x2 kernel gives a 2x3 output](figures/cnn/l12_02_conv_walkthrough.jpg)
 *Figure: The Slides 2–9 walk-through. The 2x2 kernel K sits on the top-left block of the 3x4 input I and gives the first output value, O11. In the slide's letters this is aw + bx + ey + fz. Sliding one step at a time, with no padding, fills the 2x3 output O (illustration).*
-
-### 1.4 Verified Formulas, Trade-offs & Calculations
 
 **The convolution formula (Slide 2).**
 
@@ -121,20 +87,16 @@ The feature map is 2×3, as on Slide 9. To get a feature map of the same size as
 
 ## 2. Padding: keeping the edges and the size
 
-### 2.1 The Problem & Intuition
-
-The kernel must fit inside the image. So it cannot be centred on a corner or border pixel. Part of it would cross the input boundary (Slides 61–62). Two things go wrong:
+**The idea.** The kernel must fit inside the image. So it cannot be centred on a corner or border pixel. Part of it would cross the input boundary (Slides 61–62). Two things go wrong:
 
 - The output is smaller than the input.
 - Features near the edges are used less, so the network can miss them.
 
 A bigger kernel makes this worse. With a 5×5 kernel, even more pixels cannot be used as a centre (Slides 63–68).
 
-**Padding** fixes this. It adds extra pixels, usually zeros, around the edges of the input before the convolution (Slide 11). Now the kernel can also sit on the corners.
+**Padding** fixes this. It adds extra pixels, usually zeros, around the edges of the input before the convolution (Slide 11). Now the kernel can also sit on the corners, and we control the output size and keep important features at the edges.
 
-### 2.2 Mechanism & Architecture
-
-Padding lets us control the output size and keep important features at the edges (Slide 11). The right type depends on the network and the task. There are two types (Slide 10).
+**How it works.** There are two types (Slide 10); the right one depends on the network and the task (Slide 11).
 
 1. **Valid padding.** No padding is applied. The kernel is used only at valid positions, where it fits inside the input. Effect: the output gets smaller. A 5×5 input with a 3×3 kernel gives a 3×3 output.
 2. **Same padding.** Enough zeros are added around the input so that the output has the same size as the input. Effect: the size is kept. A 5×5 input with a 3×3 kernel gives a 5×5 output.
@@ -150,14 +112,10 @@ If the top-left pixel is the pixel of interest, the filter must be centred on it
 
 **How to pad (Slides 72–73).** Pad the input with the right number of 0 inputs, so you can apply the kernel at the corners. With pad $P = 1$ and a 3×3 kernel, add one row of zeros at the top and one at the bottom. Also add one column of zeros at the left and one at the right. On Slide 73 a 7×7 input becomes a 9×9 grid.
 
-### 2.3 Visual Anchor
-
 ![Valid vs same padding on a 5x5 input](figures/cnn/l12_03_padding.jpg)
 *Figure: Valid (P = 0): a 3x3 window fits in 3x3 positions of the 5x5 input, so the output is 3x3. Same (P = 1): one ring of zeros makes a 7x7 grid, the window can sit on every original pixel, and the output stays 5x5 (illustration).*
 
-### 2.4 Verified Formulas, Trade-offs & Calculations
-
-With padding $P$ and a step of 1 (Slide 74):
+**Formulas and checks.** With padding $P$ and a step of 1 (Slide 74):
 
 ```math
 W_2 = W_1 - F + 2P + 1, \quad H_2 = H_1 - F + 2P + 1
@@ -178,18 +136,13 @@ Check with Slide 73 (input 7×7, kernel 3×3, $P = 1$): $W_2 = 7 - 3 + 2 + 1 = 7
 
 ## 3. Kernels made by hand
 
-### 3.1 The Problem & Intuition
-
-Different kernels do different jobs. One kernel finds edges. Another blurs the image. Another makes it sharper. The numbers inside the kernel decide the job. This section lists the kernel types from the slides. Section 7 shows that a CNN does not use these fixed kernels. It learns its own.
-
-### 3.2 Mechanism & Architecture
+**The idea.** Different kernels do different jobs. One kernel finds edges. Another blurs the image. Another makes it sharper. The numbers inside the kernel decide the job. This section lists the kernel types from the slides. Section 7 shows that a CNN does not use these fixed kernels. It learns its own.
 
 **What every kernel has (Slides 13–14).** A kernel, also called a filter, is a small matrix. It scans over the input to detect features.
 
 - **Size.** Kernels are usually smaller than the input. Common sizes are 3×3, 5×5 or 7×7 pixels.
 - **Feature detection.** Different kernels can be trained to detect different features, such as edges, textures or patterns. Early layers in a CNN learn simple features. Deeper layers learn more complex representations.
-- **Stride.** How many pixels the kernel moves after each operation. A larger stride gives a smaller output.
-- **Padding.** Zeros added around the input to control the output size. It keeps the dimensions and stops the loss of information at the borders.
+- **Stride and padding** (Sections 1, 2, 5). Stride is how many pixels the kernel moves after each operation; a larger stride gives a smaller output. Zero padding controls the output size, keeps the dimensions and stops the loss of information at the borders.
 - **Multiple kernels.** Each convolutional layer can have many kernels. So the layer can learn many features from the input.
 
 Kernels are how a CNN processes data. They let it learn hierarchical representations, which means simple features first and complex ones built on top.
@@ -202,14 +155,12 @@ The **Sobel kernel** detects edges in the horizontal and vertical directions. It
 \text{Horizontal: } \begin{bmatrix} -1 & 0 & 1 \\ -2 & 0 & 2 \\ -1 & 0 & 1 \end{bmatrix}, \quad \text{Vertical: } \begin{bmatrix} 1 & 2 & 1 \\ 0 & 0 & 0 \\ -1 & -2 & -1 \end{bmatrix}
 ```
 
-The **Canny edge detector** does not rely on a single kernel like the Sobel operator (Slide 16). It is a multi-stage algorithm that detects edges more robustly. It uses a series of steps:
+The **Canny edge detector** does not rely on a single kernel like the Sobel operator; it uses Gaussian smoothing and gradient kernels (Slides 16–17). It is a multi-stage algorithm that detects edges more robustly. It uses a series of steps:
 
 1. **Gaussian filter for smoothing.** This blurs the image a little to reduce noise before edge detection.
 2. **Gradient computation.** After smoothing, the gradient is calculated using derivative kernels. These can be similar to the Sobel kernels. The slides show the same two matrices as above for the horizontal and vertical gradient (Slide 17).
 3. **Non-maximum suppression.** Keep a pixel only if it is the strongest along the direction of its gradient. This makes the edges thin.
 4. **Hysteresis thresholding.** Use two limits, a high one and a low one. Strong edge pixels are kept. Weak ones are kept only if they touch a strong one.
-
-In summary, Canny does not use one kernel. It uses Gaussian smoothing and gradient kernels to identify edges (Slide 17).
 
 ![Canny edge detection pipeline](figures/cnn/l12_04_canny.jpg)
 *Figure: The Canny steps on one image: smoothing, Sobel gradients, non-maximum suppression, hysteresis thresholds, final edge map (illustration).*
@@ -344,13 +295,7 @@ Benefits:
 
 Users can design their own kernels for specific tasks or datasets. Examples are kernels that detect specific patterns, textures or other features relevant to their application.
 
-### 3.3 Visual Anchor
-
-The figures above carry this section: the Canny steps, the Slide 31 photo and the dilated kernel.
-
-### 3.4 Verified Formulas, Trade-offs & Calculations
-
-Add up the numbers in each kernel. The sum tells you what the kernel does to a flat area, where all pixels are equal.
+**Formulas and checks.** Add up the numbers in each kernel. The sum tells you what the kernel does to a flat area, where all pixels are equal.
 
 | Kernel | Sum of its numbers | Effect on a flat area |
 | :--- | :--- | :--- |
@@ -371,11 +316,7 @@ Dilation check for the figure: a 3×3 kernel has 3 elements in a row. With rate 
 
 ## 4. Convolution in 1D and on 3D inputs
 
-### 4.1 The Problem & Intuition
-
-Not all inputs are flat 2D grids. Some data is a single row of values. A colour image has three layers: red, green and blue. So we need convolution for 1D inputs and for 3D inputs. The idea stays the same: slide a filter and take one value at each step.
-
-### 4.2 Mechanism & Architecture
+**The idea.** Not all inputs are flat 2D grids. Some data is a single row of values. A colour image has three layers: red, green and blue. So we need convolution for 1D inputs and for 3D inputs. The idea stays the same: slide a filter and take one value at each step.
 
 **1D convolution (Slides 38–42).** In the 1D case, we slide a one dimensional filter over a one dimensional input. The slides use the input row A, B, C, B, C, A, B. The filter moves along the row one step at a time.
 
@@ -397,14 +338,10 @@ Not all inputs are flat 2D grids. Some data is a single row of values. A colour 
 - So an RGB image is $W_1 \times H_1 \times D_1$ and a kernel is $F \times F \times D_1$.
 - The output is $W_2 \times H_2 \times D_2$. Section 5 gives the formula.
 
-### 4.3 Visual Anchor
-
 ![Volume convolution: each filter spans the full input depth](figures/cnn/l12_06_volume_conv.jpg)
 *Figure: Each F x F x D1 filter covers the full depth of the input and gives one 2D map. K filters give an output of depth K (illustration, after Slide 43).*
 
-### 4.4 Verified Formulas, Trade-offs & Calculations
-
-Each filter gives one 2D feature map. With $K$ filters we stack $K$ maps. So the depth of the output equals the number of filters:
+**Formulas and checks.** Each filter gives one 2D feature map. With $K$ filters we stack $K$ maps. So the depth of the output equals the number of filters:
 
 ```math
 D_2 = K
@@ -416,36 +353,20 @@ Check with Slide 79: the layer has 96 filters, so the output depth is 96. Check 
 
 ## 5. Output size and stride
 
-### 5.1 The Problem & Intuition
+**The idea.** Before we build a network, we must know the size of each layer's output. The next layer needs that size. The output size depends on four things: the input size, the kernel size, the padding and the stride. This section builds one formula from them.
 
-Before we build a network, we must know the size of each layer's output. The next layer needs that size. The output size depends on four things: the input size, the kernel size, the padding and the stride. This section builds one formula from them.
+**How it works.** The slides build the formula in three steps.
 
-### 5.2 Mechanism & Architecture
+**Step 1: no padding (Slides 53–69).** The kernel cannot sit on the border pixels without crossing the input boundary, and a bigger kernel loses even more, so $W_2 = W_1 - F + 1$ (Section 1).
 
-The slides build the formula in three steps.
-
-**Step 1: no padding (Slides 53–69).** We cannot place the kernel at the corners, because it would cross the input boundary. This is true for all the border pixels. So the output is smaller than the input. As the kernel gets bigger, this is true for even more pixels. In general:
-
-```math
-W_2 = W_1 - F + 1, \quad H_2 = H_1 - F + 1
-```
-
-**Step 2: add padding (Slides 70–74).** What if we want the output to be the same size as the input? We use padding (Section 2). With pad $P$:
-
-```math
-W_2 = W_1 - F + 2P + 1, \quad H_2 = H_1 - F + 2P + 1
-```
+**Step 2: add padding (Slides 70–74).** To keep the output the same size as the input we pad (Section 2): $W_2 = W_1 - F + 2P + 1$. $H_2$ follows the same rule.
 
 **Step 3: add stride (Slides 75–78).** The **stride** $S$ is how many pixels the kernel moves after each operation. It defines the intervals at which the filter is applied. $S = 2$ means the kernel moves 2 pixels each time. In effect we skip every 2nd pixel. This again gives a smaller output. A larger stride gives a smaller output size.
-
-### 5.3 Visual Anchor
 
 ![Stride 1 vs stride 2 on a 7-pixel row](figures/cnn/l12_08_stride.jpg)
 *Figure: Stride on a 7-pixel row with a 3-wide window. S = 1 gives 5 window positions. S = 2 gives 3. Both match the formula below (drawn with Python for exact counts).*
 
-### 5.4 Verified Formulas, Trade-offs & Calculations
-
-The full formula (Slide 78):
+**Formulas and checks.** The full formula (Slide 78):
 
 ```math
 W_2 = \frac{W_1 - F + 2P}{S} + 1, \quad H_2 = \frac{H_1 - F + 2P}{S} + 1
@@ -474,25 +395,17 @@ An example where the floor matters: input 8, kernel 3, $P = 0$, $S = 2$. The div
 
 ## 6. Two worked examples
 
-### 6.1 The Problem & Intuition
+**The idea.** The slides ask two questions (Slides 79–82). Each gives an input volume and a set of filters. You must find $W_2$, $H_2$ and $D_2$. These are good practice for the formula of Section 5.
 
-The slides ask two questions (Slides 79–82). Each gives an input volume and a set of filters. You must find $W_2$, $H_2$ and $D_2$. These are good practice for the formula of Section 5.
-
-### 6.2 Mechanism & Architecture
-
-Use the same three steps each time:
+**How it works.** Use the same three steps each time:
 
 1. Read $W_1$, $H_1$, $D_1$, $F$, $K$, $S$ and $P$ from the question.
 2. Put them into the formula for $W_2$ and $H_2$.
 3. Set $D_2 = K$.
 
-### 6.3 Visual Anchor
-
 ![Fig 2 – Example A: 227x227x3 input, 96 filters of 11x11x3, stride 4, padding 0 (media/image48.png)](extracted_ML_Lec_12_CNN/media/image48.png)
 
 ![Fig 3 – Example B: 32x32x1 input, 6 filters of 5x5x1, stride 1, padding 0 (media/image50.png)](extracted_ML_Lec_12_CNN/media/image50.png)
-
-### 6.4 Verified Formulas, Trade-offs & Calculations
 
 **Example A (Slides 79–80).** Input 227×227×3. 96 filters of size 11×11×3. Stride 4. Padding 0.
 
@@ -510,22 +423,13 @@ W_2 = \frac{32 - 5 + 2(0)}{1} + 1 = 27 + 1 = 28
 
 $H_2 = 28$ as well. The depth is $D_2 = K = 6$. The output is **28×28×6**.
 
-| | Input | Filter | $K$ | $S$ | $P$ | Output |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Example A | 227×227×3 | 11×11×3 | 96 | 4 | 0 | 55×55×96 |
-| Example B | 32×32×1 | 5×5×1 | 6 | 1 | 0 | 28×28×6 |
-
 In both examples the filter depth equals the input depth (3 and 1), as Section 4 requires.
 
 ---
 
 ## 7. How a CNN learns its kernels
 
-### 7.1 The Problem & Intuition
-
-The kernels of Section 3 were designed by people. A CNN does something better. It treats the kernel numbers as unknowns and learns them from data. This section also explains why a CNN needs far fewer weights than a regular network. Two ideas do this: **sparsity of connections** and **weight sharing**.
-
-### 7.2 Mechanism & Architecture
+**The idea.** The kernels of Section 3 were designed by people. A CNN does something better. It treats the kernel numbers as unknowns and learns them from data. This section also explains why a CNN needs far fewer weights than a regular network. Two ideas do this: **sparsity of connections** and **weight sharing**.
 
 **From fixed features to learned features (Slides 83–85).** The slides use one task: decide if a photo shows a car, a bus, a monument or a flower. The part that decides is the **classifier**. They show four ways to feed it.
 
@@ -572,20 +476,14 @@ The slide shows this with colors. In the first picture, two outputs at different
 
 Overall, these advantages make CNNs well suited for image recognition, object detection and other tasks with spatial data.
 
-### 7.3 Visual Anchor
-
 ![Fully connected vs convolutional connectivity](figures/cnn/l12_11_dense_vs_sparse.jpg)
 *Figure: Computing h11 from a 4x4 image. A dense layer needs all 16 connections. A 2x2 convolution needs only 4 (illustration, after Slides 87–88).*
 
-![Fig 4 – Sparsity of connections: only pixels 1, 2, 5, 6 feed h11 (media/image60.png)](extracted_ML_Lec_12_CNN/media/image60.png)
+![Fig 4 – Three ways with fixed features: raw pixels, edge detector, SIFT / HOG (media/image53.png)](extracted_ML_Lec_12_CNN/media/image53.png)
 
-![Fig 5 – Three ways with fixed features: raw pixels, edge detector, SIFT / HOG (media/image53.png)](extracted_ML_Lec_12_CNN/media/image53.png)
+![Fig 5 – Weight sharing: several kernels, each one reused at every place (media/image63.png)](extracted_ML_Lec_12_CNN/media/image63.png)
 
-![Fig 6 – Weight sharing: several kernels, each one reused at every place (media/image63.png)](extracted_ML_Lec_12_CNN/media/image63.png)
-
-### 7.4 Verified Formulas, Trade-offs & Calculations
-
-Count the connections into $h_{11}$ for the 4×4 image:
+**Formulas and checks.** Count the connections into $h_{11}$ for the 4×4 image:
 
 - Dense layer: $4 \times 4 = 16$ connections.
 - Convolution with a 2×2 kernel: $2 \times 2 = 4$ connections.
@@ -598,11 +496,7 @@ Now count the weights. The 2×2 kernel gives a 3×3 output, so there are 9 outpu
 
 ## 8. Pooling: making feature maps smaller
 
-### 8.1 The Problem & Intuition
-
-Feature maps are large. Large maps mean more parameters and more computation in the layers that follow. A **pooling layer** makes each feature map smaller. It looks at a small window and keeps one number for it. Then it moves to the next window.
-
-### 8.2 Mechanism & Architecture
+**The idea.** Feature maps are large. Large maps mean more parameters and more computation in the layers that follow. A **pooling layer** makes each feature map smaller. It looks at a small window and keeps one number for it. Then it moves to the next window.
 
 **Pooling layer (Slide 93).** It reduces the spatial dimensions of the feature maps. This decreases the number of parameters and the computation in the network.
 
@@ -628,11 +522,7 @@ Feature maps are large. Large maps mean more parameters and more computation in 
 - Pooling can lose spatial information. This can be critical for some tasks, such as image segmentation.
 - The choice between max pooling, average pooling and other techniques depends on the task and the desired outcome.
 
-### 8.3 Visual Anchor
-
-![Fig 7 – 2x2 pooling with stride 2: max pooling and average pooling on a 4x4 feature map (media/image64.png)](extracted_ML_Lec_12_CNN/media/image64.png)
-
-### 8.4 Verified Formulas, Trade-offs & Calculations
+![Fig 6 – 2x2 pooling with stride 2: max pooling and average pooling on a 4x4 feature map (media/image64.png)](extracted_ML_Lec_12_CNN/media/image64.png)
 
 **Example 1: max and average pooling, 2×2 window, stride 2 (Slide 94).**
 
@@ -688,24 +578,14 @@ Both results match the slides. The larger stride gave the smaller output: 2×2 a
 
 ## 9. Flatten: from feature maps to the classifier
 
-### 9.1 The Problem & Intuition
-
-After convolution and pooling we have 2D feature maps. The last part of the network is a **fully connected layer**. It classifies the image, and it needs one long row of numbers as input. **Flattening** turns the 2D maps into that row.
-
-### 9.2 Mechanism & Architecture
-
-Flattening converts all the 2D arrays from the pooled feature maps into a single long continuous linear vector (Slide 107). This flattened vector is fed as input to the fully connected layer, which classifies the image.
+**The idea.** After convolution and pooling we have 2D feature maps. The last part of the network is a **fully connected layer**. It classifies the image, and it needs one long row of numbers as input. **Flattening** converts all the 2D arrays from the pooled feature maps into that single long continuous linear vector, which is fed to the fully connected layer (Slide 107).
 
 ![From convolution to classifier](figures/cnn/l12_13_cnn_to_classifier.jpg)
 *Figure: Where flatten sits. Convolution and pooling layers extract features. Flatten unrolls them into a vector. The fully connected layer uses the vector to classify the image (illustration).*
 
-### 9.3 Visual Anchor
+![Fig 7 – Flattening a 3x3 pooled feature map into a vector of 9 values (media/image68.png)](extracted_ML_Lec_12_CNN/media/image68.png)
 
-![Fig 8 – Flattening a 3x3 pooled feature map into a vector of 9 values (media/image68.png)](extracted_ML_Lec_12_CNN/media/image68.png)
-
-### 9.4 Verified Formulas, Trade-offs & Calculations
-
-Slide 107 flattens this 3×3 pooled feature map:
+**Formulas and checks.** Slide 107 flattens this 3×3 pooled feature map:
 
 ```math
 \begin{bmatrix} 1 & 1 & 0 \\ 4 & 2 & 1 \\ 0 & 2 & 1 \end{bmatrix}

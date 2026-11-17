@@ -40,9 +40,7 @@ With $d$ latent dimensions the encoder outputs $2d$ numbers, and each dimension 
 
 ## 2. VAE vs a plain autoencoder
 
-**Traditional autoencoder (Slide 6).** The encoder maps $x$ to a **fixed** code $z$: **deterministic**, one input → one point. The decoder minimises reconstruction difference. No probabilistic model, so it cannot handle uncertainty and is poor at generating new, diverse data.
-
-**VAE (Slides 7–8).** The encoder maps the input to a **Gaussian** with mean $\mu$ and variance $\sigma^2$, adding variability and uncertainty. The architectures differ only there: deterministic mapping versus probabilistic encoding plus sampling. Because a VAE must also generate samples resembling the input, its loss has one more term: the **Kullback-Leibler (KL) divergence**.
+**Traditional autoencoder (Slide 6):** **deterministic**, one input → one fixed code $z$, decoded to minimise reconstruction difference; no probabilistic model, so no way to handle uncertainty and poor at generating diverse data. **VAE (Slides 7–8):** a **Gaussian** ($\mu$, $\sigma^2$) per input, adding variability and uncertainty; that is the only architectural difference. Because it must also generate samples resembling the input, its loss adds the **Kullback-Leibler (KL) divergence**.
 
 > ✏️ **Slide discrepancy (Slide 8).** "The goal is not to reconstruct the original input; it's to generate new samples" overstates it. A VAE is still trained to reconstruct (half its loss, Slide 11); generation is the extra ability the KL term adds. Fairer: "not *only* to reconstruct".
 
@@ -64,8 +62,6 @@ With $d$ latent dimensions the encoder outputs $2d$ numbers, and each dimension 
 
 ## 3. The process flow and the loss
 
-**Process flow (Slide 9).** (1) The encoder outputs the parameters $\mu$, $\sigma^2$ of $q(z \mid x)$. (2) $z$ is sampled from $q(z \mid x)$ with the **reparameterization trick** (section 5). (3) The decoder produces $\hat{x}$, which should resemble $x$.
-
 **Why two terms (Slide 10).** To generate, the latent space must be **regularized** to follow a chosen distribution. The **reconstruction loss** keeps reconstruction accurate; the **KL divergence** makes the latent space follow the distribution. Together they prevent overfitting and give a model that generalises.
 
 **The loss (Slides 11, 23).**
@@ -76,7 +72,7 @@ L = L_{\text{reconstruction}} + \beta \, L_{KL}
 
 How badly the input was rebuilt, plus $\beta$ times how far the codes are from a standard Gaussian. $\beta = 1$ is the standard VAE (Slide 11). $\beta$ trades reconstruction against regularization (Slide 23): larger gives a smoother latent space but blurrier copies; smaller gives sharper copies but a gappier space and worse generation.
 
-**Steps to compute it (Slide 12).** (1) Encode → $\mu$, $\sigma^2$. (2) Sample $z = \mu + \sigma \cdot \epsilon$, $\epsilon \sim \mathcal{N}(0, I)$. (3) Decode → $\hat{x}$. (4) Reconstruction loss from $x$, $\hat{x}$. (5) KL between the learned distribution and the prior. (6) Combine.
+**Process flow and loss steps (Slides 9, 12).** (1) Encode → the parameters $\mu$, $\sigma^2$ of $q(z \mid x)$. (2) Sample $z = \mu + \sigma \cdot \epsilon$, $\epsilon \sim \mathcal{N}(0, I)$: the **reparameterization trick** (section 5). (3) Decode → $\hat{x}$, which should resemble $x$. (4) Reconstruction loss from $x$, $\hat{x}$. (5) KL between the learned distribution and the prior. (6) Combine.
 
 ```mermaid
 flowchart LR
@@ -122,7 +118,7 @@ At $\beta = 4$ the optimiser mostly shrinks the KL. Real reconstruction losses a
 
 ## 4. The KL divergence term, derived
 
-**The idea.** Each cloud $q(z \mid x)$ should stay near $\mathcal{N}(0, 1)$. Clouds that drift away or shrink to dots bring the gaps back. KL measures that distance; for two Gaussians it has a closed form.
+**The idea.** Each cloud $q(z \mid x)$ should stay near $\mathcal{N}(0, 1)$: clouds that drift away or shrink to dots bring back the gaps of section 1; KL measures that distance, and for two Gaussians it has a closed form.
 
 **The formula (Slides 14–15).** $q(z \mid x)$ is the **approximate posterior** the encoder outputs; $p(z)$ is the **prior**, usually $\mathcal{N}(0, I)$. In plain words: the **prior** is where we *want* codes to live before seeing any input (a standard bell curve); the **posterior** is where the codes for this particular $x$ really are; "approximate" because the encoder only estimates it with a Gaussian. With $d$ latent dimensions:
 
@@ -200,7 +196,7 @@ Take a standard random number, stretch it by the standard deviation $\sigma(x)$ 
 
 **How it helps (Slide 30).** **Gradient flow:** $z$ is now differentiable in $\mu$ and $\sigma$, so backpropagation and SGD reach the encoder. **Still random:** $\epsilon$ keeps $z$ stochastic, so the VAE can still sample.
 
-**Without vs with (Slide 31).** Without: sample $z \sim \mathcal{N}(\mu, \sigma^2)$ directly; backpropagation stops. With: sample $\epsilon$, set $z = \mu + \sigma \epsilon$; all randomness is in $\epsilon$, and $\mu$, $\sigma$ lie on a deterministic path that gradient descent can update.
+**Without vs with (Slide 31, diagram below):** all randomness moves into $\epsilon$, and $\mu$, $\sigma$ lie on a deterministic path that gradient descent can update.
 
 > ✏️ **Slide discrepancy (Slides 3 vs 26).** Slide 3 says the encoder outputs the variance $\sigma^2(x)$; Slide 26 says the log-variance. 📘 In practice it outputs $\ell = \log \sigma^2$ (any real number, while a variance must be positive), then $\sigma = \exp(\ell / 2)$.
 

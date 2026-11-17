@@ -270,36 +270,29 @@ a probability distribution over the vocabulary for the next word.
 
 6. **Interpret:** the highest-probability word, e.g. "red", is the prediction.
 
-*Numbers.* Vocabulary (red, green, sweet, blue), scores $(2.0, 1.0, 0.5, -1.0)$ → probabilities $(0.6095, 0.2242, 0.1360, 0.0303)$: "red" wins. This works only if "color" (step 2) and "apple" (step 5) are still in memory at step 6, i.e. their forget-gate values stayed near 1.
+*Numbers.* With section 3's softmax example on the vocabulary (red, green, sweet, blue), "red" wins at 0.6095. This works only if "color" (step 2) and "apple" (step 5) are still in memory at step 6, i.e. their forget-gate values stayed near 1.
 
 ---
 
 ## 7. Training an LSTM, and why its gradients survive
 
-**Learning steps (Slides 56–61).**
+**Learning steps (Slides 56–60; Slide 61 summarises them).**
 
 1. **Forward pass** through the gates (forget: discard; input: store; output: show) and the cell state (memory, updated every step); $h_t$ and $C_t$ pass on.
 2. **Loss** at each step: MSE for regression, cross-entropy for classification.
-3. **BPTT:** gradients at every step; updates **accumulate** over the sequence. Gates, especially the forget gate, keep important information and drop irrelevant details. With 4 weight blocks, each gradient is summed over time, e.g. $\partial L / \partial W_f = \sum_{t=1}^{T} \partial L / \partial W_f \vert_{\text{step } t}$, and likewise $W_i$, $W_C$, $W_o$ (117,248 parameters here, about 4 times an RNN step's work).
+3. **BPTT:** gradients at every step; updates **accumulate** over the sequence. Gates, especially the forget gate, keep important information and drop irrelevant details. With 4 weight blocks, each gradient is summed over time, e.g. $\partial L / \partial W_f = \sum_{t=1}^{T} \partial L / \partial W_f \vert_{\text{step } t}$, and likewise $W_i$, $W_C$, $W_o$ (about 4 times an RNN step's work, section 5).
 4. **Gradient flow:** gradients flow back **including through the cell state**, which stores information over long intervals; the gates control this flow and limit vanishing.
 5. **Weight updates** with SGD or Adam.
 
-Summary (Slide 61): forward through the gates → loss → BPTT (gradients per step, per gate) → update.
-
 **Why the gradients do not vanish (Slides 62–72).** Plain RNN gradients shrink (or explode) over long sequences, so it "forgets" early parts. The LSTM answers with:
 
-1. **Cell state (63):** carries information across many steps with few changes: a **highway for gradients**.
+1. **Cell-state highway (63, 68):** the cell state carries information across many steps with only an element-wise multiply (forget gate) and add (input gate), so it keeps its scale: a **highway for gradients**.
 2. **Gates (64):** forget decides what to keep, input adds relevant information without overwhelming the cell, output decides what is used now.
-3. **Gradient flow (65–66):** RNN gradients flow only through the hidden state; the LSTM adds a stable path through the cell state, so it suits long-context tasks (language modelling, time series).
+3. **Forget-gate self-loop (69, 72):** values in (0, 1) keep only relevant information; trained near 1 for important information, cell values and gradients survive many steps.
+4. **Controlled updates (70):** gradual changes through input and forget gates, no abrupt rewrites, so the state does not collapse or blow up.
+5. **Bounded activations (71):** sigmoid gates in (0, 1), tanh candidate in (−1, 1), avoiding extreme values in the products.
 
-Four reasons in detail (Slides 67–71):
-
-1. **Element-wise operations (68):** the cell state passes on with only a multiply (forget gate) and an add (input gate), so it keeps its scale; the forget gate is often near 1 for what must be kept.
-2. **Forget gate self-loop (69):** values in (0, 1) keep only relevant information; near 1, cell values and gradients survive many steps.
-3. **Controlled updates (70):** gradual changes through input and forget gates, no abrupt rewrites, so the state does not collapse.
-4. **Bounded activations (71):** sigmoid gates in (0, 1), tanh candidate in (−1, 1), avoiding extreme values in the products.
-
-**Summary (Slide 72):** a stable, lightly modified gradient path; element-wise updates that limit shrinking or blow-up; forget values near 1 for important information. Plain RNNs cannot manage this.
+So, unlike a plain RNN whose gradient flows only through the hidden state, the LSTM has a stable path through the cell state and suits long-context tasks such as language modelling and time series (Slides 65–66, 72).
 
 > 📘 **Beyond the slides — the one-line reason.** From $C_t = f_t \ast C_{t-1} + i_t \ast \tilde{C}_t$, the direct path gives $\partial C_t / \partial C_{t-1} = f_t$, so $\partial C_t / \partial C_k = \prod_{j=k+1}^{t} f_j$. One step back along the memory line multiplies by the forget gate only: no weight matrix, no tanh slope. (Indirect paths through $h_{t-1}$ behave more like a plain RNN.) Over 50 steps: RNN with $\gamma = 0.5$ leaves $8.9 \times 10^{-16}$, $\gamma = 0.9$ leaves 0.0052; LSTM with $f = 0.95$ leaves 0.0769, $f = 0.99$ leaves 0.605. The real difference is control: the LSTM **learns** $f_t$ and sets it near 1 exactly where memory matters. A common trick starts $b_f$ at 1 or more, so $f_t \ge \sigma(1) = 0.73$ and the network remembers by default (Jozefowicz et al., 2015).
 

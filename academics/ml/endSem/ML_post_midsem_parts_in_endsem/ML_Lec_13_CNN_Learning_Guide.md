@@ -103,21 +103,7 @@ Only places where the patch has a 1 count: $1 + 3 + 5 + 6 + 7 + 9 = 31$. The out
 ![Fig 3 – Max pooling and average pooling with a 2x2 window and stride 2 (media/image3.png)](extracted_ML_Lec_13_CNN/media/image3.png)
 *Figure: Slide 10.*
 
-**Slide 10 by hand.** This 4×4 map, with a 2×2 window and stride 2, splits into four non-overlapping blocks:
-
-```math
-\begin{bmatrix} 8 & 7 & 5 & 3 \\ 12 & 9 & 5 & 7 \\ 13 & 2 & 10 & 3 \\ 9 & 4 & 5 & 14 \end{bmatrix}
-```
-
-
-| Block | Values | Max | Average |
-| :--- | :--- | :---: | :--- |
-| Top-left | 8, 7, 12, 9 | 12 | $36 / 4 = 9$ |
-| Top-right | 5, 3, 5, 7 | 7 | $20 / 4 = 5$ |
-| Bottom-left | 13, 2, 9, 4 | 13 | $28 / 4 = 7$ |
-| Bottom-right | 10, 3, 5, 14 | 14 | $32 / 4 = 8$ |
-
-Both match the figure; 4×4 became 2×2. Pooling only picks or averages, so it has **no parameters** to learn (Slides 26, 34).
+**Slide 10 by hand.** It is the same 4×4 map as Lecture 12, Slide 94 (worked block by block in Lecture 12, §8): with a 2×2 window and stride 2, max pooling gives $\begin{bmatrix} 12 & 7 \\ 13 & 14 \end{bmatrix}$ and average pooling $\begin{bmatrix} 9 & 5 \\ 7 & 8 \end{bmatrix}$; 4×4 became 2×2. Pooling only picks or averages, so it has **no parameters** to learn (Slides 26, 34).
 
 ---
 
@@ -155,7 +141,7 @@ The flattened length is width × height × depth of the last maps: in Fig 1, $4 
 
 ## 6. Batch normalization
 
-**The problem.** During training every layer's weights keep changing, so the inputs reaching later layers keep changing their range. Each layer must keep re-adjusting; training is slow and unstable. **Batch normalization (BN)** normalizes each layer's inputs to improve stability and speed up training (Slide 18).
+**The problem.** During training every layer's weights keep changing, so the inputs reaching later layers keep changing their range. Each layer must keep re-adjusting; training is slow and unstable. **Batch normalization (BN)**, the slides' second regularization technique after dropout, normalizes each layer's inputs to improve stability and speed up training (Slide 18).
 
 **Why BN helps (Slides 18–19).**
 
@@ -183,7 +169,7 @@ Subtract the mean, divide by the spread; the values then have mean 0 and varianc
 y_i = \gamma \hat{x}_i + \beta
 ```
 
-3. **At inference** the mean and variance come from **running averages**, not batch statistics.
+3. **At inference:** running averages, not batch statistics (below).
 
 ![Fig 5 – The normalization step of batch normalization (media/image5.png)](extracted_ML_Lec_13_CNN/media/image5.png)
 
@@ -284,44 +270,23 @@ All match the slides. Notice where the weights are: both conv layers together ha
 
 All match Slide 36, which uses Indian commas (6,23,78,344 = 62,378,344). Pooling, input and output rows have 0. FC-1 assumes a 6×6×256 input (9216 values).
 
-**Step 2: sizes from a 224 input.**
+**Step 2: sizes from a 224 input (as the slide says) and from a 227 input (as in Lecture 12).**
 
-| Layer | Calculation | Correct | Slide 36 says |
+| Layer | From 224 | Slide 36 says | From 227 (no rounding needed) |
 | :--- | :--- | :--- | :--- |
-| Conv-1 | $(224 - 11)/4 + 1 = 54.25$ → 54 | 54×54×96 | 54×54×96 |
-| MaxPool-1 | $(54 - 3)/2 + 1 = 26.5$ → 26 | 26×26×96 | 26×26×96 |
-| Conv-2 | $(26 - 5 + 4)/1 + 1 = 26$ | 26×26×256 | 26×26×256 |
-| MaxPool-2 | $(26 - 3)/2 + 1 = 12.5$ → 12 | 12×12×256 | **13**×13×256 |
-| Conv-3, 4, 5 | $(12 - 3 + 2)/1 + 1 = 12$ | 12×12×(384, 384, 256) | **13**×13 |
-| MaxPool-3 | $(12 - 3)/2 + 1 = 5.5$ → 5 | 5×5×256 | **6**×6×256 |
+| Conv-1 | $(224 - 11)/4 + 1 = 54.25$ → 54×54×96 | 54×54×96 | $(227 - 11)/4 + 1 = 55$ → 55×55×96 |
+| MaxPool-1 | $(54 - 3)/2 + 1 = 26.5$ → 26×26×96 | 26×26×96 | $(55 - 3)/2 + 1 = 27$ → 27×27×96 |
+| Conv-2 | $(26 - 5 + 4)/1 + 1 = 26$ → 26×26×256 | 26×26×256 | $(27 - 5 + 4)/1 + 1 = 27$ → 27×27×256 |
+| MaxPool-2 | $(26 - 3)/2 + 1 = 12.5$ → 12×12×256 | **13**×13×256 | $(27 - 3)/2 + 1 = 13$ → 13×13×256 |
+| Conv-3, 4, 5 | $(12 - 3 + 2)/1 + 1 = 12$ → 12×12×(384, 384, 256) | **13**×13 | $(13 - 3 + 2)/1 + 1 = 13$ → 13×13×(384, 384, 256) |
+| MaxPool-3 | $(12 - 3)/2 + 1 = 5.5$ → 5×5×256 | **6**×6×256 | $(13 - 3)/2 + 1 = 6$ → 6×6×256 |
 
 > ✏️ **The mistakes (Slide 36).** With a 224 input, the five sizes from MaxPool-2 to MaxPool-3 are wrong: 13 and 6 cannot follow from 26. FC-1's input is then $5 \times 5 \times 256 = 6400$, so FC-1 has $(6400 + 1) \times 4096 = 26{,}218{,}496$ parameters and the total becomes $62{,}378{,}344 - 37{,}752{,}832 + 26{,}218{,}496 = 50{,}844{,}008$.
 
-**Step 3: the other correction, a 227 input** (as in Lecture 12). No division needs rounding:
-
-| Layer | Calculation | Size |
-| :--- | :--- | :--- |
-| Conv-1 | $(227 - 11)/4 + 1 = 55$ | 55×55×96 |
-| MaxPool-1 | $(55 - 3)/2 + 1 = 27$ | 27×27×96 |
-| Conv-2 | $(27 - 5 + 4)/1 + 1 = 27$ | 27×27×256 |
-| MaxPool-2 | $(27 - 3)/2 + 1 = 13$ | 13×13×256 |
-| Conv-3, 4, 5 | $(13 - 3 + 2)/1 + 1 = 13$ | 13×13×384, 13×13×384, 13×13×256 |
-| MaxPool-3 | $(13 - 3)/2 + 1 = 6$ | 6×6×256 |
-
-These are exactly Slide 32's sizes, and they give the 6×6×256 that Slide 36's FC-1 count uses.
+The 227 column is exactly Slide 32's sizes, and it gives the 6×6×256 that Slide 36's FC-1 count uses (total 62,378,344). **Summary:** Slide 36's header says 224, but its sizes 13 and 6 need 227; it mixes the two.
 
 ![Slide 36: input 224 vs 227](figures/cnn/l13_07_slide36_paths.jpg)
 *Figure: From 224 the formula gives 12 after the second pool, not 13; from 227 it gives 13 and matches the table (illustration).*
-
-![AlexNet feature-map sizes](figures/cnn/l13_06_alexnet.jpg)
-*Figure: The sizes for a 227 input, from 227×227×3 down to the 1000 outputs (illustration).*
-
-**Summary.** Slide 36's header says 224, but its sizes 13 and 6 need 227; it mixes the two.
-
-| Input | Sizes (Conv-1 … MaxPool-3) | FC-1 parameters | Total |
-| :--- | :--- | ---: | ---: |
-| 224 | 54, 26, 26, 12, 12, 12, 12, 5 | 26,218,496 | 50,844,008 |
-| 227 | 55, 27, 27, 13, 13, 13, 13, 6 | 37,752,832 | 62,378,344 |
 
 Either way the FC layers hold most of the weights: with 227, $37{,}752{,}832 + 16{,}781{,}312 + 4{,}097{,}000 = 58{,}631{,}144$ of 62,378,344; the five conv layers hold only 3,747,200.
 
