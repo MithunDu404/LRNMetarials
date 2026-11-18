@@ -6,6 +6,23 @@ Companion to [activation_crossentropy_backprop_visual_guide.md](../../activation
 **Tags:** 🎯 real paper (year, question); ✍️ practice to cover the deck; 📘 beyond the slides. 💡 = memory hook.
 This deck is mid-sem material that is also in the end-sem syllabus.
 
+**Symbol key** (this file uses these simple symbols; the last column shows the slides' symbol, so you can recognise it in a question):
+
+| Symbol | Meaning | On the slides |
+| :--- | :--- | :--- |
+| $x$ | input | $X_i$ |
+| $w$ | weight | $W$ |
+| $z$ | weighted sum: $z = w \cdot x$ | $\theta$ |
+| $a$ | sigmoid output: $a = \sigma(z)$ | $\hat{y}$, $o$ |
+| $y$ | target (1 for the true class, else 0) | $y$, $t$ |
+| $C$ | cross-entropy loss | $C$ |
+| $d$ | delta | $\delta$ |
+| $\eta$ | learning rate | $\eta$ |
+| $a2_j$, $z2_j$ | output, weighted sum of neuron $j$ in output layer 2 | $o_j^K$, $\theta_j^K$ |
+| $a1_i$ | output of neuron $i$ in layer 1 | $o_i^{K-1}$ |
+| $W2_{ij}$ | weight from neuron $i$ (layer 1) to neuron $j$ (layer 2) | $W_{ij}^K$ |
+| $n$ | number of output neurons (classes) | $M_K$ |
+
 | Topic in the guide | Question |
 | :--- | :--- |
 | Why squared error learns slowly (§7) | A1, B1(b) |
@@ -20,9 +37,9 @@ This deck is mid-sem material that is also in the end-sem syllabus.
 
 ### A1. Why does squared error make a sigmoid network learn slowly? ✍️ [2]
 
-With squared error, the output delta is $\delta = (o - t)\,o(1 - o)$. When the sigmoid output is near 0 or 1, the factor $o(1 - o)$ is near 0, so the update almost vanishes **even when the network is completely wrong**.
+With squared error, the output delta is $d = (a - y)\,a(1 - a)$. When the sigmoid output is near 0 or 1, the factor $a(1 - a)$ is near 0, so the update almost vanishes **even when the network is completely wrong**.
 
-| Output $o$ (target 0) | $(o - t)$ | $o(1 - o)$ | $\delta$ |
+| Output $a$ (target 0) | $(a - y)$ | $a(1 - a)$ | $d$ |
 | :---: | :---: | :---: | :---: |
 | 0.5 | 0.5 | 0.25 | 0.125 |
 | 0.99 | 0.99 | 0.0099 | 0.0098 |
@@ -39,10 +56,10 @@ Cross-entropy treats the outputs as a **probability distribution** over the clas
 
 ### A3. Apply softmax to the scores [2.0, 1.0, 0.1]. ✍️ [2]
 
-$$o_j = \frac{e^{\theta_j}}{\sum_k e^{\theta_k}}$$
+$$a_j = \frac{e^{z_j}}{\sum_k e^{z_k}}$$
 
-- $e^{\theta} = [7.389,\ 2.718,\ 1.105]$, sum = 11.213
-- $o = [0.659,\ 0.242,\ 0.099]$, which sums to 1
+- $e^{z} = [7.389,\ 2.718,\ 1.105]$, sum = 11.213
+- $a = [0.659,\ 0.242,\ 0.099]$, which sums to 1
 
 Class 1 is predicted, with probability 0.659. Exponentiating makes all values positive and exaggerates gaps (a score difference of 1 becomes a ratio of $e \approx 2.72$).
 
@@ -50,12 +67,12 @@ Class 1 is predicted, with probability 0.659. Exponentiating makes all values po
 
 ### A4. What does the cross-entropy weight update do when a sample is misclassified? ✍️ [2]
 
-$$W \leftarrow W - \eta\,\frac{1}{N}\sum_{X_i} X_i(\hat{y} - y)$$
+$$w \leftarrow w - \eta\,\frac{1}{N}\sum (a - y)\,x$$
 
-- Class 1 misclassified ($\hat{y}$ near 0): $(\hat{y} - y) < 0$, so the weight **increases**.
-- Class 0 misclassified ($\hat{y}$ near 1): $(\hat{y} - y) > 0$, so the weight **decreases**.
+- Class 1 misclassified ($a$ near 0): $(a - y) < 0$, so the weight **increases**.
+- Class 0 misclassified ($a$ near 1): $(a - y) > 0$, so the weight **decreases**.
 
-The step is proportional to the error $(\hat{y} - y)$: **the bigger the mistake, the bigger the correction**.
+The step is proportional to the error $(a - y)$: **the bigger the mistake, the bigger the correction**.
 
 > 💡 Cross-entropy: rate of learning ∝ error.
 
@@ -70,36 +87,36 @@ The step is proportional to the error $(\hat{y} - y)$: **the bigger the mistake,
 
 **(a) Answer.**
 
-A single sigmoid neuron: $\hat{y} = \sigma(\theta)$, $\theta = W^TX_i$, classes $y \in \{0, 1\}$.
+A single sigmoid neuron: $z = w \cdot x$, $a = \sigma(z)$, classes $y \in \{0, 1\}$, and $N$ samples.
 
-1. **Likelihood:** $\hat{y}$ is the likelihood that $X_i$ is in class 1, and $1 - \hat{y}$ that it is in class 0.
-2. **One formula for both cases:** $L = \hat{y}^{\,y}(1 - \hat{y})^{\,1-y}$. If $y = 1$ it gives $\hat{y}$; if $y = 0$ it gives $1 - \hat{y}$.
-3. **Log-likelihood** (product → sum): $\log L = y\log\hat{y} + (1 - y)\log(1 - \hat{y})$.
+1. **Likelihood:** $a$ is the likelihood that $x$ is in class 1, and $1 - a$ that it is in class 0.
+2. **One formula for both cases:** $L = a^{\,y}(1 - a)^{\,1-y}$. If $y = 1$ it gives $a$; if $y = 0$ it gives $1 - a$.
+3. **Log-likelihood** (product → sum): $\log L = y\log a + (1 - y)\log(1 - a)$.
 4. **Average and negate** (we maximise likelihood, but minimise loss):
 
-$$C = -\frac{1}{N}\sum_{X_i}\big[y\log\hat{y} + (1 - y)\log(1 - \hat{y})\big]$$
+$$C = -\frac{1}{N}\sum\big[y\log a + (1 - y)\log(1 - a)\big]$$
 
 This is the **binary cross-entropy** loss.
 
 **Gradient** by the chain rule:
 
-$$\frac{\partial C}{\partial\hat{y}} = -\frac{1}{N}\sum\left(\frac{y}{\hat{y}} - \frac{1 - y}{1 - \hat{y}}\right) = -\frac{1}{N}\sum\frac{y - \hat{y}}{\hat{y}(1 - \hat{y})}, \qquad \frac{\partial\hat{y}}{\partial\theta} = \hat{y}(1 - \hat{y}), \qquad \frac{\partial\theta}{\partial W} = X_i$$
+$$\frac{\partial C}{\partial a} = -\frac{1}{N}\sum\left(\frac{y}{a} - \frac{1 - y}{1 - a}\right) = -\frac{1}{N}\sum\frac{y - a}{a(1 - a)}, \qquad \frac{\partial a}{\partial z} = a(1 - a), \qquad \frac{\partial z}{\partial w} = x$$
 
-The $\hat{y}(1 - \hat{y})$ in the denominator **cancels** the sigmoid's slope:
+The $a(1 - a)$ in the denominator **cancels** the sigmoid's slope:
 
-$$\frac{\partial C}{\partial W} = \frac{1}{N}\sum_{X_i}X_i(\hat{y} - y), \qquad W \leftarrow W - \eta\,\frac{1}{N}\sum_{X_i}X_i(\hat{y} - y)$$
+$$\frac{\partial C}{\partial w} = \frac{1}{N}\sum (a - y)\,x, \qquad w \leftarrow w - \eta\,\frac{1}{N}\sum (a - y)\,x$$
 
 **(b) Answer.**
 
-| Loss | Output delta | When very wrong |
+| Loss | Output delta $d$ | When very wrong |
 | :--- | :--- | :--- |
-| Squared error | $(\hat{y} - y)\,\hat{y}(1 - \hat{y})$ | $\hat{y}(1 - \hat{y}) \approx 0$ → learning stalls |
-| Cross-entropy | $(\hat{y} - y)$ | large → learns fast |
+| Squared error | $(a - y)\,a(1 - a)$ | $a(1 - a) \approx 0$ → learning stalls |
+| Cross-entropy | $(a - y)$ | large → learns fast |
 
-*Example:* $y = 1$ but $\hat{y} = 0.1$.
+*Example:* $y = 1$ but $a = 0.1$.
 
-- Squared error: $\delta = (0.1 - 1)(0.1)(0.9) = -0.081$.
-- Cross-entropy: $\delta = 0.1 - 1 = -0.9$, about **11× larger**.
+- Squared error: $d = (0.1 - 1)(0.1)(0.9) = -0.081$.
+- Cross-entropy: $d = 0.1 - 1 = -0.9$, about **11× larger**.
 
 Reasons it is preferred:
 
@@ -121,14 +138,14 @@ In a test with the same bad start, cross-entropy reached 96% accuracy while squa
 
 **(a) Answer.**
 
-$$o_j = \frac{e^{\theta_j}}{\sum_{k=1}^{M_K}e^{\theta_k}}, \quad j = 1, \dots, M_K$$
+$$a_j = \frac{e^{z_j}}{\sum_{k=1}^{n}e^{z_k}}, \quad j = 1, \dots, n$$
 
 **Working:**
 
 1. **Exponentiate** each score: all values become positive, and larger scores are exaggerated.
 2. **Divide by the total:** the outputs sum to exactly 1.
 
-So $o_j$ is read as $P(X \in \text{class } j)$, and the class with the largest $o_j$ is predicted. *E.g.* [2.0, 1.0, 0.1] → [0.659, 0.242, 0.099].
+So $a_j$ is read as $P(x \in \text{class } j)$, and the class with the largest $a_j$ is predicted. *E.g.* [2.0, 1.0, 0.1] → [0.659, 0.242, 0.099].
 
 ![Softmax step by step](../../lec_guide_images/l08_softmax_step_by_step.png)
 
@@ -136,20 +153,20 @@ So $o_j$ is read as $P(X \in \text{class } j)$, and the class with the largest $
 
 **(b) Answer.**
 
-Target $t_j = 1$ for the true class, 0 otherwise.
+Target $y_j = 1$ for the true class, 0 otherwise. Layer 2 is the output layer and layer 1 the layer before it.
 
-For one output node $j$: $-\big[t_j\log o_j^K + (1 - t_j)\log(1 - o_j^K)\big]$.
+For one output node $j$: $-\big[y_j\log a2_j + (1 - y_j)\log(1 - a2_j)\big]$.
 
-Over all $M_K$ nodes and all $N$ samples:
+Over all $n$ nodes and all $N$ samples:
 
-$$C = -\frac{1}{N}\sum_X\sum_{j=1}^{M_K}\big[t_j\log o_j^K + (1 - t_j)\log(1 - o_j^K)\big]$$
+$$C = -\frac{1}{N}\sum\sum_{j=1}^{n}\big[y_j\log a2_j + (1 - y_j)\log(1 - a2_j)\big]$$
 
-With $o_j^K = \sigma(\theta_j^K)$ and $\theta_j^K = \sum_i W_{ij}^K o_i^{K-1}$, the chain rule gives:
+With $a2_j = \sigma(z2_j)$ and $z2_j = \sum_i W2_{ij}\,a1_i$, the chain rule gives:
 
-$$\frac{\partial C}{\partial W_{ij}^K} = -\frac{1}{N}\sum_X\left(\frac{t_j}{o_j^K} - \frac{1 - t_j}{1 - o_j^K}\right)o_j^K(1 - o_j^K)\,o_i^{K-1} = \frac{1}{N}\sum_X(o_j^K - t_j)\,o_i^{K-1}$$
+$$\frac{\partial C}{\partial W2_{ij}} = -\frac{1}{N}\sum\left(\frac{y_j}{a2_j} - \frac{1 - y_j}{1 - a2_j}\right)a2_j(1 - a2_j)\,a1_i = \frac{1}{N}\sum(a2_j - y_j)\,a1_i$$
 
-$$\boxed{W_{ij}^K \leftarrow W_{ij}^K - \eta\,\frac{1}{N}\sum_X(o_j^K - t_j)\,o_i^{K-1}}$$
+$$\boxed{W2_{ij} \leftarrow W2_{ij} - \eta\,\frac{1}{N}\sum(a2_j - y_j)\,a1_i}$$
 
-Compared with squared error ($\delta_j = (o_j - t_j)o_j(1 - o_j)$), the delta is simply $\delta_j = o_j - t_j$: **bigger error, bigger step**. (📘 With true softmax outputs and the categorical loss $-\sum_j t_j\log o_j$, the delta is also exactly $o_j - t_j$.)
+Compared with squared error ($d_j = (a_j - y_j)\,a_j(1 - a_j)$), the delta is simply $d_j = a_j - y_j$: **bigger error, bigger step**. (📘 With true softmax outputs and the categorical loss $-\sum_j y_j\log a_j$, the delta is also exactly $a_j - y_j$.)
 
-> 💡 Every cross-entropy delta is just output − target.
+> 💡 Every cross-entropy $d$ is just output − target.

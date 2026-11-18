@@ -6,6 +6,20 @@ Companion to [activation_crossentropy_backprop_visual_guide.md](../../activation
 **Tags:** 🎯 real paper (year, question); ✍️ practice to cover the deck; 📘 beyond the slides. 💡 = memory hook.
 This deck is mid-sem material that is also in the end-sem syllabus. No past paper has asked this exact example, but backpropagation numericals are standard; the derivation is in [Neural Network 3 Q&A, B2](Neural_Network_3_QA.md).
 
+**Symbol key** (this file uses these simple symbols; the last column shows the slides' symbol, so you can recognise it in a question):
+
+| Symbol | Meaning | On the slides |
+| :--- | :--- | :--- |
+| $a0$ | input layer values, bias entry 1 first | $O^0$ |
+| $z1$, $z2$ | weighted sums entering layers 1, 2 | $\theta^1$, $\theta^2$ |
+| $a1$, $a2$ | outputs of layers 1, 2 | $O^1$, $O^2$ |
+| $W1$, $W2$ | weights into layers 1, 2 | $W^1$, $W^2$ |
+| $y$ | targets | $t$ |
+| $d1$, $d2$ | deltas of layers 1, 2 | $\delta^1$, $\delta^2$ |
+| $\eta$ | learning rate | $\eta$ |
+
+Subscripts pick a neuron: $a2_1$ is output neuron 1, $d1_2$ is hidden neuron 2. Index 0 is the bias entry. $W2_{ij}$ is the weight from hidden neuron $i$ to output neuron $j$ (row $j$, column $i$).
+
 | Topic in the guide | Question |
 | :--- | :--- |
 | Hidden layers and the latent space (§10) | A1 |
@@ -34,13 +48,13 @@ Real data is usually **not linearly separable**. The hidden layers apply non-lin
 - **Layers 1 to K−1:** the $K - 1$ hidden layers.
 - **Layer K:** output layer, with **one neuron per class**.
 
-*E.g.* the Lecture 11 example has $K = 2$: one hidden layer and 2 output neurons for a 2-class problem; for $X$ in class 1 the targets are [1, 0].
+*E.g.* the Lecture 11 example has $K = 2$: one hidden layer and 2 output neurons for a 2-class problem; for $x$ in class 1 the targets are $y = [1, 0]$.
 
 > 💡 K layers after the input = K − 1 hidden + 1 output.
 
-### A3. In the Lecture 11 example, output node 2 is badly wrong (0.956 instead of 0) but its delta is only 0.0399. Why? ✍️ [2]
+### A3. In the Lecture 11 example, output node 2 is badly wrong (0.956 instead of 0) but its delta $d$ is only 0.0399. Why? ✍️ [2]
 
-With squared error and a sigmoid, $\delta_2 = (o_2 - t_2)\,o_2(1 - o_2) = 0.956 \times 0.956 \times 0.044 = 0.0399$. The sigmoid slope $o(1 - o) = 0.042$ is tiny because the output is saturated near 1, so it shrinks the correction. With cross-entropy the delta would be $o_2 - t_2 = 0.956$, and node 2 drops to about 0.048 within 20 iterations (squared error needs about 50 to reach 0.19).
+With squared error and a sigmoid, $d2_2 = (a2_2 - y_2)\,a2_2(1 - a2_2) = 0.956 \times 0.956 \times 0.044 = 0.0399$. The sigmoid slope $a(1 - a) = 0.042$ is tiny because the output is saturated near 1, so it shrinks the correction. With cross-entropy the delta would be $a2_2 - y_2 = 0.956$, and node 2 drops to about 0.048 within 20 iterations (squared error needs about 50 to reach 0.19).
 
 > 💡 Saturated sigmoid hides a big error.
 
@@ -58,58 +72,58 @@ With squared error and a sigmoid, $\delta_2 = (o_2 - t_2)\,o_2(1 - o_2) = 0.956 
 
 ### B1. ✍️ (numerical, Lecture 11 example)
 
-A network with one hidden layer of 2 neurons and 2 output neurons uses sigmoid activations and squared error, $\eta = 0.5$. Input $X = [0.7, 1.2]$ is in **class 1**, so the targets are $t = [1, 0]$. The first column of each weight matrix is the bias:
+A network with one hidden layer of 2 neurons and 2 output neurons uses sigmoid activations and squared error, $\eta = 0.5$. Input $x = [0.7, 1.2]$ is in **class 1**, so the targets are $y = [1, 0]$. The first column of each weight matrix is the bias:
 
-$$W^1 = \begin{bmatrix} 0.5 & 1.5 & 0.8 \\ 0.8 & 0.2 & -1.6 \end{bmatrix}, \qquad W^2 = \begin{bmatrix} 0.9 & -1.7 & 1.6 \\ 1.2 & 2.1 & -0.2 \end{bmatrix}$$
+$$W1 = \begin{bmatrix} 0.5 & 1.5 & 0.8 \\ 0.8 & 0.2 & -1.6 \end{bmatrix}, \qquad W2 = \begin{bmatrix} 0.9 & -1.7 & 1.6 \\ 1.2 & 2.1 & -0.2 \end{bmatrix}$$
 
-**(a)** Do one feed-forward pass. Is $X$ classified correctly? Compute the error. **[4]**
+**(a)** Do one feed-forward pass. Is $x$ classified correctly? Compute the error. **[4]**
 **(b)** Update the output-layer and hidden-layer weights by backpropagation. **[6]**
 
 **(a) Answer.**
 
 ![Example network](../../lec_guide_images/l10_example_network_forward_pass.png)
 
-With $O^0 = [1, 0.7, 1.2]^T$ (bias first):
+With $a0 = [1, 0.7, 1.2]$ (bias entry first):
 
-$$\theta^1 = W^1O^0 = [0.5 + 1.05 + 0.96,\ \ 0.8 + 0.14 - 1.92] = [2.51,\ -0.98]$$
-$$O^1 = [1,\ \sigma(2.51),\ \sigma(-0.98)] = [1,\ 0.925,\ 0.273]$$
+$$z1 = W1 \cdot a0 = [0.5 + 1.05 + 0.96,\ \ 0.8 + 0.14 - 1.92] = [2.51,\ -0.98]$$
+$$a1 = [1,\ \sigma(2.51),\ \sigma(-0.98)] = [1,\ 0.925,\ 0.273]$$
 
 (✏️ the slide prints −9.8; it is a typo for −0.98.)
 
-$$\theta^2 = W^2O^1 = [0.9 - 1.7(0.925) + 1.6(0.273),\ \ 1.2 + 2.1(0.925) - 0.2(0.273)] = [-0.236,\ 3.088]$$
-$$O^2 = [0.441,\ 0.956]$$
+$$z2 = W2 \cdot a1 = [0.9 - 1.7(0.925) + 1.6(0.273),\ \ 1.2 + 2.1(0.925) - 0.2(0.273)] = [-0.236,\ 3.088]$$
+$$a2 = [0.441,\ 0.956]$$
 
-The actual output should be [1, 0], but node 2 (0.956) beats node 1 (0.441): **$X$ is misclassified**.
+The actual output should be [1, 0], but node 2 (0.956) beats node 1 (0.441): **$x$ is misclassified**.
 
 $$E = \tfrac{1}{2}\big[(0.441 - 1)^2 + (0.956 - 0)^2\big] = 0.613$$
 
 **(b) Answer.**
 
-**Output layer** ($W^2 \leftarrow W^2 - \eta\,\delta^2(O^1)^T$, $\delta_j^2 = (o_j - t_j)o_j(1 - o_j)$):
+**Output layer** (row $j$ of $W2$: new row = old row $- \eta\,d2_j \cdot a1$, with $d2_j = (a2_j - y_j)\,a2_j(1 - a2_j)$):
 
-$$\delta^2 = [(0.441 - 1)(0.441)(0.559),\ \ (0.956)(0.956)(0.044)] = [-0.1377,\ 0.0399]$$
+$$d2 = [(0.441 - 1)(0.441)(0.559),\ \ (0.956)(0.956)(0.044)] = [-0.1377,\ 0.0399]$$
 
-$$W^2_{new} = W^2 - 0.5\begin{bmatrix} -0.1377 & -0.1274 & -0.0376 \\ 0.0399 & 0.0369 & 0.0109 \end{bmatrix} = \begin{bmatrix} 0.9689 & -1.6363 & 1.6188 \\ 1.1801 & 2.0815 & -0.2054 \end{bmatrix}$$
+$$W2_{new} = W2 - 0.5\begin{bmatrix} -0.1377 & -0.1274 & -0.0376 \\ 0.0399 & 0.0369 & 0.0109 \end{bmatrix} = \begin{bmatrix} 0.9689 & -1.6363 & 1.6188 \\ 1.1801 & 2.0815 & -0.2054 \end{bmatrix}$$
 
-**Hidden layer** (use the **old** $W^2$; skip the bias unit, which has no incoming weights):
+**Hidden layer** (use the **old** $W2$; skip the bias entry, which has no incoming weights):
 
-$$\delta_i^1 = o_i^1(1 - o_i^1)\sum_j\delta_j^2W_{ij}^2$$
+$$d1_i = a1_i(1 - a1_i)\sum_j d2_j\,W2_{ij}$$
 
-$$\delta_2^1 = 0.925(0.075)\big[(-0.1377)(-1.7) + (0.0399)(2.1)\big] = 0.0695 \times 0.3179 = 0.0221$$
-$$\delta_3^1 = 0.273(0.727)\big[(-0.1377)(1.6) + (0.0399)(-0.2)\big] = 0.1984 \times (-0.2283) = -0.0453$$
+$$d1_1 = 0.925(0.075)\big[(-0.1377)(-1.7) + (0.0399)(2.1)\big] = 0.0695 \times 0.3179 = 0.0221$$
+$$d1_2 = 0.273(0.727)\big[(-0.1377)(1.6) + (0.0399)(-0.2)\big] = 0.1984 \times (-0.2283) = -0.0453$$
 
-$$W^1_{new} = W^1 - 0.5\,\delta^1(O^0)^T = \begin{bmatrix} 0.4889 & 1.4923 & 0.7867 \\ 0.8227 & 0.2159 & -1.5728 \end{bmatrix}$$
+$$W1_{new} = W1 - 0.5\,(d1 \text{ of each row}) \times a0 = \begin{bmatrix} 0.4889 & 1.4923 & 0.7867 \\ 0.8227 & 0.2159 & -1.5728 \end{bmatrix}$$
 
-**One iteration is complete;** the error falls from 0.613 to 0.590. Repeating on the same $X$:
+**One iteration is complete;** the error falls from 0.613 to 0.590. Repeating on the same $x$:
 
 | Iteration | 0 | 20 | 50 | 300 |
 | :--- | :---: | :---: | :---: | :---: |
-| $O^2$ | [0.441, 0.956] | [0.823, 0.838] | [0.919, 0.191] | [0.966, 0.041] |
+| $a2$ | [0.441, 0.956] | [0.823, 0.838] | [0.919, 0.191] | [0.966, 0.041] |
 | $E$ | 0.613 | 0.367 | 0.021 | 0.001 |
 
 Training continues until node 1 is close to 1 and node 2 close to 0.
 
-> 💡 Forward, deltas from the old weights, then update both layers.
+> 💡 Forward, $d$ from the old weights, then update both layers.
 
 ### B2. ✍️
 

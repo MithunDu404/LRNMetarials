@@ -6,6 +6,21 @@ Companion to [neural_networks_visual_guide.md](../../neural_networks_visual_guid
 **Tags:** 🎯 real paper (year, question); ✍️ practice to cover the deck; 📘 beyond the slides. 💡 = memory hook.
 This deck is mid-sem material that is also in the end-sem syllabus. "2026 Mid" = this year's mid-sem paper.
 
+**Symbol key** (this file uses these simple symbols; the last column shows the slides' symbol, so you can recognise it in a question):
+
+| Symbol | Meaning | On the slides |
+| :--- | :--- | :--- |
+| $x$ | input | $X$ |
+| $w$, $b$ | weight, bias | $W$, $b$ |
+| $a$ | neuron's output (prediction) | $\hat{y}$ |
+| $y$ | true target | $y$ |
+| $E$ | squared error | $E$ |
+| $g$ | gradient: the slopes $\partial E/\partial w$ | $\nabla E$ |
+| $\eta$ | learning rate | $\eta$ |
+| $k$ | Leaky ReLU's small slope | $a$ |
+| $m$, $s^2$ | batch mean, batch variance | $\mu_B$, $\sigma_B^2$ |
+| $c$, $h$ | batch norm's learned scale, shift | $\gamma$, $\beta$ |
+
 | Topic in the guide | Question |
 | :--- | :--- |
 | Gradient descent, hiker picture, delta rule (§9) | A1, B1(a) |
@@ -22,9 +37,9 @@ This deck is mid-sem material that is also in the end-sem syllabus. "2026 Mid" =
 
 ### A1. What is gradient descent? Write its update rule. ✍️ [2]
 
-Gradient descent is an iterative optimisation method that minimises the cost function $E(\mathbf{w})$ by moving the parameters a small step **opposite to the gradient** (the direction of steepest decrease):
+Gradient descent is an iterative optimisation method that minimises the cost function $E(w)$ by moving the parameters a small step **opposite to the gradient** $g$ (the direction of steepest decrease):
 
-$$\mathbf{w} \leftarrow \mathbf{w} - \eta\,\nabla E(\mathbf{w})$$
+$$w \leftarrow w - \eta\,g, \qquad g = \frac{\partial E}{\partial w}$$
 
 If the slope is positive, $w$ decreases; if negative, $w$ increases; at the minimum the slope is 0 and it stops (convergence). Steps are long where the slope is steep and shrink automatically near the bottom.
 
@@ -54,7 +69,7 @@ In high-dimensional networks, saddle points are far more common than local minim
 
 ### A4. Explain the working principle of batch normalization and its advantages. 🎯 2025 Mid Q4(c) [2]
 
-For each mini-batch, normalise each layer's input to mean 0 and variance 1, then scale and shift with learnable $\gamma, \beta$: $\hat{x} = \frac{x - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}$, $y = \gamma\hat{x} + \beta$. It is placed **Linear $(WX + b)$ → BatchNorm → Activation**.
+For each mini-batch, normalise each layer's input to mean 0 and variance 1, then scale and shift with learnable $c, h$: $x' = \dfrac{x - m}{\sqrt{s^2 + \epsilon}}$, output $= c\,x' + h$ ($\epsilon$ is a tiny number that avoids division by 0). It is placed **Linear $(wx + b)$ → BatchNorm → Activation**.
 
 Advantages: keeps activations out of the saturated regions, so it reduces **vanishing and exploding gradients**; allows higher learning rates and faster training; has a mild regularising effect. (Full numerical: [Lecture 13 Q&A, B2](../ML_post_midsem_parts_in_endsem/ML_Lec_13_CNN_QA.md).)
 
@@ -64,15 +79,15 @@ Advantages: keeps activations out of the saturated regions, so it reduces **vani
 
 In backpropagation the gradient of an early layer is a **product** of activation derivatives across all later layers. Sigmoid's slope is at most 0.25 (tanh's at most 1, and near 0 when saturated), so the product shrinks towards 0 and early layers stop learning.
 
-**ReLU** has slope exactly **1** for positive inputs, so the product does not shrink. **Leaky ReLU** also has a small slope $a$ (e.g. 0.01) for negative inputs, so the gradient is never exactly 0 and neurons cannot "die".
+**ReLU** has slope exactly **1** for positive inputs, so the product does not shrink. **Leaky ReLU** also has a small slope $k$ (e.g. 0.01) for negative inputs, so the gradient is never exactly 0 and neurons cannot "die".
 
 > 💡 0.25 × 0.25 × … → 0; 1 × 1 × … stays 1.
 
-### A6. What is gradient clipping? Clip $\mathbf{g} = (3, 4)$ to a maximum norm of 1. ✍️ [2]
+### A6. What is gradient clipping? Clip $g = (3, 4)$ to a maximum norm of 1. ✍️ [2]
 
-If the gradient's length exceeds a threshold, rescale it: $\mathbf{g} \leftarrow \mathbf{g}\cdot\dfrac{\text{threshold}}{\lVert\mathbf{g}\rVert}$. Same direction, smaller step. It is the main fix for **exploding** gradients.
+If the gradient's length exceeds a threshold, rescale it: $g \leftarrow g \cdot \dfrac{\text{threshold}}{\lVert g\rVert}$. Same direction, smaller step. It is the main fix for **exploding** gradients.
 
-$\lVert\mathbf{g}\rVert = \sqrt{9 + 16} = 5 > 1$, so $\mathbf{g} \leftarrow (3, 4)/5 = (0.6, 0.8)$.
+$\lVert g\rVert = \sqrt{9 + 16} = 5 > 1$, so $g \leftarrow (3, 4)/5 = (0.6, 0.8)$.
 
 > 💡 Keep the direction, cap the length.
 
@@ -91,24 +106,24 @@ $\lVert\mathbf{g}\rVert = \sqrt{9 + 16} = 5 > 1$, so $\mathbf{g} \leftarrow (3, 
 
 **How it works:**
 
-1. Initialise $\mathbf{w}$ (and $b$) randomly: a random point on the cost surface $E(\mathbf{w}, b)$.
-2. Compute the gradient $\nabla E$ (partial derivatives with respect to each parameter); it points uphill.
-3. Step the other way: $\mathbf{w} \leftarrow \mathbf{w} - \eta\nabla E$.
+1. Initialise $w$ (and $b$) randomly: a random point on the cost surface $E(w, b)$.
+2. Compute the gradient $g$ (partial derivatives with respect to each parameter); it points uphill.
+3. Step the other way: $w \leftarrow w - \eta\,g$.
 4. Repeat until the gradient is about 0 (the point of convergence).
 
 Like a blindfolded hiker going down a valley: long strides where it is steep, short strides near the bottom.
 
-**Derivation.** Linear neuron $\hat{y}_i = \mathbf{W}^TX_i$, $N$ samples:
+**Derivation.** Linear neuron $a_i = w \cdot x_i$, for $N$ samples $i = 1, \dots, N$:
 
-$$E(\mathbf{W}) = \frac{1}{2}\sum_{i=1}^{N}(\hat{y}_i - y_i)^2$$
+$$E = \frac{1}{2}\sum_{i=1}^{N}(a_i - y_i)^2$$
 
-$$\frac{\partial E}{\partial\mathbf{W}} = \sum_{i=1}^{N}(\hat{y}_i - y_i)\frac{\partial\hat{y}_i}{\partial\mathbf{W}} = \sum_{i=1}^{N}(\hat{y}_i - y_i)X_i$$
+$$\frac{\partial E}{\partial w} = \sum_{i=1}^{N}(a_i - y_i)\frac{\partial a_i}{\partial w} = \sum_{i=1}^{N}(a_i - y_i)\,x_i$$
 
-(the $\frac{1}{2}$ cancels the 2 from the square, and $\partial(\mathbf{W}^TX_i)/\partial\mathbf{W} = X_i$)
+(the $\frac{1}{2}$ cancels the 2 from the square, and $\partial(w \cdot x_i)/\partial w = x_i$)
 
-$$\boxed{\mathbf{W} \leftarrow \mathbf{W} - \eta\sum_{i=1}^{N}(\hat{y}_i - y_i)X_i}$$
+$$\boxed{w \leftarrow w - \eta\sum_{i=1}^{N}(a_i - y_i)\,x_i}$$
 
-New weight = old weight − learning rate × (prediction − truth) × input. If $y = 1$ but $\hat{y}$ is low, $(\hat{y} - y) < 0$ and a fraction of $X_i$ is **added**; if $y = 0$ but $\hat{y}$ is high, it is **subtracted**; if correct, almost no change.
+New weight = old weight − learning rate × (prediction − truth) × input. If $y = 1$ but $a$ is low, $(a - y) < 0$ and a fraction of $x$ is **added**; if $y = 0$ but $a$ is high, it is **subtracted**; if correct, almost no change.
 
 **(b) Answer.**
 
@@ -167,7 +182,7 @@ Measured in a 15-layer network:
 | **Batch normalization** | both | keeps each layer's input in a healthy range (Linear → BN → Activation) |
 | **Xavier / He initialisation** | both | signal variance neither grows nor shrinks layer to layer |
 | **Residual (skip) connections** (ResNet) | vanishing | the gradient has a shortcut to early layers |
-| **Gradient clipping** | exploding | rescale $\mathbf{g} \leftarrow \mathbf{g}\cdot\text{threshold}/\lVert\mathbf{g}\rVert$ |
+| **Gradient clipping** | exploding | rescale $g \leftarrow g \cdot \text{threshold}/\lVert g\rVert$ |
 | **L2 regularization** | exploding | penalises the large weights that make factors exceed 1 |
 | **Smaller learning rate** | exploding | limits the size of each weight change |
 | **LSTM / GRU** (📘 Lectures 21–22) | vanishing in RNNs | gated memory path |

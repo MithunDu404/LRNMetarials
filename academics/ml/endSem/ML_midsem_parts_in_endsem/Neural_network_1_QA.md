@@ -6,6 +6,21 @@ Companion to [neural_networks_visual_guide.md](../../neural_networks_visual_guid
 **Tags:** 🎯 real paper (year, question); ✍️ practice to cover the deck; 📘 beyond the slides. 💡 = memory hook.
 This deck is mid-sem material that is also in the end-sem syllabus.
 
+**Symbol key** (this file uses these simple symbols; the last column shows the slides' symbol, so you can recognise it in a question):
+
+| Symbol | Meaning | On the slides |
+| :--- | :--- | :--- |
+| $x$ | input | $x$, $X$ |
+| $w$ | weight | $w$, $W$ |
+| $W1$, $W2$ | weight matrices of layers 1, 2 | $W_1$, $W_2$ |
+| $b$ | bias | $b$, $w_0$ |
+| $z$ | weighted sum: $z = w_1x_1 + w_2x_2 + \dots + b$ | $\sum w_ix_i + b$ |
+| $a$ | activation (the neuron's output): $a = f(z)$ | $y$, $\hat{y}$ |
+| $T$ | firing threshold | $\theta$ |
+| $w \cdot x$ | dot product $w_1x_1 + w_2x_2 + \dots$ | $\mathbf{w}^T\mathbf{x}$ |
+| $\lVert w\rVert$ | length of $w$ | $\lVert\mathbf{w}\rVert$ |
+| $m$ | smallest margin (convergence proof) | $\delta$ |
+
 | Topic in the guide | Question |
 | :--- | :--- |
 | Biological vs artificial neuron (§1) | A1, B1(a) |
@@ -25,36 +40,36 @@ This deck is mid-sem material that is also in the end-sem syllabus.
 
 | Biological | Artificial | Job |
 | :--- | :--- | :--- |
-| Dendrites | inputs $x_i$ | receive signals |
-| Synapses | weights $w_i$ | set the strength of each signal |
-| Soma (cell body) | weighted sum $\sum w_i x_i + b$ | add the inputs up |
+| Dendrites | inputs $x$ | receive signals |
+| Synapses | weights $w$ | set the strength of each signal |
+| Soma (cell body) | weighted sum $z = \sum wx + b$ | add the inputs up |
 | Axon hillock | activation threshold | decide whether to fire |
-| Axon | output $y$ | send the result on |
+| Axon | output $a$ | send the result on |
 | Synaptic plasticity | weight updates | learning |
 
-So $y = f\big(\sum_i w_i x_i + b\big)$.
+So $z = \sum wx + b$ and $a = f(z)$.
 
 > 💡 Dendrites in, synapses weigh, soma sums, hillock decides, axon sends.
 
-### A2. Calculate the output $y$ of a three-input neuron with bias. Inputs $(0.8, 0.6, 0.4)$, weights $[w_1, w_2, w_3, b] = [0.2, 0.1, -0.3, 0.35]$, binary sigmoid activation. 🎯 2023 Mid Q4(a), 2023 End Q4(a) [3]
+### A2. Calculate the output $a$ of a three-input neuron with bias. Inputs $(0.8, 0.6, 0.4)$, weights $[w_1, w_2, w_3, b] = [0.2, 0.1, -0.3, 0.35]$, binary sigmoid activation. 🎯 2023 Mid Q4(a), 2023 End Q4(a) [3]
 
 $$z = 0.2(0.8) + 0.1(0.6) - 0.3(0.4) + 0.35 = 0.16 + 0.06 - 0.12 + 0.35 = 0.45$$
 
-$$y = \sigma(0.45) = \frac{1}{1 + e^{-0.45}} = \frac{1}{1 + 0.6376} = 0.6106$$
+$$a = \sigma(0.45) = \frac{1}{1 + e^{-0.45}} = \frac{1}{1 + 0.6376} = 0.6106$$
 
 > 💡 Weighted sum first, then squash.
 
 ### A3. What is a McCulloch-Pitts neuron? What are its limitations? ✍️ [2]
 
-It takes **binary** inputs, has **no weights**, and fires ($y = 1$) when $\sum x_i \ge \theta$. AND of $n$ inputs uses $\theta = n$; OR uses $\theta = 1$. An **inhibitory** input forces the output to 0 (giving NOT, NOR, $x_1$ AND NOT $x_2$).
+It takes **binary** inputs, has **no weights**, and fires ($a = 1$) when $\sum x \ge T$. AND of $n$ inputs uses $T = n$; OR uses $T = 1$. An **inhibitory** input forces the output to 0 (giving NOT, NOR, $x_1$ AND NOT $x_2$).
 
-Limitations: inputs must be 0/1; every input counts equally; $\theta$ is set by hand (no learning); only **linearly separable** functions can be computed.
+Limitations: inputs must be 0/1; every input counts equally; $T$ is set by hand (no learning); only **linearly separable** functions can be computed.
 
-> 💡 M-P = count the ones and compare with θ; the perceptron adds weights and learning.
+> 💡 M-P = count the ones and compare with $T$; the perceptron adds weights and learning.
 
 ### A4. What is the bias in a perceptron and why is it used? ✍️ [2]
 
-Rewrite $\sum w_i x_i \ge \theta$ as $\sum w_i x_i - \theta \ge 0$, and add a constant input $x_0 = 1$ with weight $w_0 = -\theta$. Then $y = 1 \iff \mathbf{w}^T\mathbf{x} \ge 0$. The bias **shifts the decision boundary** (or the activation function left or right), so the boundary need not pass through the origin, and it is learned like any other weight.
+Rewrite $\sum wx \ge T$ as $\sum wx - T \ge 0$, and set $b = -T$. Then $z = \sum wx + b$ and $a = 1$ when $z \ge 0$. The bias is simply a weight on a constant input of 1. It **shifts the decision boundary** (or the activation function left or right), so the boundary need not pass through the origin, and it is learned like any other weight.
 
 Do not confuse it with **bias vs variance**: high bias = large training error (underfitting); high variance = large validation error (overfitting).
 
@@ -62,16 +77,16 @@ Do not confuse it with **bias vs variance**: high bias = large training error (u
 
 ### A5. Give the weights of a single neuron that implements AND, OR and NAND, and verify AND. ✍️ [2]
 
-With weights $[w_0, w_1, w_2]$ on $[1, x_1, x_2]$ and a step function (1 if sum ≥ 0):
+With weights $[b, w_1, w_2]$ and a step function ($a = 1$ if $z \ge 0$), where $z = b + w_1x_1 + w_2x_2$:
 
 - AND: $[-1.5, 1, 1]$; OR: $[-0.5, 1, 1]$; NAND: $[1.5, -1, -1]$.
-- AND check on (0,0), (0,1), (1,0), (1,1): sums $-1.5, -0.5, -0.5, 0.5$ → outputs $0, 0, 0, 1$ ✓.
+- AND check on (0,0), (0,1), (1,0), (1,1): $z = -1.5, -0.5, -0.5, 0.5$ → $a = 0, 0, 0, 1$ ✓.
 
 > 💡 AND needs both (threshold 1.5); OR needs one (threshold 0.5); NAND is AND with signs flipped.
 
 ### A6. Why must hidden layers use a non-linear activation? ✍️ [2]
 
-Without it, two linear layers collapse into one: $W_2(W_1X) = (W_2W_1)X$, so a deep network could still only draw a straight line. With non-linear activations each layer re-maps its input, $\hat{y} = f^{(K)}(\cdots f^{(2)}(f^{(1)}(X)))$, until the final representation is linearly separable.
+Without it, two linear layers collapse into one: $W2(W1\,x) = (W2\,W1)x$, so a deep network could still only draw a straight line. With non-linear activations each layer re-maps its input, $a = f_3(f_2(f_1(x)))$, until the final representation is linearly separable.
 
 > 💡 Linear on linear is still linear.
 
@@ -97,9 +112,9 @@ Without it, two linear layers collapse into one: $W_2(W_1X) = (W_2W_1)X$, so a d
 
 ![Biological vs artificial neuron](../../nn_guide_images/nn_01_biological_vs_artificial_neuron.png)
 
-$$y = f\Big(\sum_i w_i x_i + b\Big)$$
+$$z = \sum wx + b, \qquad a = f(z)$$
 
-- inputs $x_i$ ↔ dendrites; weights $w_i$ ↔ synapses; weighted sum ↔ soma; activation function $f$ ↔ axon hillock threshold; output $y$ ↔ axon; weight updates ↔ plasticity.
+- inputs $x$ ↔ dendrites; weights $w$ ↔ synapses; weighted sum $z$ ↔ soma; activation function $f$ ↔ axon hillock threshold; output $a$ ↔ axon; weight updates ↔ plasticity.
 - The membrane potential corresponds to the sum before activation.
 - The refractory period has no direct counterpart (roughly like dropout).
 
@@ -109,12 +124,12 @@ $$y = f\Big(\sum_i w_i x_i + b\Big)$$
 
 **Structure:**
 
-- **Layer 0 (input):** passes the features on unchanged ($y = x$); one neuron per feature.
+- **Layer 0 (input):** passes the features on unchanged ($a = x$); one neuron per feature.
 - **Layers 1 to K−1 (hidden):** non-linear activations; at least one hidden layer.
 - **Layer K (output):** one neuron per class.
 - Layers are **fully connected** and information flows **forward only**. Many layers = a **deep** network.
 
-**Working principle:** each layer computes a non-linear function of the previous layer's output: $f_1(X)$, then $f_2(f_1(X))$, and so on. The input is mapped to intermediate feature vectors again and again, until the last representation is **linearly separable**, so the output layer can act as a linear classifier. The weights are learned by backpropagation with gradient descent.
+**Working principle:** each layer computes a non-linear function of the previous layer's output: $f_1(x)$, then $f_2(f_1(x))$, and so on. The input is mapped to intermediate feature vectors again and again, until the last representation is **linearly separable**, so the output layer can act as a linear classifier. The weights are learned by backpropagation with gradient descent.
 
 **Iris example:** 4 features → **10 ReLU** hidden neurons → **3 softmax** outputs (3 species). Features standardised, labels one-hot, 80/20 train/test split, Adam optimiser, categorical cross-entropy loss, 100 epochs, batch size 8. Result: about **96.7%** test accuracy (29 of 30).
 
@@ -127,10 +142,10 @@ $$y = f\Big(\sum_i w_i x_i + b\Big)$$
 
 **(a) Answer.**
 
-AND and OR each need **one neuron** with a step activation and inputs $[1, x_1, x_2]$:
+AND and OR each need **one neuron** with a step activation, with weights $[b, w_1, w_2]$:
 
-- AND: $y = \text{step}(-1.5 + x_1 + x_2)$
-- OR: $y = \text{step}(-0.5 + x_1 + x_2)$
+- AND: $a = \text{step}(-1.5 + x_1 + x_2)$
+- OR: $a = \text{step}(-0.5 + x_1 + x_2)$
 
 ![AND, OR, NAND boundaries](../../nn_guide_images/nn_06_and_or_nand_boundaries.png)
 
@@ -147,9 +162,9 @@ $$[-0.5, 1, 1]X = [-0.5, 0.5, 0.5, 1.5] \to [0, 1, 1, 1]\ \text{(OR)}$$
 
 XOR = AND(OR, NAND):
 
-- hidden neuron $h_1$ = OR: weights $[-0.5, 1, 1]$
-- hidden neuron $h_2$ = NAND: weights $[1.5, -1, -1]$
-- output = AND($h_1, h_2$): weights $[-1.5, 1, 1]$
+- hidden neuron $h_1$ = OR: $[b, w_1, w_2] = [-0.5, 1, 1]$
+- hidden neuron $h_2$ = NAND: $[b, w_1, w_2] = [1.5, -1, -1]$
+- output = AND($h_1, h_2$): $[b, w_1, w_2] = [-1.5, 1, 1]$
 
 | $x_1$ | $x_2$ | $h_1$ (OR) | $h_2$ (NAND) | XOR |
 | :---: | :---: | :---: | :---: | :---: |
@@ -178,7 +193,7 @@ For training instead of hand-set weights: 2 inputs → 2 hidden (sigmoid/ReLU) �
 
 **(a) Answer.**
 
-$P$ = inputs with label 1, $N$ = inputs with label 0 (each with $x_0 = 1$ for the bias).
+$P$ = inputs with label 1, $N$ = inputs with label 0 (each with an extra input of 1 for the bias, so $b$ is part of $w$).
 
 ```text
 initialise w randomly
@@ -188,12 +203,12 @@ while not converged:
     if x in N and w.x >= 0: w = w - x
 ```
 
-It stops when every input is classified correctly. For $m$ output neurons (classes) it is run once per neuron.
+It stops when every input is classified correctly. With several output neurons (classes), it is run once per neuron.
 
-**Why it works:** $\mathbf{w}^T\mathbf{x} = \lVert\mathbf{w}\rVert\lVert\mathbf{x}\rVert\cos\alpha$, so the sign depends on the angle $\alpha$. Positive points need $\alpha < 90°$, negative points $\alpha > 90°$.
+**Why it works:** $w \cdot x = \lVert w\rVert\,\lVert x\rVert\cos\alpha$, so the sign depends on the angle $\alpha$. Positive points need $\alpha < 90°$, negative points $\alpha > 90°$.
 
-- Missed positive: $(\mathbf{w} + \mathbf{x})^T\mathbf{x} = \mathbf{w}^T\mathbf{x} + \lVert\mathbf{x}\rVert^2 > \mathbf{w}^T\mathbf{x}$, so $\cos\alpha$ grows and $\mathbf{w}$ rotates **towards** $\mathbf{x}$.
-- Missed negative: subtracting $\mathbf{x}$ rotates $\mathbf{w}$ **away** from $\mathbf{x}$.
+- Missed positive: $(w + x)\cdot x = w \cdot x + \lVert x\rVert^2 > w \cdot x$, so $\cos\alpha$ grows and $w$ rotates **towards** $x$.
+- Missed negative: subtracting $x$ rotates $w$ **away** from $x$.
 
 ![Perceptron angle geometry](../../nn_guide_images/nn_07_perceptron_angle_geometry.png)
 
@@ -201,25 +216,25 @@ It stops when every input is classified correctly. For $m$ output neurons (class
 
 **Setup:**
 
-1. Replace each negative point by $-\mathbf{x}$; now we need $\mathbf{w}^T\mathbf{p} \ge 0$ for every point $\mathbf{p}$.
-2. Normalise so $\lVert\mathbf{p}\rVert = 1$.
-3. Since the data is separable, a solution $\mathbf{w}^\ast$ exists; take $\lVert\mathbf{w}^\ast\rVert = 1$ and $\delta = \min_{\mathbf{p}} \mathbf{w}^{\ast T}\mathbf{p} > 0$.
-4. Look at $\cos\beta = \dfrac{\mathbf{w}^{\ast T}\mathbf{w}_{t+1}}{\lVert\mathbf{w}_{t+1}\rVert}$ after $k$ corrections.
+1. Replace each negative point by $-x$; call every point $p$. Now we need $w \cdot p \ge 0$ for every $p$.
+2. Normalise so $\lVert p\rVert = 1$.
+3. Since the data is separable, a solution $w^*$ exists; take $\lVert w^*\rVert = 1$ and let $m$ = the smallest value of $w^* \cdot p$, so $m > 0$.
+4. Let $w_t$ be the weights after $t$ corrections. Look at $\cos\beta = \dfrac{w^* \cdot w_{t+1}}{\lVert w_{t+1}\rVert}$ after $k$ corrections.
 
-**Numerator grows at least linearly** (each correction adds $\mathbf{p}_i$):
+**Numerator grows at least linearly** (each correction adds a point $p$):
 
-$$\mathbf{w}^{\ast T}\mathbf{w}_{t+1} = \mathbf{w}^{\ast T}\mathbf{w}_t + \mathbf{w}^{\ast T}\mathbf{p}_i \ge \mathbf{w}^{\ast T}\mathbf{w}_t + \delta \ \Rightarrow\ \ge \mathbf{w}^{\ast T}\mathbf{w}_0 + k\delta$$
+$$w^* \cdot w_{t+1} = w^* \cdot w_t + w^* \cdot p \ge w^* \cdot w_t + m \ \Rightarrow\ w^* \cdot w_k \ge w^* \cdot w_0 + km$$
 
-**Denominator grows at most like a square root** ($\mathbf{w}_t^T\mathbf{p}_i < 0$ because it was a mistake):
+**Denominator grows at most like a square root** ($w_t \cdot p < 0$ because it was a mistake):
 
-$$\lVert\mathbf{w}_{t+1}\rVert^2 = \lVert\mathbf{w}_t\rVert^2 + 2\mathbf{w}_t^T\mathbf{p}_i + \lVert\mathbf{p}_i\rVert^2 \le \lVert\mathbf{w}_t\rVert^2 + 1 \ \Rightarrow\ \le \lVert\mathbf{w}_0\rVert^2 + k$$
+$$\lVert w_{t+1}\rVert^2 = \lVert w_t\rVert^2 + 2\,w_t \cdot p + \lVert p\rVert^2 \le \lVert w_t\rVert^2 + 1 \ \Rightarrow\ \lVert w_k\rVert^2 \le \lVert w_0\rVert^2 + k$$
 
 **Combine:**
 
-$$\cos\beta \ge \frac{\mathbf{w}^{\ast T}\mathbf{w}_0 + k\delta}{\sqrt{\lVert\mathbf{w}_0\rVert^2 + k}}$$
+$$\cos\beta \ge \frac{w^* \cdot w_0 + km}{\sqrt{\lVert w_0\rVert^2 + k}}$$
 
-The right side grows like $\sqrt{k}$, but $\cos\beta \le 1$, so $k$ must be **finite**. With $\mathbf{w}_0 = 0$: $\sqrt{k}\,\delta \le 1$, so $k \le 1/\delta^2$. ∎
+The right side grows like $\sqrt{k}$, but $\cos\beta \le 1$, so $k$ must be **finite**. With $w_0 = 0$: $\sqrt{k}\,m \le 1$, so $k \le 1/m^2$. ∎
 
-*Example:* a run on 50 points had $\delta = 0.0627$, bound $1/\delta^2 = 254$ corrections; it actually stopped after 12.
+*Example:* a run on 50 points had $m = 0.0627$, bound $1/m^2 = 254$ corrections; it actually stopped after 12.
 
 > 💡 Top grows like $k$, bottom like $\sqrt{k}$, cosine can't pass 1.
