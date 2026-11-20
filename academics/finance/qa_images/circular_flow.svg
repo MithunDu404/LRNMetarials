@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" width="520" height="300" font-family="Arial, sans-serif" font-size="13">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="520" height="300" fill="#ffffff"/>
+<rect x="20" y="110" width="120" height="80" rx="10" fill="#eaf2fb" stroke="#1f5fbf" stroke-width="2"/><text x="80" y="155" fill="#1f5fbf" text-anchor="middle" font-weight="bold">Households</text>
+<rect x="380" y="110" width="120" height="80" rx="10" fill="#fdf2e9" stroke="#d35400" stroke-width="2"/><text x="440" y="155" fill="#d35400" text-anchor="middle" font-weight="bold">Firms</text>
+<path d="M80,108 C80,20 440,20 440,108" fill="none" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ar)"/>
+<text x="260" y="30" fill="#1e8449" text-anchor="middle">labour services (real flow)</text>
+<path d="M150,130 C220,85 300,85 370,130" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#ar)"/>
+<text x="260" y="92" fill="#c0392b" text-anchor="middle">consumption spending (money flow)</text>
+<path d="M370,170 C300,215 220,215 150,170" fill="none" stroke="#c0392b" stroke-width="2.5" marker-end="url(#ar)"/>
+<text x="260" y="222" fill="#c0392b" text-anchor="middle">wages = factor income (money flow)</text>
+<path d="M440,192 C440,280 80,280 80,192" fill="none" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ar)"/>
+<text x="260" y="290" fill="#1e8449" text-anchor="middle">goods, e.g. bread (real flow)</text>
+</svg>

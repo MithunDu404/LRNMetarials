@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 300" width="440" height="300" font-family="Arial, sans-serif" font-size="13">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker></defs>
+<rect width="440" height="300" fill="#ffffff"/>
+<line x1="50" y1="260" x2="410" y2="260" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="50" y1="260" x2="50" y2="15" stroke="#333" stroke-width="1.5" marker-end="url(#ar)"/>
+<text x="405" y="282" fill="#111" text-anchor="end">Income Y</text>
+<text x="12" y="12" fill="#111" text-anchor="start">Expenditure</text>
+<line x1="50" y1="260" x2="290" y2="20" stroke="#555" stroke-width="2"/>
+<text x="262" y="40" fill="#555" text-anchor="end">45° line</text>
+<line x1="50" y1="200" x2="400" y2="25" stroke="#c0392b" stroke-width="2.5"/>
+<line x1="250" y1="195" x2="280" y2="195" stroke="#c0392b" stroke-width="2.5"/><text x="286" y="200" fill="#c0392b" font-weight="bold">PE1 (before)</text>
+<line x1="50" y1="170" x2="370" y2="10" stroke="#c0392b" stroke-width="2.5" stroke-dasharray="7 4"/>
+<line x1="250" y1="215" x2="280" y2="215" stroke="#c0392b" stroke-width="2.5" stroke-dasharray="7 4"/><text x="286" y="220" fill="#c0392b" font-weight="bold">PE2 = PE1 + ΔG</text>
+<line x1="80" y1="185" x2="80" y2="157" stroke="#111" stroke-width="1.8" marker-end="url(#ar)"/>
+<text x="86" y="176" fill="#111" text-anchor="start" font-size="12">ΔG</text>
+<line x1="170" y1="140" x2="170" y2="260" stroke="#777" stroke-width="1.2" stroke-dasharray="4 3"/>
+<circle cx="170" cy="140" r="4" fill="#111"/>
+<text x="180" y="150" fill="#111" text-anchor="start" font-weight="bold">E1</text>
+<text x="170" y="276" fill="#111" text-anchor="middle">Y1</text>
+<line x1="230" y1="80" x2="230" y2="260" stroke="#777" stroke-width="1.2" stroke-dasharray="4 3"/>
+<circle cx="230" cy="80" r="4" fill="#111"/>
+<text x="240" y="92" fill="#111" text-anchor="start" font-weight="bold">E2</text>
+<text x="230" y="276" fill="#111" text-anchor="middle">Y2</text>
+<line x1="172" y1="240" x2="228" y2="240" stroke="#1e8449" stroke-width="1.8" marker-start="url(#ar)" marker-end="url(#ar)"/>
+<text x="238" y="236" fill="#1e8449" text-anchor="start">ΔY = ΔG / (1 − b)</text>
+</svg>
