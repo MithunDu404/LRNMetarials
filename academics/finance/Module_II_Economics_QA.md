@@ -4,7 +4,8 @@ Companion to [Finance_Economics_and_Management_Midterm_Study_Guide.md](Finance_E
 
 **Pattern (end-sem):** economics questions are short and come in many small parts: Part A = 1–3 marks (definitions, one-line reasons, small calculations); Part B = 4–7 marks (a graph with explanation, a GDP/GNP calculation, a multiplier argument), usually with an OR.
 **Tags:** 🎯 real paper (year, question; HU-4201 = the 8th-semester paper of the same course); ✍️ practice to cover the notes; 📘 beyond the notes. 💡 = memory hook.
-**Not in the notes yet:** past end-sems also asked marginal utility and indifference curves, utility maximisation with a Lagrangian, short-run and long-run production, the Phillips curve, and demand-pull vs cost-push inflation in detail. They will be added when that part of the syllabus arrives.
+**Microeconomics (post-midsem):** marginal utility, indifference curves, the Lagrangian, production and cost are in [Module_II_Microeconomics_QA.md](Module_II_Microeconomics_QA.md).
+**Not in the notes yet:** past end-sems also asked the Phillips curve and demand-pull vs cost-push inflation in detail.
 
 | Topic in the guide | Question |
 | :--- | :--- |
