@@ -1,185 +1,260 @@
 # Module II — Economics: Exam Questions and Answers (HU-4101)
 
-Companion to [Finance_Economics_and_Management_Midterm_Study_Guide.md](Finance_Economics_and_Management_Midterm_Study_Guide.md), sections 1–2 (demand and supply, national income, the Keynesian cross, money and banking). Try each question first, then read the answer.
+This file goes with [Finance_Economics_and_Management_Midterm_Study_Guide.md](Finance_Economics_and_Management_Midterm_Study_Guide.md), sections 1–2. Those sections cover demand and supply, national income, the Keynesian cross, and money and banking. Try each question yourself first. Then read the answer.
 
-**Pattern (end-sem):** economics questions are short and come in many small parts: Part A = 1–3 marks (definitions, one-line reasons, small calculations); Part B = 4–7 marks (a graph with explanation, a GDP/GNP calculation, a multiplier argument), usually with an OR.
-**Tags:** 🎯 real paper (year, question; HU-4201 = the 8th-semester paper of the same course); ✍️ practice to cover the notes; 📘 beyond the notes. 💡 = memory hook.
-**Microeconomics (post-midsem):** marginal utility, indifference curves, the Lagrangian, production and cost are in [Module_II_Microeconomics_QA.md](Module_II_Microeconomics_QA.md).
-**Not in the notes yet:** past end-sems also asked the Phillips curve and demand-pull vs cost-push inflation in detail.
+**How the end-sem asks economics:** the questions are short and come in many small parts.
+
+- **Part A** = 1–3 marks. Definitions, one-line reasons, small sums.
+- **Part B** = 4–7 marks. A graph with an explanation, a GDP or GNP sum, or a multiplier argument. There is usually an OR choice.
+
+**Tags used in this file:**
+
+- 🎯 = asked in a real paper (the year and question number are given). "HU-4201" means the 8th-semester paper of the same course.
+- ✍️ = a practice question, added so that every part of the notes is covered.
+- 📘 = goes a little beyond the notes.
+- 💡 = a short line to help you remember.
+
+**Microeconomics (after the midsem):** marginal utility, indifference curves, the Lagrangian, production and cost are in a separate file: [Module_II_Microeconomics_QA.md](Module_II_Microeconomics_QA.md).
+**Not in the notes yet:** past end-sems also asked about the Phillips curve, and about demand-pull vs cost-push inflation in detail.
 
 | Topic in the guide | Question |
 | :--- | :--- |
 | Scarcity, micro vs macro (§1.1) | A1 |
-| Demand: law, determinants, shifts, elasticity (§1.2) | A2, A3, A4, B1 |
+| Demand: law, what it depends on, shifts, elasticity (§1.2) | A2, A3, A4, B1 |
 | Supply, equilibrium, shocks (§1.2–1.3) | B1 |
 | Circular flow of income (§2.1) | A5, B2 |
-| GDP: definition, nominal vs real, deflator, base year (§2.2) | A6, A7, A8, B3 |
+| GDP: meaning, nominal vs real, deflator, base year (§2.2) | A6, A7, A8, B3 |
 | C + I + G + NX, GNP, factor cost, NNP (§2.2) | B3, B4 |
 | Consumption function, Keynesian cross, stability (§2.3) | A11, B5 |
 | Multipliers: government spending, tax, investment (§2.3) | A11, B6 |
 | Money: functions, M1–M4, motives, inflation (§2.4) | A9, A10, A12, A13 |
-| Central vs commercial banks, credit creation (§2.4) | B7 |
+| Central bank vs commercial bank, credit creation (§2.4) | B7 |
 | Fiscal vs monetary policy (§2.4) | B8 |
 
 ---
 
 ## Part A — Short questions (1–3 marks)
 
-### A1. What is the basic economic problem? Distinguish microeconomics from macroeconomics. ✍️ [2]
+### A1. What is the basic economic problem? How is microeconomics different from macroeconomics? ✍️ [2]
 
-**Economic problem:** human wants are unlimited, but resources (land, labour, capital, time) are **scarce** (limited). They also have **alternative uses**: each can be used in many ways. So society must choose how to use (allocate) them. A good is scarce when, at zero price, people would want more than there is. Food grain is scarce; rotten eggs are not, because no one wants them.
+**The economic problem in one line:** we want many things, but we have only a few resources to make them.
 
-- **Microeconomics** studies **individual** units: one consumer's choice, one firm's price and output, one market.
-- **Macroeconomics** studies the **whole economy**: GDP, national income, the general price level (inflation), unemployment, growth.
+- Human wants are **unlimited**. When one want is met, a new one comes up.
+- Resources are **scarce**, which means limited. Resources are land, labour (workers), capital (machines, buildings) and time.
+- Each resource has **alternative uses**. A piece of land can grow rice, or hold a factory, or hold houses. It cannot do all three at once.
+- So every society must **choose** how to use (allocate) its resources.
 
-> 💡 Micro = one tree; macro = the forest.
+**When is a good "scarce"?** A good is scarce if, at a price of zero, people would want more of it than there is. Food grain is scarce, because everyone wants it and there is not enough. Rotten eggs are not scarce, because nobody wants them even for free.
 
-### A2. State the law of demand. On what does the demand for a good depend? 🎯 2024 End Q1, 2025 Mid Q4 [1 + 2]
+**Micro vs macro:**
 
-**Law of demand:** if other things stay the same (*ceteris paribus*), the quantity demanded of a good **falls when its price rises** and **rises when its price falls**. So the demand curve slopes **downward**.
+- **Microeconomics** looks at **single units**: one buyer's choices, one firm's price and output, one market.
+- **Macroeconomics** looks at the **whole economy**: GDP, national income, the general price level (inflation), unemployment and growth.
 
-Demand for good x depends on:
+> 💡 Micro = one tree. Macro = the whole forest.
+
+### A2. State the law of demand. What does the demand for a good depend on? 🎯 2024 End Q1, 2025 Mid Q4 [1 + 2]
+
+**Law of demand:** when the price of a good **rises**, people buy **less** of it. When the price **falls**, they buy **more**. This is true only if everything else stays the same. Economists call this condition *ceteris paribus* (Latin for "other things being equal").
+
+Because of this law, the demand curve **slopes downward**: high price, low quantity; low price, high quantity.
+
+**What demand depends on.** The demand for good x is written as:
 
 $$q_x = f(P_x,\ M,\ P_y,\ \text{tastes})$$
 
-- $P_x$: its own price;
-- $M$: the consumer's income;
-- $P_y$: prices of related goods (substitutes such as tea and coffee, complements);
-- tastes and preferences, including the **bandwagon effect** (buying because others are buying).
+Read this as "the quantity of x people want depends on these four things":
 
-**Desire vs demand:** a desire is only a wish; **demand** is a desire backed by the **ability and willingness to pay**.
+- $P_x$: the price of the good itself.
+- $M$: the buyer's income.
+- $P_y$: the prices of **related goods**. A related good can be a **substitute** (used instead, like tea instead of coffee) or a **complement** (used together, like a car and petrol).
+- **Tastes and preferences**. This includes the **bandwagon effect**: people buy something just because others are buying it.
 
-> 💡 Price up, quantity down, all else fixed.
+**Desire vs demand:** a desire is only a wish. **Demand** is a desire that the person is **able and willing to pay for**. A poor person may wish for a car, but that is not demand until they can and will pay.
 
-### A3. Distinguish a movement along the demand curve from a shift of the demand curve. ✍️ [2]
+> 💡 Price goes up, quantity goes down, as long as nothing else changes.
 
-- **Movement along the curve** (change in **quantity demanded**): caused **only by the good's own price**. A fall in price moves the buyer down the same curve to a larger quantity.
-- **Shift of the curve** (change in **demand**): caused by any **other** factor. A rise in income, a rise in the price of a substitute or a favourable change in tastes shifts the whole curve **right** (more is bought at every price); the opposite changes shift it **left**.
+### A3. What is the difference between a movement along the demand curve and a shift of the demand curve? ✍️ [2]
 
-> 💡 Own price moves you along; anything else moves the line.
+- **Movement along the curve.** This is called a change in **quantity demanded**. Only **the good's own price** causes it. If the price falls, the buyer moves down the **same** curve and buys more.
+- **Shift of the whole curve.** This is called a change in **demand**. Any **other** factor causes it. For example:
+  - income rises,
+  - the price of a substitute rises,
+  - tastes change in favour of the good.
 
-### A4. What does the slope of a demand curve tell us about price sensitivity? ✍️ [2]
+  Each of these shifts the whole curve to the **right**: more is bought at every price. The opposite changes shift it to the **left**.
 
-- **Flat curve (elastic demand):** a small price change causes a **large** change in quantity. Buyers are very sensitive. There are close substitutes, or the good is not essential (for example, a brand of soft drink).
-- **Steep curve (inelastic demand):** even a large price change hardly changes quantity. The good is essential with no substitute (for example, life-saving medicine).
+> 💡 Its own price moves you along the line. Anything else moves the whole line.
 
-> 💡 Flat = sensitive buyers; steep = they buy anyway.
+### A4. What does the slope of a demand curve tell us about how sensitive buyers are to price? ✍️ [2]
 
-### A5. Answer about the circular flow model. 🎯 2023 Mid Q2, 2025 Mid Q1(a) [1 + 1 + 1]
+- **Flat curve = elastic demand.** A small price change causes a **big** change in quantity. Buyers are very sensitive to price. This happens when there are close substitutes, or when the good is not essential. Example: one brand of soft drink. If it costs more, people switch to another brand.
+- **Steep curve = inelastic demand.** Even a big price change hardly changes the quantity. This happens when the good is essential and has no substitute. Example: life-saving medicine. People buy it whatever the price.
 
-**(a)** Factor payments (wages) are made to **(ii) households**, because households own the factors of production (labour).
-**(b)** Without leakages and injections, the income flowing round the system remains **(i) constant**.
-**(c)** Why is it constant? Firms pay **all** their revenue to households as factor income, and households **spend all** of it on firms' goods. Nothing leaks out (no saving, taxes or imports). Nothing extra comes in (no investment, government spending or exports). So the same amount keeps going round.
+> 💡 Flat line = buyers react a lot. Steep line = they buy anyway.
+
+### A5. Answer these questions on the circular flow model. 🎯 2023 Mid Q2, 2025 Mid Q1(a) [1 + 1 + 1]
+
+**(a) Who receives factor payments (like wages)?** **(ii) Households.** Households own the factors of production. For example, they own their labour and sell it to firms.
+
+**(b) With no leakages and no injections, what happens to the income flowing round the system?** It stays **(i) constant**.
+
+**(c) Why does it stay constant?**
+
+- Firms pay **all** of their revenue to households as income (wages).
+- Households **spend all** of that income on the firms' goods.
+- Nothing leaks out. A **leakage** is money that leaves the flow: saving, taxes or imports. There are none.
+- Nothing extra comes in. An **injection** is money that enters the flow from outside: investment, government spending or exports. There are none.
+- So the same amount of money keeps going round and round.
 
 > 💡 No leak, no injection, no change.
 
-### A6. Define GDP. Is the sale of your three-year-old mobile phone counted in this year's GDP? Why are last year's goods not counted? 🎯 2024 Mid Q1(a, b), 2023 Mid Q1(b) [1 + 1 + 1]
+### A6. Define GDP. Is the sale of your three-year-old phone counted in this year's GDP? Why are last year's goods not counted? 🎯 2024 Mid Q1(a, b), 2023 Mid Q1(b) [1 + 1 + 1]
 
-**GDP (gross domestic product):** the total **market value** of all **final goods and services** produced **within the domestic territory** of a country during a given period (usually a year).
+**GDP (gross domestic product)** is the total **market value** of all **final goods and services** made **inside a country's borders** during a given time, usually one year.
 
 $$\text{GDP} = P_1q_1 + P_2q_2 + \dots + P_nq_n$$
 
-- **Used phone: not counted.** GDP measures **current production**. The phone was made (and counted) three years ago. Reselling it only changes the owner; nothing new is made. (A dealer's commission on the sale would count, because it is a service given now.)
-- **Last year's goods** were already counted in last year's GDP. Counting them again would be **double counting**, and this year's production would look bigger than it really is.
-- Only **final** goods are counted. Intermediate goods (goods used to make other goods, like flour used by a baker) are already inside the price of the final good.
+This means: for each good, multiply its price ($P$) by the quantity made ($q$), then add them all up.
 
-> 💡 GDP counts what is made this year, inside the border, once.
+- **Your used phone: not counted.** GDP counts only what is **made this year**. Your phone was made three years ago, and it was counted in GDP then. Selling it now only changes who owns it. Nothing new is made. (But if a dealer takes a commission for selling it, that commission **is** counted, because the dealer gives a service now.)
+- **Last year's goods are not counted** because they were already counted in last year's GDP. Counting them again would be **double counting**. It would make this year's production look bigger than it really is.
+- **Only final goods are counted.** A final good is one bought by the person who will use it. Intermediate goods are goods used to make other goods, like the flour a baker uses to make bread. The flour's value is already inside the price of the bread, so we do not count it again.
 
-### A7. GDP vs GNP. What can you infer if a country's GDP is much lower than its GNP? 🎯 2023 Mid Q1(a), 2024 Mid Q1(c) [2 + 1]
+> 💡 GDP counts what is made this year, inside the border, only once.
+
+### A7. GDP vs GNP. What can you say about a country whose GDP is much lower than its GNP? 🎯 2023 Mid Q1(a), 2024 Mid Q1(c) [2 + 1]
 
 | GDP | GNP |
 | :--- | :--- |
-| production **inside the country's borders**, by anyone (citizens or foreigners) | income earned by the country's **citizens and firms**, anywhere in the world |
-| a foreign firm's factory in India counts in India's GDP | an Indian firm's earnings abroad count in India's GNP |
+| Counts production **inside the country's borders**, by anyone (citizens or foreigners). | Counts income earned by the country's **own citizens and firms**, wherever they are in the world. |
+| A foreign company's factory in India counts in **India's GDP**. | An Indian company's earnings abroad count in **India's GNP**. |
 
 $$\text{GNP} = \text{GDP} + \text{NFIA}$$
 
-NFIA (net factor income from abroad) = factor income earned by residents abroad − factor income paid to foreigners at home.
+**NFIA (net factor income from abroad)** = income our residents earn abroad − income foreigners earn inside our country.
 
-**GNP much higher than GDP** means NFIA is large and positive. The country's people earn much more abroad than foreigners earn inside it. It is likely a country with many **workers abroad sending money home** (remittances) or large investments abroad, and fairly small production at home. For example, Pakistan (GNP > GDP, remittances); India and China have GDP > GNP.
+**If GNP is much higher than GDP,** NFIA is large and positive. This means the country's people earn far more abroad than foreigners earn inside it. Such a country probably has:
 
-> 💡 Domestic = where; national = who.
+- many **workers abroad who send money home** (these payments are called remittances), or
+- large investments in other countries,
 
-### A8. What is the purpose of fixing a base year? Define the GDP deflator. 🎯 2024 End Q4, 2023 Mid Q3 [2 + 2]
+along with fairly small production at home.
 
-**Base year:** nominal GDP can rise just because **prices** rise, even if no extra goods are made. So we value every year's output at the **same, fixed prices** of one chosen year, the base year. This removes the effect of price changes. The change that is left in GDP shows the real change in **quantity produced**. That is real GDP, and it lets us compare output across years.
+Example: Pakistan has GNP > GDP because of remittances. India and China have GDP > GNP.
 
-**Example (2023 Mid Q3).** Country X produces apples and oranges; base year 2020.
+> 💡 Domestic = **where** it is made. National = **who** earns it.
+
+### A8. Why do we fix a base year? Define the GDP deflator. 🎯 2024 End Q4, 2023 Mid Q3 [2 + 2]
+
+**Why a base year?**
+
+- Nominal GDP uses each year's **current** prices.
+- So nominal GDP can go up just because **prices** went up, even if no extra goods were made.
+- To remove this effect, we pick one year, the **base year**, and value every year's output at that year's **fixed prices**.
+- Now any change in GDP comes only from a change in the **quantity produced**. This is **real GDP**. It lets us compare output fairly across years.
+
+**Example (2023 Mid Q3).** Country X grows apples and oranges. The base year is 2020.
 
 | Good | 2023 price | 2023 output | 2020 price |
 | :--- | ---: | ---: | ---: |
 | Apples | ₹20 | 100 kg | ₹5 |
 | Oranges | ₹12 | 150 kg | ₹8 |
 
-- Nominal GDP 2023 = 20 × 100 + 12 × 150 = 2,000 + 1,800 = **₹3,800**
-- Real GDP 2023 (2020 prices) = 5 × 100 + 8 × 150 = 500 + 1,200 = **₹1,700**
+- Nominal GDP 2023 (2023 prices × 2023 output) = 20 × 100 + 12 × 150 = 2,000 + 1,800 = **₹3,800**
+- Real GDP 2023 (2020 prices × 2023 output) = 5 × 100 + 8 × 150 = 500 + 1,200 = **₹1,700**
 
-**GDP deflator** = (nominal GDP ÷ real GDP) × 100 = 3,800/1,700 × 100 = **223.5**. It is a price index (a measure of the price level) for **all** goods produced in the economy. Here, prices have risen about 124% since 2020.
+**GDP deflator** = (nominal GDP ÷ real GDP) × 100 = 3,800 ÷ 1,700 × 100 = **223.5**.
 
-> 💡 Nominal = today's prices; real = base-year prices; deflator = their ratio.
+The deflator is a **price index**: a number that measures the price level of **all** goods made in the economy. A value of 223.5 means prices are about 2.24 times their 2020 level. In other words, prices have risen by about 124% since 2020.
 
-### A9. State the functions of money. Which functions do cash, Bitcoin and real estate perform? 🎯 2025 Mid Q3(a), 2023 Mid Q5 [1 + 3]
+> 💡 Nominal = today's prices. Real = base-year prices. Deflator = nominal ÷ real × 100.
 
-Money removes the problems of **barter** (swapping goods directly): you must find someone who has what you want and wants what you have (double coincidence of wants); there is no common measure of value; and many goods cannot be stored. Its functions:
+### A9. What are the functions of money? Which of them do cash, Bitcoin and real estate perform? 🎯 2025 Mid Q3(a), 2023 Mid Q5 [1 + 3]
 
-1. **Medium of exchange:** accepted in payment for everything.
-2. **Unit of account:** a common measure in which all prices, GDP and debts are expressed.
-3. **Store of value:** holds purchasing power for the future (weakened by inflation).
+**Why we need money.** Without money we must **barter**, which means swap goods directly. Barter has three problems:
+
+1. You must find someone who has what you want **and** wants what you have. This is called the "double coincidence of wants", and it is rare.
+2. There is no common measure of value. How many eggs is one shirt worth?
+3. Many goods cannot be stored. Milk goes bad.
+
+Money solves these problems. It has three functions:
+
+1. **Medium of exchange:** people accept it as payment for anything.
+2. **Unit of account:** all prices, GDP and debts are measured in it. It is a common measuring stick.
+3. **Store of value:** you can keep it and spend it later. (Inflation makes this weaker, because money buys less over time.)
 
 | Item | Medium of exchange | Unit of account | Store of value |
 | :--- | :---: | :---: | :---: |
-| Cash | ✓ | ✓ | ✓ (loses value with inflation) |
-| Bitcoin | weak: few sellers accept it | ✗: prices are not quoted in it | partly: held as an asset, but its price swings a lot (volatile) |
-| Real estate | ✗: cannot buy groceries with land | ✗ | ✓: keeps value, but is hard to turn into cash quickly (illiquid) |
+| Cash | ✓ | ✓ | ✓ (but loses value with inflation) |
+| Bitcoin | weak: few sellers accept it | ✗: prices are not written in Bitcoin | partly: people hold it as an asset, but its price goes up and down a lot (it is volatile) |
+| Real estate | ✗: you cannot buy groceries with land | ✗ | ✓: it keeps its value, but it is hard to turn into cash quickly (it is illiquid) |
 
 > 💡 Exchange, account, store: only cash does all three well.
 
 ### A10. What do M1, M2, M3 and M4 mean? What is broad money? 🎯 HU-4201 2024 Mid Q2 (OR) [2]
 
-The RBI measures the money supply in four steps:
+The RBI measures the money supply at four levels. Each level adds something to the one before:
 
-- **M1 (narrow money)** = currency with the public + demand deposits with banks;
-- **M2** = M1 + savings deposits with post-office savings banks;
-- **M3 (broad money)** = M1 + **time (fixed) deposits** with banks;
-- **M4** = M3 + all deposits with post-office savings banks (excluding National Savings Certificates).
+- **M1 (narrow money)** = currency (notes and coins) with the public + demand deposits in banks. (A demand deposit is money you can take out any time, like a current account.)
+- **M2** = M1 + savings deposits in post-office savings banks.
+- **M3 (broad money)** = M1 + **time deposits** in banks. (A time deposit is a fixed deposit that is locked for a period.)
+- **M4** = M3 + all deposits in post-office savings banks (not counting National Savings Certificates).
 
-**Broad money (M3)** includes fixed deposits, which cannot be spent at once. It is the most used measure of money supply. Liquidity (how quickly money can be spent) falls from M1 (most liquid) to M4 (least liquid).
+**Broad money (M3)** includes fixed deposits, which you cannot spend at once. It is the measure of money supply that is used most often.
 
-> 💡 M1 = spendable now; each step adds less liquid deposits.
+**Liquidity** means how quickly money can be spent. M1 is the most liquid. Liquidity falls step by step, and M4 is the least liquid.
 
-### A11. What is the marginal propensity to consume? If the investment multiplier is 5, find the MPC. What happens to the multiplier if the MPC rises? 🎯 HU-4201 2024 Mid Q2, HU-4201 2025 Mid Q5, 2023 End Q7 [1 + 2 + 2]
+> 💡 M1 = money you can spend right now. Each next step adds deposits that are slower to spend.
 
-Keynes's consumption function: $C = a + bY$, where $a$ = autonomous (subsistence) consumption, spent even at zero income, and $b$ = **MPC**.
+### A11. What is the marginal propensity to consume (MPC)? If the investment multiplier is 5, find the MPC. What happens to the multiplier if the MPC rises? 🎯 HU-4201 2024 Mid Q2, HU-4201 2025 Mid Q5, 2023 End Q7 [1 + 2 + 2]
 
-**MPC** = the fraction of each **extra** rupee of income that is spent on consumption: $b = \Delta C/\Delta Y$, with $0 < b < 1$.
+**Keynes's consumption function:** $C = a + bY$.
 
-**Investment multiplier:** a rise in investment raises income by a multiple of itself, $k = \dfrac{1}{1 - b}$. This is because each round of spending becomes someone's income, and part of it is spent again.
+- $C$ = consumption (spending by households).
+- $Y$ = income.
+- $a$ = **autonomous consumption**: what people spend even when income is zero, just to survive (for food, for example).
+- $b$ = the **MPC**.
+
+**MPC** is the part of each **extra** rupee of income that people spend. If you earn ₹1 more and spend 80 paise of it, your MPC is 0.8. In symbols: $b = \Delta C/\Delta Y$, and $0 < b < 1$.
+
+**Investment multiplier.** When investment rises, income rises by **more** than the investment. Why? Each round of spending becomes someone else's income, and they spend part of it again. The size of the multiplier is:
+
+$$k = \frac{1}{1 - b}$$
+
+**Finding the MPC when k = 5:**
 
 $$5 = \frac{1}{1 - b} \Rightarrow 1 - b = 0.2 \Rightarrow b = 0.8$$
 
-**If MPC rises**, people spend again a larger share in every round, so the **multiplier gets bigger**: MPC 0.75 → k = 4; MPC 0.8 → k = 5; MPC 0.9 → k = 10. Since $0 < b < 1$, the multiplier is always greater than 1.
+**If the MPC rises,** people spend a bigger share in every round. So the **multiplier gets bigger**:
 
-> 💡 The more people re-spend, the bigger the multiplier.
+- MPC 0.75 → k = 4
+- MPC 0.8 → k = 5
+- MPC 0.9 → k = 10
 
-### A12. Why do people hold money instead of bonds (Keynes's motives)? ✍️ [3]
+Because $b$ is always between 0 and 1, the multiplier is always greater than 1.
 
-1. **Transaction motive:** to pay for everyday purchases between one payday and the next.
-2. **Precautionary motive:** to meet emergencies (illness, accidents, job loss).
-3. **Speculative motive:** if interest rates are expected to **rise**, bond prices will **fall**. Holding cash now avoids that loss, and the person can buy bonds cheaper later.
+> 💡 The more people spend again, the bigger the multiplier.
 
-> 💡 Spend, save for a rainy day, wait for a bargain.
+### A12. Why do people hold money instead of bonds? (Keynes's three motives) ✍️ [3]
 
-### A13. Define inflation and state its causes. 🎯 2025 Mid Q3(b) [2]
+1. **Transaction motive:** to pay for everyday things between one payday and the next.
+2. **Precautionary motive:** to be ready for emergencies, like illness, an accident or losing a job.
+3. **Speculative motive:** to avoid a loss on bonds. If people expect interest rates to **rise**, bond prices will **fall**. (Bond prices and interest rates move in opposite directions.) So they keep cash now, avoid the loss, and buy bonds later at a lower price.
 
-**Inflation** is a **sustained** (steady, lasting) **rise in the general price level**. So each rupee buys less, and money loses value as a store of value.
+> 💡 Money to spend, money for a rainy day, money to wait for a bargain.
 
-Causes:
+### A13. Define inflation and give its causes. 🎯 2025 Mid Q3(b) [2]
 
-- **Demand side:** total demand exceeds what the economy can produce, for example, a fast increase in money supply, large government spending, easy credit ("too much money chasing too few goods").
-- **Cost side:** production costs rise, for example, higher oil prices, wages or raw material costs, and firms pass them on as higher prices.
-- **Supply shocks:** war, sanctions or crop failure reduce supply, so prices jump.
+**Inflation** is a **steady, lasting rise in the general level of prices**. A one-time jump in one good's price is not inflation. Because of inflation, each rupee buys less, so money becomes a weaker store of value.
 
-> 💡 Demand pulls prices up; costs push them up.
+**Causes:**
+
+- **Demand side ("demand-pull"):** people want to buy more than the economy can produce. This can happen when money supply grows fast, the government spends a lot, or loans are easy to get. People say: "too much money chasing too few goods".
+- **Cost side ("cost-push"):** the cost of making goods goes up. For example, oil, wages or raw materials become dearer. Firms pass the extra cost on to buyers as higher prices.
+- **Supply shocks:** war, sanctions or a failed crop cut the supply of goods, so prices jump.
+
+> 💡 Demand pulls prices up. Costs push prices up.
 
 ---
 
@@ -187,243 +262,290 @@ Causes:
 
 ### B1. 🎯 2025 Mid Q4 (OR) + 🎯 2023 End Q8
 
-**(a)** Show how the equilibrium price is determined in a market using demand and supply curves. **[3]**
-**(b)** An individual's income rises. What happens to the equilibrium price? Explain with demand and supply curves. **[4]**
+**(a)** Using demand and supply curves, show how the equilibrium price is set in a market. **[3]**
+**(b)** A person's income rises. What happens to the equilibrium price? Explain with demand and supply curves. **[4]**
 
 **(a) Answer.**
 
 ![Market equilibrium: demand and supply](qa_images/market_equilibrium.svg)
 
-- **Demand curve D** slopes down (law of demand). **Supply curve S** slopes up: a higher price gives sellers more profit, so they supply more ($q_s = f(P, \text{technology}, \dots)$).
-- **Equilibrium** is where they cross, at E: quantity demanded = quantity supplied. This gives the equilibrium price P* and quantity Q*.
-- **Above P*** (for example, P1): sellers offer more than buyers want. Unsold stock piles up (**excess supply**). Sellers cut prices until P* is reached.
-- **Below P*** (for example, P2): buyers want more than there is (**excess demand**, a shortage). Buyers push the price up and sellers supply more, until P* is reached.
+- The **demand curve D** slopes down. This is the law of demand: at a lower price, people buy more.
+- The **supply curve S** slopes up. At a higher price, sellers make more profit, so they offer more. ($q_s = f(P, \text{technology}, \dots)$ means the quantity supplied depends on price, technology and other things.)
+- **Equilibrium** is the point E where the two curves cross. Here, the quantity people want to buy equals the quantity sellers want to sell. This gives the equilibrium price P* and the equilibrium quantity Q*.
+- **If the price is above P\*** (for example at P1): sellers offer more than buyers want. Unsold goods pile up. This is called **excess supply**. Sellers cut their prices until the price falls back to P*.
+- **If the price is below P\*** (for example at P2): buyers want more than is available. This is a shortage, called **excess demand**. Buyers push the price up, and sellers offer more, until the price rises to P*.
 
-So price is set by **both** cost (behind supply) and demand, not by cost alone. For example, a soft drink costs little to make but sells high because demand is strong.
+So the price is set by **both** cost (which lies behind supply) and demand. It is not set by cost alone. For example, a soft drink costs little to make, but it sells at a high price because demand for it is strong.
 
 **(b) Answer.**
 
-For a normal good (one people buy more of when richer), higher income raises demand at every price. So the demand curve **shifts right** (D → D′). Supply does not change.
+Take a **normal good**, which is a good people buy more of when they become richer. When income rises, people want more of it at **every** price. So the demand curve **shifts to the right** (from D to D′). The supply curve does not move.
 
 ![A rise in income shifts demand right](qa_images/demand_shift.svg)
 
-1. At the old price P*, demand is now greater than supply: **excess demand**.
-2. Buyers compete for the limited goods and the price is bid **up**.
-3. The higher price makes producers supply more (a **movement along** the supply curve).
-4. A new equilibrium E1 is reached at a **higher price P1 and a higher quantity Q1**.
+Step by step:
 
-📘 The same logic applies to a **supply shock**: war or sanctions shift supply **left**, causing excess demand at the old price, so the price rises and the quantity falls.
+1. At the old price P*, people now want more than is supplied. There is **excess demand**.
+2. Buyers compete for the limited goods, and the price is pushed **up**.
+3. The higher price makes producers supply more. This is a **movement along** the supply curve, not a shift of it.
+4. A new equilibrium E1 is reached, with a **higher price P1 and a higher quantity Q1**.
 
-> 💡 Demand shifts right → price and quantity both rise.
+📘 The same logic works for a **supply shock**. War or sanctions shift the supply curve to the **left**. At the old price there is now excess demand. So the price rises and the quantity falls.
+
+> 💡 Demand shifts right → price and quantity both go up.
 
 ### B2. 🎯 HU-4201 2025 Mid Q4 + 🎯 2025 Mid Q1(b)
 
-Define GDP. With the circular flow of income model, explain why total factor income equals total expenditure, that is, why national income and national expenditure are identical. **[2 + 3]**
+Define GDP. Using the circular flow of income model, explain why total factor income equals total spending. In other words, why are national income and national expenditure the same? **[2 + 3]**
 
 **Answer.**
 
-**GDP** = market value of all final goods and services produced within a country in a year (see A6).
+**GDP** is the market value of all final goods and services made inside a country in a year (see A6).
 
-**Simple two-sector model.** Assumptions:
+**The simple two-sector model.** We make three assumptions to keep it simple:
 
-1. only two sectors, **households** and **firms**;
-2. firms produce one good (say bread) and use one factor (labour), owned by households;
-3. households spend **all** their income; there is no saving, no government and no foreign trade (no leakages, no injections).
+1. There are only two sectors: **households** and **firms**.
+2. Firms make one good (say, bread). They use one factor of production (labour), which households own.
+3. Households spend **all** of their income. There is no saving, no government and no foreign trade. So there are no leakages and no injections.
 
 ![Circular flow of income](qa_images/circular_flow.svg)
 
-- **Real flow:** households give labour to firms; firms give bread to households.
-- **Money flow:** firms pay wages to households; households spend those wages on bread.
+Two flows go round in opposite directions:
 
-**Why income = expenditure:**
+- **Real flow (things):** households give labour to firms. Firms give bread to households.
+- **Money flow (rupees):** firms pay wages to households. Households spend those wages on bread.
 
-- Every rupee that households **spend** reaches firms as revenue.
-- Firms pay **all** of it out to households as factor income (wages).
-- Households spend all their income. So total spending = total revenue of firms = total factor income.
-- And total spending is the value of the bread produced. So:
+**Why income = spending:**
+
+- Every rupee households **spend** reaches the firms as revenue.
+- Firms pay **all** of that revenue to households as factor income (wages).
+- Households spend all of this income again.
+- So: total spending = total revenue of firms = total factor income.
+- Total spending is also the value of all the bread that was made. So:
 
 $$\text{National income} = \text{National expenditure} = \text{National product (GDP)}$$
 
-These are three ways of looking at the same flow: what is produced, what is earned by producing it, and what is spent on buying it.
+These are just three ways of looking at the **same** flow of money:
+
+1. the value of what is **made** (product),
+2. what people **earn** by making it (income),
+3. what people **spend** to buy it (expenditure).
 
 > 💡 One person's spending is another person's income.
 
 ### B3. 🎯 2025 End Q1 + 🎯 HU-4201 2024 Mid Q1(c)
 
-**(a)** Calculate GDP and GNP at market prices (₹ crore): consumption 800, investment 500, factor payments to abroad 200, factor income from abroad 50, government expenditure 10, exports 200, imports 100. **[2 + 2]**
-**(b)** What is real GDP? What advantage does it have over nominal GDP? Mention one flaw of GDP as a measure of welfare. **[3]**
+**(a)** Find GDP and GNP at market prices (₹ crore): consumption 800, investment 500, factor payments to abroad 200, factor income from abroad 50, government spending 10, exports 200, imports 100. **[2 + 2]**
+**(b)** What is real GDP? What is its advantage over nominal GDP? Give one weakness of GDP as a measure of people's well-being. **[3]**
 **(c)** Critics say that when inflation is high, high nominal GDP growth hides weak real activity. Why? **[2]**
 
 **(a) Answer.**
 
-Expenditure method: GDP = C + I + G + (X − M).
+Use the **expenditure method**: GDP = C + I + G + (X − M). Here C = consumption, I = investment, G = government spending, X = exports and M = imports.
 
 $$\text{GDP}_{MP} = 800 + 500 + 10 + (200 - 100) = ₹1{,}410 \text{ crore}$$
 
+Next, find NFIA (net factor income from abroad) and add it to GDP to get GNP:
+
 $$\text{NFIA} = 50 - 200 = -150, \qquad \text{GNP}_{MP} = 1{,}410 + (-150) = ₹1{,}260 \text{ crore}$$
 
-GNP < GDP because foreigners earn more in this country than its residents earn abroad.
+GNP is less than GDP here because foreigners earn more inside this country than its own people earn abroad.
 
 **(b) Answer.**
 
-- **Real GDP** values the current year's output at **base-year (constant) prices**: $\text{GDP}_R = \sum P_{base} \times q_{current}$.
-- **Advantage:** nominal GDP rises when prices rise, even if not one extra unit is made. Real GDP removes price changes and shows the true growth of **output**. For example, in the guide's example nominal GDP rose 112.5% but real GDP only 25%; the rest was inflation.
-- **Flaw as a welfare measure** (any one):
-  - It counts only **market** sales, so unpaid housework and care work (mostly done by women) are left out.
+- **Real GDP** values this year's output at **base-year (fixed) prices**: $\text{GDP}_R = \sum P_{base} \times q_{current}$. In words: multiply each good's base-year price by this year's quantity, and add.
+- **Advantage:** nominal GDP goes up when prices go up, even if not a single extra unit is made. Real GDP removes the price effect and shows the true growth in **output**. In the guide's example, nominal GDP rose 112.5%, but real GDP rose only 25%. The rest was just inflation.
+- **Weakness as a measure of well-being** (give any one):
+  - It counts only goods and services **sold in the market**. So unpaid housework and care work (mostly done by women) are left out.
   - It ignores pollution and damage to the environment.
-  - It says nothing about how income is **distributed** (shared), so a high GDP can exist alongside widespread poverty.
+  - It says nothing about how income is **shared**. A country can have a high GDP and still have many poor people.
 
-**(c) Answer.** Nominal GDP = real output × prices. If prices rise fast, nominal GDP grows fast even when real output hardly grows. Much of the reported growth is then just **higher prices**, not more goods and services. So real activity in the economy is weaker than the nominal figure suggests. That is why growth should be judged by real GDP (nominal GDP divided by the GDP deflator).
+**(c) Answer.**
 
-> 💡 Nominal growth = real growth + inflation (roughly).
+- Nominal GDP = real output × prices.
+- If prices rise fast, nominal GDP grows fast, even if real output hardly grows.
+- So much of the "growth" is just **higher prices**, not more goods and services.
+- This means real activity is weaker than the nominal figure makes it look.
+- That is why growth should be judged by **real GDP** (nominal GDP divided by the GDP deflator).
+
+> 💡 Nominal growth ≈ real growth + inflation.
 
 ### B4. 🎯 2023 Mid Q4 + ✍️
 
-**(a)** Calculate GDP, GNP and GNP at factor cost (₹): final consumption 300, investment 80, exports 250, imports 550, government expenditure 200, payments to factors abroad 100, income from abroad 500, net indirect tax 100, debt interest income 20, depreciation 25. **[3]**
-**(b)** Explain the four components of expenditure, and the steps from GDP at market price to national income. Find national income (NNP at factor cost) for: C 600, I 200, G 150, X 80, M 100, factor income from abroad 40, factor payments abroad 70, net indirect taxes 50, depreciation 30. **[4]**
+**(a)** Find GDP, GNP and GNP at factor cost (₹): final consumption 300, investment 80, exports 250, imports 550, government spending 200, payments to factors abroad 100, income from abroad 500, net indirect tax 100, debt interest income 20, depreciation 25. **[3]**
+**(b)** Explain the four parts of spending, and the steps from GDP at market price to national income. Then find national income (NNP at factor cost) for: C 600, I 200, G 150, X 80, M 100, factor income from abroad 40, factor payments abroad 70, net indirect taxes 50, depreciation 30. **[4]**
 
 **(a) Answer.**
 
 - GDP = 300 + 80 + 200 + (250 − 550) = 580 − 300 = **₹280**
-- NFIA = 500 − 100 = +400 → GNP = 280 + 400 = **₹680**
+- NFIA = 500 − 100 = +400, so GNP = 280 + 400 = **₹680**
 - GNP at factor cost = GNP − net indirect taxes = 680 − 100 = **₹580**
 
-Debt interest income (a transfer, not payment for current production) and depreciation are not needed for these three.
+Two items are given only to test you. They are **not needed** for these three answers:
+
+- **Debt interest income** is a transfer payment. It is not payment for anything produced this year.
+- **Depreciation** is needed only for **net** figures (NNP), not for these gross figures.
 
 **(b) Answer.**
 
-**Components of expenditure (GDP = C + I + G + NX):**
+**The four parts of spending (GDP = C + I + G + NX):**
 
-1. **C, consumption:** households' spending on durable goods (car, fridge), non-durables (food) and services (haircut, doctor).
-2. **I, investment:** new machines and buildings, new houses, and the **change in inventories** (unsold stock).
-3. **G, government purchases:** roads, defence, salaries of government staff (not pensions or other transfers).
+1. **C, consumption:** what households spend on durable goods (car, fridge), non-durable goods (food) and services (haircut, doctor).
+2. **I, investment:** spending on new machines and buildings, new houses, and the **change in inventories** (inventories are stocks of goods made but not yet sold).
+3. **G, government purchases:** roads, defence, and salaries of government workers. Pensions and other **transfers** are **not** included, because nothing is produced in return for them.
 4. **NX, net exports:** exports − imports.
 
-**The ladder:**
+**The ladder from GDP to national income:**
 
 | Step | Rule | Example |
 | :--- | :--- | ---: |
 | GDP at market price | C + I + G + (X − M) | 600 + 200 + 150 + (80 − 100) = **930** |
-| GNP at market price | + NFIA | 930 + (40 − 70) = **900** |
-| GNP at factor cost | − net indirect taxes (indirect taxes − subsidies) | 900 − 50 = **850** |
-| NNP at factor cost = **national income** | − depreciation | 850 − 30 = **820** |
+| GNP at market price | add NFIA | 930 + (40 − 70) = **900** |
+| GNP at factor cost | subtract net indirect taxes (indirect taxes − subsidies) | 900 − 50 = **850** |
+| NNP at factor cost = **national income** | subtract depreciation | 850 − 30 = **820** |
 
-- **Market price vs factor cost:** market price includes indirect taxes and is lowered by subsidies. Factor cost is what the factors of production (land, labour, capital) actually receive.
-- **Gross vs net:** depreciation is the wear and tear of machines. Taking it away gives net product.
+Two pairs of words explain the ladder:
 
-> 💡 GDP → (+NFIA) GNP → (−NIT) factor cost → (−depreciation) national income.
+- **Market price vs factor cost.** The market price includes indirect taxes (like GST), and it is lowered by subsidies. Factor cost is what the factors of production (land, labour, capital) actually receive. So factor cost = market price − indirect taxes + subsidies.
+- **Gross vs net.** Depreciation is the wear and tear of machines during the year. Gross − depreciation = net.
+
+> 💡 GDP → (+NFIA) → GNP → (−net indirect tax) → factor cost → (−depreciation) → national income.
 
 ### B5. 🎯 2023 End Q7 + 🎯 2025 Mid Q2(a) + 🎯 HU-4201 2025 Mid Q5
 
-Explain the simple Keynesian model of income determination graphically. Why is the Keynesian cross a stable equilibrium? **[3 + 2]**
+Explain the simple Keynesian model of income with a graph. Why is the Keynesian cross a stable equilibrium? **[3 + 2]**
 
 **Answer.**
 
-**Background:** classical economists believed markets correct themselves, so the government should leave them alone (*laissez-faire*). The Great Depression of the 1930s brought years of mass unemployment. It showed that an economy can stay stuck at low output because of **too little demand**. Keynes argued that total demand decides income, and that the government can raise it ("in the long run we are all dead").
+**Background.**
 
-**The model** (no foreign trade; investment I and government spending G fixed):
+- Classical economists believed that markets fix themselves. So the government should leave them alone. This idea is called *laissez-faire* ("let it be").
+- Then came the Great Depression of the 1930s, with many years of mass unemployment. It showed that an economy can stay stuck at low output for a long time, because people are **not spending enough** (too little demand).
+- Keynes argued that **total demand decides income**, and that the government can raise demand when it is too low. He famously said, "in the long run we are all dead", meaning we cannot just wait for markets to fix themselves.
 
-- consumption $C = a + bY$;
-- planned expenditure $PE = C + I + G = (a + I + G) + bY$, a line with intercept $a + I + G$ and slope $b < 1$;
-- actual expenditure = output = income, drawn as the **45° line** ($AE = Y$).
+**The model.** We assume no foreign trade, and fixed investment (I) and government spending (G).
+
+- Consumption: $C = a + bY$.
+- **Planned expenditure** (what people plan to spend): $PE = C + I + G = (a + I + G) + bY$. On a graph this is a straight line that starts at $a + I + G$ and has slope $b$ (less than 1).
+- **Actual expenditure = output = income.** On a graph this is the **45° line** ($AE = Y$). Every point on it has spending equal to income.
 
 ![Keynesian cross](qa_images/keynesian_cross.svg)
 
-**Equilibrium** is at E, where planned expenditure equals output: $Y = (a + I + G) + bY$, so
+**Equilibrium** is at E, where planned spending equals output. Solve $Y = (a + I + G) + bY$:
 
 $$Y^* = \frac{a + I + G}{1 - b}$$
 
-**Why it is stable (inventory adjustment):**
+**Why the equilibrium is stable.** The key is firms' **inventories** (their stock of unsold goods).
 
-- At **Y1 < Y\*:** planned spending is greater than output. Firms sell more than they produced, so their **inventories fall unexpectedly**. They hire more and produce more, and Y rises towards Y\*.
-- At **Y2 > Y\*:** output is greater than planned spending. Unsold goods pile up (**unplanned inventory accumulation**). Firms cut production and Y falls towards Y\*.
+- **If income is at Y1, below Y\*:** people plan to spend more than firms produce. Firms sell more than they made, so their stock of goods **falls without warning**. Firms react by hiring more workers and producing more. Income rises towards Y\*.
+- **If income is at Y2, above Y\*:** firms produce more than people plan to buy. Unsold goods pile up (**unplanned inventory build-up**). Firms cut production, and income falls towards Y\*.
 
-Any move away from Y\* sets off forces that bring income back to it. So the equilibrium is stable.
+So whenever income moves away from Y\*, forces push it back. That is why the equilibrium is stable.
 
-> 💡 Shelves empty → produce more; shelves full → produce less.
+> 💡 Shelves empty → make more. Shelves full → make less.
 
 ### B6. 🎯 2024 End Q6 (OR) + ✍️
 
-**(a)** Explain graphically how, in a Keynesian framework, an autonomous increase in government expenditure affects equilibrium income. **[4]**
-**(b)** Does an increase in taxes have the same impact? Explain. **[2]**
-**(c)** With $C = 100 + 0.8Y$, $I = 50$, $G = 50$: find equilibrium income, and the change in income if G rises by 20, or if a lump-sum tax of 20 is imposed. **[✍️ 3]**
+**(a)** Using a graph, explain how a rise in government spending (that does not depend on income) changes equilibrium income in the Keynesian model. **[4]**
+**(b)** Does a rise in taxes have the same effect? Explain. **[2]**
+**(c)** With $C = 100 + 0.8Y$, $I = 50$, $G = 50$: find equilibrium income. Then find the change in income if G rises by 20, or if a lump-sum tax of 20 is added. **[✍️ 3]**
 
 **(a) Answer.**
 
-A rise in G raises planned expenditure at every income level. So the PE line **shifts up** by ΔG (parallel). It now cuts the 45° line at a **higher income**, and income rises by **more** than ΔG.
+When G rises, planned spending is higher at **every** level of income. So the PE line **shifts up** by ΔG, staying parallel to the old line. The new line cuts the 45° line at a **higher income**. Income rises by **more** than ΔG.
 
 ![Rise in government spending in the Keynesian cross](qa_images/keynesian_cross_shift.svg)
 
-Derivation: $Y = a + bY + I + G$ → $Y(1 - b) = a + I + G$ → $Y = \dfrac{a + I + G}{1 - b}$, so
+The maths:
+
+$Y = a + bY + I + G$ → $Y(1 - b) = a + I + G$ → $Y = \dfrac{a + I + G}{1 - b}$, so
 
 $$\frac{\Delta Y}{\Delta G} = \frac{1}{1 - b} > 1$$
 
-**Why more than ΔG:** the government's spending becomes firms' revenue and workers' income. They spend the fraction b of it. That becomes someone else's income, who again spends b of it, and so on: ΔG + bΔG + b²ΔG + … = ΔG/(1 − b).
+**Why income rises by more than ΔG:**
 
-**(b) Answer.** No. A tax works in the **opposite direction** and is **weaker**. A lump-sum tax T cuts disposable income to (Y − T), so consumption becomes $C = a + b(Y - T)$:
+1. The government's spending becomes firms' revenue, and then workers' income.
+2. The workers spend part b of it. That spending becomes someone else's income.
+3. They also spend part b of it, and so on.
+4. Adding all the rounds: ΔG + bΔG + b²ΔG + … = ΔG/(1 − b).
+
+**(b) Answer.** No. A tax works in the **opposite direction**, and it is **weaker**.
+
+A lump-sum tax T (a fixed amount, not linked to income) reduces the money people have to spend to (Y − T). So consumption becomes $C = a + b(Y - T)$, and:
 
 $$Y = \frac{a + I + G}{1 - b} - \frac{b}{1 - b}T \quad\Rightarrow\quad \frac{\Delta Y}{\Delta T} = -\frac{b}{1 - b}$$
 
-A tax increase **lowers** income. Its size, b/(1 − b), is smaller than the spending multiplier 1/(1 − b) by exactly 1. Why? Households pay part of the tax out of **saving**. So only the fraction b of the tax cuts spending in the first round. But government spending enters demand in full.
+- The minus sign means a tax rise **lowers** income.
+- Its size, b/(1 − b), is smaller than the spending multiplier 1/(1 − b) by exactly 1.
+- **Why weaker?** Households pay part of the tax out of their **savings**. So in the first round, only part b of the tax reduces spending. But government spending enters demand **in full** in the first round.
 
 **(c) Answer.**
 
-- Equilibrium: $Y = \dfrac{100 + 50 + 50}{1 - 0.8} = \dfrac{200}{0.2} = 1{,}000$; consumption C = 100 + 0.8 × 1,000 = 900.
-- G up by 20: multiplier 1/0.2 = 5, so ΔY = 5 × 20 = **+100** (income 1,100).
-- Tax of 20: tax multiplier −0.8/0.2 = −4, so ΔY = −4 × 20 = **−80** (income 920).
+- Equilibrium income: $Y = \dfrac{100 + 50 + 50}{1 - 0.8} = \dfrac{200}{0.2} = 1{,}000$. Consumption C = 100 + 0.8 × 1,000 = 900.
+- G rises by 20: the multiplier is 1/0.2 = 5, so ΔY = 5 × 20 = **+100**. New income = 1,100.
+- Tax of 20: the tax multiplier is −0.8/0.2 = −4, so ΔY = −4 × 20 = **−80**. New income = 920.
 
-> 💡 Spending multiplier 1/(1 − b); tax multiplier −b/(1 − b), one smaller.
+> 💡 Spending multiplier = 1/(1 − b). Tax multiplier = −b/(1 − b), which is one smaller in size.
 
 ### B7. 🎯 2023 Mid Q6 + 🎯 2024 Mid Q2(a) + 🎯 HU-4201 2024 End Q3(a)
 
-**(a)** State the differences between a commercial bank and the central bank. **[2]**
+**(a)** Give the differences between a commercial bank and the central bank. **[2]**
 **(b)** Explain how commercial banks create money (fractional reserve banking). **[4]**
-**(c)** "To increase the money supply, the monetary authority cuts the reserve requirement." Is this valid? Use the money multiplier. **[3]**
+**(c)** "To increase the money supply, the central bank lowers the reserve requirement." Is this right? Use the money multiplier. **[3]**
 
 **(a) Answer.**
 
 | Central bank (RBI) | Commercial bank (SBI, HDFC) |
 | :--- | :--- |
-| aims at price stability and the health of the system, not profit | aims at profit |
-| sole issuer of currency notes | cannot issue currency |
-| banker to banks and to the government; **lender of last resort** | banker to the public and businesses |
-| does not take deposits from or lend to the public | accepts public deposits and gives loans |
-| controls money supply and credit (CRR, repo rate, open market operations) | is regulated by the central bank |
+| Aims at stable prices and a healthy banking system, not profit. | Aims at profit. |
+| The only one allowed to print currency notes. | Cannot print currency. |
+| Bank of the banks and of the government. It is the **lender of last resort**: it lends to banks when nobody else will. | Bank of the public and of businesses. |
+| Does not take deposits from, or lend to, the public. | Takes deposits from the public and gives loans. |
+| Controls money supply and credit, using tools like CRR, the repo rate and open market operations. | Is controlled by the central bank. |
 
-**(b) Answer.** Banks keep only a **fraction** (part) of deposits as reserves (the cash reserve ratio, CRR) and lend the rest. The loans are spent and come back to banks as new deposits.
+**(b) Answer.**
 
-For example, CRR = 10%, a customer deposits ₹10,000:
+"Fractional" means "a part". Banks keep only a **part** of each deposit as reserves and lend out the rest. The part they must keep is set by the **cash reserve ratio (CRR)**. The loans get spent, and the money comes back into banks as new deposits. Then those are lent again.
+
+Example: CRR = 10%, and a customer deposits ₹10,000.
 
 1. Bank A keeps ₹1,000 and lends ₹9,000.
-2. The borrower pays someone who deposits ₹9,000 in Bank B; it keeps ₹900 and lends ₹8,100.
-3. Bank C receives ₹8,100, keeps ₹810, lends ₹7,290, and so on.
+2. The borrower pays someone, who deposits ₹9,000 in Bank B. Bank B keeps ₹900 and lends ₹8,100.
+3. Bank C receives ₹8,100, keeps ₹810 and lends ₹7,290. And so on.
 
-Total deposits = 10,000 + 9,000 + 8,100 + … = 10,000 × 1/0.10 = **₹1,00,000**. So the initial ₹10,000 of cash creates ₹1,00,000 of deposits, that is, ₹90,000 of new money.
+Total deposits = 10,000 + 9,000 + 8,100 + … = 10,000 × 1/0.10 = **₹1,00,000**.
+
+So the first ₹10,000 of cash ends up creating ₹1,00,000 of deposits. That is ₹90,000 of **new** money.
 
 $$\text{Money multiplier} = \frac{1}{\text{CRR}}$$
 
-**(c) Answer. Valid.** With a lower reserve requirement, banks keep less of each deposit idle and lend more in every round. So the multiplier rises. For example, CRR 10% → multiplier 10; CRR 5% → multiplier 20. The same reserves now support more deposits in total, so the money supply **increases**. (It works fully only if banks actually lend and people borrow.)
+**(c) Answer. Yes, it is right.**
+
+- When the reserve requirement is lower, banks keep less of each deposit and lend more in every round.
+- So the money multiplier gets bigger. For example: CRR 10% → multiplier 10; CRR 5% → multiplier 20.
+- The same reserves now support more deposits in total. So the money supply **goes up**.
+- One condition: this works fully only if banks actually lend, and people actually borrow.
 
 > 💡 Lower reserve ratio → bigger multiplier → more money.
 
 ### B8. 🎯 2025 Mid Q2(b) + 🎯 HU-4201 2024 Mid Q2 + ✍️
 
-**(a)** What is an expansionary fiscal policy? What did Keynes suggest to lift an economy out of a sustained recession? **[2 + 1]**
+**(a)** What is an expansionary fiscal policy? What did Keynes suggest to pull an economy out of a long recession? **[2 + 1]**
 **(b)** Compare fiscal and monetary policy. **[4]**
 
 **(a) Answer.**
 
-- **Expansionary fiscal policy:** the government **raises its spending (G) or cuts taxes (T)** to increase total demand. Through the multiplier, income and employment rise by more than the initial change. It is used in a recession.
-- **Keynes's remedy:** in a recession the problem is too little demand (deficient demand), and the market will not fix it quickly. The government should **step in and spend** (public works, infrastructure), even if it runs a budget deficit (spends more than it earns). The multiplier then raises income and jobs.
+- **Expansionary fiscal policy:** the government **spends more (raises G) or taxes less (cuts T)** to raise total demand. Because of the multiplier, income and jobs rise by more than the first change. It is used during a recession (a period when the economy shrinks and jobs are lost).
+- **Keynes's answer:** in a recession, the problem is that people are not spending enough (deficient demand). The market will not fix this quickly. So the government should **step in and spend**, for example on public works and infrastructure. It should do this even if it means a **budget deficit** (spending more than it collects in taxes). The multiplier will then raise income and jobs.
 
 **(b) Answer.**
 
 | | Fiscal policy | Monetary policy |
 | :--- | :--- | :--- |
-| Run by | government (Ministry of Finance) | central bank (RBI) |
-| Tools | government spending, taxes | money supply, CRR, repo rate, open market operations |
-| Expansionary | raise G, cut T | lower interest rates, buy government bonds, cut CRR |
-| Contractionary | cut G, raise T | raise interest rates, sell bonds, raise CRR |
-| Main aim | directly change total demand, income, jobs | control inflation and credit, keep prices stable |
+| Who runs it | the government (Ministry of Finance) | the central bank (RBI) |
+| Tools | government spending and taxes | money supply, CRR, repo rate, open market operations |
+| To expand the economy | raise G, cut T | lower interest rates, buy government bonds, cut CRR |
+| To slow the economy down | cut G, raise T | raise interest rates, sell bonds, raise CRR |
+| Main aim | change total demand, income and jobs directly | control inflation and credit, keep prices stable |
 
-> 💡 Fiscal = government's purse; monetary = central bank's tap.
+> 💡 Fiscal = the government's purse. Monetary = the central bank's tap.

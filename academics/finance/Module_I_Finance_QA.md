@@ -1,19 +1,30 @@
 # Module I — Finance: Exam Questions and Answers (HU-4101)
 
-Companion to [Finance_Economics_and_Management_Midterm_Study_Guide.md](Finance_Economics_and_Management_Midterm_Study_Guide.md), sections 4–6 (accounting, cost accounting, financing and capital budgeting). Try each question first, then read the answer.
+This file goes with [Finance_Economics_and_Management_Midterm_Study_Guide.md](Finance_Economics_and_Management_Midterm_Study_Guide.md), sections 4–6. Those sections cover accounting, cost accounting, and financing and capital budgeting. Try each question yourself first. Then read the answer.
 
-**Pattern (end-sem):** Part A = short notes and short questions (2–4 marks; the paper usually says "any one" or "any two"). Part B = long questions and numericals (6–12 marks), often with an OR. Numericals so far: NPV (10–12 marks) and overhead or cost-sheet calculations (6–10 marks).
-**Tags:** 🎯 real paper (year, question; HU-4201 = the 8th-semester paper of the same course); ✍️ practice to cover the notes; 📘 beyond the notes. 💡 = memory hook.
-**Not in the notes yet:** past end-sems also asked operating, financial and combined leverage (2024 End Q2) and EBIT-EPS analysis of capital structures (2025 End Q1 OR). They will be added when that part of the syllabus arrives.
+**How the end-sem asks finance:**
+
+- **Part A** = short notes and short questions (2–4 marks). The paper usually says "answer any one" or "any two".
+- **Part B** = long questions and sums (6–12 marks), often with an OR choice.
+- So far the sums have been: NPV (10–12 marks), and overhead or cost-sheet sums (6–10 marks).
+
+**Tags used in this file:**
+
+- 🎯 = asked in a real paper (the year and question number are given). "HU-4201" means the 8th-semester paper of the same course.
+- ✍️ = a practice question, added so that every part of the notes is covered.
+- 📘 = goes a little beyond the notes.
+- 💡 = a short line to help you remember.
+
+**Not in the notes yet:** past end-sems also asked about operating, financial and combined leverage (2024 End Q2), and EBIT-EPS analysis of capital structures (2025 End Q1 OR). These will be added when that part of the syllabus arrives.
 
 | Topic in the guide | Question |
 | :--- | :--- |
 | Accounting, AAA definition, stakeholders (§4.1) | A1, A2 |
 | Assets and liabilities (§4.2) | A3, A4 |
 | Cost, costing, cost unit (§5.1) | A5, B1 |
-| Classifications of cost (§5.1) | B1, B2, B3 |
+| Types (classifications) of cost (§5.1) | B1, B2, B3 |
 | Methods of costing (§5.1) | A6, B9 |
-| Cost sheet and its exclusions (§5.2–5.3) | B3, B4 |
+| Cost sheet and what it leaves out (§5.2–5.3) | B3, B4 |
 | Sources of finance, equity vs debt, preference shares (§6.1) | A8, A9, B5 |
 | Cost of capital, debt tax shield (§6.1) | A7, A8 |
 | Time value of money (§6.2) | A10 |
@@ -26,163 +37,213 @@ Companion to [Finance_Economics_and_Management_Midterm_Study_Guide.md](Finance_E
 
 ### A1. Discuss the AAA definition of accounting. 🎯 HU-4201 2025 Mid Q1 [4]
 
-The American Accounting Association defines accounting as *"the process of identifying, measuring and communicating economic information to permit informed judgments and decision making by the users of information."*
+The American Accounting Association (AAA) defines accounting as *"the process of identifying, measuring and communicating economic information to permit informed judgments and decision making by the users of information."*
 
-In simple words: accounting picks out money events, puts a money value on them and reports them, so people can make good decisions.
+**In simple words:** accounting picks out the events that involve money, puts a money value on them, and reports them, so that people can make good decisions.
 
-- **Process:** it goes on all the time: recording, sorting (classifying), summarising and reporting. It is not a one-time event.
-- **Identifying:** record only events that involve money, that is, events with a **financial character** (paying rent, buying steel). Hiring a brilliant engineer or high staff morale is not recorded, because it has no money value.
-- **Measuring:** express every event in **money** (₹).
-- **Communicating:** report the results as financial statements (balance sheet, profit and loss account, cash flow statement).
-- **Users:** owners, lenders, suppliers, managers, employees and government use the information to make decisions.
+Take the definition word by word:
 
-Accounting **records** the past; finance **uses** those records to decide about the future (raising money, investing it).
+- **Process:** accounting goes on all the time. It records, sorts (classifies), summarises and reports. It is not a one-time job.
+- **Identifying:** record only events that involve money. These are events with a **financial character**, like paying rent or buying steel. Hiring a brilliant engineer, or having happy staff, is not recorded, because it has no money value.
+- **Measuring:** show every event in **money** (₹).
+- **Communicating:** report the results as financial statements: the balance sheet, the profit and loss account, and the cash flow statement.
+- **Users:** owners, lenders, suppliers, managers, employees and the government use this information to make decisions.
+
+**Accounting vs finance:** accounting **records** what happened in the past. Finance **uses** those records to decide about the future, such as raising money and investing it.
 
 > 💡 Identify → Measure → Communicate → Decide.
 
 ### A2. Who uses accounting information, and what does each user look for? ✍️ [3]
 
-| User | What they look for | Decision |
+| User | What they look for | What they decide |
 | :--- | :--- | :--- |
-| Suppliers, short-term creditors | **liquidity**: can it pay soon? | give credit or ask for cash |
-| Banks, long-term lenders | **solvency**: can it pay its debts over 10–20 years? | approve the loan, set the interest rate |
-| Shareholders | **profitability**, return on equity | buy, hold or sell shares |
-| Management | unit costs, gaps between budget and actual (variances) | pricing, cost cutting, expansion |
-| Employees, unions | stability, profits | wage bargaining, job security |
-| Government | taxable profit, following the law | tax assessment |
+| Suppliers, short-term lenders | **Liquidity**: can the firm pay soon? | whether to give credit or ask for cash |
+| Banks, long-term lenders | **Solvency**: can the firm pay its debts over the next 10–20 years? | whether to give the loan, and at what interest rate |
+| Shareholders | **Profitability** and return on their money | whether to buy, keep or sell shares |
+| Managers | cost per unit, and gaps between the budget and actual figures (called variances) | pricing, cutting costs, growing the business |
+| Employees, unions | whether the firm is stable and making profits | wage demands, job security |
+| Government | taxable profit, and whether the firm follows the law | how much tax to charge |
 
-A **stakeholder** is anyone whose money or interest is at risk in the firm.
+A **stakeholder** is anyone whose money or interest depends on the firm.
 
-> 💡 Creditors ask "can you pay?"; owners ask "are you earning?"
+> 💡 Lenders ask "can you pay?" Owners ask "are you earning?"
 
-### A3. Write notes (any two): fixed assets, internal liabilities, measurement in accounting. 🎯 2025 Mid Q2 [2 × 3]
+### A3. Write notes on any two: fixed assets, internal liabilities, measurement in accounting. 🎯 2025 Mid Q2 [2 × 3]
 
-**Fixed assets:** assets held for **long-term use (more than 12 months)** in the business, not for resale. Examples: land, buildings, plant and machinery, vehicles. They earn income over many years, so their cost is spread over their life by **depreciation**. Contrast: current assets (cash, stock, debtors) turn into cash within 12 months.
+**Fixed assets**
 
-**Internal liabilities:** what the business owes to its **own owners**, that is, owners' equity: share capital, reserves and surplus, retained earnings. In accounting, the business and its owners are treated as separate. So the owners' capital is shown as something the business owes them. External liabilities are owed to outsiders (bank loans, debentures, creditors).
+- Assets kept for **long-term use (more than 12 months)** in the business, not for selling.
+- Examples: land, buildings, plant and machinery, vehicles.
+- They earn income over many years. So their cost is spread over their working life. This spreading is called **depreciation**.
+- Compare: **current assets** (cash, stock, debtors) turn into cash within 12 months.
 
-**Measurement in accounting:** the second step of the AAA definition. Every identified transaction is expressed in a common **money unit** (₹, US dollar). This lets us add up and compare very different items (steel, wages, rent). Things that cannot be measured in money (staff loyalty) are not recorded.
+**Internal liabilities**
 
-> 💡 Fixed = long-term use; internal = owed to owners; measure = put a ₹ value on it.
+- What the business owes to its **own owners**. This is the owners' equity: share capital, reserves and surplus, and retained earnings.
+- In accounting, the business and its owners are treated as two separate people. So the owners' money is shown as something the business owes them.
+- Compare: **external liabilities** are owed to outsiders, like bank loans, debentures and creditors.
+
+**Measurement in accounting**
+
+- The second step of the AAA definition.
+- Every transaction that has been identified is shown in a common **money unit** (₹, US dollar).
+- This lets us add up and compare very different things: steel, wages, rent.
+- Things that cannot be measured in money (like staff loyalty) are not recorded.
+
+> 💡 Fixed = long-term use. Internal = owed to the owners. Measure = put a ₹ value on it.
 
 ### A4. Define asset and liability. What is a fictitious asset? ✍️ [3]
 
-- **Asset:** something the firm owns or controls, got through a past event, that will bring **future economic benefits** (money or use) later. It is classified as fixed vs current (by time), and tangible vs intangible (by form; intangible means it cannot be touched, like goodwill, patents and copyrights).
-- **Liability:** a debt or duty the firm has now, from a past event. The firm must settle it later by paying out money or other resources (a **future outflow**). It is classified as long-term vs current (by time), and internal vs external (by who is owed).
-- **Fictitious asset:** not a real asset at all. It is a loss or expense that has not yet been written off (removed from the books), so it still sits on the balance sheet. Examples: a debit balance (a loss) of the profit and loss account; preliminary expenses of forming the company. It cannot be sold for anything.
+- **Asset:** something the firm owns or controls, which it got from a past event, and which will bring **benefits in the future** (money or use).
+  - By time: **fixed** (long-term) or **current** (short-term).
+  - By form: **tangible** (can be touched, like a machine) or **intangible** (cannot be touched, like goodwill, patents and copyrights).
+- **Liability:** a debt or duty the firm has now, because of a past event. The firm must settle it later by paying out money or other resources.
+  - By time: **long-term** or **current**.
+  - By who is owed: **internal** (owners) or **external** (outsiders).
+- **Fictitious asset:** not a real asset at all. It is a loss or an expense that has not yet been written off (removed from the books), so it still sits on the balance sheet. It cannot be sold for anything.
+  - Examples: a loss shown in the profit and loss account (a debit balance); preliminary expenses paid to set up the company.
 
 If a payment gives no benefit beyond this year, it is an **expense** in the profit and loss account, not an asset.
 
-> 💡 Asset = future benefit; liability = future sacrifice.
+> 💡 Asset = a future benefit. Liability = a future payment.
 
 ### A5. Define cost and costing. What is a cost unit? 🎯 2025 End Q2(a), 2023 Mid Q1(a, b) [4]
 
-- **Cost:** the total money value of the **scarce resources given up (sacrificed)**, that is, material, labour and expenses, to reach a goal, such as making a product or giving a service.
-- **Costing:** the method of **finding out the cost** of products, jobs or services. It collects expenses, sorts them (classifies) and shares them out (allocates).
-- **Cost unit:** the unit of output for which cost is stated. "₹100 for chairs" means nothing until we know whether it is per chair or per 100 chairs. Examples: per tonne (steel), per passenger-km (bus), per tonne-km (freight).
+- **Cost:** the total money value of the **limited resources given up** (material, labour and other expenses) to reach a goal, like making a product or giving a service.
+- **Costing:** the method of **finding out the cost** of products, jobs or services. It collects the expenses, sorts them into groups, and shares them out among products.
+- **Cost unit:** the unit of output that a cost is stated for. "₹100 for chairs" means nothing until we know whether it is per chair or per 100 chairs.
+  - Examples: per tonne (steel), per passenger-km (bus), per tonne-km (goods transport).
 
-Why it matters: in a competitive market the firm cannot simply raise its price, so **controlling cost** is the main way to raise profit (profit = sales − total cost).
+**Why cost matters:** in a competitive market, a firm cannot just raise its price. So **keeping costs down** is the main way to raise profit. (Profit = sales − total cost.)
 
-> 💡 Cost = what you give up; costing = how you find it.
+> 💡 Cost = what you give up. Costing = how you work it out.
 
 ### A6. Write short notes on process costing and contract costing. 🎯 2025 Mid Q2(iii), HU-4201 2025 Mid Q2 [2 + 2]
 
-**Process costing:** used when production is **continuous** and passes through a series of stages (processes). All units are identical, so one unit cannot be told from another. Cost is collected for each process. Cost per unit = process cost ÷ units. The output of one process becomes the input of the next. Examples: oil refineries, chemicals, paper, sugar, cement.
+**Process costing**
 
-**Contract costing:** used for **large jobs that take a long time**, done to a customer's order, usually at a site away from the factory. Each contract is a separate cost unit with its own account. Examples: bridges, roads, buildings, shipbuilding.
+- Used when production **never stops** and passes through a series of stages (processes).
+- All units are the same, so one unit cannot be told apart from another.
+- Cost is collected for **each process**. Cost per unit = cost of the process ÷ number of units.
+- The output of one process becomes the input of the next.
+- Examples: oil refineries, chemicals, paper, sugar, cement.
 
-> 💡 Process = endless identical flow; contract = one big site job.
+**Contract costing**
 
-### A7. What is cost of capital? Why is debt the cheapest source? 🎯 2025 End Q2(b) [4]
+- Used for **big jobs that take a long time**, done to a customer's order, usually at a site away from the factory.
+- Each contract is treated as a separate cost unit, with its own account.
+- Examples: bridges, roads, buildings, shipbuilding.
 
-**Cost of capital (K):** the **minimum rate of return** a firm must earn on its investments to satisfy the people who provided its funds (lenders and shareholders). It is the firm's cut-off (hurdle) rate, the bar a project must cross: a project is worth doing only if it earns more than K.
+> 💡 Process = a never-ending flow of identical units. Contract = one big job at a site.
 
-Each provider wants a return that matches its **risk**:
+### A7. What is cost of capital? Why is debt the cheapest source of money? 🎯 2025 End Q2(b) [4]
+
+**Cost of capital (K)** is the **lowest rate of return** a firm must earn on its investments to keep the people who gave it money (lenders and shareholders) satisfied.
+
+It works as a **cut-off rate** (also called the hurdle rate): a bar that every project must jump over. A project is worth doing only if it earns more than K.
+
+Each provider of money wants a return that matches the **risk** they take:
 
 $$K_d < K_p < K_r < K_e$$
 
 (debt < preference shares < retained earnings < equity)
 
-- **Debt:** fixed interest that must be paid, first claim on assets → lowest risk → lowest return.
-- **Equity:** dividend only if profit is left, last claim → highest risk → highest return.
-- Also, interest is **tax-deductible**: it is taken off profit before tax is worked out. So the after-tax cost of debt is even lower: $K_d(1 - t)$. For example, 10% debt with 30% tax costs only 7%.
+- **Debt:** lenders get fixed interest that must be paid, and they are paid first if the firm closes. So their risk is lowest, and they accept the lowest return.
+- **Equity:** shareholders get a dividend only if profit is left over, and they are paid last if the firm closes. So their risk is highest, and they want the highest return.
+- **The tax benefit:** interest is **tax-deductible**. It is taken off profit **before** tax is worked out. So the cost of debt after tax is even lower: $K_d(1 - t)$, where t is the tax rate. Example: a 10% loan with a 30% tax rate really costs only 10% × (1 − 0.3) = 7%.
 
 > 💡 More risk for the investor = more cost for the firm.
 
 ### A8. Write a note on debt capital. 🎯 2025 End Q2(d) [4]
 
-**Debt capital** is long-term **borrowed** money: debentures, bonds, term loans from banks.
+**Debt capital** is long-term **borrowed** money: debentures, bonds and term loans from banks. Its features:
 
-- **Refundable:** the amount borrowed (the principal) must be paid back on the due date (maturity date).
-- **Compulsory interest:** paid on time, whether the firm makes a profit or a loss.
-- **Secured:** usually backed by a charge (mortgage) on fixed assets. If the firm is closed down (wound up), lenders are paid first.
-- **No ownership:** lenders get no voting rights, so the owners keep control.
-- **Tax shield:** interest is an expense, deducted before tax, so debt is the cheapest source.
-- **Risk:** too much debt means a heavy fixed interest bill. If sales fall, the firm may fail to pay (default) and fall into **financial distress**.
+- **Must be repaid:** the amount borrowed (the principal) must be paid back on a fixed date (the maturity date).
+- **Interest is compulsory:** it must be paid on time, whether the firm makes a profit or a loss.
+- **Secured:** it is usually backed by a charge (mortgage) on the firm's fixed assets. If the firm is closed down (wound up), lenders are paid first.
+- **No ownership:** lenders get no voting rights. So the owners keep control of the firm.
+- **Tax shield:** interest is an expense, taken off before tax. This makes debt the cheapest source of money.
+- **Risk:** too much debt means a big fixed interest bill every year. If sales fall, the firm may fail to pay (default) and get into **financial distress** (serious money trouble).
 
-So firms use a mix of equity and debt, not 100% of either.
+That is why firms use a **mix** of equity and debt, never 100% of either.
 
-> 💡 Debt: cheap and tax-friendly, but the interest never stops.
+> 💡 Debt is cheap and saves tax, but the interest never stops.
 
 ### A9. What are cumulative preference shares? ✍️ [2]
 
-Preference shares carry a **fixed dividend rate** that must be paid **before** any dividend to equity shareholders. Suppose they are **cumulative** and the firm cannot pay in a loss year. Then the unpaid dividend is carried forward as **arrears** (money still owed). All arrears must be paid in a later year before equity shareholders get anything.
+- **Preference shares** have a **fixed dividend rate**. This dividend must be paid **before** any dividend goes to equity shareholders.
+- If they are **cumulative**, and the firm cannot pay the dividend in a loss year, the unpaid dividend is not lost. It is carried forward as **arrears** (money still owed).
+- In a later year, all the arrears must be paid **before** equity shareholders get anything.
 
-For example, ₹1,00,000 of 10% cumulative preference shares, no dividend in year 1: in year 2 the firm must pay ₹20,000 to them first.
+**Example:** ₹1,00,000 of 10% cumulative preference shares. No dividend is paid in year 1. In year 2, the firm must first pay them ₹20,000 (₹10,000 for year 1 + ₹10,000 for year 2).
 
 > 💡 Cumulative = missed dividends pile up and are paid first.
 
-### A10. Why is a rupee today worth more than a rupee tomorrow? Find the present value of ₹12,100 receivable after 2 years at 10%. ✍️ [3]
+### A10. Why is a rupee today worth more than a rupee tomorrow? Find the present value of ₹12,100 to be received after 2 years at 10%. ✍️ [3]
 
-Cash at different times cannot be added directly, because:
+We cannot simply add up money received at different times. A rupee today is worth more for three reasons:
 
 1. **Inflation:** prices rise, so a future rupee buys less.
 2. **Earning power:** money in hand today can be invested and earn interest.
-3. **Risk:** a future receipt may never come.
+3. **Risk:** money promised in the future may never come.
 
-Compounding moves money forward, discounting moves it back:
+To compare money across time:
 
-$$FV = PV(1 + r)^n, \qquad PV = \frac{FV}{(1 + r)^n}$$
+- **Compounding** moves money **forward** in time: $FV = PV(1 + r)^n$.
+- **Discounting** moves money **back** to today: $PV = \dfrac{FV}{(1 + r)^n}$.
+
+Here FV = future value, PV = present value (today's value), r = interest rate, n = number of years.
 
 $$PV = \frac{12{,}100}{(1.10)^2} = \frac{12{,}100}{1.21} = ₹10{,}000$$
 
-> 💡 Compound forward, discount back.
+So ₹12,100 in 2 years is worth the same as ₹10,000 today.
+
+> 💡 Compound to go forward. Discount to come back.
 
 ### A11. Write a note on the payback period. 🎯 2025 End Q2(c), HU-4201 2024 End Q1(b) [4]
 
-**Payback period (PBP)** is the time a project takes for its cash inflows to **recover the initial investment**.
+The **payback period (PBP)** is the time a project takes to **earn back the money first invested** in it.
 
-- Even inflows: PBP = investment ÷ annual inflow. For example, ₹50,000 ÷ ₹12,500 per year = 4 years.
-- Uneven inflows: add the inflows year by year until the total reaches the investment. For the last, part year, work out the fraction: amount still needed ÷ that year's inflow.
+**How to find it:**
 
-**Rule:** the shorter the payback, the better (the money comes back sooner, less risk).
+- **Same inflow every year:** PBP = investment ÷ yearly inflow. Example: ₹50,000 ÷ ₹12,500 per year = 4 years.
+- **Different inflow each year:** add up the inflows year by year until the total reaches the investment. For the last (part) year, work out the fraction: money still needed ÷ that year's inflow.
 
-**Merits:** simple; shows liquidity and risk.
-**Demerits:** it ignores the **time value of money** (a rupee today is worth more than a rupee later). It also ignores all cash flows **after** the payback date, so it does not measure total profit. (The **discounted payback period** fixes the first problem by using discounted inflows.)
+**Rule:** the shorter the payback, the better. The money comes back sooner, so there is less risk.
+
+**Good points:** it is simple, and it shows how quickly cash comes back (liquidity) and how risky the project is.
+
+**Weak points:**
+
+- It ignores the **time value of money**. It treats a rupee in year 3 the same as a rupee today.
+- It ignores all the money that comes **after** the payback date, so it does not measure total profit.
+- (The **discounted payback period** fixes the first problem by using discounted inflows.)
 
 > 💡 Payback answers "how soon?", not "how much?".
 
 ### A12. What is IRR? How is it used? 🎯 HU-4201 2024 End Q1(c) [4]
 
-The **internal rate of return (IRR)** is the discount rate at which a project's **NPV becomes zero**. That is, the present value of the inflows exactly equals the investment:
+The **internal rate of return (IRR)** is the discount rate that makes a project's **NPV exactly zero**. At this rate, the present value of the inflows equals the money invested:
 
 $$\sum_{t=1}^{n}\frac{\text{Inflow}_t}{(1 + \text{IRR})^t} - \text{Investment} = 0$$
 
-It is the project's own rate of return. It is found by trial and error:
+In simple words: the IRR is the project's own rate of return.
 
-1. Try a rate.
+**How to find it (trial and error):**
+
+1. Try a rate and work out the NPV.
 2. If NPV > 0, try a higher rate. If NPV < 0, try a lower rate.
-3. Then estimate the exact rate between the two rates (this is called interpolation).
+3. Once you have one rate with a positive NPV and one with a negative NPV, estimate the exact rate between them. This is called **interpolation**.
 
-**Rule:** accept if IRR > cost of capital. Between projects, prefer the higher IRR.
+**Rule:** accept the project if IRR > cost of capital. When choosing between projects, prefer the one with the higher IRR.
 
-For example, invest ₹1,000, receive ₹1,100 after one year: IRR = 10%. With cost of capital 8%, accept.
+**Example:** invest ₹1,000 and get ₹1,100 back after one year. The IRR is 10%. If the cost of capital is 8%, accept.
 
 > 💡 IRR = the rate that makes NPV zero.
 
 ---
 
-## Part B — Long questions and numericals (6–12 marks)
+## Part B — Long questions and sums (6–12 marks)
 
 ### B1. 🎯 2024 Mid Q2(a) + 🎯 2023 End Q1
 
@@ -191,35 +252,41 @@ For example, invest ₹1,000, receive ₹1,100 after one year: IRR = 10%. With c
 
 **(a) Answer.**
 
-**Cost** is the total of resources sacrificed, in money terms, to make a product or give a service.
+**Cost** is the total money value of the resources given up to make a product or give a service.
 
-**Functional classification** groups costs by the **function (department)** that causes them:
+The **functional classification** groups costs by the **function (department)** that causes them:
 
 | Function | What it covers | Examples |
 | :--- | :--- | :--- |
 | **Production (works, factory) cost** | everything inside the factory to turn raw material into finished goods | raw material, direct wages, factory rent, power and fuel, lubricants, depreciation of plant, works manager's salary |
-| **Administration (office) cost** | running the office and general management | office rent, clerks' salaries, stationery, postage, audit fees, directors' fees, meeting expenses |
-| **Selling cost** | creating demand and getting orders | advertisement, salesmen's salaries and commission, showroom rent |
-| **Distribution cost** | getting goods from the warehouse to the customer | carriage outwards, packing for dispatch, depreciation of delivery van |
-| **Research and development cost** | new products or better processes | R&D staff salaries, prototype testing |
+| **Administration (office) cost** | running the office and the general management | office rent, clerks' salaries, stationery, postage, audit fees, directors' fees, meeting expenses |
+| **Selling cost** | creating demand and getting orders | advertising, salesmen's salaries and commission, showroom rent |
+| **Distribution cost** | getting goods from the warehouse to the customer | carriage outwards (transport to customers), packing for dispatch, depreciation of the delivery van |
+| **Research and development cost** | making new products or better methods | R&D staff salaries, testing new models (prototypes) |
 
-It shows **which department** spends how much, so each manager can be held responsible. It also gives the stages of the cost sheet (works cost → cost of production → cost of sales).
+**Why it is useful:**
+
+- It shows **which department** spends how much, so each manager can be held responsible for their costs.
+- It also gives the stages of the cost sheet: works cost → cost of production → cost of sales.
 
 **(b) Answer.**
 
-**Behaviour-wise (variability)** classification groups costs by how they change with **output**:
+The **behaviour-wise** classification groups costs by how they change when **output** changes:
 
-| Type | Behaviour | Example |
+| Type | How it behaves | Example |
 | :--- | :--- | :--- |
-| **Variable** | changes in direct proportion to output; fixed per unit | raw material, direct wages on piece rate |
-| **Fixed** | stays the same in total within a capacity range; per unit it falls as output rises | factory rent, supervisor's fixed salary, insurance |
-| **Semi-variable** | partly fixed, partly variable | electricity or telephone bill: fixed meter rent + charge per unit used |
+| **Variable** | total changes in step with output; the cost **per unit stays the same** | raw material; wages paid per piece made |
+| **Fixed** | total stays the same (within the firm's capacity); the cost **per unit falls** as output rises | factory rent, supervisor's fixed salary, insurance |
+| **Semi-variable** | partly fixed, partly variable | electricity or phone bill: a fixed monthly rent plus a charge for each unit used |
 
-For example, rent ₹10,000 per month: at 1,000 units that is ₹10 per unit, at 2,000 units ₹5 per unit. Material ₹20 per unit: total rises with output, per unit stays ₹20.
+**Example:**
 
-It is used for pricing decisions, break-even analysis and budgeting.
+- Rent is ₹10,000 per month. At 1,000 units, that is ₹10 per unit. At 2,000 units, it is ₹5 per unit.
+- Material is ₹20 per unit. The total rises with output, but per unit it stays ₹20.
 
-> 💡 Function asks "which department?"; behaviour asks "does it move with output?".
+**Why it is useful:** for pricing decisions, break-even analysis and budgeting.
+
+> 💡 Functional asks "which department?" Behaviour asks "does it change with output?"
 
 ### B2. 🎯 2023 Mid Q2
 
@@ -238,12 +305,16 @@ It is used for pricing decisions, break-even analysis and budgeting.
 
 **(a) Answer.**
 
-- **Direct cost:** can be linked easily and cheaply to **one** product or cost unit. Examples: leather in a pair of shoes; wages of the operator who makes that job.
-- **Indirect cost (overhead):** shared by **many** products. It cannot be linked to one unit, so it must be shared out among products (apportioned). Examples: factory lighting, security guard's salary, supervisor's salary.
+"Traceability" means: can we trace (link) this cost to one product?
+
+- **Direct cost:** can be linked easily and cheaply to **one** product or cost unit.
+  Examples: the leather in a pair of shoes; the wages of the worker who made that job.
+- **Indirect cost (overhead):** shared by **many** products. It cannot be linked to just one unit, so it has to be shared out among the products (this sharing is called apportioning).
+  Examples: factory lighting, a security guard's salary, a supervisor's salary.
 
 **(b) Answer.**
 
-Pick only the items that create sales or deliver goods:
+Pick only the items that **bring in sales** or **deliver goods** to customers:
 
 | Selling and distribution item | ₹ |
 | :--- | ---: |
@@ -255,14 +326,14 @@ Pick only the items that create sales or deliver goods:
 | Showroom lighting | 58,000 |
 | **Total selling and distribution overheads** | **5,31,000** |
 
-Left out, and why:
+**Items left out, and why:**
 
-- power and fuel, stores manager's salary → **factory** overheads;
-- meeting expenses, office rent → **administration** overheads;
-- debtors, creditors → **balance sheet** items, not costs;
-- sales → revenue, not a cost.
+- Power and fuel, stores manager's salary → these are **factory** overheads.
+- Meeting expenses, office rent → these are **administration** overheads.
+- Debtors, creditors → these are **balance sheet** items, not costs.
+- Sales → this is income (revenue), not a cost.
 
-> 💡 Showroom and "outwards" items are selling; office items are administration; debtors and creditors never enter costing.
+> 💡 Showroom items and anything "outwards" are selling. Office items are administration. Debtors and creditors never enter costing.
 
 ### B3. 🎯 2024 Mid Q2(b) (OR) + 🎯 2025 Mid Q1
 
@@ -280,9 +351,11 @@ Left out, and why:
 | Direct wages | 8,00,000 | Electricity (50% for factory) | 1,00,000 |
 | Telephone charges | 70,000 | | |
 
-**(b)** Prepare a cost statement in the prescribed format, showing each stage, with imaginary items. **[4]**
+**(b)** Prepare a cost sheet in the standard format, showing each stage, using made-up figures. **[4]**
 
 **(a) Answer.**
+
+Pick only the items that come from **running the office**:
 
 | Administrative item | ₹ |
 | :--- | ---: |
@@ -293,14 +366,19 @@ Left out, and why:
 | Accounting charges | 2,50,000 |
 | Audit fees | 1,60,000 |
 | Office rent | 1,50,000 |
-| Depreciation of photocopier (office machine) | 50,000 |
+| Depreciation of photocopier (an office machine) | 50,000 |
 | Electricity, office share (50% of 1,00,000) | 50,000 |
 | Telephone charges | 70,000 |
 | **Total administrative overheads** | **10,45,000** |
 
-Left out: direct materials, direct wages, direct expenses (prime cost); indirect wages and the factory 50% of electricity (works overheads); packing and advertisements (selling and distribution); sales (revenue).
+**Items left out, and why:**
 
-**(b) Answer.** Cost sheet for the period (imaginary figures, ₹):
+- Direct materials, direct wages, direct expenses → these make up **prime cost**.
+- Indirect wages, and the factory's 50% of electricity → **factory (works) overheads**.
+- Packing charges and advertisements → **selling and distribution**.
+- Sales → income, not a cost.
+
+**(b) Answer.** A cost sheet for the period (made-up figures, ₹):
 
 | Particulars | ₹ | ₹ |
 | :--- | ---: | ---: |
@@ -324,13 +402,17 @@ Left out: direct materials, direct wages, direct expenses (prime cost); indirect
 | Add: profit | | 30,000 |
 | **Sales** | | **1,50,000** |
 
-Never include interest on loans, dividends, income tax, debtors or creditors.
+(WIP = work in progress: goods that are half-made.)
 
-> 💡 Material → prime → works → production → goods sold → sales. WIP is adjusted at the factory stage, finished goods after cost of production.
+**Never include** interest on loans, dividends, income tax, debtors or creditors in a cost sheet.
+
+> 💡 Material → prime → works → production → goods sold → sales. Adjust WIP at the factory stage. Adjust finished goods after the cost of production.
 
 ### B4. ✍️ (full cost sheet)
 
-From the following data of a factory that produced 10,000 units, **(a)** prepare a cost sheet showing raw material consumed, prime cost, works cost, cost of production, cost of goods sold, cost of sales and profit, and the cost of production per unit. **[7]** **(b)** Explain why four of the items were left out. **[3]**
+A factory made 10,000 units. From the data below:
+**(a)** Prepare a cost sheet showing raw material consumed, prime cost, works cost, cost of production, cost of goods sold, cost of sales and profit. Also find the cost of production per unit. **[7]**
+**(b)** Explain why four of the items were left out. **[3]**
 
 | Item | ₹ | Item | ₹ |
 | :--- | ---: | :--- | ---: |
@@ -378,52 +460,69 @@ From the following data of a factory that produced 10,000 units, **(a)** prepare
 
 Cost of production per unit = 3,25,000 ÷ 10,000 = **₹32.50**.
 
-**(b) Answer.**
+**(b) Answer.** A cost sheet shows only the cost of **making and selling** goods. These four items are something else:
 
-- **Interest on bank loan:** a cost of **financing** (borrowing money), not of producing. It would be the same however the goods were made.
-- **Dividend paid:** a share of profit given to the owners (an **appropriation of profit**). It is paid out of profit, so it is not a cost.
-- **Income tax:** also charged on profit, after profit is found.
-- **Debtors:** a **balance sheet** item (money customers owe), not an expense.
+- **Interest on bank loan:** a cost of **borrowing money** (financing), not of making goods. It would be the same however the goods were made.
+- **Dividend paid:** a share of profit given to the owners. It is paid **out of** profit (an "appropriation of profit"), so it is not a cost.
+- **Income tax:** also charged on profit, after profit has been worked out.
+- **Debtors:** money that customers owe the firm. It is a **balance sheet** item, not an expense.
 
-> 💡 Finance charges, profit appropriations and balance sheet items stay out.
+> 💡 Borrowing costs, shares of profit and balance sheet items stay out of the cost sheet.
 
 ### B5. 🎯 2024 Mid Q1 + 🎯 2023 End Q2 + ✍️
 
-**(a)** Discuss four major long-term sources of corporate finance. **[4]**
-**(b)** Compare equity capital and debt capital. Why should long-term assets be financed by long-term funds? **[6]**
+**(a)** Discuss four main long-term sources of money for a company. **[4]**
+**(b)** Compare equity capital and debt capital. Why should long-term assets be paid for with long-term money? **[6]**
 
 **(a) Answer.**
 
-1. **Equity share capital:** money from the owners (shareholders). It is permanent: never repaid while the company exists. Dividend is paid only if there is profit. Shareholders can vote and carry the highest risk.
-2. **Preference share capital:** gets a fixed-rate dividend, paid before any equity dividend. It is repaid before equity if the company is closed (wound up). Usually no voting rights. It may be cumulative.
-3. **Debentures and long-term loans (debt):** borrowed for a fixed period at fixed interest, and secured on assets. Interest must be paid and is tax-deductible.
-4. **Retained earnings (ploughing back of profits):** profits kept in the business instead of being paid as dividend. It comes from inside, costs nothing to raise and is never repaid. But owners give up some dividend now.
+1. **Equity share capital:** money from the owners (shareholders).
+   - It is permanent: it is never repaid while the company exists.
+   - A dividend is paid only if there is profit.
+   - Shareholders can vote, and they carry the most risk.
+2. **Preference share capital:**
+   - Gets a dividend at a fixed rate, paid **before** any equity dividend.
+   - If the company is closed (wound up), it is repaid before equity.
+   - Usually has no voting rights. It may be cumulative (see A9).
+3. **Debentures and long-term loans (debt):**
+   - Borrowed for a fixed period at a fixed interest rate, and secured on the firm's assets.
+   - Interest must be paid, and it is tax-deductible.
+4. **Retained earnings (ploughing back profits):**
+   - Profits kept in the business instead of being paid out as dividends.
+   - It comes from inside the firm, costs nothing to raise, and is never repaid.
+   - But the owners give up some dividend now.
 
 **(b) Answer.**
 
 | Point | Equity capital | Debt capital |
 | :--- | :--- | :--- |
-| Need | compulsory: a company cannot exist without owners' capital | optional |
-| Repayment | not repaid during the company's life | repaid on maturity |
-| Return | dividend, only if profit and if declared | fixed interest, compulsory even in a loss |
-| Tax | dividend is paid **after** tax | interest is deducted **before** tax |
-| Security | none; last (residual) claim | secured on fixed assets; first claim |
+| Is it needed? | compulsory: a company cannot exist without owners' money | optional |
+| Repayment | not repaid during the company's life | repaid on the fixed date (maturity) |
+| Return | dividend, only if there is profit and the company declares it | fixed interest, which must be paid even in a loss |
+| Tax | dividend is paid **after** tax | interest is taken off **before** tax |
+| Security | none; owners are paid last (a "residual" claim) | secured on fixed assets; lenders are paid first |
 | Control | voting rights | no voting rights |
-| Risk to investor / cost to firm | highest | lowest |
+| Risk to the investor = cost to the firm | highest | lowest |
 
-Before giving money, every investor asks three things: when will it be repaid, what return will I get, and what security do I have. Equity and debt answer them differently.
+Before giving money, every investor asks three questions:
 
-**Golden rule of financing:**
+1. When will I get it back?
+2. What return will I get?
+3. What security do I have?
 
-- Fixed assets (land, machinery) earn income slowly, over many years. So they must be paid for with **long-term** money (equity, debentures, term loans).
-- Suppose a factory is bought with short-term funds (an overdraft, 30-day supplier credit). The loan falls due long before the factory has earned the money to repay it. The firm then faces a cash crisis even when it is making a profit.
-- Short-term funds should pay for current assets (stock, debtors).
+Equity and debt answer these questions in opposite ways.
 
-> 💡 Long-term assets with long-term money; short-term assets with short-term money.
+**The golden rule of financing:**
+
+- Fixed assets (land, machinery) earn money slowly, over many years. So they must be paid for with **long-term** money (equity, debentures, term loans).
+- What if a factory is bought with short-term money (like a bank overdraft, or 30 days' credit from a supplier)? The loan must be repaid long before the factory has earned enough to repay it. The firm then runs out of cash, even if it is making a profit.
+- Short-term money should pay for current assets (stock, debtors).
+
+> 💡 Long-term assets with long-term money. Short-term assets with short-term money.
 
 ### B6. 🎯 2025 End Q1 [12]
 
-Equipment A costs ₹75,000 and Equipment B costs ₹50,000. The required return for both is 11%. Calculate the NPV of each and comment on acceptability.
+Equipment A costs ₹75,000 and Equipment B costs ₹50,000. The required return for both is 11%. Calculate the NPV of each and say whether they should be accepted.
 
 | Year | 1 | 2 | 3 | 4 | 5 |
 | :--- | ---: | ---: | ---: | ---: | ---: |
@@ -432,7 +531,7 @@ Equipment A costs ₹75,000 and Equipment B costs ₹50,000. The required return
 
 **Answer.**
 
-**NPV** = present value of all cash inflows − initial investment, where each inflow is discounted by the factor $1/(1 + r)^t$:
+**NPV (net present value)** = the present value of all the cash that will come in − the money invested at the start. Each year's inflow is turned into today's value by multiplying it by a **discount factor**, $1/(1 + r)^t$:
 
 $$\text{NPV} = \sum_{t=1}^{n}\frac{\text{Inflow}_t}{(1 + r)^t} - \text{Investment}$$
 
@@ -451,24 +550,24 @@ Discount factors at 11%: $1/1.11 = 0.9009$, $1/1.11^2 = 0.8116$, then 0.7312, 0.
 
 **Comment:**
 
-- Both NPVs are positive, so each earns more than the required 11%; **both are acceptable** if they are independent.
-- If only one can be bought (mutually exclusive), choose **Equipment A**, which adds more wealth (₹3,831 > ₹1,087).
-- 📘 A also returns more per rupee invested (present value ÷ cost: A = 1.051, B = 1.022), so A wins on both counts.
+- Both NPVs are positive. So each machine earns more than the required 11%. **Both can be accepted** if the firm can buy both (they are independent).
+- If the firm can buy only one (they are mutually exclusive), it should choose **Equipment A**, because it adds more wealth (₹3,831 > ₹1,087).
+- 📘 A also gives more back for each rupee invested (present value ÷ cost: A = 1.051, B = 1.022). So A wins on both measures.
 
-(Factors rounded to 4 places; using exact factors gives the same answer within a rupee.)
+(The factors are rounded to 4 decimal places. Using exact factors gives the same answer to within one rupee.)
 
-> 💡 NPV > 0 → accept; two choices → higher NPV.
+> 💡 NPV > 0 → accept. If you must choose one → pick the higher NPV.
 
 ### B7. 🎯 2024 End Q2 (OR) + ✍️
 
-A company can buy Machine A or Machine B, each costing ₹80,000. Earnings after tax are:
+A company can buy Machine A or Machine B. Each costs ₹80,000. Earnings after tax are:
 
 | Year | 1 | 2 | 3 | 4 | 5 |
 | :--- | ---: | ---: | ---: | ---: | ---: |
 | Machine A (₹) | 24,000 | 32,000 | 40,000 | 24,000 | 16,000 |
 | Machine B (₹) | 8,000 | 24,000 | 32,000 | 48,000 | 32,000 |
 
-**(a)** Evaluate the two machines by the NPV method at a 10% discount rate. **[7]**
+**(a)** Compare the two machines using NPV at a 10% discount rate. **[7]**
 **(b)** Find the payback period of each. Does it agree with NPV? **[3]**
 
 **(a) Answer.**
@@ -484,11 +583,13 @@ A company can buy Machine A or Machine B, each costing ₹80,000. Earnings after
 | Less: cost | | | 80,000 | | 80,000 |
 | **NPV** | | | **+24,641.6** | | **+23,800.8** |
 
-Both are worth buying. **Machine A** is better because its NPV is higher by about ₹841.
+Both machines are worth buying. **Machine A is better**, because its NPV is higher by about ₹841.
 
-Note that the **undiscounted** totals are A = ₹1,36,000 and B = ₹1,44,000, so B looks better before discounting. A wins because its money comes **earlier**, and early money is worth more.
+**An important point:** without discounting, the totals are A = ₹1,36,000 and B = ₹1,44,000. So B looks better at first. But A wins, because A's money comes in **earlier**, and money received earlier is worth more.
 
 **(b) Answer.**
+
+Add up the inflows year by year (cumulative totals):
 
 | | A cumulative (₹) | B cumulative (₹) |
 | :--- | ---: | ---: |
@@ -497,10 +598,10 @@ Note that the **undiscounted** totals are A = ₹1,36,000 and B = ₹1,44,000, s
 | Year 3 | 96,000 | 64,000 |
 | Year 4 | | 1,12,000 |
 
-- A: after 2 years ₹56,000 is back; ₹24,000 more is needed from year 3's ₹40,000 → 24,000/40,000 = 0.6 year. **PBP = 2.6 years.**
-- B: after 3 years ₹64,000; ₹16,000 more from year 4's ₹48,000 → 16,000/48,000 = 0.33 year. **PBP = 3.33 years** (3 years 4 months).
+- **A:** after 2 years, ₹56,000 is back. ₹24,000 more is needed, out of year 3's ₹40,000. That takes 24,000 ÷ 40,000 = 0.6 of a year. **PBP = 2.6 years.**
+- **B:** after 3 years, ₹64,000 is back. ₹16,000 more is needed, out of year 4's ₹48,000. That takes 16,000 ÷ 48,000 = 0.33 of a year. **PBP = 3.33 years** (3 years 4 months).
 
-Payback also prefers A, so both methods agree here.
+Payback also prefers A. So the two methods agree here.
 
 > 💡 Early cash beats late cash, even when the late total is bigger.
 
@@ -514,11 +615,14 @@ Payback also prefers A, so both methods agree here.
 | Investment | ₹2,00,000 | ₹50,000 |
 | Inflows, years 1–5 (₹) | 50,000; 56,000; 61,000; 72,000; nil | 35,000; 66,000; 64,000; 68,000; 23,000 |
 
-**(b)** A project's cash flow next year will be ₹10,000, ₹20,000 or ₹30,000 with probabilities 0.3, 0.5 and 0.2. Find the expected value and the standard deviation, and say what each tells the manager. **[4]**
+**(b)** A project's cash flow next year will be ₹10,000, ₹20,000 or ₹30,000, with chances (probabilities) of 0.3, 0.5 and 0.2. Find the expected value and the standard deviation, and say what each one tells the manager. **[4]**
 
 **(a) Answer.**
 
-**NPV** is the present value of a project's future cash inflows minus its initial investment. It measures how much wealth the project adds, after allowing for the time value of money. Accept if NPV > 0. Between projects, choose the highest NPV.
+**NPV** is the present value of a project's future cash inflows, minus the money invested at the start. It measures **how much wealth the project adds**, after allowing for the fact that later money is worth less.
+
+- Accept if NPV > 0.
+- When choosing between projects, choose the highest NPV.
 
 | Year | Factor | A inflow | A present value | B inflow | B present value |
 | :---: | :---: | ---: | ---: | ---: | ---: |
@@ -531,43 +635,59 @@ Payback also prefers A, so both methods agree here.
 | Less: investment | | | 2,00,000 | | 50,000 |
 | **NPV** | | | **−13,307** | | **+1,45,122** |
 
-**Recommend Project B.** A's NPV is negative. It does not even earn 10%, so it would reduce wealth. B costs only a quarter as much and has a large positive NPV.
+**Recommend Project B.**
+
+- A's NPV is negative. It does not even earn 10%, so it would **reduce** the firm's wealth.
+- B costs only a quarter as much and has a large positive NPV.
 
 **(b) Answer.**
 
+**Expected value** (the weighted average): multiply each outcome by its chance, and add.
+
 $$E = \sum p_i x_i = 0.3(10{,}000) + 0.5(20{,}000) + 0.2(30{,}000) = 3{,}000 + 10{,}000 + 6{,}000 = ₹19{,}000$$
+
+**Variance:** for each outcome, find how far it is from E, square it, multiply by its chance, and add.
 
 $$\sigma^2 = \sum p_i (x_i - E)^2 = 0.3(-9{,}000)^2 + 0.5(1{,}000)^2 + 0.2(11{,}000)^2 = 2{,}43{,}00{,}000 + 5{,}00{,}000 + 2{,}42{,}00{,}000 = 4{,}90{,}00{,}000$$
 
+**Standard deviation** is the square root of the variance:
+
 $$\sigma = \sqrt{4{,}90{,}00{,}000} = ₹7{,}000$$
 
-- **Expected value (₹19,000):** the average cash flow, with each outcome weighted by its chance (probability). This is the figure to plan with.
-- **Standard deviation (₹7,000):** how far actual results may spread away from the average. It measures **risk**. If two projects have the same expected value, the one with the smaller σ is safer.
+**What they tell the manager:**
 
-> 💡 Mean = what you expect; standard deviation = how sure you can be.
+- **Expected value (₹19,000):** the average cash flow, with each outcome weighted by how likely it is. This is the figure to plan with.
+- **Standard deviation (₹7,000):** how far the actual result may be from that average. It measures **risk**. If two projects have the same expected value, the one with the smaller σ is safer.
+
+> 💡 Expected value = what you expect. Standard deviation = how sure you can be.
 
 ### B9. 🎯 2023 Mid Q1 (c, d) + ✍️
 
 **(a)** Briefly explain the methods of costing. **[5]**
-**(b)** Why are different methods of costing needed? **[2]**
+**(b)** Why do we need different methods of costing? **[2]**
 **(c)** Why does a firm prepare a cost sheet? **[3]**
 
 **(a) Answer.**
 
 | Method | Used when | Cost unit | Examples |
 | :--- | :--- | :--- | :--- |
-| **Job costing** | each order is different, made to the customer's specification | the job | printing press, repair workshop, furniture to order |
-| **Batch costing** | a group of identical items is made together | the batch (cost per item = batch cost ÷ number) | medicines, garments, biscuits |
-| **Contract costing** | large, long jobs at a site | the contract | bridges, roads, buildings, ships |
-| **Process costing** | continuous production through stages, identical units | each process | oil refinery, chemicals, paper, cement |
-| **Operating (service) costing** | services, not goods | composite units (passenger-km, room-day, bed-day) | bus and rail transport, hotels, hospitals |
+| **Job costing** | each order is different, made to the customer's own design | the job | printing press, repair workshop, furniture made to order |
+| **Batch costing** | a group of identical items is made together | the batch (cost per item = batch cost ÷ number of items) | medicines, clothes, biscuits |
+| **Contract costing** | big, long jobs at a site | the contract | bridges, roads, buildings, ships |
+| **Process costing** | non-stop production through stages; all units are identical | each process | oil refinery, chemicals, paper, cement |
+| **Operating (service) costing** | services, not goods | combined units, like passenger-km, room-day or bed-day | buses and trains, hotels, hospitals |
 
-**(b) Answer.** Industries produce in different ways: one-off orders, batches, continuous flow or services. The cost unit and the way cost is collected must suit the type of production. One method cannot give correct unit costs for both a printing press and an oil refinery. The right method gives correct costs for pricing, cost control and tenders (price quotes for a contract).
+**(b) Answer.**
+
+- Industries make things in different ways: one-off orders, batches, a non-stop flow, or services.
+- The cost unit, and the way cost is collected, must suit the type of production.
+- One method cannot give correct costs per unit for both a printing press and an oil refinery.
+- The right method gives correct costs for setting prices, controlling costs and quoting for tenders (price offers for a contract).
 
 **(c) Answer.**
 
-1. It shows the cost at **each stage** (prime cost, works cost, cost of production, cost of sales). So the manager sees where costs are rising: material, factory or selling.
-2. It helps fix the **selling price** and quote for **tenders**, using past overhead percentages. In the guide's example, factory overheads were 20.53% of prime cost and office overheads 2.12% of works cost. So a new job is quoted by adding those percentages.
-3. It allows **comparison** with earlier periods and with other firms. This helps control cost.
+1. It shows the cost at **each stage**: prime cost, works cost, cost of production, cost of sales. So the manager can see where costs are rising: in material, in the factory, or in selling.
+2. It helps to fix the **selling price** and to quote for **tenders**, using past overhead percentages. In the guide's example, factory overheads were 20.53% of prime cost, and office overheads were 2.12% of works cost. So a new job is priced by adding those same percentages.
+3. It allows **comparison** with earlier periods and with other firms. This helps to control cost.
 
-> 💡 Job = one order, batch = a group, contract = a site, process = a flow, operating = a service.
+> 💡 Job = one order. Batch = a group. Contract = a site. Process = a flow. Operating = a service.
