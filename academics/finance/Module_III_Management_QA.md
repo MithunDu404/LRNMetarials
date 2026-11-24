@@ -1,10 +1,6 @@
 # Module III — Management: Exam Questions and Answers (HU-4101)
 
-This file goes with three sources:
-
-- [Management_Concepts_and_Leadership_Styles_Learning_Guide.md](Management_Concepts_and_Leadership_Styles_Learning_Guide.md), which covers the decks `1 & 2 - MGT CONCEPT.pptx` and `3 - MGT STYLES.pptx`;
-- the management part (§3) of [Finance_Economics_and_Management_Midterm_Study_Guide.md](Finance_Economics_and_Management_Midterm_Study_Guide.md);
-- the deck `4 - CORPORATE STRATEGIES.pptx`. This deck has no guide yet, so its answers below are written straight from the slides.
+**Syllabus for the end-sem:** only the deck `4 - CORPORATE STRATEGIES.pptx` (129 slides), which was shared after the midsem. Everything in this file comes from that deck. The midsem topics (management concepts, Fayol, leadership styles) are not here.
 
 Try each question yourself first. Then read the answer.
 
@@ -12,475 +8,278 @@ Try each question yourself first. Then read the answer.
 
 - Mostly **case studies** (8–10 marks). Each case has sub-questions and says "attempt any two". There is often an OR between two cases.
 - A set of short applied questions (2 marks each, about 6 marks in total).
-- Sometimes a 5-mark theory question.
+- Sometimes a 4–5 mark theory question.
 
 In this file, **Part A** has the short and theory questions, and **Part B** has the case studies.
 
 **Tags used in this file:**
 
-- 🎯 = asked in a real paper (the year and question number are given). "HU-4201" means the 8th-semester paper of the same course.
-- ✍️ = a practice question, added so that every part of the notes is covered.
-- 📘 = goes a little beyond the notes.
+- 🎯 = asked in a real paper (the year and question number are given).
+- ✍️ = a practice question, added so that every part of the deck is covered.
 - 💡 = a short line to help you remember.
 
-**Not in the notes yet:** past end-sems also asked about the marketing mix (4Ps) and channels (2024 End), linear models of communication (2023 End), and the Hawthorne studies (2023 Mid). These will be added when that part of the syllabus arrives.
-
-| Topic in the notes | Question |
+| Topic in the deck | Question |
 | :--- | :--- |
-| Definition, efficiency vs effectiveness, characteristics | A1, A3 |
-| Functions of management, Fayol's 14 principles | A2, A6 |
-| Science, art or profession | A4, B4 |
-| Levels of management, importance, functional areas | A5, A7 |
-| Leadership vs management, three styles | A8, A9, B2 |
-| Trait theory, Ohio State / Michigan, Managerial Grid | A10, A11, A12, B5 |
-| Situational, path-goal, LMX, transactional vs transformational | A13, A14, A15, B1, B3, B5 |
-| Applied 2-mark questions | A16 |
-| Vision, mission, goals, objectives, SMART (deck 4) | A17, A18 |
-| Strategy and its levels; types of corporate strategy | A19, A20 |
-| Stability strategy | A21, B8(a) |
-| Expansion: concentration and Ansoff, integration, diversification | A22, A23, A24, B7, B8(c) |
-| Cooperation: M&A, JV, strategic alliance | A25, A26 |
-| International strategies (Bartlett–Ghoshal) | A27, B9 |
-| Retrenchment and combination | A28, A29, B6, B8(b) |
-| 📘 Porter's generic strategies, five forces, strategic-management process | A30 |
+| Vision and mission: definitions, examples, differences | A1, A2 |
+| Goals and objectives: definitions, differences, types of goals | A3, A4 |
+| SMART goals, areas of objectives, why objectives matter | A5 |
+| Strategy and its three levels | A6 |
+| Types of corporate-level strategy | A7 |
+| Stability strategy | A8, B3(a) |
+| Expansion strategy: meaning, reasons, five types | A9 |
+| Concentration and Ansoff's matrix | A10, B2 |
+| Integration: vertical (backward, forward, full, taper) and horizontal | A11, B3(c) |
+| Diversification: related and unrelated | A12, B2 |
+| Cooperation: M&A, joint venture, strategic alliance | A13, A14 |
+| Internationalization (Bartlett–Ghoshal) | A15, B4 |
+| Retrenchment: turnaround, divestment, liquidation | A16, B1, B3(b) |
+| Combination: simultaneous and sequential | A17, B1, B3(b) |
 
 ---
 
 ## Part A — Short and theory questions (2–5 marks)
 
-### A1. Define management. What is the difference between efficiency and effectiveness? ✍️ [3]
+### A1. Define vision and mission. Give examples. ✍️ [3]
 
-**Management** means **getting work done through and with other people**, so that the organisation reaches its goals **efficiently and effectively**.
+**Vision**
 
-Three famous definitions:
+- A vision is a **picture of the future**. It describes the kind of place a person or a firm wants to create over a long time.
+- It answers the question **"What will success look like?"**
+- Chasing this picture of success is what **motivates people to work together**.
+- In short: a vision says **what the firm would like to become**.
 
-- **Mary Parker Follett:** "the art of getting things done through people."
-- **Henri Fayol:** "to manage is to forecast and plan, to organise, to command, to co-ordinate and to control."
-- **Peter Drucker:** management has many purposes. It manages a business, it manages managers, and it manages workers and work.
+**Mission**
 
-| Efficiency | Effectiveness |
-| :--- | :--- |
-| **doing things right** | **doing the right things** |
-| using the fewest resources (money, time, material) for a given output | actually reaching the goal (the target, the deadline, the quality) |
-| about the **means** (how) | about the **ends** (what is achieved) |
+- A mission is the **basic purpose** of the firm: **why it exists**, what business it is in, and which customers it wants to serve.
+- It is a **lasting statement of purpose** that makes one firm different from other, similar firms.
+- It shows the firm's **scope**: which products and which markets it works in. (The deck says the mission names the product, market and technology areas the business focuses on.)
+- In short: a mission says **what the firm is now**, and answers **"What is the company giving to society?"**
 
-A good manager needs both: reach the goal, and waste nothing on the way.
-
-> 💡 Efficiency = the right way. Effectiveness = the right goal.
-
-### A2. What are the different functions of management? 🎯 2023 Mid Q3 [5]
-
-Henri Fayol gave five functions. They are often remembered as **POSDC**:
-
-1. **Planning:** looking ahead and deciding in advance **what** to do, **how** and **when**. It includes setting objectives. Example: aiming for a 15% rise in market share over three years.
-2. **Organising:** dividing the work, grouping it into departments, giving people and resources to each task, and deciding who reports to whom.
-3. **Staffing / commanding (directing):** hiring and training people, then instructing, guiding and motivating them to do their tasks.
-4. **Coordinating:** making all departments work together in the same direction. Example: production makes what the sales team can actually sell.
-5. **Controlling:** comparing actual results with the plan, finding the gap, and correcting it.
-
-These five form a **cycle**: what we learn while controlling shows us what to plan next.
-
-![Fayol's five functions](../../figures/management/fayol_five_functions.png)
-
-> 💡 Plan → Organise → Staff/Direct → Coordinate → Control → back to Plan.
-
-### A3. State the characteristics of management. ✍️ [4]
-
-1. **Goal-oriented:** it exists to reach set objectives.
-2. **Universal:** every organisation needs it: a business, a hospital, the army, a university.
-3. **A continuous process:** a never-ending cycle of planning, doing, checking and adjusting.
-4. **Dynamic:** it changes to fit new markets, new technology and changes in society.
-5. **A group activity:** it is about people working together, not one person alone.
-6. **Interdisciplinary:** it borrows ideas from many subjects: economics, psychology, sociology, statistics and engineering.
-7. **A system of authority:** there is a chain of command, and managers have the right to give directions.
-8. **Decision-making:** managers must choose between options, even when the future is uncertain.
-9. **A profession:** it has an organised body of knowledge, formal training and a code of ethics.
-10. **Intangible:** you cannot see or touch it. You notice it only through its effects: order, team spirit (morale) and results.
-
-> 💡 It has a goal, it is everywhere, it never stops, it changes, it is about people, and it is invisible.
-
-### A4. Is management a science, an art or a profession? 🎯 HU-4201 2025 Mid A(ii), 🎯 2024 Mid Q2(b) [2–5]
-
-It is **all three**.
-
-- **Science:**
-  - It has an organised body of knowledge and principles (like Fayol's 14).
-  - It has cause-and-effect links that have been tested with evidence.
-  - It uses data, statistics, and methods such as **TQM** (total quality management) and statistical quality control.
-- **Art:**
-  - Using that knowledge needs personal skill, judgement, creativity and a feel for people. These get better with practice.
-  - Example: handling a sudden **breakdown in the supply chain**. The manager must find new suppliers fast and calm worried staff. No textbook gives the exact steps.
-- **Profession:**
-  - It is learned through formal education (like an MBA).
-  - It has professional bodies and a code of conduct.
-  - Managers are appointed for their ability, not because they own the firm.
-  - But it is not a profession in the strict sense, like law or medicine, because no licence is required to practise it.
-
-**Different functions lean different ways:**
-
-- **Planning and controlling** lean towards **science**: forecasts, budgets, and variance analysis (comparing actual results with planned ones).
-- **Directing, motivating and handling conflict** lean towards **art**.
-
-> 💡 Science tells you what works. Art tells you how to make it work with these particular people.
-
-### A5. Explain the levels of management. How do authority and accountability flow? ✍️ [4]
-
-| Level | Who | Main job |
-| :--- | :--- | :--- |
-| **Top** | board of directors, chairman, CEO, managing director | sets the objectives, policies and long-term strategy; deals with investors and the outside world |
-| **Middle** | heads of departments, regional or plant managers | turns the top level's strategy into department plans and budgets; links the top and the bottom; coordinates departments |
-| **Lower (supervisory)** | supervisors, foremen, team leads | gives out daily work, supervises workers directly, keeps up quality and discipline, reports upwards |
-
-- **Authority flows down:** top → middle → lower. (Authority is the right to give orders.)
-- **Accountability flows up:** lower → middle → top. Each level must answer for its results to the level above it.
-
-![Levels of management](../../figures/management/management_levels_hierarchy.png)
-
-> 💡 Orders go down. Reports go up.
-
-### A6. Discuss Henri Fayol's contribution to modern management (his 14 principles). 🎯 HU-4201 2024 Mid Q1 [5]
-
-Fayol was a French mining engineer. He is called the **father of modern (administrative) management**. He showed that management is a separate skill that can be **taught**. He described its five functions (see A2) and gave 14 principles:
-
-1. **Division of work:** when each person specialises in one task, skill and output go up.
-2. **Authority and responsibility:** the right to give orders comes with responsibility for the results.
-3. **Discipline:** everyone obeys the rules and agreements.
-4. **Unity of command:** each employee takes orders from **only one** boss.
-5. **Unity of direction:** activities with the same objective have one head and one plan.
-6. **Subordination of individual interest to general interest:** the interest of the group comes before the interest of one person.
-7. **Remuneration:** pay is fair, and satisfies both the worker and the firm.
-8. **Centralisation:** the right balance between decisions taken at the top and decisions passed down to lower levels (delegation).
-9. **Scalar chain:** an unbroken line of authority from the top to the bottom. In an emergency, people at the same level may talk directly. This shortcut is called a "gang plank".
-10. **Order:** a place for everything and everyone, and everything and everyone in its place.
-11. **Equity:** workers are treated with kindness and fairness.
-12. **Stability of tenure:** people keep their jobs for a long time, so few people leave (low staff turnover).
-13. **Initiative:** employees are allowed to suggest ideas and carry them out.
-14. **Esprit de corps:** team spirit and harmony. ("Union is strength.")
-
-> 💡 Fayol: 5 functions + 14 principles = management as a subject you can study.
-
-### A7. Why is management important and needed? What are its functional areas? 🎯 HU-4201 2024 End Q5(b) [4]
-
-**Why management is important:**
-
-1. It helps the group reach its goals, by directing everyone towards them.
-2. It makes the **best use of scarce resources** (people, money, materials, machines). It cuts waste and cost.
-3. It keeps the organisation stable, and helps it survive and grow when the world around it changes.
-4. It builds a sound organisation with clear roles, so there is no overlap or confusion.
-5. It keeps good relations with employees and keeps them motivated.
-6. It helps the nation develop, by creating jobs, more output and better products.
-
-**Functional areas (the scope of management):** finance, human resources (personnel), marketing, production, materials, purchasing, maintenance and office management.
-
-> 💡 Without management, resources are just a pile of things.
-
-### A8. How is leadership different from management? ✍️ [3]
-
-| | Management | Leadership |
-| :--- | :--- | :--- |
-| Aim | order, consistency and efficiency of the existing system | vision, direction and change |
-| Power comes from | the formal **position** and its authority | personal **influence**, trust and respect |
-| Focus | plans, budgets, processes, control | people: inspiring them, uniting them, motivating them |
-| Change | keeps things stable; reacts to events | drives change; acts before events happen (proactive) |
-| Time | short term | long term |
-
-A manager has **subordinates** (people who report to them). A leader has **followers** (people who choose to follow). The best managers are also leaders.
-
-> 💡 Managers do things right. Leaders do the right things and bring people along.
-
-### A9. What are the three main management styles? Explain with examples. 🎯 HU-4201 2024 End Q4 [1 + 7]
-
-| | Autocratic (authoritarian) | Democratic (participative) | Laissez-faire (free rein) |
-| :--- | :--- | :--- | :--- |
-| Who decides | the manager alone | the manager, after talking with the team; decisions are shared | the team, with little interference from the manager |
-| Communication | one-way: orders from the top | two-way: open discussion | mostly among team members |
-| Strengths | quick decisions, clear command, tight control | commitment, creativity, better ideas, high morale | freedom, new ideas, people motivate themselves |
-| Weaknesses | low morale, no initiative, everyone depends on the boss, many people leave | slower decisions; discussion can go on and on | drifting and confusion if people lack skill or discipline |
-| Best when | emergencies, crises, tight deadlines, unskilled or new staff | complex problems, knowledge workers, engineering and software teams | highly skilled, self-motivated experts (R&D labs, senior designers) |
-| Example | an army in battle; the early Infosys founders | a product design team | research scientists |
-
-**No style is best in every situation.** A good manager matches the style to the task and to the people.
-
-> 💡 Autocratic: "I decide." Democratic: "We decide." Laissez-faire: "You decide."
-
-### A10. What is trait theory? What are its limits? ✍️ [2]
-
-**Trait theory** says leaders are **born, not made**. Leaders have certain personal qualities (traits) that make them rise to the top: intelligence, confidence, energy, height, and **charisma**.
-
-- **Charisma** is a personal charm that draws people to someone. Its traits include vision, self-confidence, persuasive speech and warmth.
-- Example: Steve Jobs at Apple.
-
-**Limits of trait theory:**
-
-- No single list of traits fits all leaders.
-- It ignores the **situation** and the followers.
-- Having the traits does not guarantee success.
-
-These problems led to the **behavioural theories**, which study what leaders **do**, not what they are.
-
-> 💡 Traits = who the leader is. Behaviour = what the leader does.
-
-### A11. Explain the Ohio State and Michigan studies of leadership. ✍️ [4]
-
-Both studies looked at what leaders **do** (their behaviour), not at their traits.
-
-**Ohio State studies:** found two **separate** dimensions. A leader can be high or low on each one, independently.
-
-- **Initiating structure (task side):** defining roles, setting goals, deadlines and procedures.
-- **Consideration (people side):** trust, respect for subordinates' ideas, and care for their feelings.
-
-**University of Michigan studies:** found two **opposite** orientations. A leader leans towards one or the other.
-
-- **Employee-oriented:** focuses on relationships and the workers' needs.
-- **Production-oriented:** focuses on the technical task and the output. Workers are just a means to reach the target.
-
-Michigan found that employee-oriented leaders had groups that were more productive and more satisfied. Both studies led to the Managerial Grid (see A12).
-
-> 💡 Ohio = two separate dials. Michigan = one dial with two ends.
-
-### A12. Explain Blake and Mouton's Managerial Grid with a diagram. 🎯 2023 Mid Q1 [5]
-
-Blake and Mouton scored a manager from 1 to 9 on two things:
-
-- **concern for production** (the x-axis);
-- **concern for people** (the y-axis).
-
-This gives 81 possible positions. Five of them are the key ones:
-
-| Position | Style | Meaning |
-| :--- | :--- | :--- |
-| (1, 1) | **Impoverished** | little concern for either; does just enough to keep the job |
-| (9, 1) | **Task / produce or perish** | output at any cost; people are only tools; based on authority and obedience |
-| (1, 9) | **Country club** | comfort and friendliness come first; output suffers |
-| (5, 5) | **Middle of the road** | a balance by compromise; good enough, but not excellent |
-| (9, 9) | **Team management** | high concern for both; committed people work together for shared goals (linked to McGregor's Theory Y). This is the **best** style. |
-
-![Blake-Mouton Managerial Grid](../../figures/management/blake_mouton_managerial_grid.png)
-
-> 💡 Aim for (9, 9): high concern for people, high concern for production.
-
-### A13. Explain Hersey and Blanchard's situational leadership theory. ✍️ [4]
-
-The right style depends on how **ready** the follower is. Readiness has two parts:
-
-- **ability:** do they have the skill for the task?
-- **willingness:** are they confident and motivated to do it?
-
-As the follower becomes more ready, the leader gives **less direction**.
-
-| Follower readiness | Style | Task behaviour | Relationship behaviour |
-| :--- | :--- | :---: | :---: |
-| R1: unable and unwilling | **S1 Telling (directing)**: step-by-step instructions, close supervision | high | low |
-| R2: unable but willing | **S2 Selling (coaching)**: explain decisions, guide and encourage | high | high |
-| R3: able but unwilling or unsure | **S3 Participating (supporting)**: share decisions, praise, build confidence | low | high |
-| R4: able and willing | **S4 Delegating**: hand over the responsibility | low | low |
-
-Example: a fresh engineering graduate (R1/R2) needs telling or selling. An engineer with 10 years' experience (R4) should be left to deliver.
-
-![Situational leadership](../../figures/management/hersey_blanchard_situational_leadership.jpg)
-
-> 💡 Tell, sell, participate, delegate: as readiness grows, let go.
-
-### A14. Write notes on the path-goal theory and the leader-member exchange (LMX) theory. ✍️ [3]
-
-- **Path-goal theory (Robert House):**
-  - The leader's job is to help followers reach their goals by **clearing the path** for them.
-  - The leader gives direction, resources and support, and removes obstacles.
-  - The leader also makes it clear that effort leads to good performance, and good performance leads to rewards.
-- **LMX (leader-member exchange) theory:**
-  - A leader builds a **different one-to-one relationship** with each subordinate.
-  - The **in-group** (trusted, go-getting performers) gets more responsibility, more communication, more guidance (mentoring) and faster careers.
-  - The **out-group** gets a formal, rule-based relationship and normal supervision.
-
-> 💡 Path-goal: clear the road. LMX: in-group vs out-group.
-
-### A15. Differentiate between transactional and transformational leadership. 🎯 2023 Mid Q4 [5]
-
-| | Transactional | Transformational |
-| :--- | :--- | :--- |
-| Based on | an **exchange**: reward for good work, penalty for failure | **inspiration**: a shared vision and shared values |
-| Works | inside the existing system | changes the system |
-| Motivation | from outside (extrinsic): pay, bonus | from inside (intrinsic): purpose, growth |
-| Approach | reacts to problems; corrects mistakes; follows procedures | acts ahead; encourages new ideas; questions old ways |
-| Result | steady, predictable performance | performance beyond what was expected; lasting change |
-
-**The four I's of transformational leadership:**
-
-- **Idealised influence:** the leader is a role model that people trust.
-- **Inspirational motivation:** the leader gives an exciting vision.
-- **Individualised consideration:** the leader coaches each person.
-- **Intellectual stimulation:** the leader questions old beliefs and encourages new ideas.
-
-Example: Mahatma Gandhi inspired millions of people to put a shared cause above their own interest.
-
-![Transactional vs transformational](../../figures/management/transactional_vs_transformational_summary.png)
-
-> 💡 Transactional = "do this, get that". Transformational = "let us change the world".
-
-### A16. Short applied questions. 🎯 HU-4201 2025 Mid A + 🎯 HU-4201 2024 End Q5(a) [2 each]
-
-**(a) How should an engineer coordinate the functions of management in a systematic way?**
-Treat them as a closed loop, like a control system in engineering:
-
-- **plan** with clear, measurable targets;
-- **organise** the tasks and people (who does what, by when);
-- **direct** with clear instructions and support;
-- **coordinate** through regular reviews across teams;
-- **control** by measuring results against the plan, and feed the gaps back into the next plan.
-
-**(b) How can employee attrition (people leaving their jobs) be reduced?**
-Follow these steps in order:
-
-1. hire people who fit the job and the culture;
-2. welcome and train them well (onboarding);
-3. give fair pay and recognition (Fayol's remuneration and equity);
-4. offer career paths and job security (stability of tenure);
-5. give them a say in decisions, and **psychological safety** (feeling safe to speak up);
-6. give regular feedback.
-
-Also hold **exit interviews** to learn why people leave.
-
-**(c) How can capacity leakage be reduced?**
-**Capacity leakage** means output that is lost because machines and people sit idle, wait, redo work, or are poorly coordinated. Fix it with:
-
-- good planning and scheduling;
-- preventive maintenance (fixing machines before they break);
-- removing waste (Toyota's **lean** methods and **kaizen**, which means small, continuous improvements);
-- training people in many skills (multi-skilling);
-- tracking how fully resources are used (utilisation).
-
-**(d) How can managerial success be measured?**
-
-- results against goals: targets met, profit, cost, quality;
-- efficiency: output per unit of resource;
-- people results: morale, attrition, absenteeism;
-- customer satisfaction;
-- growth and new ideas (innovation).
-
-**(e) What is CSR, and how can it help the Sustainable Development Goals?** 📘
-**Corporate social responsibility (CSR)** is a firm's duty to society, beyond making profit. In India, companies above a certain size must spend 2% of their profit on CSR. Projects in education, health, clean water, renewable energy and skill training directly help SDGs (Sustainable Development Goals) such as quality education, good health and clean energy.
-
-> 💡 Use theory words (Fayol, styles, lean) in every applied answer.
-
----
-
-### Corporate strategy (deck 4)
-
-### A17. How is vision different from mission? Give examples. ✍️ [3]
-
-| | Vision | Mission |
-| :--- | :--- | :--- |
-| Question it answers | "What will success look like?" What the firm wants to **become**. | "What does the firm give to society?" What the firm **is now**. |
-| Time | the future, the long run (5–10 years or more) | the present: why the firm exists and how it serves its stakeholders |
-| Length | short | longer; often sums up the firm's values |
-| Role | a picture of success that motivates people to work together | a road map to reach the vision; says which products and markets the firm works in, and what makes it different from similar firms |
-
-**Examples:**
+**Examples from the deck:**
 
 - **Vision:**
   - BSNL: "To become the largest telecom service provider in Asia."
   - Walt Disney: "Make people happy."
   - Stokes Eye Clinic: "Our vision is to take care of your vision."
+- **Mission:** Newport News Shipbuilding: "We shall build good ships here, at a profit if we can, at a loss if we must, but always good ships."
 - **IIEST Shibpur:**
-  - Vision: to become one of the best institutes in the world for multi-disciplinary research.
-  - Mission: to create and spread knowledge, and to produce engineers, scientists and entrepreneurs of the highest quality.
+  - Vision: to become one of the best institutes in the world for multi-disciplinary research, building world-class technology for a developed India.
+  - Mission: to create and spread knowledge; to produce engineers, scientists and entrepreneurs of the highest quality; and to develop new technology for society.
 
-> 💡 Vision = where we want to be. Mission = what we do today to get there.
+> 💡 Vision = the dream. Mission = the job we do every day.
 
-### A18. How are goals different from objectives? What are the types of goals, and what makes an objective SMART? ✍️ [4]
+### A2. How is a vision statement different from a mission statement? ✍️ [4]
 
-- **Goal:** a broad, long-term result that serves the mission.
-- **Objective:** "the end result of planned activity". It says **what** must be done and **by when**, in numbers where possible.
-- Goals sit above objectives: **goals serve the mission, and objectives serve the goals.**
+| | Vision statement | Mission statement |
+| :--- | :--- | :--- |
+| What it is about | **where** the firm wants to be | **how** the firm will get there; its purpose and main aims |
+| Question it answers | "Where do we aim to be?" | "What do we do? What makes us different?" |
+| Time | the **future** (usually 5–10 years or more) | the **present**, leading to the future |
+| Job | inspires people; tells them why they work here | lists the broad goals; mainly for leaders, the team and shareholders |
+| Length | short | longer; often sums up the firm's values |
+| Change | should change as little as possible | may change, but must stay tied to values, customer needs and the vision |
+| Questions to ask when writing it | Where are we going? When do we want to get there? How? | What do we do today? For whom? Why? |
+| A good one is | clear, hopeful, easy to remember, realistic, and in line with the firm's values and culture | clear about the firm's purpose and values, who its main stakeholders are, and what it owes them |
+
+**How they fit together:** the vision describes the long-run goal. The mission is like a **road map** for reaching that goal.
+
+> 💡 Vision = where. Mission = what, for whom and why.
+
+### A3. What are goals and objectives? What are a business's objectives? ✍️ [3]
+
+**Goals**
+
+- Organisational goals are aims that top management sets to **show the expected results** and to **guide employees' efforts**.
+- A goal is the expected result of planning. Goals are **broad and general**. They express the firm's guiding principles and hopes.
+- A goal is usually **long-term**.
+
+**Objectives**
+
+- Objectives are **"the end results of planned activity."**
+- They are **precise targets** needed to reach the goals. They are detailed statements of results that can be **measured**, in numbers (quantitatively) or in quality (qualitatively).
+- An objective says **what** must be done and **by when**, in numbers if possible.
+- Organisational objectives are **short-term and medium-term**. They shape the firm's policies and decide how its resources are shared out. Reaching them helps the firm reach its overall goals.
+
+**Order:** goals serve the **mission**, and objectives serve the **goals**. So goals are higher than objectives.
+
+**Objectives of a business:** what the business wants to achieve over a given period. For example:
+
+- earn a profit, so it can grow;
+- give customers good-quality goods;
+- protect the environment.
+
+> 💡 Mission → goals → objectives: each level serves the one above.
+
+### A4. Differentiate between goals and objectives. What are the three types of organisational goals? ✍️ [4]
 
 | | Goal | Objective |
 | :--- | :--- | :--- |
+| Definition | the direction and final destination that helps the firm reach its vision | the exact actions and steps the firm must take to reach its goals |
 | How specific | a general aim or direction | specific and exact |
-| Scope | broad; covers the whole | narrow; covers small parts of the whole |
-| Measurement | hard to measure; often not in numbers | easy to measure; must be measurable |
+| Scope | broad | narrow |
+| Size | large; the whole | small pieces; part of the whole |
+| Action | a general result | specific, measurable steps |
+| Measurement | hard; goals are often not in numbers | easy; must be measurable |
 | Time | long term | short to medium term |
 | Example | increase the number of international customers | win 28% more customers from the UK, Australia and Germany in the next 3 months |
 
-**Three types of goals:**
+**Three types of goals** (example: a retail company):
 
-- **Strategic goals:** set by and for top management. Example: raise market share by 15% in three years.
-- **Tactical goals:** for middle managers. Example: add more products to the product line.
-- **Operational goals:** short-term goals for lower-level managers. Example: raise the store's customer-satisfaction score by 10% this quarter.
+1. **Strategic goals:** set by and for **top management**. Long term.
+   - Example: raise market share by 15% in the next three years.
+2. **Tactical goals:** for **middle managers**. They say what actions are needed to reach the strategic goal.
+   - Example: add new product categories, or improve existing ones.
+3. **Operational goals:** for **lower-level managers**. Short term; they deal with day-to-day problems.
+   - Example: raise the store's customer-satisfaction score by 10% this quarter, through better staff training, faster checkout and a better store layout.
 
-**SMART objectives** are:
+> 💡 Strategic = top, years. Tactical = middle, months. Operational = bottom, weeks.
 
-- **S**pecific
-- **M**easurable
-- **A**chievable
-- **R**elevant
-- **T**ime-bound
+### A5. What are SMART goals? Name the areas where firms set objectives, and say why objectives matter. ✍️ [4]
 
-Example from 3M: 10% growth in EPS (earnings per share), 20–25% return on equity, and 27% return on capital employed.
+A **SMART** goal is carefully planned, short and easy to track. It is:
 
-**Areas where firms set objectives:** markets, productivity, innovation, products, profitability, financial resources, physical facilities, structure, manager performance, employee performance and attitude, customer service, and social responsibility.
+- **S**pecific: says exactly what the person or business wants to achieve.
+- **M**easurable: has numbers that show progress.
+- **A**chievable: realistic. If it is not, people will be tempted to give up.
+- **R**elevant: fits the firm's values and long-term objectives.
+- **T**ime-based: has a deadline, which helps to track progress and set milestones.
+
+SMART goals are more likely to be reached, and they bring the whole firm together behind them.
+
+**Example (3M, Minnesota Mining & Manufacturing), financial objectives:**
+
+- 10% growth in earnings per share;
+- 20–25% return on equity;
+- 27% return on capital employed.
+
+**Twelve areas of objectives:**
+
+1. markets
+2. productivity
+3. innovation
+4. products
+5. profitability
+6. financial resources
+7. physical facilities
+8. organisation structure and activities
+9. manager performance and development
+10. employee performance and attitude
+11. customer service
+12. social responsibility
 
 **Why objectives matter:**
 
-- they define the firm's place in its environment;
-- they coordinate decisions and the people who make them;
-- they guide strategy;
-- they give standards for judging performance.
+1. They define the firm's place in its environment.
+2. They help to coordinate decisions and the people who make them.
+3. They help in forming strategies.
+4. They give standards for judging the firm's performance.
 
-### A19. What is strategy? Explain the levels of strategy. ✍️ [3]
+### A6. What is strategy? Explain the levels of strategy. ✍️ [3]
 
 **Strategy** is "a plan of action or policy designed to achieve a major or overall aim."
 
-There are three levels. Picture a pyramid: responsibility grows as you go from the bottom to the top.
+There are three levels. Picture a pyramid: **responsibility increases** as you go from the bottom to the top.
 
 1. **Corporate level (grand strategies):** top management's overall plan for the whole firm and all its **strategic business units (SBUs)**. (An SBU is a part of the firm that runs as a separate business.)
-   - It chooses the direction of the whole firm. It is the blueprint for growth.
-   - It decides how far, how fast and when the firm will grow.
-   - Its decisions are the highest-level, the most value-based and the most conceptual.
+   - It is the choice of **direction** the firm takes to reach its objectives.
+   - It is the **blueprint for the firm's growth**, and sets the overall direction.
+   - It decides **how far, how fast and when** the firm will grow.
+   - It is the **highest level of decision-making**. Its decisions are more value-based and conceptual than at the levels below.
 2. **Business level (generic strategies):** how each business or SBU competes in its own market.
-3. **Functional or operational level:** how each function (production, marketing, finance, HR) supports the business strategy and creates value for the customer.
+3. **Functional or operational level:** how each function (production, marketing, finance, HR) supports the business.
 
-### A20. What are the types of corporate-level strategy? Draw the classification. 🎯 2023 End Q4 (part) ✍️ [4]
+> 💡 Corporate = which businesses? Business = how to compete? Functional = how to do each job?
+
+### A7. What are the types of corporate-level strategy? Draw the classification. 🎯 2023 End Q4 (part) ✍️ [4]
 
 ```mermaid
 flowchart TD
     C["Corporate-level strategy"] --> S["A. Stability<br/>no change · profit · pause/proceed with caution"]
     C --> E["B. Expansion<br/>concentration · integration · diversification · cooperation · internationalization"]
     C --> R["C. Retrenchment<br/>turnaround · divestment · liquidation"]
-    C --> M["D. Combination<br/>simultaneous · sequential · both"]
+    C --> M["D. Combination<br/>simultaneous · sequential"]
 ```
 
-- **Stability:** make no change to what the firm is doing now.
-- **Expansion:** make the firm's activities bigger or wider.
-- **Retrenchment:** cut down the firm's activities.
-- **Combination:** a mix of the three above.
+- **A. Stability:** make no change to what the firm is doing now.
+- **B. Expansion:** make the firm's activities bigger.
+- **C. Retrenchment:** cut down the firm's activities.
+- **D. Combination:** a mix of the three above.
 
-### A21. What is a stability strategy? When is it chosen, and what are its types? ✍️ [4]
+> 💡 Stay, grow, shrink, or mix.
 
-**Meaning.** The firm keeps its present strategy. It stays with its current products and markets, keeps the same level of effort, and is happy with **slow, step-by-step growth** (incremental growth). It does **not**:
+### A8. What is a stability strategy? When is it chosen, and what are its types? ✍️ [4]
 
-- invest in new factories,
-- chase a bigger market share, or
-- enter new areas.
+**Meaning.**
 
-**When a firm chooses it:**
+- The firm **keeps its present strategy** at the corporate level. It keeps focusing on its present products and markets.
+- It makes **no change** to its current activities. It keeps the same level of effort, and is happy with **slow, step-by-step (incremental) growth**.
+- It does **not** invest in new factories and assets, chase a bigger market share, or enter new regions.
+- Firms choose it when the industry has slow or no growth, or after a period of fast expansion, when they need to **consolidate** (settle and strengthen what they have) before growing again.
 
-1. The business world around it is disturbed, changing fast or uncertain, so the firm waits.
-2. Things are calm and the firm sees no major threat.
-3. The firm has just grown fast and must **consolidate** (settle and strengthen what it has) before growing again.
-4. The firm's growth ambitions are modest.
-5. The industry is **mature** (it has stopped growing much), and the firm is comfortably placed in it.
+**Conditions that favour a stability strategy:**
 
-**Types:**
+1. The industry or the economy is disturbed; the environment is unstable and uncertain.
+2. The environment is calm, and the firm sees no major threat to itself or its industry.
+3. The firm has just grown fast and needs to consolidate its gains before growing more.
+4. The firm's growth ambitions are modest; it is happy with slow growth.
+5. The industry is **mature** (has few or no growth chances), and the firm is comfortably placed in it.
 
-- **No-change strategy:** a conscious decision to do nothing new and keep the business as it is. ("Taking no decision is a decision too.") Common in small and medium firms that work in a familiar niche with proven technology.
-- **Profit strategy:** when profits start slipping, the firm props them up for a while. It cuts investment and costs, raises prices, or improves productivity, to get through a temporary difficulty.
-- **Pause/proceed-with-caution strategy:** a short rest after a burst of expansion, or a test of the ground before a full new strategy. It gives time for changes to reach every level, and for structures and systems to adjust.
+**Three types:**
 
-### A22. Explain expansion through concentration, using Ansoff's product-market matrix. 🎯 2023 End Q5(a) [4]
+1. **No-change strategy:**
+   - A **conscious decision to do nothing new**, and carry on with the present business.
+   - "Taking no decision is sometimes a decision too."
+   - Used by many small and medium firms in a familiar, often narrow (niche) market, using proven technology.
+2. **Profit strategy:**
+   - No firm can follow a no-change strategy for ever. Things change, and it must do something.
+   - When profits start to slip, the firm props them up with **short-term measures**: cut investment, cut costs, raise prices, or raise productivity, to get through a temporary difficulty.
+3. **Pause/proceed-with-caution strategy:**
+   - The firm **tests the ground** before moving ahead with a full new strategy, or **rests for a while** after very fast expansion.
+   - It gives time for the changes to reach every level of the firm, and for its structure and systems to adjust.
+   - It is a **temporary** strategy.
+   - Example from the deck: Bata and Liberty, in a market dominated by global brands like Adidas, Nike and Reebok.
 
-An **expansion** (growth) strategy aims at fast growth. The firm widens its customer groups, the needs it serves (customer functions), or its technologies. This speeds up growth in sales, profit and market share.
+> 💡 Stability = hold, hold for profit, or hold and then move.
 
-**Ansoff's matrix** (by Igor Ansoff) is a tool for finding ways to grow. It asks two questions: is the product old or new, and is the market old or new?
+### A9. What is an expansion strategy? Why do firms choose it, and what are its types? ✍️ [4]
+
+**Meaning.**
+
+- Also called a **growth** or **intensification** strategy. It **expands the company's activities**.
+- The firm aims at high growth by **widening the scope** of one of its businesses, in terms of:
+  - its **customer groups** (who it sells to),
+  - its **customer functions** (which needs it serves), and
+  - its **alternative technologies** (how it makes things).
+- It speeds up growth in sales, profit and market share, by entering new markets, getting new resources, developing new technology and building new management skills.
+
+**Why firms choose a growth strategy:**
+
+- to increase profits;
+- to increase market share or sales;
+- to increase their scale of operations;
+- to lower the production cost per unit.
+
+**Examples from the deck:**
+
+- A chocolate maker whose customers are children and teenagers starts selling to **middle-aged and older people** too (a new customer group).
+- A printing firm moves from old letter-press printing to **desktop publishing**, to raise output and efficiency (a new technology).
+- In both cases, the firm moves in a new direction and **changes its present business definition** a lot.
+
+**Five types of expansion:**
+
+| Type | Sub-types | Question |
+| :--- | :--- | :--- |
+| B1. Concentration | market penetration, market development, product development | A10 |
+| B2. Integration | vertical, horizontal | A11 |
+| B3. Diversification | related (concentric), unrelated (conglomerate) | A12 |
+| B4. Cooperation | mergers, takeovers, joint ventures, strategic alliances | A13, A14 |
+| B5. Internationalization | international, multi-domestic, global, transnational | A15 |
+
+> 💡 Concentrate, integrate, diversify, cooperate, go international.
+
+### A10. Explain expansion through concentration, using Ansoff's product-market matrix. 🎯 2023 End Q5(a) [4]
+
+**Ansoff's product-market matrix** was first given by **Igor Ansoff (1968)**. It helps a firm find ways to grow. It asks two questions: is the product present or new, and is the market present or new?
 
 | Product ↓ / Market → | Present market | New market |
 | :--- | :--- | :--- |
@@ -489,83 +288,119 @@ An **expansion** (growth) strategy aims at fast growth. The firm widens its cust
 
 **Concentration** covers the first three boxes:
 
-1. **Market penetration:** sell **more of the same products** in the **same market**. Ways to do it:
-   - make existing customers buy more often and in bigger amounts (volume discounts, bonus cards, keeping customers loyal);
-   - win customers from rivals (better design, quality or price);
-   - attract people in the market who do not yet buy (lower prices, service, publicity).
+1. **Market penetration:** sell **more of the same products** in the **same market**. The firm believes there is still room to grow by pushing its current products in its current markets. Ways to do it:
+   - get existing customers to buy **more often** and in **larger amounts** (volume discounts, bonus cards, keeping customers);
+   - win **rivals' customers** (attractive design, quality, attractive price);
+   - attract **new customers** in the same market (price cuts, better service, more publicity).
    - Example: Big Bazaar's "Wednesday Bazaar" discounts.
-2. **Market development:** take **present products** to **new markets**. Ways to do it:
-   - new regions, in the country or abroad, through more sales staff, channel partners, agents or franchising;
-   - new customer groups (segments), through slightly changed versions of the product, other sales channels or other media.
-3. **Product development:** **new or improved products** for the **present market**. Examples: McDonald's new burgers; Diet, Vanilla and Ginger Coke; Google Chrome for existing internet users.
+2. **Market development:** sell the **same products** in **new markets**. Ways to do it:
+   - **new places:** regional, national or international expansion, through more sales staff, new channel partners, sales agents or manufacturer's representatives, and franchising;
+   - **new customer groups (segments):** small changes to the product to suit a new group, other sales channels, or advertising in other media.
+   - Example: the deck shows a Cadbury Dairy Milk advert aimed at adults, not just children.
+3. **Product development:** sell **new or improved products** in the **same market**. Ways to do it:
+   - develop new products;
+   - make different or improved versions of current products;
+   - change current products to suit what different customers like and dislike.
+   - Examples: McDonald's keeps launching new burgers; Coca-Cola launched Diet Coke, Vanilla Coke and Ginger Coke to use the Coke brand; Google made the Chrome browser for existing internet users.
 
-The fourth box, **diversification** (new product + new market), is the riskiest. See A24.
+The fourth box, **diversification** (new product + new market), is the riskiest. See A12.
 
 > 💡 Read the matrix from the safest corner (penetration) to the riskiest (diversification).
 
-### A23. Explain integration strategies: vertical (backward, forward, full, taper) and horizontal. ✍️ [4]
+### A11. Explain integration strategies: vertical (backward, forward, full, taper) and horizontal. ✍️ [4]
 
-**Integration** means joining activities that are related to what the firm already does. The firm chooses them using **value-chain analysis** (looking at each step that adds value, from raw material to the customer).
+**Integration** means joining activities that are **related to what the firm already does**. The firm chooses them using **value-chain analysis** (looking at each step that adds value, from raw material to the final customer).
 
-**Vertical integration** means the firm takes over activities that **supply its inputs** or **sell its outputs**. Picture the chain:
+**Vertical integration**
 
-commodity producers → suppliers → **manufacturer** → importers → stores → buyers
+- The firm moves **backward** into the industry that makes its inputs, or **forward** into the industry that sells its products.
+- In simple words: the firm starts making something that serves **its own needs**, either supplying its raw materials or selling its output.
+- Picture the chain: commodity producers → suppliers → **manufacturer** → importers → stores → buyers.
 
-- **Backward (upstream) integration:** moving **towards the source** of raw materials. Example: Nirma set up its own plants to make soda ash and linear alkyl benzene (raw materials for its detergent).
-- **Forward (downstream) integration:** moving **nearer to the final customer**. Example: DCM, Mafatlal and National Textile Corporation opened their own retail shops.
-- **Full integration:** the firm has its own suppliers, its own manufacturing and its own distributors.
-- **Taper integration:** the firm makes **part** of what it needs and buys the rest from outside suppliers. Or it sells part through its own shops and the rest through independent distributors. (The slide spells it "tapper".)
+Four types of vertical integration:
 
-**Horizontal integration** means getting more business **in the same line**, at the **same stage** of the value chain. It is done by growing internally, or by merging with firms that sell similar products. Examples:
+1. **Backward (upstream) integration:** moving **back towards the source** of raw materials.
+   - Example: Nirma set up plants to make soda ash and linear alkyl benzene, the raw materials for its detergent.
+2. **Forward (downstream) integration:** moving **ahead, nearer to the final customer**.
+   - Example: DCM, Mafatlal and National Textile Corporation set up their own retail shops, to control how their cloth is sold.
+3. **Full integration:** the firm owns **all** the steps: its own suppliers, its own factory and its own distributors.
+4. **Taper integration:** a middle path between full integration and none (the slide spells it "tapper"). The firm:
+   - makes **part** of what it needs and buys the rest from outside suppliers (backward integration plus outside supplies); or
+   - sells **part** through its own outlets and the rest through independent distributors (forward integration plus outside distribution).
 
-- Aditya Birla Group bought L&T's cement business.
-- IDBI Bank took over United Western Bank. Its branches went up from 181 to 410, and it added farm loans.
-- Vodafone–Idea, Marriott–Starwood, Arcelor–Mittal, Exxon–Mobil, JP Morgan Chase.
+**Horizontal integration**
+
+- Getting more business **in the same line of business**, at the **same stage** of the value chain: the same type of product, at the same level of making or selling.
+- It can come from growing inside the firm, or from **mergers and acquisitions** of firms that sell similar products.
+- Examples:
+  - Aditya Birla Group bought L&T's cement business.
+  - IDBI Bank took over United Western Bank. Its branches went up from 181 to 410. It added farm loans to its industrial loans, and got cheaper deposits.
+  - Vodafone–Idea, Marriott–Starwood, Arcelor–Mittal, Exxon–Mobil, JP Morgan Chase.
 
 | | Vertical | Horizontal |
 | :--- | :--- | :--- |
 | Direction | up or down the supply chain | sideways, at the same stage |
-| Goal | control over inputs or selling; lower costs of dealing with outsiders | bigger scale, more market share, less competition |
-| Risk | the firm is tied to one industry; costly to get out | competition authorities may object (antitrust); hard to merge similar firms smoothly |
+| Goal | control over inputs or over selling | bigger scale, more market share, less competition |
+| Example | Nirma making its own soda ash | IDBI taking over United Western Bank |
 
-### A24. What is diversification? How is related diversification different from unrelated diversification? When is it a good idea? ✍️ [4]
+> 💡 Vertical = up and down the chain. Horizontal = buy the shop next door.
 
-**Diversification** means moving into **new lines of business**: new products for new markets. The firm's definition of its own business changes a lot. Example: L&T.
+### A12. What is diversification? How is related diversification different from unrelated diversification? When is it a good idea? ✍️ [4]
 
-1. **Related (concentric) diversification:** the new business is **linked** to the existing one.
-   - *Linked by marketing:* a sewing-machine maker adds kitchenware, sold through the same shops.
-   - *Linked by technology:* an insurer of institutions starts insuring individuals.
-   - *Linked by both:* a maker of plastic water tanks adds plastic doors and windows, sold through the same hardware dealers.
-   - Amul moved from dairy products (milk, desserts, spreads, cheese) to non-dairy products (vegetable oils, snacks, instant food).
-2. **Unrelated (conglomerate) diversification:** **completely new** products, technologies and markets.
-   - ITC: agribusiness, FMCG (fast-moving consumer goods), hotels, IT, paperboards.
-   - Aditya Birla: aluminium, cement, chemicals, telecom, textiles and more.
-   - Tata: engineering, materials, chemicals, consumer products, IT, energy and services.
+**Diversification** means moving into **new lines of business**: new products for new markets (the fourth box of Ansoff's matrix). It means a **big change in the firm's business definition**. Example: L&T.
+
+**1. Related (concentric) diversification.** The new activity is **linked** to the existing business. Three types:
+
+- **Marketing-related:** a sewing-machine maker adds kitchenware and household appliances, sold through the same retail shops to the same families.
+- **Technology-related:** an insurance company that insures institutions starts insuring individuals too.
+- **Marketing- and technology-related:** a maker of plastic water tanks also makes plastic doors and windows, sold through its hardware dealers.
+- Example: Amul moved from dairy (milk, drinks and desserts, bread spreads, cheese) to non-dairy products (vegetable oils, snacks, instant food).
+
+**2. Unrelated (conglomerate) diversification.** The new activities have **nothing to do** with the existing business. The firm adds new products, using new technology, in new markets.
+
+- ITC: agribusiness, FMCG (fast-moving consumer goods), hotels, IT, tyres.
+- Aditya Birla Group: aluminium, outsourcing, cement, chemicals, copper, gas, mining, retail, software, telecom, textiles.
+- Tata: engineering, services, materials, energy and communications, IT, consumer products, chemicals.
 
 **When diversification is a good idea:**
 
-- to raise the share price or the growth rate;
-- when investing outside is a better use of money than growing inside;
+- to raise the firm's share price;
+- to raise its growth rate;
+- when investing is a better use of money than growing internally;
 - to make earnings and sales more stable;
 - to balance or fill out the product line;
+- to diversify the product line;
 - to get a needed resource quickly;
 - to save tax;
 - to raise efficiency and profit.
 
-### A25. Explain expansion through cooperation. How are a merger, an acquisition, a joint venture and a strategic alliance different? ✍️ [5]
+> 💡 Related = same family. Unrelated = a stranger.
 
-**Cooperation.** Rival firms can compete and cooperate at the same time. This is called **co-opetition**. It makes the whole market grow. It works because rivals often have interests that fit together (complementary interests). A cooperative strategy:
+### A13. Explain expansion through cooperation. How are a merger, an acquisition, a joint venture and a strategic alliance different? ✍️ [5]
 
-- creates value for the customer;
-- costs less than creating that value in some other way;
-- puts the firm in a better position against its competitors.
+**Cooperation**
 
-**Mergers and acquisitions (M&A).** A merger combines two or more organisations. Either:
+- Normally, one firm gains at the cost of others. It is a **win-lose** situation: if one wins, others lose.
+- But **competition can live side by side with cooperation**. Firms can cooperate with rivals while still competing with them, so that the whole market grows.
+- This is called **co-opetition**: competing and cooperating at the same time, for the good of both.
+- The key idea is that rival firms often have interests that **fit together** (complementary interests).
+
+A **cooperative strategy** is one where firms **work together to reach a shared objective**. Cooperating is a good strategy when it:
+
+- creates value for a customer;
+- costs less than creating that value in other ways;
+- puts the firm in a better position than its competitors.
+
+**Three types:** (i) mergers and acquisitions (takeovers), (ii) joint ventures, (iii) strategic alliances.
+
+**Mergers and acquisitions (M&A)**
+
+A merger combines two or more organisations. Either:
 
 - one firm takes over the other's assets and liabilities, paying with shares or cash; or
-- both firms are dissolved, and a new company with new shares is formed.
+- both firms are dissolved, their assets and liabilities are combined, and new shares are issued.
 
-For the buyer it is an **acquisition**. For the firm being bought, it is a **merger**.
+For the firm that buys, it is an **acquisition**. For the firm that is bought, it is a **merger**.
 
 **Types of merger** (using a footwear firm as the example):
 
@@ -573,68 +408,89 @@ For the buyer it is an **acquisition**. For the firm being bought, it is a **mer
 | :--- | :--- | :--- |
 | Horizontal | same industry, similar products | footwear firm + footwear firm |
 | Vertical | same product, different stages of making it | footwear firm + leather tannery |
-| Concentric | related customer groups or uses | footwear firm + specialty footwear firm |
+| Concentric | related customer needs or customer groups | footwear firm + specialty footwear firm |
 | Conglomerate | different industries | footwear firm + medicine (pharmaceutical) firm |
 
 **Why firms do M&A:**
 
 - to reduce competition;
 - to grow faster and gain market share;
-- to raise the share price;
-- to get a resource quickly;
-- **synergy** (together they are worth more than apart);
-- resources to keep operations stable;
-- economies of scale.
+- to raise the value of the firm's shares;
+- to get a needed resource quickly;
+- to gain **synergy** (together they are worth more than apart);
+- to get resources that keep operations stable;
+- to get economies of scale.
+
+**The four compared:**
 
 | | Merger | Acquisition | Joint venture | Strategic alliance |
 | :--- | :--- | :--- | :--- | :--- |
-| Who | usually two firms of equal size | a large firm takes over a smaller one | two or more firms form a **new firm** for a task or a period | two or more firms **agree** to work together |
-| Nature | voluntary and friendly; shares are swapped | often hostile: the buyer offers the target's shareholders a better price | always friendly; ownership (equity) is shared | cooperation to work better; may involve no ownership |
-| The parent firms | stop existing | the target stops existing | keep working in their own areas | keep working normally; each stays independent |
+| Who | usually two firms of equal size | a large firm takes over a smaller one | two or more firms form a **new firm** for a task or a period | two or more firms **agree** to support each other |
+| Nature | voluntary and friendly; a **stock swap** (both give up their shares and get shares of the new firm) | often forceful or unfriendly: the buyer offers the target's shareholders a better price | always friendly; one partner gets money, management help and technology from the stronger partner | aims to make the firms more efficient; **no equity** (ownership) investment |
+| The parent firms | stop existing | stop existing | keep working in their own areas | keep working normally, supporting each other |
 
-> 💡 The parent firms survive in a joint venture and an alliance, but not in a merger.
+> 💡 The parent firms survive in a joint venture and an alliance, but not in a merger or an acquisition.
 
-### A26. What are the types of joint ventures and strategic alliances? ✍️ [4]
+### A14. Explain joint ventures and strategic alliances, and their types. ✍️ [4]
 
-**Joint venture (JV):** a **new firm** formed by two or more parties under a long-term contract. They put in money (equity) and share income, expenses, control, profits and losses. It can be for one project or for an ongoing relationship. Examples: Sony Ericsson; Samsung–Sony S-LCD.
+**Joint venture (JV)**
 
-**Types of JV by who the partners are:**
+- A **new entity** formed by two or more parties under a **long-term contract**, to do a specific activity together.
+- The parties put in money (equity) and share its income, expenses and control, and its **profits and losses**.
+- It can be for **one project only**, or for a **continuing** business relationship.
+- Unlike a merger, the **parent firms do not stop existing**.
+- Examples: Sony Ericsson; Samsung and Sony's S-LCD.
 
-- Two Indian firms in the same industry: NTPC and Indian Railways formed Bharatiya Rail Bijlee Company.
-- Two Indian firms in different industries: ActionAid India and TISS offer degree courses in rural India.
-- An Indian firm and a foreign firm, in India: DLF and Nakheel (UAE) for building integrated townships.
-- An Indian firm and a foreign firm, in that foreign country: Kirloskar Pumps and SPP Pumps (UK) for the EU market.
-- An Indian firm and a foreign firm, in a third country: Apollo Tyres and Continental AG built a tyre plant in Malaysia.
+**Types of JV by who the partners are** (Indian examples from the deck):
+
+| Partners | Example |
+| :--- | :--- |
+| two Indian firms in the **same industry** | NTPC + Indian Railways = Bharatiya Rail Bijlee Company |
+| two Indian firms in **different industries** | ActionAid India + TISS = degree courses in rural India |
+| an Indian and a foreign firm, **in India** | DLF + Nakheel (UAE) = two integrated townships in India |
+| an Indian and a foreign firm, **in that foreign country** | Kirloskar Pumps + SPP Pumps (UK) = serving the EU market |
+| an Indian and a foreign firm, **in a third country** | Apollo Tyres + Continental AG (Germany) = tyre plant in Malaysia |
 
 **Types of JV by purpose:**
 
-- **Project-based:** formed for one task.
-- **Vertical:** the partners work at different stages of making the same product.
-- **Horizontal:** the partners are competitors.
-- **Functional-based:** formed for synergy and benefit to both.
+1. **Project-based:** the partners join to finish one particular task.
+2. **Vertical:** the partners work at different stages of the same product.
+3. **Horizontal:** the partners are competitors.
+4. **Functional-based:** the partners join for a benefit to both, from the synergy between them.
 
-**Strategic alliance:** an agreement to work together towards a common goal, while each firm stays **independent**. It is simpler and less binding than a JV, and **no new firm** is formed. Partners bring products, sales channels, factory capacity or know-how. Examples:
+**Strategic alliance**
 
-- Barnes & Noble with Starbucks (coffee shops inside bookshops);
-- Vodafone India with ICICI Bank (m-pesa mobile money);
-- MasterCard with Apple Pay;
-- Chevrolet with Disney (the Test Track ride at EPCOT).
+- An agreement between two or more parties that they will **act in a certain way to reach a common goal**, while **each stays independent**.
+- It is simpler and **less binding** than a JV. In a JV the firms pool resources to create a separate business; in an alliance they do not.
+- Partners may bring: **products**, **distribution channels**, **manufacturing capability**, and **knowledge and expertise**.
+- Examples:
+  - Barnes & Noble with Starbucks (coffee shops inside bookshops);
+  - Vodafone India with ICICI Bank (m-pesa mobile money);
+  - MasterCard with Apple Pay;
+  - Chevrolet with Disney (the Test Track ride at EPCOT, Walt Disney World).
+
+**Alliance vs JV in one line:** in an alliance each firm stays independent; in a JV the firms **share the risks** of the venture.
 
 **Types of strategic alliance:**
 
-- **Equity alliance:** the partners own different shares of what they set up. Example: Panasonic invested USD 30 million in Tesla's batteries, which grew into the Nevada battery plant.
-- **Non-equity alliance:** just a contract to share resources and skills; no ownership.
-- **Pro-competitive:** links along the value chain, between makers and their suppliers.
-- **Non-competitive:** firms in the same industry that do not compete with each other, for example because they work in different regions.
-- **Competitive:** rivals that cooperate closely.
-- **Pre-competitive:** firms from different industries working together, for example on new technology.
+- **Equity alliance:** two or more firms own **different percentages** of a company they set up together, combining their resources.
+  - Example: Panasonic invested USD 30 million in Tesla's battery work. This grew into a lithium-ion battery plant in Nevada.
+- **Non-equity alliance:** firms only sign a **contract** to share resources and skills. No one owns a share.
+- **Pro-competitive alliance:** along the value chain, between makers and their suppliers (vertical).
+- **Non-competitive alliance:** firms in the same industry that do not compete, for example because they are in different regions.
+- **Competitive alliance:** two **rivals** cooperate closely.
+- **Pre-competitive alliance:** firms from **different industries** work together on a clear task, such as new technology.
 
-### A27. Explain the four international strategies using the Bartlett–Ghoshal model. 🎯 2024 End Case 4 (theory part) [5]
+> 💡 JV = a new baby company. Alliance = a handshake.
 
-A firm that operates in more than one country is a **multinational corporation (MNC)**. It faces two pressures:
+### A15. Explain expansion through internationalization, using the Bartlett–Ghoshal model. 🎯 2024 End Case 4 (theory part) [5]
 
-1. **Pressure to cut costs** and be efficient.
-2. **Pressure to be locally responsive**: to suit each country's tastes and conditions.
+**Internationalization** means selling the firm's products or services **beyond its home country**. A firm that operates in more than one country is a **multinational corporation (MNC)**, such as Kia or Walmart. It must choose an international strategy.
+
+**Two pressures** decide the choice (the **C. A. Bartlett and S. Ghoshal** model):
+
+1. **Cost reduction:** the need to keep costs low and be efficient.
+2. **Local responsiveness:** the need to suit each country's tastes and market conditions (quick response, or a different product).
 
 Each pressure can be low or high. This gives four strategies:
 
@@ -643,320 +499,100 @@ Each pressure can be low or high. This gives four strategies:
 | **High** | **Global** | **Transnational** |
 | **Low** | **International** | **Multi-domestic** |
 
-1. **International (low cost pressure, low local pressure):** sells the home product abroad with little change and no price cut. Buyers want it **because** it is different. Examples: Harley-Davidson, Belgian chocolate, Starbucks, Rolex.
-2. **Multi-domestic (low cost pressure, high local pressure):** changes the product to suit each country, but does not cut prices much. Examples: Netflix's local shows; Heinz ketchup without onion and garlic for India; Outback Steakhouse.
-3. **Global (high cost pressure, low local pressure):** the **same product everywhere**, to get economies of scale and low cost, with only small changes. Examples: Microsoft software (only the language changes); P&G's global brands; Intel; Lenovo. It suits products the customer does not see directly, where price matters more than taste.
-4. **Transnational (high, high):** the middle path. A global brand and core product for efficiency, plus local touches. Example: McDonald's and KFC keep the same core menu, but McDonald's sells wine in France, serves the McArabia in Saudi Arabia, and sells no pork there.
+1. **International strategy (low cost pressure, low local pressure):**
+   - The firm sells its product abroad with **little or no change**, and does not cut its price.
+   - Buyers want it **because** it is different from local products.
+   - Examples: Harley-Davidson (people abroad want the American look, sound and power); Belgian chocolate in the US (no price cut against Hershey's, no change in taste); Starbucks; Rolex.
+2. **Multi-domestic strategy (low cost pressure, high local pressure):**
+   - The firm **changes the product to suit each country**, but does not focus on cost.
+   - Examples: Netflix makes shows for each country (New Zealand, Portugal, Pakistan, India); Heinz sells ketchup without onion and garlic in India; Outback Steakhouse adapts to local tastes but does not cut prices much.
+3. **Global strategy (high cost pressure, low local pressure):**
+   - The firm gives up local changes to get **low cost and efficiency**. It is the exact **opposite of multi-domestic**.
+   - It sells **the same product everywhere**, with only small changes, to get economies of scale.
+   - Examples: Microsoft (the same software, only the language changes); Procter & Gamble's global brands; Intel; Lenovo.
+   - It suits products the customer does not see (like Intel's chips), where price matters more than local taste.
+4. **Transnational strategy (high cost pressure, high local pressure):**
+   - The **middle path** between multi-domestic and global. It balances low cost with local tastes.
+   - Example: McDonald's and KFC keep the same brand and core menu everywhere, but add local touches. McDonald's sells wine in France and the McArabia chicken sandwich in Saudi Arabia, where its breakfast has no pork.
 
 > 💡 Transnational = "think global, act local".
 
-### A28. What is a retrenchment strategy? Explain turnaround, divestment and liquidation. 🎯 2025 End Case 1 (theory part) [4]
+### A16. What is a retrenchment strategy? Explain turnaround, divestment and liquidation. 🎯 2025 End Case 1 (theory part) [4]
 
-**Retrenchment** means cutting down operations or expenses to get back to a financially stable position. Firms use it to shrink or restructure after an economic slowdown, losses or legal trouble.
+**Retrenchment** means **reducing the company's level of activities**: cutting operations or expenses to get back to a **financially stable** position. Firms use it because of an economic slowdown, losses or legal trouble. It is used to **downsize** or **restructure** the business.
 
-1. **Turnaround:** reverse earlier wrong decisions and make a loss-making unit profitable again. Three steps:
-   1. change the management;
-   2. cut costs;
-   3. reduce assets (sell what is not needed).
-2. **Divestment:** **sell or close** a unit that is not core, and use the money to grow the core business. Examples:
-   - VST sold its food business to Global Green (Thapar group). Reasons: shortage of raw material, no working capital, and the parent itself was losing money.
-   - GEC of India sold Genelec in 1987, a year after its top management changed, to pay for its own expansion.
-   - Indian Organic Chemicals sold its "Futura" foods business. Reasons: competition from unorganised sellers, technology problems, a factory mindset in a marketing business, and no money.
-3. **Liquidation:** **close** the firm or unit and sell its assets. It is bankruptcy: the last resort and the worst form of retrenchment. Jobs, opportunities and the brand are all lost. Causes: continuing losses, political instability, conflicts, poor management. Example:
-   - Empress Mills, Nagpur (Tata, 1986). Reasons: about 50 years without modernisation, government policy that hurt cotton textiles, failed plans for a merger and for voluntary retirement (VRS), and no rescue package.
-   - Lesson: if action is not taken in time, even the biggest group cannot save a unit.
+**1. Turnaround strategy**
 
-**Divestment vs liquidation:** divestment sells off a non-core part to make the core stronger, and **the firm carries on**. Liquidation sells everything and **shuts the door**.
+- The firm **reverses its earlier wrong decisions** and makes a loss-making unit profitable again.
+- Firms often ignore some units, which then sink into losses. When they see the mistake, they use turnaround to put the unit back on track.
+- **Three major steps:**
+  1. change in management;
+  2. cost reduction;
+  3. asset reduction.
 
-### A29. What is a combination strategy? Give examples. 🎯 2025 End Part B Q2 (theory) [3]
+**2. Divestment strategy**
 
-A **combination strategy** mixes stability, expansion and retrenchment, to make the overall business better. The mix can be:
+- The firm **downsizes or sells a business unit**, to focus on its core and use the money to grow the core business.
+- Examples:
+  - **VST** sold its food business (VST Natural Products) to the Thapar group's Global Green Company. Reasons: raw materials were not available, there was not enough working capital, and the parent was itself making a loss.
+  - **Indian Organic Chemicals** sold its "Futura" foods unit (potato wafers and banana chips) in 1989. Reasons: unfair competition from the unorganised sector, technology problems, a factory mindset in a business that needed marketing skill, and lack of funds.
+  - **GEC of India** sold Genelec, a trading company, in 1987, within a year of a change in top management. Reasons: no money to invest in Genelec, and the sale gave funds for GEC's own expansion.
 
-- **Simultaneous** (at the same time, in different businesses):
-  - sell off one SBU or product line while adding another;
-  - turn around some units while growing others;
-  - "harvest" some products (take their cash without investing more) while growing others.
-- **Sequential** (one after another, in the same business):
-  - grow first, then stabilise; or
-  - turn around first, then grow once things improve.
+**3. Liquidation strategy**
+
+- The firm **sells off its assets or closes a unit**. Liquidation = **bankruptcy**.
+- It is the **worst** form of retrenchment and the **final resort** for a declining company. Business, jobs, opportunities and brand value are all lost.
+- Causes: continuous losses, unstable politics, conflicts inside the company, poor management.
+- Example: **Empress Mills, Nagpur** (Tata), liquidated in 1986:
+  - for nearly 50 years it did not modernise or keep up with competition;
+  - government policy was not good for cotton textiles;
+  - a plan to merge it with other Tata textile units failed, and so did a voluntary retirement scheme for its 6,000 workers;
+  - banks delayed a rescue package, and the state government gave no political support.
+  - **Lesson:** if action is not taken in time, even the largest business group cannot save a company.
+
+**Divestment vs liquidation:** in divestment, the firm sells a **non-core** business and uses the money for its **core** business, and **the firm carries on**. In liquidation, it sells the unit and **closes the door**.
+
+> 💡 Turnaround = fix it. Divestment = sell a part. Liquidation = shut it down.
+
+### A17. What is a combination strategy? Give examples. 🎯 2025 End Part B Q2 (theory) [3]
+
+A **combination strategy** is a **mix of stability, expansion and retrenchment**, to improve the business. The mix can happen:
+
+- **at the same time, in different businesses** (simultaneous), or
+- **at different times, in the same business** (sequential).
+
+**1. Simultaneous combination:**
+
+- sell off one SBU or product line while adding another one somewhere else;
+- turn around some products or businesses while growing others;
+- "harvest" some products (take their cash without investing more) while growing others.
+
+**2. Sequential combination:**
+
+- first grow, then switch to stability; or
+- first turn around, then grow once things improve.
 
 **Examples:**
 
-- **ITC:** backward integration into packaging and printing (1925); diversification into hotels (1975) and agribusiness (1990); turnaround of Triveni Tissues; divestment of financial services.
-- **Aditya Birla:** bought Novelis, formed JVs abroad, and over the years diversified, divested, merged and demerged (split) businesses.
+- **ITC:** a diversified conglomerate (FMCG, hotels, paperboards and packaging, agribusiness, IT).
+  - Started in 1910; backward integration into packaging and printing in 1925.
+  - Diversified into hotels in 1975 and agribusiness in 1990.
+  - Turnaround of the speciality-paper business Triveni Tissues after acquiring it and merging it with its paperboards business.
+  - Divested its financial-services business.
+- **Aditya Birla Group:** has used almost every corporate strategy since 1857.
+  - Acquired Novelis, becoming the world's largest aluminium rolling company.
+  - Has several joint ventures abroad (South East Asia, China).
+  - Has diversified, divested, acquired, merged and demerged (split) businesses along the way.
 
-### A30. Porter's generic strategies, the strategic-management process and the five forces. 📘 🎯 2023 End Q4, Q5(b) [8]
-
-The deck names business-level strategies as "generic strategies" but does not explain them. The standard textbook answers are given below.
-
-**The four phases of the strategic-management process:**
-
-1. **Environmental scanning:** study the firm's inside and outside using SWOT (strengths, weaknesses, opportunities, threats).
-2. **Strategy formulation:** set the vision, mission and objectives, and choose a strategy.
-3. **Strategy implementation:** put it into action through structure, resources, policies and programmes.
-4. **Evaluation and control:** measure the results against the objectives, and correct.
-
-**Porter's five forces** (the five things that decide how hard competition is in an industry):
-
-- the threat of new firms entering;
-- the bargaining power of suppliers;
-- the bargaining power of buyers;
-- the threat of substitute products;
-- rivalry among the firms already there.
-
-The **threat of new entrants is low** when it is hard to enter (high entry barriers). Barriers include: economies of scale, high capital needs, strong brands, high switching costs for customers, access to sales channels, patents and licences, government policy, and the fear that existing firms will fight back.
-
-**Porter's generic strategies:**
-
-- **Cost leadership:** have the lowest cost in the industry.
-- **Differentiation:** offer something unique that buyers will pay more for.
-- **Focus:** use cost leadership or differentiation, but aim at one narrow customer group.
-
-**How a firm becomes the cost leader:**
-
-- economies of scale and high volume;
-- the learning-curve effect (costs fall as workers gain experience);
-- efficient, standard processes and automation;
-- tight cost control and low overheads;
-- cheap inputs (backward integration, bulk buying);
-- simple, no-frills products;
-- efficient distribution.
-
-Examples: Walmart, Nirma, Patanjali, IndiGo.
+> 💡 Combination = do two things at once, or one after the other.
 
 ---
 
 ## Part B — Case studies (8–10 marks)
 
-### B1. 🎯 2025 Mid (Module III) — How Infosys's leadership changed [10]
+> The full case texts for B1–B4 are not in this folder. Only their summaries in the past-paper solution files are. The facts below are the well-known public history of each company. In the exam, use the facts given in the paper, and link them to the same strategy terms.
 
-*In its early years, Infosys used a fairly autocratic style. The founders made the decisions, which gave strict control, speed and steady quality while the company grew. As it spread across the world, this rigid style began to show its limits: decisions were too concentrated at the top, so morale and new ideas suffered. Infosys slowly moved to a democratic, participative style: employees took part in project decisions, there were feedback sessions, and managers kept an open door. At the same time, leaders such as Narayana Murthy showed transformational leadership, built on values, ethics and the vision of a globally respected Indian IT company.*
-
-Attempt any two:
-**(1)** Why was an autocratic style useful early on, and why did it become a problem later?
-**(2)** As a manager, how would you balance democratic participation with quick decisions in a fast-moving IT company?
-**(3)** Is transformational leadership more sustainable than autocratic leadership in knowledge industries like IT?
-
-**(1) Answer.**
-
-*Why it was useful early on:*
-
-- A small, young company needs **speed, focus and steady quality**.
-- The founders had the vision and the expertise. When they made the decisions, there was no confusion, standards stayed the same everywhere, and there was a clear chain of command (Fayol's unity of command and unity of direction).
-- There were few staff, and they were new. So close direction suited them. (In situational leadership terms: telling or selling, for followers with low readiness.)
-
-*Why it became a problem later:*
-
-- A large, global firm full of skilled **knowledge workers** (people whose work is based on their expertise) cannot send every decision to the top.
-- Decisions became slow. People closest to the customers could not act. Initiative and creativity were crushed. Morale fell, and more people left.
-- Autocracy treats experts as people who just follow orders. This wastes their knowledge. (On the Managerial Grid, this is position 9,1: high concern for production, low concern for people.)
-
-**(2) Answer.**
-
-- **Split decisions by type:**
-  - Routine and urgent decisions: hand them to the team to decide on the spot.
-  - Strategic decisions: ask for everyone's views, but set a **deadline**. After the deadline, the manager decides. ("Consult, then decide.")
-- **Set clear goals and limits** (which decisions are made at which level), then delegate inside those limits. Example: Southwest Airlines lets its front-line staff decide many things themselves.
-- **Use agile routines:** short daily stand-up meetings and sprint reviews give everyone a voice quickly, without long meetings.
-- **Use the situational approach:** more direction for new hires; delegation for experienced engineers.
-- **Build psychological safety** (from Google's Project Aristotle): when people feel safe to speak up early, problems are solved **faster**, not slower.
-
-**(3) Answer.** Yes, mostly.
-
-- In IT, the main asset is people's knowledge and creativity.
-- Transformational leadership raises **intrinsic motivation** (drive from inside) through a shared vision, coaching and intellectual challenge (the four I's). This leads to new ideas, commitment, and staff who stay. Knowledge firms need all of these to survive.
-- Autocratic leadership gives control in the short term. But it kills initiative and drives people away, and talented employees can easily find other jobs.
-- However, a crisis or a strict legal deadline may still need a firm, directive approach for a short time. So the best approach is a **transformational base**, with **directive action when the situation needs it**.
-
-> 💡 Autocracy builds the house. Participation and inspiration keep people living in it.
-
-### B2. 🎯 2024 End Case 3 — The autocratic production manager [8]
-
-*A production manager in a well-organised Indian factory makes all decisions alone, sets tight deadlines and expects strict obedience. Deadlines are met, but employees feel unmotivated, more people leave than is normal for the industry, and the quality of work goes up and down.*
-
-**(i)** What is the effect of autocratic management on employee motivation and on keeping staff? **[2]**
-**(ii)** How could involving employees in decisions affect productivity? **[2]**
-**(iii)** Discuss which management styles suit a manufacturing set-up, from an engineering point of view. **[4]**
-
-**(i) Answer.**
-
-- Workers have no voice, so they feel like machines.
-- Morale is low. They feel no ownership of their work. They work out of fear, not commitment.
-- Motivated people leave for better workplaces, so **staff turnover rises**. The factory keeps losing trained workers and keeps paying to hire and train new ones.
-- Effort that is given unwillingly also shows up as **quality that goes up and down**.
-
-**(ii) Answer.**
-
-- Workers on the shop floor know the machines and processes best.
-- Involving them (through quality circles, suggestion schemes and *kaizen*) brings practical ideas to cut defects and waste.
-- People also carry out decisions they helped to make with more commitment.
-- Result: higher productivity, better quality, fewer absences and fewer people leaving.
-- Example: the Toyota Production System.
-
-**(iii) Answer.**
-
-| Situation in the factory | Suitable style | Why |
-| :--- | :--- | :--- |
-| safety-critical work, emergencies, standards required by law | **autocratic** (directive) | must be fast and exact; there is no time for debate during a fire or a breakdown |
-| improving processes, solving quality problems, launching a new product | **democratic** (participative) | needs the knowledge of operators and engineers; builds commitment to the change |
-| R&D cell, highly skilled maintenance or design experts | **laissez-faire** (delegative) | experts work best with freedom |
-
-**From an engineering point of view, the factory is a system.**
-
-- Standard operating procedures and safety need firm control.
-- But continuous improvement needs participation.
-- So the manager should be **situational**: directive on safety and standards, participative on improvement, and delegative with experts. The aim is the 9,9 team style.
-- **Recommended change for this manager:** keep firm standards, but involve the workers in planning and problem-solving.
-
-> 💡 Firm on safety, open on improvement.
-
-### B3. 🎯 HU-4201 2025 Mid (OR) — Restructuring SwiftTech [5 × 2]
-
-*SwiftTech is a fast-growing software company that now has more than 500 employees. But its management has not kept up:*
-*(a) the structure is rigid and top-heavy, and middle managers are left out of decisions;*
-*(b) coordination is poor, and projects are delayed;*
-*(c) morale is low, and staff turnover is up by 20%;*
-*(d) there is no system for continuous improvement.*
-*The CEO, Mr Arjun, wants to restructure the company.*
-
-**(i)** Identify the management problems. Which of Fayol's principles are missing?
-**(ii)** Which leadership style should Mr Arjun use to improve motivation? Give examples.
-**(iii)** Compare top-down decision-making with a participative approach. Which one suits SwiftTech?
-**(iv)** How can SwiftTech use Toyota's lean principles?
-**(v)** Suggest a management structure with top, middle and lower levels.
-
-**(i) Answer.**
-
-**The problems:**
-
-- slow decisions, all made at the top;
-- middle managers left out;
-- poor coordination between teams, causing delays;
-- low morale, and people leaving.
-
-**Fayol's principles that are missing:**
-
-- **Centralisation** (the balance is wrong: everything is too centralised);
-- **Scalar chain** (the middle level is bypassed);
-- **Unity of direction** and **coordination**;
-- **Initiative**;
-- **Esprit de corps** (team spirit);
-- **Stability of tenure**;
-- possibly **equity** and **remuneration**.
-
-**(ii) Answer.** A **transformational and participative** style:
-
-- share a clear vision for the company's next stage (inspirational motivation);
-- coach the managers and engineers (individualised consideration);
-- invite new ideas (intellectual stimulation);
-- give real authority to middle managers (delegation).
-
-Examples: open town-hall meetings, goal setting at team level, recognition programmes, and clear career paths.
-
-**(iii) Answer.**
-
-| Top-down | Participative |
-| :--- | :--- |
-| fast for simple decisions; clear control | slower at first, but gives better decisions for complex work |
-| low commitment; ideas from the people doing the work are lost | high commitment; uses everyone's knowledge |
-| suits crises and small firms | suits large firms full of skilled knowledge workers |
-
-SwiftTech is large and full of skilled software engineers. So **participative** management works better. But it should have clear limits and deadlines, so that decisions are not delayed.
-
-**(iv) Answer.** **Lean** means **removing waste** and **improving all the time**. SwiftTech can:
-
-- map out how work gets delivered, and remove delays and unnecessary hand-overs;
-- use small teams that mix different skills (cross-functional teams);
-- use *kaizen*: anyone may suggest an improvement;
-- use visual task boards (*kanban*) to show what work is in progress;
-- fix problems where they start;
-- show respect for people.
-
-This makes the company more efficient and gives employees a voice.
-
-**(v) Answer.**
-
-- **Top:** the CEO and the leadership team. They set the vision and strategy, and provide resources.
-- **Middle:** the heads of engineering, product, delivery and HR. They are now **part of decision-making**. They turn strategy into plans, coordinate teams, and own the results.
-- **Lower:** team leads and scrum masters. They do daily planning, remove obstacles, and coach the engineers.
-
-Also add:
-
-- monthly reviews that bring all levels together;
-- clear rules on who decides what at each level;
-- a channel for feedback to flow upwards.
-
-Authority flows down. Accountability and information flow up.
-
-> 💡 Bring the middle managers back into the chain.
-
-### B4. 🎯 2024 Mid Q2 (OR) — Google's Project Aristotle, and science vs art [5 + 5]
-
-**(a)** Google's Project Aristotle studied what makes teams successful. What role does management play in making teams successful? **[5]**
-**(b)** How do the functions of management need both systematic, evidence-based methods and intuitive, creative thinking? Where does management rely more on one than the other? Give examples. **[5]**
-
-**(a) Answer.**
-
-**What Google found:** Google studied about **180 teams**. It found that **who** was in a team (star performers, high IQ, top universities) mattered much less than **how** the team worked together.
-
-- The most important factor was **psychological safety**: members felt safe to speak up, take risks and admit mistakes without being laughed at.
-- The other factors were: dependability (members can rely on each other), clear structure and roles, meaning (the work matters to them) and impact (the work makes a difference).
-
-**Management creates exactly these conditions:**
-
-- **Planning and organising** give clear goals, roles and structure.
-- **Directing and leading** build trust and safety. The manager listens, invites everyone to speak, and treats mistakes as chances to learn (a democratic, transformational style).
-- **Coordinating** makes members able to rely on each other.
-- **Controlling** gives fair feedback, not blame.
-
-So successful teams are not luck. They are the result of good management of people and processes.
-
-**(b) Answer.** (See also A4.)
-
-- **Science (systematic, evidence-based):** forecasting demand from data, budgeting, scheduling, quality control (TQM, statistical process control), and measuring performance.
-- **Art (intuitive, creative):** lifting a team that has lost heart, bargaining with a difficult supplier, solving conflicts, and deciding quickly in a crisis without full information.
-- **Which function leans which way:**
-  - **Planning and controlling** rely more on systematic, evidence-based methods.
-  - **Directing, motivating and handling crises** rely more on gut feeling (intuition) and creativity.
-- **Example:** a start-up uses Agile measurements (science), but it needs creative changes of direction (pivots) when the market shifts (art).
-
-> 💡 Teams win through safety and clarity, and managers build both.
-
-### B5. ✍️ — A new hospital ward [10]
-
-*A hospital opens a new ward. The ward manager has three groups of staff:*
-*(1) newly hired nurses, who are eager but have little experience;*
-*(2) experienced nurses, who are skilled but have lost motivation after being passed over for promotion;*
-*(3) two senior specialists, who know their work far better than the manager does.*
-*The previous manager gave every group the same detailed orders, and complaints went up.*
-
-**(a)** Using situational leadership theory, suggest a style for each group. **[6]**
-**(b)** Where was the previous manager on the Managerial Grid, and where should the new manager aim to be? **[4]**
-
-**(a) Answer.**
-
-| Group | Readiness | Style | What the manager does |
-| :--- | :--- | :--- | :--- |
-| new nurses | R2: unable but willing | **S2 Selling (coaching)** | gives clear procedures and close guidance, plus encouragement and explanations of why |
-| experienced nurses who have lost motivation | R3: able but unwilling | **S3 Participating (supporting)** | involves them in ward decisions, recognises their skill, talks about career paths; gives little task instruction |
-| senior specialists | R4: able and willing | **S4 Delegating** | agrees goals with them, gives them freedom and resources, stays available if needed |
-
-**Why the complaints went up:** giving everyone the same detailed orders (the "telling" style) insulted the experts. It also did nothing to lift the morale of the demotivated nurses.
-
-**(b) Answer.**
-
-- The previous manager focused on tasks and orders, with little concern for people. That is about **(9, 1): task / produce or perish**.
-- The new manager should aim for **(9, 9): team management**. This means high standards of patient care (concern for production) together with trust, involvement and respect for the staff (concern for people).
-
-> 💡 One style for everyone fits no one.
-
----
-
-### Corporate strategy cases (deck 4)
-
-> The full case texts for B6–B9 are not in this folder. Only their summaries in the past-paper solution files are. The facts below are the well-known public history of each company. In the exam, use the facts given in the paper, and link them to the same strategy terms.
-
-### B6. 🎯 2025 End Case 1 — How Nokia reinvented itself [10]
+### B1. 🎯 2025 End Case 1 — How Nokia reinvented itself [10]
 
 **Case (summary).** Nokia once led the mobile-phone market, and then lost it to smartphones. It reinvented itself as a company that makes telecom networks and technology.
 
@@ -988,7 +624,7 @@ So successful teams are not luck. They are the result of good management of peop
 
 > 💡 Nokia = divest → turn around → integrate → grow (a sequential combination).
 
-### B7. 🎯 2025 End Case 2 (OR) — Reliance Industries: diversification and divestment [10]
+### B2. 🎯 2025 End Case 2 (OR) — Reliance Industries: diversification and divestment [10]
 
 **Case (summary).** Reliance grew from textiles into petrochemicals and oil refining, and then into telecom (Jio), retail and new energy.
 
@@ -1024,7 +660,7 @@ So successful teams are not luck. They are the result of good management of peop
   - *expansion* in new energy;
   - done **sequentially**, as the green businesses grow large enough.
 
-### B8. 🎯 2025 End Part B — Three applied situations [2 × 3]
+### B3. 🎯 2025 End Part B — Three applied situations [2 × 3]
 
 **(a) A firm in a saturated market (where demand has stopped growing) decides not to expand. Which strategy is this, and is it sensible?**
 
@@ -1044,9 +680,9 @@ So successful teams are not luck. They are the result of good management of peop
 - **Which to choose depends on where the pressure comes from:**
   - if it comes from **price wars with rivals**, horizontal integration fits;
   - if it comes from **powerful suppliers or problems with distribution**, vertical integration fits.
-- Use the comparison table in A23.
+- Use the comparison table in A11.
 
-### B9. 🎯 2024 End Case 4 — Sun Pharma's international strategy [8]
+### B4. 🎯 2024 End Case 4 — Sun Pharma's international strategy [8]
 
 **Case (summary).** About Indian MNCs abroad. Explain how Sun Pharmaceuticals follows a **transnational strategy**, balancing the same product everywhere (standardisation) with changes for each country (local responsiveness).
 
