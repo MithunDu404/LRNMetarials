@@ -1,224 +1,324 @@
 # Module II — Economics: Exam Questions and Answers (HU-4101)
 
-This file goes with [Finance_Economics_and_Management_Midterm_Study_Guide.md](Finance_Economics_and_Management_Midterm_Study_Guide.md), sections 1–2. Those sections cover demand and supply, national income, the Keynesian cross, and money and banking. Try each question yourself first. Then read the answer.
+This is the **only** economics guide. It covers exactly the end-sem economics syllabus:
+
+- **After the midsem (class notes):**
+  - consumer behaviour (30 Oct);
+  - theory of production (6 Nov);
+  - theory of cost (13 Nov).
+- **From the midsem part:** the **Keynesian cross model** and the **Phillips curve**. (The 13 Nov notes mark these as important: "this class + previous class + Phillips curve + Keynesian model".)
+
+Nothing else is included. Demand and supply, GDP, money and banking, indifference curves, the Lagrangian and similar topics are **not** in the syllabus, so they have been removed. Try each question yourself first. Then read the answer.
 
 **How the end-sem asks economics:** the questions are short and come in many small parts.
 
-- **Part A** = 1–3 marks. Definitions, one-line reasons, small sums.
-- **Part B** = 4–7 marks. A graph with an explanation, a GDP or GNP sum, or a multiplier argument. There is usually an OR choice.
+- **Part A** = 2–3 marks. A definition, a reason, or a small diagram.
+- **Part B** = 4–7 marks. A graph with an explanation, or a table or formula sum. There is usually an OR choice.
 
 **Tags used in this file:**
 
 - 🎯 = asked in a real paper (the year and question number are given). "HU-4201" means the 8th-semester paper of the same course.
 - ✍️ = a practice question, added so that every part of the notes is covered.
-- 📘 = goes a little beyond the notes.
 - 💡 = a short line to help you remember.
 
-**Microeconomics (after the midsem):** marginal utility, indifference curves, the Lagrangian, production and cost are in a separate file: [Module_II_Microeconomics_QA.md](Module_II_Microeconomics_QA.md).
-**Not in the notes yet:** past end-sems also asked about the Phillips curve, and about demand-pull vs cost-push inflation in detail.
-
-| Topic in the guide | Question |
+| Topic (where it comes from) | Question |
 | :--- | :--- |
-| Scarcity, micro vs macro (§1.1) | A1 |
-| Demand: law, what it depends on, shifts, elasticity (§1.2) | A2, A3, A4, B1 |
-| Supply, equilibrium, shocks (§1.2–1.3) | B1 |
-| Circular flow of income (§2.1) | A5, B2 |
-| GDP: meaning, nominal vs real, deflator, base year (§2.2) | A6, A7, A8, B3 |
-| C + I + G + NX, GNP, factor cost, NNP (§2.2) | B3, B4 |
-| Consumption function, Keynesian cross, stability (§2.3) | A11, B5 |
-| Multipliers: government spending, tax, investment (§2.3) | A11, B6 |
-| Money: functions, M1–M4, motives, inflation (§2.4) | A9, A10, A12, A13 |
-| Central bank vs commercial bank, credit creation (§2.4) | B7 |
-| Fiscal vs monetary policy (§2.4) | B8 |
+| Utility and the three approaches (30 Oct) | A1 |
+| Cardinal utility: assumptions (30 Oct) | A2 |
+| Rational consumer and the three axioms (30 Oct) | A3 |
+| TU, MU, saturation, diminishing MU (30 Oct) | A4, A5 |
+| Net utility, disutility, first- and second-order conditions (30 Oct) | A6, B1 |
+| Production function; short run vs long run (6 Nov) | A7 |
+| TP, MP and the law of variable proportions (6 Nov) | A8, B2 |
+| Returns to scale (6 Nov) | A9, B3 |
+| TFC, TVC, TC (13 Nov) | A10 |
+| AFC, AVC, AC and MC (13 Nov) | A11, A12, B4 |
+| Keynesian cross, MPC and multipliers (midsem part) | A13, B5, B6 |
+| Phillips curve (midsem part) | A14, B7 |
 
 ---
 
-## Part A — Short questions (1–3 marks)
+## Part A — Short questions (2–3 marks)
 
-### A1. What is the basic economic problem? How is microeconomics different from macroeconomics? ✍️ [2]
+### Consumer behaviour (30 Oct)
 
-**The economic problem in one line:** we want many things, but we have only a few resources to make them.
+### A1. What is utility? Name the three approaches to understanding consumer behaviour. ✍️ [2]
 
-- Human wants are **unlimited**. When one want is met, a new one comes up.
-- Resources are **scarce**, which means limited. Resources are land, labour (workers), capital (machines, buildings) and time.
-- Each resource has **alternative uses**. A piece of land can grow rice, or hold a factory, or hold houses. It cannot do all three at once.
-- So every society must **choose** how to use (allocate) its resources.
+**Answer.**
 
-**When is a good "scarce"?** A good is scarce if, at a price of zero, people would want more of it than there is. Food grain is scarce, because everyone wants it and there is not enough. Rotten eggs are not scarce, because nobody wants them even for free.
+- **Utility** is the satisfaction a person gets from consuming goods and services.
+- The theory of consumer behaviour assumes we **can measure (quantify)** this satisfaction.
+- **To "maximise utility" means to get the most satisfaction possible.**
+- There are **three approaches** to understanding consumer behaviour:
+  1. **Cardinal utility approach:** utility can be measured in numbers (units called "utils", or money). This is the approach in our notes.
+  2. **Ordinal utility approach:** utility cannot be measured, only ranked (1st choice, 2nd choice, …).
+  3. **Revealed preference approach:** we learn what people like from what they actually buy.
 
-**Micro vs macro:**
+💡 *Cardinal = "how much?" Ordinal = "which is better?"*
 
-- **Microeconomics** looks at **single units**: one buyer's choices, one firm's price and output, one market.
-- **Macroeconomics** looks at the **whole economy**: GDP, national income, the general price level (inflation), unemployment and growth.
+---
 
-> 💡 Micro = one tree. Macro = the whole forest.
+### A2. State the assumptions of the cardinal utility approach. 🎯 2024 End Q1(b) [2]
 
-### A2. State the law of demand. What does the demand for a good depend on? 🎯 2024 End Q1, 2025 Mid Q4 [1 + 2]
+**Answer.**
 
-**Law of demand:** when the price of a good **rises**, people buy **less** of it. When the price **falls**, they buy **more**. This is true only if everything else stays the same. Economists call this condition *ceteris paribus* (Latin for "other things being equal").
+The cardinal utility approach makes four assumptions (from the notes):
 
-Because of this law, the demand curve **slopes downward**: high price, low quantity; low price, high quantity.
+1. **Utility can be measured objectively.** We can put a number on satisfaction.
+2. **The consumer is rational.** Their choices follow the three rules in A3.
+3. **The consumer's goal is to get the most utility.** In other words, the most satisfaction.
+4. **Marginal utility diminishes.** After a point, each extra unit gives less extra satisfaction than the one before.
 
-**What demand depends on.** The demand for good x is written as:
+💡 *Measurable, rational, maximise, diminishing.*
 
-$$q_x = f(P_x,\ M,\ P_y,\ \text{tastes})$$
+---
 
-Read this as "the quantity of x people want depends on these four things":
+### A3. When is a consumer called rational? State the three axioms of choice. A voter prefers party A to B and B to C, but then prefers C to A. Which axiom is broken? 🎯 2024 End Q2 (part), 🎯 HU-4201 2024 End Q2 [3]
 
-- $P_x$: the price of the good itself.
-- $M$: the buyer's income.
-- $P_y$: the prices of **related goods**. A related good can be a **substitute** (used instead, like tea instead of coffee) or a **complement** (used together, like a car and petrol).
-- **Tastes and preferences**. This includes the **bandwagon effect**: people buy something just because others are buying it.
+**Answer.**
 
-**Desire vs demand:** a desire is only a wish. **Demand** is a desire that the person is **able and willing to pay for**. A poor person may wish for a car, but that is not demand until they can and will pay.
+A consumer is **rational** when their choices are rational. To be rational, they must obey **all three** of these axioms (basic rules) at the same time:
 
-> 💡 Price goes up, quantity goes down, as long as nothing else changes.
+1. **Axiom of completeness:** the consumer has the mental ability and the resources to **compare any two choices**. For any two bundles A and B, they can say: "I prefer A", or "I prefer B", or "I like both equally".
+2. **Axiom of consistency:** the consumer's choices must be **consistent**. If they choose A over B once, they must do so **in all cases**, not switch to B next time.
+3. **Axiom of transitivity:** choices link up like a chain. If the consumer chooses **A over B** and **B over C**, then when offered A and C, they **must choose A**.
 
-### A3. What is the difference between a movement along the demand curve and a shift of the demand curve? ✍️ [2]
+**The voter:** they prefer A to B and B to C. Transitivity says they must then prefer A to C. Since they prefer C to A, they **break the axiom of transitivity**. So this choice is not rational in the economic sense.
 
-- **Movement along the curve.** This is called a change in **quantity demanded**. Only **the good's own price** causes it. If the price falls, the buyer moves down the **same** curve and buys more.
-- **Shift of the whole curve.** This is called a change in **demand**. Any **other** factor causes it. For example:
-  - income rises,
-  - the price of a substitute rises,
-  - tastes change in favour of the good.
+(If the same voter also keeps switching between A and B from one election to the next, with nothing else changing, that breaks **consistency**.)
 
-  Each of these shifts the whole curve to the **right**: more is bought at every price. The opposite changes shift it to the **left**.
+💡 *Compare everything, stay Consistent, choices flow in a chain (Transitive).*
 
-> 💡 Its own price moves you along the line. Anything else moves the whole line.
+---
 
-### A4. What does the slope of a demand curve tell us about how sensitive buyers are to price? ✍️ [2]
+### A4. What is marginal utility? What happens to total utility as we keep increasing the quantity consumed? Explain with a diagram. ✍️ [3]
 
-- **Flat curve = elastic demand.** A small price change causes a **big** change in quantity. Buyers are very sensitive to price. This happens when there are close substitutes, or when the good is not essential. Example: one brand of soft drink. If it costs more, people switch to another brand.
-- **Steep curve = inelastic demand.** Even a big price change hardly changes the quantity. This happens when the good is essential and has no substitute. Example: life-saving medicine. People buy it whatever the price.
+**Answer.**
 
-> 💡 Flat line = buyers react a lot. Steep line = they buy anyway.
+- **Total utility (TU):** the total satisfaction from all the units consumed.
+- **Marginal utility (MU):** the **change in total utility** from consuming **one extra unit** of the good:
+$$MU_n = TU_n - TU_{n-1} \qquad \text{or} \qquad MU_x = \frac{d(TU)}{dq_x}$$
+  So MU is the **slope of the TU curve**.
 
-### A5. Answer these questions on the circular flow model. 🎯 2023 Mid Q2, 2025 Mid Q1(a) [1 + 1 + 1]
+**What happens as the quantity rises (from the notes):**
 
-**(a) Who receives factor payments (like wages)?** **(ii) Households.** Households own the factors of production. For example, they own their labour and sell it to firms.
+1. **At first, TU rises at an increasing rate.** Each new unit adds more satisfaction than the last one, so **MU is rising**.
+2. **After some point, TU rises at a decreasing rate.** Each new unit still adds satisfaction, but less than the last one. So **MU is falling, but still positive**. This is the law of diminishing marginal utility.
+   - The point where this change happens is the **inflexion point** of TU (where the curve changes its bend).
+   - MU is **highest** at the inflexion point.
+3. **At the saturation point, TU is at its highest and MU = 0.** One more unit adds nothing.
+4. **After saturation, TU falls and MU is negative.** Extra units actually reduce satisfaction.
 
-**(b) With no leakages and no injections, what happens to the income flowing round the system?** It stays **(i) constant**.
+![Total utility and marginal utility](qa_images/tu_mu.svg)
 
-**(c) Why does it stay constant?**
+**The economic region** is the stretch from the highest MU to the point where MU = 0 (marked in the diagram). This is where a sensible consumer actually consumes:
 
-- Firms pay **all** of their revenue to households as income (wages).
-- Households **spend all** of that income on the firms' goods.
-- Nothing leaks out. A **leakage** is money that leaves the flow: saving, taxes or imports. There are none.
-- Nothing extra comes in. An **injection** is money that enters the flow from outside: investment, government spending or exports. There are none.
-- So the same amount of money keeps going round and round.
+- Before it, MU is still rising, so it always pays to consume more.
+- Beyond it, MU is negative, so consuming more reduces satisfaction.
 
-> 💡 No leak, no injection, no change.
+💡 *TU rises fast, then slowly, then stops at saturation (MU = 0), then falls.*
 
-### A6. Define GDP. Is the sale of your three-year-old phone counted in this year's GDP? Why are last year's goods not counted? 🎯 2024 Mid Q1(a, b), 2023 Mid Q1(b) [1 + 1 + 1]
+---
 
-**GDP (gross domestic product)** is the total **market value** of all **final goods and services** made **inside a country's borders** during a given time, usually one year.
+### A5. How much of good X will a consumer consume if X is free? Explain with a utility diagram. 🎯 2025 End Q2 [3]
 
-$$\text{GDP} = P_1q_1 + P_2q_2 + \dots + P_nq_n$$
+**Answer.**
 
-This means: for each good, multiply its price ($P$) by the quantity made ($q$), then add them all up.
+**The consumer consumes until MU = 0.** Here is why:
 
-- **Your used phone: not counted.** GDP counts only what is **made this year**. Your phone was made three years ago, and it was counted in GDP then. Selling it now only changes who owns it. Nothing new is made. (But if a dealer takes a commission for selling it, that commission **is** counted, because the dealer gives a service now.)
-- **Last year's goods are not counted** because they were already counted in last year's GDP. Counting them again would be **double counting**. It would make this year's production look bigger than it really is.
-- **Only final goods are counted.** A final good is one bought by the person who will use it. Intermediate goods are goods used to make other goods, like the flour a baker uses to make bread. The flour's value is already inside the price of the bread, so we do not count it again.
+1. The consumer's aim is to make **total utility as large as possible**.
+2. The good is **free**, so consuming more costs nothing.
+3. So they keep consuming as long as each extra unit adds **some** satisfaction, that is, as long as **MU is positive**.
+4. They stop where **MU = 0**. Here **TU is at its highest** (the saturation point in the diagram in A4).
+5. They do not go beyond this point, because then MU is negative and TU starts to fall.
 
-> 💡 GDP counts what is made this year, inside the border, only once.
+**A common mistake:** stopping where MU is **highest**. That is wrong. After that point, MU is smaller but still positive, so each unit still **adds** to TU. Since the aim is the most **total** utility, the consumer carries on until MU = 0.
 
-### A7. GDP vs GNP. What can you say about a country whose GDP is much lower than its GNP? 🎯 2023 Mid Q1(a), 2024 Mid Q1(c) [2 + 1]
+In terms of the rule in A6: the best point is where MU = price. Here the price is 0, so the best point is MU = 0.
 
-| GDP | GNP |
+**Example:** TU $= 10x^2 - \tfrac{2}{3}x^3$, so MU $= 20x - 2x^2$. Setting MU = 0 gives $x = 10$. TU is highest there: TU $= 1000 - 666.7 = 333.3$.
+
+💡 *Free good: "keep eating until the next bite gives zero pleasure", not "until the bite you enjoy most".*
+
+---
+
+### A6. A consumer has consumed 5 units of a good and is thinking of buying the 6th. The marginal utility of the 6th unit is ₹20 and its price is ₹10. Will the consumer buy it? ✍️ (class question) [2]
+
+**Answer.** **Yes, the consumer will buy it.**
+
+- When we pay for a good, we **lose** some satisfaction, because we give up money. The notes call this **disutility (DU)**. For one unit it equals the price.
+- The 6th unit **adds** ₹20 of satisfaction (MU) and **takes away** ₹10 of satisfaction (the price).
+- MU > price, so the net change in satisfaction is ₹20 − ₹10 = **+₹10**. Buying it makes the consumer better off.
+- The consumer keeps buying extra units until **MU = price**. Beyond that point, MU < price, and each extra unit would lower net satisfaction.
+
+💡 *Buy while MU > price. Stop where MU = price.*
+
+---
+
+### Production (6 Nov)
+
+### A7. What is a production function? How is the short-run production function different from the long-run one? 🎯 2025 End Q3 (part) [2]
+
+**Answer.**
+
+- **Production function:** a **technical relationship** between the **inputs** used and the **output** made:
+$$y = f(x) \qquad \text{or, with labour and capital,} \qquad y = f(L, K)$$
+  It is "technical" because it is about engineering and methods, not about prices.
+
+| Short-run production function | Long-run production function |
 | :--- | :--- |
-| Counts production **inside the country's borders**, by anyone (citizens or foreigners). | Counts income earned by the country's **own citizens and firms**, wherever they are in the world. |
-| A foreign company's factory in India counts in **India's GDP**. | An Indian company's earnings abroad count in **India's GNP**. |
+| One input (usually capital K) is held **constant**; the others (usually labour L) can change. | **All** inputs are allowed to change. |
+| Output is raised by adding more of the variable input to the fixed input. | Output is raised by changing the **scale** of all inputs together. |
+| Follows the **law of variable proportions** (A8). | Follows **returns to scale** (A9). |
 
-$$\text{GNP} = \text{GDP} + \text{NFIA}$$
+The short run and the long run are **not fixed lengths of time** (they do not mean "one year"). They depend only on whether all inputs can be changed.
 
-**NFIA (net factor income from abroad)** = income our residents earn abroad − income foreigners earn inside our country.
+---
 
-**If GNP is much higher than GDP,** NFIA is large and positive. This means the country's people earn far more abroad than foreigners earn inside it. Such a country probably has:
+### A8. Define total product and marginal product. How do TP and MP change as more labour is added? State the law of variable proportions. ✍️ [3]
 
-- many **workers abroad who send money home** (these payments are called remittances), or
-- large investments in other countries,
+**Answer.**
 
-along with fairly small production at home.
+- **Total product (TP):** the total output made with a given amount of labour, while capital stays fixed.
+- **Marginal product (MP):** the **change in total output** when **one more unit of an input** is added. It is worked out separately for each variable input:
+$$MP_L = TP_L - TP_{L-1} \qquad \text{or} \qquad MP_L = \frac{\partial TP}{\partial L}$$
+  So MP is the **slope of the TP curve**.
 
-Example: Pakistan has GNP > GDP because of remittances. India and China have GDP > GNP.
+**How TP and MP change (the TP curve is S-shaped, like TU):**
 
-> 💡 Domestic = **where** it is made. National = **who** earns it.
+1. **TP rises at an increasing rate**, so **MP is rising**.
+2. **TP rises at a decreasing rate**, so **MP is falling but still positive**. The point where the change happens is the **inflexion point** of TP, where **MP is highest**.
+3. **TP reaches its highest point** where **MP = 0**.
+4. **After that, TP falls**, because **MP is negative**.
 
-### A8. Why do we fix a base year? Define the GDP deflator. 🎯 2024 End Q4, 2023 Mid Q3 [2 + 2]
+**Law of variable proportions** (also called the **law of diminishing returns to a factor**): when more and more of one variable input is added to a fixed input, the marginal product of the variable input **rises at first, but after some point it falls**, and it can even become negative.
 
-**Why a base year?**
+**Why does this happen?** The notes say the **efficiency of the fixed factor drops because the variable factor overcrowds it**. A few extra workers help to use the machines fully. But too many workers crowd around the same machines and get in each other's way.
 
-- Nominal GDP uses each year's **current** prices.
-- So nominal GDP can go up just because **prices** went up, even if no extra goods were made.
-- To remove this effect, we pick one year, the **base year**, and value every year's output at that year's **fixed prices**.
-- Now any change in GDP comes only from a change in the **quantity produced**. This is **real GDP**. It lets us compare output fairly across years.
+**Why "variable proportions"?** Labour is added while capital stays fixed, so the **proportion (ratio) of labour to capital keeps changing**.
 
-**Example (2023 Mid Q3).** Country X grows apples and oranges. The base year is 2020.
+💡 *TP is highest exactly where MP = 0. MP is highest exactly at the inflexion point of TP.*
 
-| Good | 2023 price | 2023 output | 2020 price |
-| :--- | ---: | ---: | ---: |
-| Apples | ₹20 | 100 kg | ₹5 |
-| Oranges | ₹12 | 150 kg | ₹8 |
+---
 
-- Nominal GDP 2023 (2023 prices × 2023 output) = 20 × 100 + 12 × 150 = 2,000 + 1,800 = **₹3,800**
-- Real GDP 2023 (2020 prices × 2023 output) = 5 × 100 + 8 × 150 = 500 + 1,200 = **₹1,700**
+### A9. What are returns to scale? Explain constant, increasing and decreasing returns to scale. ✍️ [3]
 
-**GDP deflator** = (nominal GDP ÷ real GDP) × 100 = 3,800 ÷ 1,700 × 100 = **223.5**.
+**Answer.**
 
-The deflator is a **price index**: a number that measures the price level of **all** goods made in the economy. A value of 223.5 means prices are about 2.24 times their 2020 level. In other words, prices have risen by about 124% since 2020.
+**Returns to scale** describe what happens to output in the **long run** when **all inputs are increased in the same proportion**.
 
-> 💡 Nominal = today's prices. Real = base-year prices. Deflator = nominal ÷ real × 100.
+**Example from the notes:** if we double both inputs and output exactly doubles,
+$$f(2x_1, 2x_2) = 2f(x_1, x_2) = 2y$$
+then we have **constant returns to scale**.
 
-### A9. What are the functions of money? Which of them do cash, Bitcoin and real estate perform? 🎯 2025 Mid Q3(a), 2023 Mid Q5 [1 + 3]
+**General form.** Multiply every input by t (t > 0). If
+$$f(tL, tK) = t^v f(L, K)$$
+then the value of v tells us the returns to scale:
 
-**Why we need money.** Without money we must **barter**, which means swap goods directly. Barter has three problems:
+| v | Name | If all inputs are doubled, output becomes |
+| :--- | :--- | :--- |
+| v = 1 | **Constant** returns to scale (CRS) | exactly double |
+| v > 1 | **Increasing** returns to scale (IRS) | more than double |
+| v < 1 | **Decreasing** returns to scale (DRS) | less than double |
 
-1. You must find someone who has what you want **and** wants what you have. This is called the "double coincidence of wants", and it is rare.
-2. There is no common measure of value. How many eggs is one shirt worth?
-3. Many goods cannot be stored. Milk goes bad.
+**Why decreasing returns happen:** the notes mention **managerial diseconomies**. When a firm grows very large, managers get overloaded and coordination gets worse. So output grows more slowly than inputs.
 
-Money solves these problems. It has three functions:
+💡 *Double the inputs: output exactly double = CRS, more = IRS, less = DRS.*
 
-1. **Medium of exchange:** people accept it as payment for anything.
-2. **Unit of account:** all prices, GDP and debts are measured in it. It is a common measuring stick.
-3. **Store of value:** you can keep it and spend it later. (Inflation makes this weaker, because money buys less over time.)
+---
 
-| Item | Medium of exchange | Unit of account | Store of value |
-| :--- | :---: | :---: | :---: |
-| Cash | ✓ | ✓ | ✓ (but loses value with inflation) |
-| Bitcoin | weak: few sellers accept it | ✗: prices are not written in Bitcoin | partly: people hold it as an asset, but its price goes up and down a lot (it is volatile) |
-| Real estate | ✗: you cannot buy groceries with land | ✗ | ✓: it keeps its value, but it is hard to turn into cash quickly (it is illiquid) |
+### Cost (13 Nov)
 
-> 💡 Exchange, account, store: only cash does all three well.
+### A10. What are fixed cost and variable cost? Explain the shapes of the TFC, TVC and TC curves. ✍️ [3]
 
-### A10. What do M1, M2, M3 and M4 mean? What is broad money? 🎯 HU-4201 2024 Mid Q2 (OR) [2]
+**Answer.**
 
-The RBI measures the money supply at four levels. Each level adds something to the one before:
+Costs come from production, $Y = f(L, K)$, so the shape of the cost curves follows from the production function.
 
-- **M1 (narrow money)** = currency (notes and coins) with the public + demand deposits in banks. (A demand deposit is money you can take out any time, like a current account.)
-- **M2** = M1 + savings deposits in post-office savings banks.
-- **M3 (broad money)** = M1 + **time deposits** in banks. (A time deposit is a fixed deposit that is locked for a period.)
-- **M4** = M3 + all deposits in post-office savings banks (not counting National Savings Certificates).
+$$TC = TFC + TVC$$
 
-**Broad money (M3)** includes fixed deposits, which you cannot spend at once. It is the measure of money supply that is used most often.
+- **Total fixed cost (TFC):** stays the same **whatever the level of production**, even at zero output. Examples: rent, insurance, salaries of permanent staff.
+  - **Shape:** a **flat (horizontal) line**.
+- **Total variable cost (TVC):** **changes with the level of production**. It is zero when nothing is made. Examples: raw materials, wages of workers, fuel.
+  - **Shape:** as output rises, TVC rises, but at a changing rate:
+    - **at first it rises at a decreasing rate** (the curve bends downward);
+    - **then it rises at an increasing rate** (the curve bends upward).
+  - The point where the bend changes is the inflexion point (point A in the notes).
+- **Total cost (TC):** TC = TFC + TVC. It has **the same shape as TVC**, but it starts at the TFC level instead of at zero, because TFC is added on top.
 
-**Liquidity** means how quickly money can be spent. M1 is the most liquid. Liquidity falls step by step, and M4 is the least liquid.
+**Why is TVC the "opposite" of the total product curve?** (The notes call TVC the opposite of TP.)
 
-> 💡 M1 = money you can spend right now. Each next step adds deposits that are slower to spend.
+- While MP is **rising** (phase 1 in A8), each extra worker adds more output. So each extra unit of output needs less extra labour, and TVC rises **slowly**.
+- Once MP is **falling**, each extra worker adds less output. So each extra unit of output needs more extra labour, and TVC rises **faster and faster**.
 
-### A11. What is the marginal propensity to consume (MPC)? If the investment multiplier is 5, find the MPC. What happens to the multiplier if the MPC rises? 🎯 HU-4201 2024 Mid Q2, HU-4201 2025 Mid Q5, 2023 End Q7 [1 + 2 + 2]
+💡 *TFC = flat. TVC = rises slowly, then fast. TC = TVC lifted up by TFC.*
+
+---
+
+### A11. Define AFC, AVC and AC. Why is the lowest point of AC to the right of the lowest point of AVC? ✍️ [3]
+
+**Answer.**
+
+Divide TC = TFC + TVC by the quantity q:
+
+$$\frac{TC}{q} = \frac{TFC}{q} + \frac{TVC}{q} \quad\Rightarrow\quad AC = AFC + AVC$$
+
+- **AFC (average fixed cost) = TFC/q:** keeps **falling** as output rises, because the same fixed cost is spread over more units.
+- **AVC (average variable cost) = TVC/q:** **U-shaped**. It falls at first, then rises.
+- **AC (average cost, also called ATC) = AFC + AVC:** also **U-shaped**.
+
+![Short-run cost curves](qa_images/cost_curves.svg)
+
+(In the diagram, AC is labelled ATC.)
+
+**Why AC reaches its lowest point later than AVC (from the notes):**
+
+- After AVC reaches its lowest point, AVC starts **rising**.
+- But AFC is **still falling**, and it keeps **pulling AC down**.
+- For a while, the **fall in AFC is bigger than the rise in AVC**, so AC keeps falling.
+- AC turns up only once the rise in AVC becomes bigger than the fall in AFC.
+- So the lowest point of AC is **to the right** of the lowest point of AVC.
+
+💡 *The fall in AFC outweighs the rise in AVC for a while, so AC bottoms out later.*
+
+---
+
+### A12. Define marginal cost. Show that MC cuts AVC and AC at their lowest points. ✍️ [3]
+
+**Answer.**
+
+- **Marginal cost (MC):** the **change in total cost** when output changes by **one unit**:
+$$MC = \frac{\Delta TC}{\Delta q} \qquad \text{or} \qquad MC = \frac{\partial (TC)}{\partial q}$$
+  - Fixed cost does not change with output, so MC depends only on variable cost.
+  - MC is **U-shaped**: it falls at first, then rises. It reaches its lowest point **before** AVC and AC do.
+
+**Why MC cuts AVC and AC at their lowest points (the rule from the notes):**
+
+- **If the marginal addition is above the average, the average is pulled up. If it is below, the average is pulled down.**
+- So while MC is below AC, AC is falling. Once MC is above AC, AC is rising.
+- The average stops falling and starts rising exactly where **MC = AC**, which is the **lowest point** of AC.
+- The same reasoning works for AVC. So MC cuts **AVC first** and **AC later**, each at its lowest point.
+
+💡 *MC is like a new student joining a class: a score above the class average pulls the average up, a score below pulls it down.*
+
+---
+
+### Keynesian cross (midsem part)
+
+### A13. What is the marginal propensity to consume (MPC)? If the investment multiplier is 5, find the MPC. What happens to the multiplier if the MPC rises? 🎯 HU-4201 2024 Mid Q2, HU-4201 2025 Mid Q5, 2023 End Q7 [1 + 2 + 2]
+
+**Answer.**
 
 **Keynes's consumption function:** $C = a + bY$.
 
 - $C$ = consumption (spending by households).
 - $Y$ = income.
-- $a$ = **autonomous consumption**: what people spend even when income is zero, just to survive (for food, for example).
+- $a$ = **autonomous consumption**: what people spend even when income is zero, just to survive.
 - $b$ = the **MPC**.
 
 **MPC** is the part of each **extra** rupee of income that people spend. If you earn ₹1 more and spend 80 paise of it, your MPC is 0.8. In symbols: $b = \Delta C/\Delta Y$, and $0 < b < 1$.
 
-**Investment multiplier.** When investment rises, income rises by **more** than the investment. Why? Each round of spending becomes someone else's income, and they spend part of it again. The size of the multiplier is:
+**Investment multiplier.** When investment rises, income rises by **more** than the investment. This is because each round of spending becomes someone else's income, and they spend part of it again. The size of the multiplier is:
 
 $$k = \frac{1}{1 - b}$$
 
@@ -226,7 +326,7 @@ $$k = \frac{1}{1 - b}$$
 
 $$5 = \frac{1}{1 - b} \Rightarrow 1 - b = 0.2 \Rightarrow b = 0.8$$
 
-**If the MPC rises,** people spend a bigger share in every round. So the **multiplier gets bigger**:
+**If the MPC rises,** people spend a bigger share in every round, so the **multiplier gets bigger**:
 
 - MPC 0.75 → k = 4
 - MPC 0.8 → k = 5
@@ -234,184 +334,224 @@ $$5 = \frac{1}{1 - b} \Rightarrow 1 - b = 0.2 \Rightarrow b = 0.8$$
 
 Because $b$ is always between 0 and 1, the multiplier is always greater than 1.
 
-> 💡 The more people spend again, the bigger the multiplier.
+💡 *The more people spend again, the bigger the multiplier.*
 
-### A12. Why do people hold money instead of bonds? (Keynes's three motives) ✍️ [3]
+---
 
-1. **Transaction motive:** to pay for everyday things between one payday and the next.
-2. **Precautionary motive:** to be ready for emergencies, like illness, an accident or losing a job.
-3. **Speculative motive:** to avoid a loss on bonds. If people expect interest rates to **rise**, bond prices will **fall**. (Bond prices and interest rates move in opposite directions.) So they keep cash now, avoid the loss, and buy bonds later at a lower price.
+### Phillips curve (midsem part)
 
-> 💡 Money to spend, money for a rainy day, money to wait for a bargain.
+### A14. What is the Phillips curve? How are inflation and unemployment related in the short run? 🎯 2025 End Q4 (part) [2]
 
-### A13. Define inflation and give its causes. 🎯 2025 Mid Q3(b) [2]
+**Answer.**
 
-**Inflation** is a **steady, lasting rise in the general level of prices**. A one-time jump in one good's price is not inflation. Because of inflation, each rupee buys less, so money becomes a weaker store of value.
+- **A. W. Phillips (1958)** studied UK data from 1861 to 1957. He found that when **unemployment was low, money wages rose fast**, and when **unemployment was high, wages rose slowly**. So the two moved in **opposite directions**.
+- **Samuelson and Solow (1960)** restated this for the USA as a link between **inflation** and **unemployment**. This is the **Phillips curve**: a downward-sloping curve with unemployment on the x-axis and inflation on the y-axis.
 
-**Causes:**
+**The short-run relation: a trade-off.** Lower unemployment comes with higher inflation, and higher unemployment comes with lower inflation.
 
-- **Demand side ("demand-pull"):** people want to buy more than the economy can produce. This can happen when money supply grows fast, the government spends a lot, or loans are easy to get. People say: "too much money chasing too few goods".
-- **Cost side ("cost-push"):** the cost of making goods goes up. For example, oil, wages or raw materials become dearer. Firms pass the extra cost on to buyers as higher prices.
-- **Supply shocks:** war, sanctions or a failed crop cut the supply of goods, so prices jump.
+**Why?**
 
-> 💡 Demand pulls prices up. Costs push prices up.
+1. When demand in the economy is high, firms produce more and hire more, so unemployment falls.
+2. With fewer people looking for work, workers are scarce, and firms must **offer higher wages** to get them.
+3. Higher wages raise firms' costs, and strong demand lets firms **raise prices**. So inflation rises.
+4. The opposite happens when demand is weak: unemployment rises, wage pressure is low, and inflation falls.
+
+So in the short run, the government faces a **choice (a "menu")**: it can have lower unemployment, but only by accepting higher inflation, or the other way round.
+
+💡 *Short run: fewer jobless ↔ faster price rises.*
 
 ---
 
 ## Part B — Longer questions (4–7 marks)
 
-### B1. 🎯 2025 Mid Q4 (OR) + 🎯 2023 End Q8
+### B1. 🎯 2023 End Q9 + ✍️ — Getting the most net utility
 
-**(a)** Using demand and supply curves, show how the equilibrium price is set in a market. **[3]**
-**(b)** A person's income rises. What happens to the equilibrium price? Explain with demand and supply curves. **[4]**
-
-**(a) Answer.**
-
-![Market equilibrium: demand and supply](qa_images/market_equilibrium.svg)
-
-- The **demand curve D** slopes down. This is the law of demand: at a lower price, people buy more.
-- The **supply curve S** slopes up. At a higher price, sellers make more profit, so they offer more. ($q_s = f(P, \text{technology}, \dots)$ means the quantity supplied depends on price, technology and other things.)
-- **Equilibrium** is the point E where the two curves cross. Here, the quantity people want to buy equals the quantity sellers want to sell. This gives the equilibrium price P* and the equilibrium quantity Q*.
-- **If the price is above P\*** (for example at P1): sellers offer more than buyers want. Unsold goods pile up. This is called **excess supply**. Sellers cut their prices until the price falls back to P*.
-- **If the price is below P\*** (for example at P2): buyers want more than is available. This is a shortage, called **excess demand**. Buyers push the price up, and sellers offer more, until the price rises to P*.
-
-So the price is set by **both** cost (which lies behind supply) and demand. It is not set by cost alone. For example, a soft drink costs little to make, but it sells at a high price because demand for it is strong.
-
-**(b) Answer.**
-
-Take a **normal good**, which is a good people buy more of when they become richer. When income rises, people want more of it at **every** price. So the demand curve **shifts to the right** (from D to D′). The supply curve does not move.
-
-![A rise in income shifts demand right](qa_images/demand_shift.svg)
-
-Step by step:
-
-1. At the old price P*, people now want more than is supplied. There is **excess demand**.
-2. Buyers compete for the limited goods, and the price is pushed **up**.
-3. The higher price makes producers supply more. This is a **movement along** the supply curve, not a shift of it.
-4. A new equilibrium E1 is reached, with a **higher price P1 and a higher quantity Q1**.
-
-📘 The same logic works for a **supply shock**. War or sanctions shift the supply curve to the **left**. At the old price there is now excess demand. So the price rises and the quantity falls.
-
-> 💡 Demand shifts right → price and quantity both go up.
-
-### B2. 🎯 HU-4201 2025 Mid Q4 + 🎯 2025 Mid Q1(b)
-
-Define GDP. Using the circular flow of income model, explain why total factor income equals total spending. In other words, why are national income and national expenditure the same? **[2 + 3]**
-
-**Answer.**
-
-**GDP** is the market value of all final goods and services made inside a country in a year (see A6).
-
-**The simple two-sector model.** We make three assumptions to keep it simple:
-
-1. There are only two sectors: **households** and **firms**.
-2. Firms make one good (say, bread). They use one factor of production (labour), which households own.
-3. Households spend **all** of their income. There is no saving, no government and no foreign trade. So there are no leakages and no injections.
-
-![Circular flow of income](qa_images/circular_flow.svg)
-
-Two flows go round in opposite directions:
-
-- **Real flow (things):** households give labour to firms. Firms give bread to households.
-- **Money flow (rupees):** firms pay wages to households. Households spend those wages on bread.
-
-**Why income = spending:**
-
-- Every rupee households **spend** reaches the firms as revenue.
-- Firms pay **all** of that revenue to households as factor income (wages).
-- Households spend all of this income again.
-- So: total spending = total revenue of firms = total factor income.
-- Total spending is also the value of all the bread that was made. So:
-
-$$\text{National income} = \text{National expenditure} = \text{National product (GDP)}$$
-
-These are just three ways of looking at the **same** flow of money:
-
-1. the value of what is **made** (product),
-2. what people **earn** by making it (income),
-3. what people **spend** to buy it (expenditure).
-
-> 💡 One person's spending is another person's income.
-
-### B3. 🎯 2025 End Q1 + 🎯 HU-4201 2024 Mid Q1(c)
-
-**(a)** Find GDP and GNP at market prices (₹ crore): consumption 800, investment 500, factor payments to abroad 200, factor income from abroad 50, government spending 10, exports 200, imports 100. **[2 + 2]**
-**(b)** What is real GDP? What is its advantage over nominal GDP? Give one weakness of GDP as a measure of people's well-being. **[3]**
-**(c)** Critics say that when inflation is high, high nominal GDP growth hides weak real activity. Why? **[2]**
+**(a)** Explain the law of diminishing marginal utility. **[3]**
+**(b)** When the consumer has to pay for the good, how much will they consume? Write the first- and second-order conditions. With $TU = 10x^2 - \tfrac{2}{3}x^3$ and a price of ₹32, find the quantity bought. **[4]**
 
 **(a) Answer.**
 
-Use the **expenditure method**: GDP = C + I + G + (X − M). Here C = consumption, I = investment, G = government spending, X = exports and M = imports.
+**Law of diminishing marginal utility:** after a point, each extra unit of a good gives **less extra satisfaction** than the unit before.
 
-$$\text{GDP}_{MP} = 800 + 500 + 10 + (200 - 100) = ₹1{,}410 \text{ crore}$$
+Step by step (see the diagram in A4):
 
-Next, find NFIA (net factor income from abroad) and add it to GDP to get GNP:
+1. At first, MU rises, and TU rises faster and faster.
+2. After MU reaches its highest point, **MU starts to fall**. This is where the law begins. TU still rises, but more and more slowly.
+3. At the saturation point, **MU = 0** and TU is at its highest.
+4. After that, MU is negative and TU falls.
 
-$$\text{NFIA} = 50 - 200 = -150, \qquad \text{GNP}_{MP} = 1{,}410 + (-150) = ₹1{,}260 \text{ crore}$$
-
-GNP is less than GDP here because foreigners earn more inside this country than its own people earn abroad.
+**Everyday example:** the first glass of water on a hot day is wonderful, the third is fine, and by the sixth you do not want any more.
 
 **(b) Answer.**
 
-- **Real GDP** values this year's output at **base-year (fixed) prices**: $\text{GDP}_R = \sum P_{base} \times q_{current}$. In words: multiply each good's base-year price by this year's quantity, and add.
-- **Advantage:** nominal GDP goes up when prices go up, even if not a single extra unit is made. Real GDP removes the price effect and shows the true growth in **output**. In the guide's example, nominal GDP rose 112.5%, but real GDP rose only 25%. The rest was just inflation.
-- **Weakness as a measure of well-being** (give any one):
-  - It counts only goods and services **sold in the market**. So unpaid housework and care work (mostly done by women) are left out.
-  - It ignores pollution and damage to the environment.
-  - It says nothing about how income is **shared**. A country can have a high GDP and still have many poor people.
+**The idea (from the notes).** When we have to pay for the good, paying causes a **loss of satisfaction** too.
+
+- **Disutility (DU)** = the satisfaction lost by paying = price × quantity: $DU = P_x q_x$. On a graph, this is a straight line from the origin.
+- **Net utility (NU)** = satisfaction gained − satisfaction lost:
+$$NU = TU - DU = TU(q_x) - P_x q_x$$
+- The consumer consumes up to the point where the **gap between the TU curve and the DU line is largest**. That is where NU is at its maximum.
+
+**First-order condition (FOC).** To find the maximum, set the slope of NU to zero:
+$$\frac{d(NU)}{dq_x} = \frac{d(TU)}{dq_x} - P_x = 0 \;\Rightarrow\; MU_x - P_x = 0 \;\Rightarrow\; \boxed{MU_x = P_x}$$
+
+So the consumer gets the most net utility where **marginal utility = price**.
+
+But this is only a **necessary condition, not a sufficient one**. A zero slope can also happen at a **minimum** of NU. So we also need the second condition.
+
+**Second-order condition (SOC).** At the best point, NU must be bending downwards:
+$$\frac{d^2(TU)}{dq_x^2} < 0$$
+This means **MU must be falling** at that point (diminishing marginal utility).
+
+**The sum.** $TU = 10x^2 - \tfrac{2}{3}x^3$, so $MU = 20x - 2x^2$, and price = 32.
+
+- FOC: $20x - 2x^2 = 32 \;\Rightarrow\; x^2 - 10x + 16 = 0 \;\Rightarrow\; (x - 2)(x - 8) = 0$, so **x = 2 or x = 8**.
+- SOC: $\dfrac{d(MU)}{dx} = 20 - 4x$.
+  - At x = 2: $20 - 8 = 12 > 0$. ✗ MU is still **rising**, so this is a **minimum** of NU.
+  - At x = 8: $20 - 32 = -12 < 0$. ✓ MU is **falling**, so this is the **maximum**.
+- **Answer: the consumer buys 8 units.**
+- Check:
+  - at x = 8: TU = 640 − 341.33 = 298.67; spending = 32 × 8 = 256; NU = **42.67** (the most);
+  - at x = 2: TU = 40 − 5.33 = 34.67; spending = 64; NU = −29.33 (the least).
+
+This example shows why the FOC alone is not enough: it gives two answers, and the SOC picks the right one.
+
+💡 *FOC: MU = price. SOC: MU must be falling. You need both.*
+
+---
+
+### B2. 🎯 2025 End Q3 + 🎯 HU-4201 2024 End Q3(b) + ✍️ (class table)
+
+**(a)** Using the class table below (capital fixed), find MP for each level of labour and explain the phases of production. **[4]**
+**(b)** What is important about the inflexion point of the TP curve? Which law decides the shape of TP? Why is it called the law of variable proportions? **[3]**
+**(c)** Find x and y in this table: **[2]**
+
+| L | TP | MP |
+| :---: | :---: | :---: |
+| 1 | 10 | 10 |
+| 2 | 24 | 14 |
+| 3 | x | 15 |
+| 4 | 48 | y |
+| 5 | 50 | 2 |
+
+**(a) Answer.**
+
+| L | TP | MP = TP(L) − TP(L−1) | Phase |
+| :---: | :---: | :---: | :--- |
+| 1 | 100 | — | 1 |
+| 2 | 200 | 100 | 1 |
+| 3 | 400 | 200 | 1 |
+| 4 | 700 | **300** (highest) | end of 1 (inflexion) |
+| 5 | 900 | 200 | 2 |
+| 6 | 1000 | 100 | 2 |
+| 7 | 1000 | **0** | end of 2 (TP highest) |
+| 8 | 900 | −100 | 3 |
+
+![TP and MP with the three phases](qa_images/tp_mp.svg)
+
+**The three phases:**
+
+1. **Phase 1 (L = 1 to 4): TP rises at an increasing rate.** MP rises from 100 to 300. There are too few workers for the fixed machines, so each new worker adds more than the last one.
+2. **Phase 2 (L = 4 to 7): TP rises at a decreasing rate.** MP falls (300 → 200 → 100 → 0) but stays positive or zero, so TP still rises, up to its peak of 1000. **Diminishing returns** have started.
+3. **Phase 3 (L above 7): TP falls.** MP is negative (−100 at L = 8). Too many workers overcrowd the fixed machines.
+
+A sensible firm will not hire into phase 3, because extra workers there **reduce** output.
+
+**(b) Answer.**
+
+- The **inflexion point** is where the TP curve **changes its bend**: before it, TP rises faster and faster; after it, TP rises more and more slowly.
+  - At this point **MP is at its highest** (L = 4 in the table).
+  - After it, **diminishing returns begin**.
+- The shape of TP is decided by the **law of variable proportions** (also called the **law of diminishing returns to a factor**). See A8.
+- **Why "variable proportions"?** Labour is added while capital stays fixed. So the **ratio (proportion) of labour to capital keeps changing**. At first the mix improves. After the best mix, the variable factor overcrowds the fixed factor, so the fixed factor's efficiency drops and MP falls.
+- It is a **short-run** law, because one factor must stay fixed.
 
 **(c) Answer.**
 
-- Nominal GDP = real output × prices.
-- If prices rise fast, nominal GDP grows fast, even if real output hardly grows.
-- So much of the "growth" is just **higher prices**, not more goods and services.
-- This means real activity is weaker than the nominal figure makes it look.
-- That is why growth should be judged by **real GDP** (nominal GDP divided by the GDP deflator).
+- x = TP at L = 3 = TP at L = 2 + MP at L = 3 = 24 + 15 = **39**.
+- y = MP at L = 4 = TP at L = 4 − TP at L = 3 = 48 − 39 = **9**.
 
-> 💡 Nominal growth ≈ real growth + inflation.
+💡 *MP highest = inflexion of TP. MP = 0 = top of TP. MP negative = TP falling.*
 
-### B4. 🎯 2023 Mid Q4 + ✍️
+---
 
-**(a)** Find GDP, GNP and GNP at factor cost (₹): final consumption 300, investment 80, exports 250, imports 550, government spending 200, payments to factors abroad 100, income from abroad 500, net indirect tax 100, debt interest income 20, depreciation 25. **[3]**
-**(b)** Explain the four parts of spending, and the steps from GDP at market price to national income. Then find national income (NNP at factor cost) for: C 600, I 200, G 150, X 80, M 100, factor income from abroad 40, factor payments abroad 70, net indirect taxes 50, depreciation 30. **[4]**
+### B3. ✍️ — Returns to scale: sums and comparison
 
-**(a) Answer.**
+**(a)** Find the returns to scale for: (i) $X = L^{0.5}K^{0.5}$; (ii) $X = 4L^{0.6}K^{0.6}$; (iii) $X = L^{0.3}K^{0.5}$. **[3]**
+**(b)** How are returns to scale different from returns to a variable factor? **[3]**
 
-- GDP = 300 + 80 + 200 + (250 − 550) = 580 − 300 = **₹280**
-- NFIA = 500 − 100 = +400, so GNP = 280 + 400 = **₹680**
-- GNP at factor cost = GNP − net indirect taxes = 680 − 100 = **₹580**
+**(a) Answer.** Multiply both L and K by t, then pull t out to the front. The power of t is v.
 
-Two items are given only to test you. They are **not needed** for these three answers:
+- (i) $(tL)^{0.5}(tK)^{0.5} = t^{1.0}\,L^{0.5}K^{0.5}$. So v = 1: **constant returns**. Doubling the inputs doubles the output (× 2).
+- (ii) $4(tL)^{0.6}(tK)^{0.6} = t^{1.2}\cdot 4L^{0.6}K^{0.6}$. So v = 1.2, which is more than 1: **increasing returns**. Doubling the inputs multiplies output by $2^{1.2} \approx 2.30$.
+- (iii) $(tL)^{0.3}(tK)^{0.5} = t^{0.8}\,L^{0.3}K^{0.5}$. So v = 0.8, which is less than 1: **decreasing returns**. Doubling the inputs multiplies output by only $2^{0.8} \approx 1.74$.
 
-- **Debt interest income** is a transfer payment. It is not payment for anything produced this year.
-- **Depreciation** is needed only for **net** figures (NNP), not for these gross figures.
+**Shortcut:** for this kind of function, just **add the powers**. The number in front (like the 4) does **not** change the returns to scale.
 
 **(b) Answer.**
 
-**The four parts of spending (GDP = C + I + G + NX):**
+| Returns to a variable factor | Returns to scale |
+| :--- | :--- |
+| **Short run** | **Long run** |
+| One factor changes; the others stay fixed. | **All** factors change by the same proportion. |
+| The **mix (proportion)** of factors changes. | The mix stays **the same**; only the **size (scale)** changes. |
+| Follows the law of variable proportions: MP rises, then falls. | Can be increasing, constant or decreasing returns to scale. |
+| Cause of the fall: the variable factor **overcrowds** the fixed factor. | Cause of decreasing returns: **managerial diseconomies** in a very large firm. |
 
-1. **C, consumption:** what households spend on durable goods (car, fridge), non-durable goods (food) and services (haircut, doctor).
-2. **I, investment:** spending on new machines and buildings, new houses, and the **change in inventories** (inventories are stocks of goods made but not yet sold).
-3. **G, government purchases:** roads, defence, and salaries of government workers. Pensions and other **transfers** are **not** included, because nothing is produced in return for them.
-4. **NX, net exports:** exports − imports.
+---
 
-**The ladder from GDP to national income:**
+### B4. 🎯 HU-4201 2023 End Q1 (type) + ✍️ — Cost table and cost function
 
-| Step | Rule | Example |
-| :--- | :--- | ---: |
-| GDP at market price | C + I + G + (X − M) | 600 + 200 + 150 + (80 − 100) = **930** |
-| GNP at market price | add NFIA | 930 + (40 − 70) = **900** |
-| GNP at factor cost | subtract net indirect taxes (indirect taxes − subsidies) | 900 − 50 = **850** |
-| NNP at factor cost = **national income** | subtract depreciation | 850 − 30 = **820** |
+**(a)** A firm has a total fixed cost of ₹100. Its total variable cost is given below. Find TC, AFC, AVC, AC and MC, and comment on the results. **[4]**
 
-Two pairs of words explain the ladder:
+| q | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| TVC (₹) | 0 | 40 | 70 | 90 | 120 | 160 | 210 | 280 | 370 |
 
-- **Market price vs factor cost.** The market price includes indirect taxes (like GST), and it is lowered by subsidies. Factor cost is what the factors of production (land, labour, capital) actually receive. So factor cost = market price − indirect taxes + subsidies.
-- **Gross vs net.** Depreciation is the wear and tear of machines during the year. Gross − depreciation = net.
+**(b)** For $TC = 100 + 10q - 2q^2 + 0.2q^3$: find TFC, TVC, AVC and MC, and the output where AVC is lowest. Show that MC = AVC at that output. **[3]**
 
-> 💡 GDP → (+NFIA) → GNP → (−net indirect tax) → factor cost → (−depreciation) → national income.
+**(a) Answer.**
 
-### B5. 🎯 2023 End Q7 + 🎯 2025 Mid Q2(a) + 🎯 HU-4201 2025 Mid Q5
+| q | TFC | TVC | TC | AFC | AVC | AC | MC |
+| :---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 100 | 0 | 100 | — | — | — | — |
+| 1 | 100 | 40 | 140 | 100 | 40 | 140 | 40 |
+| 2 | 100 | 70 | 170 | 50 | 35 | 85 | 30 |
+| 3 | 100 | 90 | 190 | 33.33 | 30 | 63.33 | **20** (lowest) |
+| 4 | 100 | 120 | 220 | 25 | **30** (lowest) | 55 | 30 |
+| 5 | 100 | 160 | 260 | 20 | 32 | 52 | 40 |
+| 6 | 100 | 210 | 310 | 16.67 | 35 | **51.67** (lowest) | 50 |
+| 7 | 100 | 280 | 380 | 14.29 | 40 | 54.29 | 70 |
+| 8 | 100 | 370 | 470 | 12.5 | 46.25 | 58.75 | 90 |
+
+**Formulas used:**
+
+- TC = TFC + TVC
+- AFC = TFC/q
+- AVC = TVC/q
+- AC = TC/q = AFC + AVC
+- MC = TC at this q − TC at the previous q
+
+**Comments:**
+
+- TFC stays at 100 at every output, even at q = 0. AFC keeps falling (100, 50, 33.33, …).
+- TVC rises slowly at first (+40, +30, +20), then faster and faster (+30, +40, +50, +70, +90). This is the shape described in A10.
+- **MC reaches its lowest point first** (q = 3), then **AVC** (q = 3–4), then **AC** (q = 6). This is the usual order (A11).
+- At q = 4, MC = 30 = AVC. So **MC meets AVC at its lowest point**.
+- MC rises from 50 to 70 as it crosses AC (51.67) between q = 6 and q = 7, which is at the bottom of AC.
+- While MC < AC, AC falls. Once MC > AC, AC rises. This is the rule from A12.
+
+**(b) Answer.**
+
+- TFC = **100** (the part that does not depend on q). TVC = $10q - 2q^2 + 0.2q^3$ (the rest).
+- $AVC = \dfrac{TVC}{q} = 10 - 2q + 0.2q^2$.
+- $MC = \dfrac{d(TC)}{dq} = 10 - 4q + 0.6q^2$.
+- Lowest AVC: set its slope to zero. $\dfrac{d(AVC)}{dq} = -2 + 0.4q = 0 \Rightarrow$ **q = 5**. Then AVC = 10 − 10 + 5 = **5**.
+- MC at q = 5: 10 − 20 + 15 = **5**, which equals AVC ✓. So **MC cuts AVC at its lowest point**.
+- Extra: MC itself is lowest at $q = 10/3 \approx 3.33$, before AVC's lowest point, as expected. AC is lowest at about q = 8.5, after AVC's lowest point (A11).
+
+---
+
+### B5. 🎯 2023 End Q7 + 🎯 2025 Mid Q2(a) + 🎯 HU-4201 2025 Mid Q5 — The Keynesian cross
 
 Explain the simple Keynesian model of income with a graph. Why is the Keynesian cross a stable equilibrium? **[3 + 2]**
 
@@ -419,15 +559,15 @@ Explain the simple Keynesian model of income with a graph. Why is the Keynesian 
 
 **Background.**
 
-- Classical economists believed that markets fix themselves. So the government should leave them alone. This idea is called *laissez-faire* ("let it be").
-- Then came the Great Depression of the 1930s, with many years of mass unemployment. It showed that an economy can stay stuck at low output for a long time, because people are **not spending enough** (too little demand).
-- Keynes argued that **total demand decides income**, and that the government can raise demand when it is too low. He famously said, "in the long run we are all dead", meaning we cannot just wait for markets to fix themselves.
+- Older (classical) economists believed markets fix themselves, so the government should stay out. This idea is called *laissez-faire* ("let it be").
+- The Great Depression of the 1930s proved them wrong. Millions stayed jobless for years, because people were **not spending enough**.
+- Keynes's main idea: **total spending (demand) decides a country's income.** If spending is too low, the government should raise it. He said, "in the long run we are all dead", meaning we cannot just wait for markets to fix themselves.
 
 **The model.** We assume no foreign trade, and fixed investment (I) and government spending (G).
 
-- Consumption: $C = a + bY$.
+- Consumption: $C = a + bY$ (see A13).
 - **Planned expenditure** (what people plan to spend): $PE = C + I + G = (a + I + G) + bY$. On a graph this is a straight line that starts at $a + I + G$ and has slope $b$ (less than 1).
-- **Actual expenditure = output = income.** On a graph this is the **45° line** ($AE = Y$). Every point on it has spending equal to income.
+- **Actual expenditure = output = income.** On a graph this is the **45° line** ($AE = Y$). At every point on it, spending equals income.
 
 ![Keynesian cross](qa_images/keynesian_cross.svg)
 
@@ -437,16 +577,18 @@ $$Y^* = \frac{a + I + G}{1 - b}$$
 
 **Why the equilibrium is stable.** The key is firms' **inventories** (their stock of unsold goods).
 
-- **If income is at Y1, below Y\*:** people plan to spend more than firms produce. Firms sell more than they made, so their stock of goods **falls without warning**. Firms react by hiring more workers and producing more. Income rises towards Y\*.
+- **If income is at Y1, below Y\*:** people plan to spend more than firms produce. Firms sell more than they made, so their stock of goods **falls unexpectedly**. Firms react by hiring more workers and producing more. Income rises towards Y\*.
 - **If income is at Y2, above Y\*:** firms produce more than people plan to buy. Unsold goods pile up (**unplanned inventory build-up**). Firms cut production, and income falls towards Y\*.
 
 So whenever income moves away from Y\*, forces push it back. That is why the equilibrium is stable.
 
-> 💡 Shelves empty → make more. Shelves full → make less.
+💡 *Shelves empty → make more. Shelves full → make less.*
 
-### B6. 🎯 2024 End Q6 (OR) + ✍️
+---
 
-**(a)** Using a graph, explain how a rise in government spending (that does not depend on income) changes equilibrium income in the Keynesian model. **[4]**
+### B6. 🎯 2024 End Q6 (OR) + ✍️ — Government spending and tax multipliers
+
+**(a)** Using a graph, explain how a rise in government spending changes equilibrium income in the Keynesian model. **[4]**
 **(b)** Does a rise in taxes have the same effect? Explain. **[2]**
 **(c)** With $C = 100 + 0.8Y$, $I = 50$, $G = 50$: find equilibrium income. Then find the change in income if G rises by 20, or if a lump-sum tax of 20 is added. **[✍️ 3]**
 
@@ -485,67 +627,76 @@ $$Y = \frac{a + I + G}{1 - b} - \frac{b}{1 - b}T \quad\Rightarrow\quad \frac{\De
 - G rises by 20: the multiplier is 1/0.2 = 5, so ΔY = 5 × 20 = **+100**. New income = 1,100.
 - Tax of 20: the tax multiplier is −0.8/0.2 = −4, so ΔY = −4 × 20 = **−80**. New income = 920.
 
-> 💡 Spending multiplier = 1/(1 − b). Tax multiplier = −b/(1 − b), which is one smaller in size.
+💡 *Spending multiplier = 1/(1 − b). Tax multiplier = −b/(1 − b), which is one smaller in size.*
 
-### B7. 🎯 2023 Mid Q6 + 🎯 2024 Mid Q2(a) + 🎯 HU-4201 2024 End Q3(a)
+---
 
-**(a)** Give the differences between a commercial bank and the central bank. **[2]**
-**(b)** Explain how commercial banks create money (fractional reserve banking). **[4]**
-**(c)** "To increase the money supply, the central bank lowers the reserve requirement." Is this right? Use the money multiplier. **[3]**
+### B7. 🎯 2025 End Q4 + ✍️ — The Phillips curve in the short run and the long run
 
-**(a) Answer.**
-
-| Central bank (RBI) | Commercial bank (SBI, HDFC) |
-| :--- | :--- |
-| Aims at stable prices and a healthy banking system, not profit. | Aims at profit. |
-| The only one allowed to print currency notes. | Cannot print currency. |
-| Bank of the banks and of the government. It is the **lender of last resort**: it lends to banks when nobody else will. | Bank of the public and of businesses. |
-| Does not take deposits from, or lend to, the public. | Takes deposits from the public and gives loans. |
-| Controls money supply and credit, using tools like CRR, the repo rate and open market operations. | Is controlled by the central bank. |
-
-**(b) Answer.**
-
-"Fractional" means "a part". Banks keep only a **part** of each deposit as reserves and lend out the rest. The part they must keep is set by the **cash reserve ratio (CRR)**. The loans get spent, and the money comes back into banks as new deposits. Then those are lent again.
-
-Example: CRR = 10%, and a customer deposits ₹10,000.
-
-1. Bank A keeps ₹1,000 and lends ₹9,000.
-2. The borrower pays someone, who deposits ₹9,000 in Bank B. Bank B keeps ₹900 and lends ₹8,100.
-3. Bank C receives ₹8,100, keeps ₹810 and lends ₹7,290. And so on.
-
-Total deposits = 10,000 + 9,000 + 8,100 + … = 10,000 × 1/0.10 = **₹1,00,000**.
-
-So the first ₹10,000 of cash ends up creating ₹1,00,000 of deposits. That is ₹90,000 of **new** money.
-
-$$\text{Money multiplier} = \frac{1}{\text{CRR}}$$
-
-**(c) Answer. Yes, it is right.**
-
-- When the reserve requirement is lower, banks keep less of each deposit and lend more in every round.
-- So the money multiplier gets bigger. For example: CRR 10% → multiplier 10; CRR 5% → multiplier 20.
-- The same reserves now support more deposits in total. So the money supply **goes up**.
-- One condition: this works fully only if banks actually lend, and people actually borrow.
-
-> 💡 Lower reserve ratio → bigger multiplier → more money.
-
-### B8. 🎯 2025 Mid Q2(b) + 🎯 HU-4201 2024 Mid Q2 + ✍️
-
-**(a)** What is an expansionary fiscal policy? What did Keynes suggest to pull an economy out of a long recession? **[2 + 1]**
-**(b)** Compare fiscal and monetary policy. **[4]**
+**(a)** How are inflation and unemployment related in the short run? Do periods of high inflation **and** high unemployment at the same time prove that the Phillips curve is wrong? Explain. **[3 + 2]**
+**(b)** Draw the short-run and long-run Phillips curves. **[2]**
+**(c)** Using $\pi = \pi^e - 0.5(u - 5)$, find inflation when expected inflation is 2% and unemployment is 3%, 5% and 7%. Then add a supply shock that raises inflation by 4 points at u = 7%. **[✍️ 3]**
 
 **(a) Answer.**
 
-- **Expansionary fiscal policy:** the government **spends more (raises G) or taxes less (cuts T)** to raise total demand. Because of the multiplier, income and jobs rise by more than the first change. It is used during a recession (a period when the economy shrinks and jobs are lost).
-- **Keynes's answer:** in a recession, the problem is that people are not spending enough (deficient demand). The market will not fix this quickly. So the government should **step in and spend**, for example on public works and infrastructure. It should do this even if it means a **budget deficit** (spending more than it collects in taxes). The multiplier will then raise income and jobs.
+**The short-run relation.** In the short run, inflation and unemployment move in **opposite directions** (see A14):
+
+- **Strong demand:** firms hire more, so unemployment falls. Wages and prices are pushed up, so inflation rises.
+- **Weak demand:** the opposite happens.
+
+This is a **movement along** the Phillips curve. It is **demand-pull inflation**: too much demand pulls prices up and pulls unemployment down.
+
+**What happened in the 1970s: stagflation.** Many countries had **high inflation and high unemployment at the same time**. This is called **stagflation** (stagnation + inflation). It looked as if the Phillips curve had broken down.
+
+**Do such periods prove the Phillips curve wrong? No.** They show that the **curve shifted up**. It did not stop existing. Two things shift it up:
+
+1. **Supply shocks (cost-push inflation).**
+   - The oil price shocks of 1973 and 1979 raised firms' costs.
+   - Firms raised prices **and** cut output and jobs.
+   - So inflation and unemployment rose **together**. Higher costs **pushed** prices up.
+2. **Higher expected inflation.**
+   - Milton Friedman (1968) and Edmund Phelps (1967) pointed out that workers care about **real** wages (what their pay can actually buy).
+   - If workers expect prices to rise faster, they ask for bigger pay rises.
+   - This pushes inflation up at **every** level of unemployment, so the whole curve moves up.
+
+**The expectations-augmented Phillips curve** puts both ideas together:
+$$\pi = \pi^e - \beta\,(u - u_n)$$
+
+- $\pi$ = actual inflation, $\pi^e$ = expected inflation.
+- $u$ = actual unemployment, $u_n$ = the **natural rate of unemployment** (the rate the economy settles at in the long run; also called the NAIRU).
+- $\beta$ = how strongly inflation reacts to unemployment.
+
+**Short run vs long run:**
+
+- **Short run:** expected inflation does not change yet, so there **is** a trade-off. Pushing u below $u_n$ makes inflation higher than people expected.
+- **Long run:** people learn and adjust their expectations, until actual inflation equals expected inflation ($\pi = \pi^e$). The formula then gives $u = u_n$.
+  - So in the long run **there is no trade-off**. Unemployment goes back to its natural rate, whatever the inflation rate.
+  - That is why the **long-run Phillips curve is a vertical line** at $u_n$.
+
+**Conclusion:** high inflation with high unemployment does **not** prove the Phillips curve wrong. It proves only that the trade-off is **not fixed for ever**. The short-run trade-off is real, but the curve shifts with supply shocks and expectations.
+
+**Link with the Keynesian cross:** the Keynesian cross (B5) assumes fixed prices, so it says nothing about inflation. The Phillips curve adds the price side: when expansionary policy (B6) raises output and cuts unemployment, inflation rises.
 
 **(b) Answer.**
 
-| | Fiscal policy | Monetary policy |
-| :--- | :--- | :--- |
-| Who runs it | the government (Ministry of Finance) | the central bank (RBI) |
-| Tools | government spending and taxes | money supply, CRR, repo rate, open market operations |
-| To expand the economy | raise G, cut T | lower interest rates, buy government bonds, cut CRR |
-| To slow the economy down | cut G, raise T | raise interest rates, sell bonds, raise CRR |
-| Main aim | change total demand, income and jobs directly | control inflation and credit, keep prices stable |
+![Short-run and long-run Phillips curves](qa_images/phillips_curve.svg)
 
-> 💡 Fiscal = the government's purse. Monetary = the central bank's tap.
+- **SRPC₁** is the short-run curve when people expect 2% inflation. At **A**, unemployment is at its natural rate (5%) and inflation is 2%.
+- If the government pushes unemployment down to 3%, the economy **moves along SRPC₁** to **B**: lower unemployment, but higher inflation (about 4.7%).
+- If the government keeps holding unemployment below 5%, people come to expect higher inflation. The short-run curve **shifts up** to **SRPC₂** (expected inflation 6%).
+- In the long run, unemployment goes back to 5% at **C**, with **higher inflation** than before.
+- Points A and C are both on the **vertical long-run curve (LRPC)** at $u_n = 5\%$. The lasting result of the policy is higher inflation, not lower unemployment.
+
+**(c) Answer.** $\pi = 2 - 0.5(u - 5)$.
+
+- u = 3%: $\pi = 2 - 0.5(-2) = 2 + 1 =$ **3%**
+- u = 5%: $\pi = 2 - 0.5(0) =$ **2%** (unemployment is at its natural rate, so inflation equals expected inflation)
+- u = 7%: $\pi = 2 - 0.5(2) = 2 - 1 =$ **1%**
+
+So lower unemployment comes with higher inflation: the **short-run trade-off**.
+
+**With a supply shock** that adds 4 points: $\pi = 2 - 0.5(u - 5) + 4$. At u = 7%: $\pi = 1 + 4 =$ **5%**.
+
+Now unemployment (7%) **and** inflation (5%) are both high. This is **stagflation**, and it comes from the curve **shifting up**, not from the Phillips curve being wrong.
+
+💡 *Short run: a trade-off (move along the curve). Shocks and expectations shift the curve. Long run: vertical at the natural rate.*
