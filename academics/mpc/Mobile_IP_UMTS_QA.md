@@ -527,7 +527,7 @@ sequenceDiagram
     UE->>MSC: Confirm (via RNC)
     MSC->>RNC: Assign radio bearer
     RNC->>UE: Assign channel
-    UE->>RNC: Response; ring
+    UE->>RNC: Response, then ring
 ```
 
 > 💡 Areas: **URA ⊂ RA ⊂ LA**. L→M call: **Page → RRC connect → Authenticate → Connection set-up → Radio bearer → Ring**.
